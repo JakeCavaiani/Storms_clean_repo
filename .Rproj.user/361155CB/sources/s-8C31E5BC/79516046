@@ -1,0 +1,27 @@
+{
+    "id": "79516046",
+    "path": "~/Documents/Storms_clean_repo/R_scripts/01_Storm_Delineation.R",
+    "project_path": "R_scripts/01_Storm_Delineation.R",
+    "type": "r_source",
+    "hash": "550804787",
+    "contents": "",
+    "dirty": false,
+    "created": 1661886513227.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "9261,0",
+        "scrollLine": "9258"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1661895842,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1661895842859,
+    "read_only": false,
+    "read_only_alternatives": []
+}

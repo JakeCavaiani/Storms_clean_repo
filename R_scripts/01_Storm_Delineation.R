@@ -3535,17 +3535,24 @@ names(Q.2019) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column he
 Q.2019$datetimeAK <- ymd_hms(Q.2019$datetimeAK) # converting character to datetime
 
 
+SUNA_EXO_int_corr_lab_2019 <- read_csv("processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv", 
+                                       na = "empty")
 
-chem.2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
+chem.2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv",
+                      na.strings = "NA")
 
 chem.2019 <- chem.2019[, -c(1, 3:20, 24:83, 84,85)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
 # I just want the constituents and datetimeAk
 
 chem.2019 <- chem.2019[, c(6,1,4,2,3,5)] # reorganizing column headers
 
+
+
 chem.2019$datetimeAK <- ymd_hms(chem.2019$datetimeAK) # converting character to datetime
 
 names(chem.2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
+
+
 
 
 # Load in CARI data 
@@ -3569,12 +3576,19 @@ names(CARI.Q.2019) = c("Discharge_Lsec", "day")
 
 # subset data by site #
 FRCH.2019 <-  subset(chem.2019, site.ID == "FRCH")
+FRCH.2019 <- FRCH.2019[-c(15702:15987), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
 MOOS.2019 <-  subset(chem.2019, site.ID == "MOOS")
+MOOS.2019 <- MOOS.2019[-c(15909:16233), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
 POKE.2019 <-  subset(chem.2019, site.ID == "POKE")
+POKE.2019 <- POKE.2019[-c(15340:15674), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
 VAUL.2019 <-  subset(chem.2019, site.ID == "VAUL")
+VAUL.2019 <- VAUL.2019[-c(14728:15061), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
 STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
-
-
+STRT.2019 <- STRT.2019[-c(14714:15051), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 
 frch.final.discharge.2019 <- subset(Q.2019, site.ID == "FRCH")
@@ -5931,6 +5945,10 @@ abline(v= as.POSIXct("2019-07-15 05:15:00", tz="America/Anchorage"), col="purple
 
 VAUL_storm1_07_13 = VAUL[VAUL$DateTime > as.POSIXct("2019-07-13 05:15:00", tz="America/Anchorage") &
                            VAUL$DateTime < as.POSIXct("2019-07-15 05:15:00", tz="America/Anchorage"),]
+
+##
+VAULtest <- VAUL %>% filter(datetimeAK > "2019-07-13 05:15:00" & datetimeAK < "2019-07-15 05:15:00")
+##
 plot(VAUL_storm1_07_13$MeanDischarge ~ as.POSIXct(VAUL_storm1_07_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,200), col="blue", main="VAUL 190713 storm 1",
      xlim = as.POSIXct(c("2019-07-01 00:00:00","2019-07-15 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 3 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -6377,6 +6395,9 @@ axis(side = 4)
 
 # nitrateuM, fDOM.QSU SPC Turb
 #Storm 1 #
+VAUL.test <- na.omit(VAUL_storm1_07_13)
+myData[-c(2, 4, 6), ]
+VAUL_storm1_07_13 <- VAUL_storm1_07_13[-c(192:524), ]
 VAUL_storm1_07_13_Q = subset(VAUL_storm1_07_13, select = c("DateTime", "MeanDischarge"))
 names(VAUL_storm1_07_13_Q) = c("valuedatetime","datavalue")
 VAUL_storm1_07_13_NO3 = subset(VAUL_storm1_07_13, select = c("DateTime","nitrateuM"))

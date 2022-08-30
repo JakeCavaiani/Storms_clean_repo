@@ -5853,6 +5853,8 @@ VAUL$nitrateuM <- VAUL$NO3
 VAUL$fDOM.QSU.mn <- VAUL$fDOM
 VAUL$SpCond.uScm.mn <- VAUL$SPC
 VAUL$Turbidity.FNU.mn <- VAUL$Turb
+newdata <- mtcars[order(mpg),]
+VAUL1 <- VAUL[order(VAUL$DateTime), ]
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      xlim = as.POSIXct(c("2019-05-01 0:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"),
@@ -5929,8 +5931,8 @@ abline(v = as.POSIXct(vaul.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2019-07-13 05:15:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2019-07-15 05:15:00", tz="America/Anchorage"), col="purple")
 
-VAUL_storm1_07_13 = VAUL[VAUL$DateTime > as.POSIXct("2019-07-13 05:15:00", tz="America/Anchorage") &
-                           VAUL$DateTime < as.POSIXct("2019-07-15 05:15:00", tz="America/Anchorage"),]
+VAUL_storm1_07_13 = VAUL1[VAUL1$DateTime > as.POSIXct("2019-07-13 05:15:00") &
+                           VAUL1$DateTime < as.POSIXct("2019-07-15 05:15:00"),]
 plot(VAUL_storm1_07_13$MeanDischarge ~ as.POSIXct(VAUL_storm1_07_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,200), col="blue", main="VAUL 190713 storm 1",
      xlim = as.POSIXct(c("2019-07-01 00:00:00","2019-07-15 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 3 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
