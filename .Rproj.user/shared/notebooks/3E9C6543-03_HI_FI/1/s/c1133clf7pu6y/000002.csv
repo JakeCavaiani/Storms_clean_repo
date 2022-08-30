@@ -1,0 +1,4 @@
+"0","FRCH_storm8b_08_28_fDOM = pd.read_csv(""~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_fDOM.csv"")
+"
+"2","FileNotFoundError: [Errno 2] No such file or directory: '/Users/jakecavaiani/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_fDOM.csv'
+"
