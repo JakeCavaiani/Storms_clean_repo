@@ -53,12 +53,24 @@ MOOS_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analy
 CARI_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.doy.csv")
 CARI_HI_doy_df_2018 <- CARI_HI_doy_df_2018[,-2]
 
+FRCH_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.doy.csv")
+MOOS_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.doy.csv")
+POKE_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.doy.csv")
+STRT_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.doy.csv")
+VAUL_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.doy.csv")
+CARI_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.doy.csv")
+STRT_HI_doy_df_2019[c(1701:1900), 7] <- "storm7c"
+
+
 HI.dat_2018 <- rbind(FRCH_HI_doy_df_2018, MOOS_HI_doy_df_2018, CARI_HI_doy_df_2018)
 HI.dat_2018$year <- "2018"
 
+HI.dat_2019 <- rbind(FRCH_HI_doy_df_2019, MOOS_HI_doy_df_2019, POKE_HI_doy_df_2019,
+                     STRT_HI_doy_df_2019, VAUL_HI_doy_df_2019, CARI_HI_doy_df_2019)
+HI.dat_2019$year <- "2019"
 
-HI.dat <- rbind(HI.dat_2018)
-write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
+HI.dat <- rbind(HI.dat_2018, HI.dat_2019)
+#write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
 #HI.dat <- read_csv("~/Documents/Storms/Output_from_analysis/HI.dat.csv")
 
@@ -1719,6 +1731,2870 @@ origin_date <- as.Date("2018-05-22")
 HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 
 #write.csv(HI.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
+
+
+
+
+
+
+######################################## 2019 ############################################
+###########################################################################################
+# import rain gauge data #
+FRCH_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/FRCH.RainGauge.2019.csv")
+POKE_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/POKE.RainGauge.2019.csv")
+VAUL_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
+airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
+
+# convert to AK time 
+attributes(FRCH_RainGauge_2019$Datetime)$tzone <- 'America/Anchorage'
+attributes(POKE_RainGauge_2019$DateTime)$tzone <- 'America/Anchorage'
+attributes(VAUL_RainGauge_2019$DateTime)$tzone <- 'America/Anchorage'
+attributes(airtempmean$date_timeAK)$tzone <- 'America/Anchorage'
+names(airtempmean)[2] <- "DateTime"
+
+# round to nearest 15 min 
+FRCH_RainGauge_2019$DateTime <- lubridate::floor_date(FRCH_RainGauge_2019$Datetime, "15 minutes")
+POKE_RainGauge_2019$DateTime <- lubridate::floor_date(POKE_RainGauge_2019$DateTime, "15 minutes")
+VAUL_RainGauge_2019$DateTime <- lubridate::floor_date(VAUL_RainGauge_2019$DateTime, "15 minutes")
+
+# MOOS # 
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 702),
+                          rep("storm3", 250),
+                          rep("storm4", 256),
+                          rep("storm5", 266),
+                          rep("storm6a", 114),
+                          rep("storm6b", 95),
+                          rep("storm6c", 223),
+                          rep("storm6d", 479),
+                          rep("storm7a", 166),
+                          rep("storm7b", 84),
+                          rep("storm7c", 430),
+                          rep("storm8", 174),
+                          rep("storm9", 530))
+
+MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+MOOS.2019.storms.1<- left_join(MOOS_storms, FRCH_RainGauge_2019, by = "DateTime")
+MOOS.2019.storms.1<- left_join(MOOS.2019.storms.1, airtempmean, by = "DateTime")
+
+names(MOOS.2019.storms.1)[names(MOOS.2019.storms.1) == ''] <- 'x'
+
+MOOS.2019.per.storm.1 <- MOOS.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- MOOS.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+MOOS.2019.per.storm.1$temp <- temp$temp
+
+# Reading in chem data to join with the antecedent moisture condition data 
+chem.2019 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2019.csv", 
+                      col_types = cols(NO3 = col_double()))
+
+MOOS.2019 <-  subset(chem.2019, site.ID == "MOOS")
+MOOS.2019$DateTime <- as.POSIXct(MOOS.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+MOOS.2019 <- left_join(MOOS.2019, FRCH_RainGauge_2019, by = "DateTime")
+MOOS.2019 <- left_join(MOOS.2019, airtempmean, by = "DateTime")
+MOOS.2019$week <- rollapplyr(MOOS.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2019$month <- rollapplyr(MOOS.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2019$ThreeMonth <- rollapplyr(MOOS.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2019$temp.week <- rollapplyr(MOOS.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+MOOS.2019.1 <- left_join(MOOS.2019.storms.1, MOOS.2019, by = "DateTime") # week month and 3 month precip totals 
+
+MOOS.2019.per.storm.2 <- MOOS.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+MOOS.2019.per.storm.3 <- MOOS.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+MOOS.2019.per.storm.4 <- MOOS.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+MOOS.2019.per.storm.5 <- MOOS.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "NO3")
+HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "fDOM")
+HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "SPC")
+HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "turb")
+
+HI.moos.no3.2019 <- left_join(HI.mean.precip.moos.NO3, MOOS.2019.per.storm.1, by = "storm.num")
+HI.moos.no3.2019 <- left_join(HI.moos.no3.2019, MOOS.2019.per.storm.2, by = "storm.num")
+HI.moos.no3.2019 <- left_join(HI.moos.no3.2019, MOOS.2019.per.storm.3, by = "storm.num")
+HI.moos.no3.2019 <- left_join(HI.moos.no3.2019, MOOS.2019.per.storm.4, by = "storm.num")
+HI.moos.no3.2019 <- left_join(HI.moos.no3.2019, MOOS.2019.per.storm.5, by = "storm.num")
+
+moos.lm.no3 <- lm(HI.moos.no3.2019$HI ~ HI.moos.no3.2019$precip) # model one with just total precip
+moos.lm.no3.2 <- lm(HI.moos.no3.2019$HI ~ HI.moos.no3.2019$precip.week) # model one with just total precip
+moos.lm.no3.3 <- lm(HI.moos.no3.2019$HI ~ HI.moos.no3.2019$precip.month) # model one with just total precip
+moos.lm.no3.4 <- lm(HI.moos.no3.2019$HI ~ HI.moos.no3.2019$ThreeMonth) # model one with just total precip
+
+moos.formula <- y ~ x
+
+aa <- HI.moos.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ab <- HI.moos.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("one-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ac <- HI.moos.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("one-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ad <- HI.moos.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.moos.fDOM.2019 <- left_join(HI.mean.precip.moos.fDOM, MOOS.2019.per.storm.1, by = "storm.num")
+HI.moos.fDOM.2019 <- left_join(HI.moos.fDOM.2019, MOOS.2019.per.storm.2, by = "storm.num")
+HI.moos.fDOM.2019 <- left_join(HI.moos.fDOM.2019, MOOS.2019.per.storm.3, by = "storm.num")
+HI.moos.fDOM.2019 <- left_join(HI.moos.fDOM.2019, MOOS.2019.per.storm.4, by = "storm.num")
+HI.moos.fDOM.2019 <- left_join(HI.moos.fDOM.2019, MOOS.2019.per.storm.5, by = "storm.num")
+
+moos.lm.fDOM <- lm(HI.moos.fDOM.2019$HI ~ HI.moos.fDOM.2019$precip) # model one with just total precip
+moos.lm.fDOM.2 <- lm(HI.moos.fDOM.2019$HI ~ HI.moos.fDOM.2019$precip.week) # model one with just total precip
+moos.lm.fDOM.3 <- lm(HI.moos.fDOM.2019$HI ~ HI.moos.fDOM.2019$precip.month) # model one with just total precip
+moos.lm.fDOM.4 <- lm(HI.moos.fDOM.2019$HI ~ HI.moos.fDOM.2019$ThreeMonth) # model one with just total precip
+
+moos.formula <- y ~ x
+
+ae <- HI.moos.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+af <- HI.moos.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("one-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ag <- HI.moos.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("one-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ah <- HI.moos.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.moos.SPC.2019 <- left_join(HI.mean.precip.moos.SPC, MOOS.2019.per.storm.1, by = "storm.num")
+HI.moos.SPC.2019 <- left_join(HI.moos.SPC.2019, MOOS.2019.per.storm.2, by = "storm.num")
+HI.moos.SPC.2019 <- left_join(HI.moos.SPC.2019, MOOS.2019.per.storm.3, by = "storm.num")
+HI.moos.SPC.2019 <- left_join(HI.moos.SPC.2019, MOOS.2019.per.storm.4, by = "storm.num")
+HI.moos.SPC.2019 <- left_join(HI.moos.SPC.2019, MOOS.2019.per.storm.5, by = "storm.num")
+
+moos.lm.SPC <- lm(HI.moos.SPC.2019$HI ~ HI.moos.SPC.2019$precip) # model one with just total precip
+moos.lm.SPC.2 <- lm(HI.moos.SPC.2019$HI ~ HI.moos.SPC.2019$precip.week) # model one with just total precip
+moos.lm.SPC.3 <- lm(HI.moos.SPC.2019$HI ~ HI.moos.SPC.2019$precip.month) # model one with just total precip
+moos.lm.SPC.4 <- lm(HI.moos.SPC.2019$HI ~ HI.moos.SPC.2019$ThreeMonth) # model one with just total precip
+
+moos.formula <- y ~ x
+
+ai <- HI.moos.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+aj <- HI.moos.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("one-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ak <- HI.moos.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("one-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+al <- HI.moos.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.moos.turb.2019 <- left_join(HI.mean.precip.moos.turb, MOOS.2019.per.storm.1, by = "storm.num")
+HI.moos.turb.2019 <- left_join(HI.moos.turb.2019, MOOS.2019.per.storm.2, by = "storm.num")
+HI.moos.turb.2019 <- left_join(HI.moos.turb.2019, MOOS.2019.per.storm.3, by = "storm.num")
+HI.moos.turb.2019 <- left_join(HI.moos.turb.2019, MOOS.2019.per.storm.4, by = "storm.num")
+HI.moos.turb.2019 <- left_join(HI.moos.turb.2019, MOOS.2019.per.storm.5, by = "storm.num")
+
+moos.lm.turb <- lm(HI.moos.turb.2019$HI ~ HI.moos.turb.2019$precip) # model one with just total precip
+moos.lm.turb.2 <- lm(HI.moos.turb.2019$HI ~ HI.moos.turb.2019$precip.week) # model one with just total precip
+moos.lm.turb.3 <- lm(HI.moos.turb.2019$HI ~ HI.moos.turb.2019$precip.month) # model one with just total precip
+moos.lm.turb.4 <- lm(HI.moos.turb.2019$HI ~ HI.moos.turb.2019$ThreeMonth) # model one with just total precip
+
+moos.formula <- y ~ x
+
+am <- HI.moos.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+an <- HI.moos.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("one-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ao <- HI.moos.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("one-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ap <- HI.moos.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sum.time <- MOOS.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+HI.moos.no3.2.2019 <- left_join(HI.moos.no3.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.no3.2.2019$TOTAL.TIME <- as.numeric(HI.moos.no3.2.2019$TOTAL.TIME)
+HI.moos.no3.2.2019$Intensity <- HI.moos.no3.2.2019$precip/HI.moos.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+moos.lm.no3.2 <- lm(HI.moos.no3.2.2019$HI ~ HI.moos.no3.2.2019$precip + HI.moos.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+aq <- HI.moos.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.fDOM.2.2019 <- left_join(HI.moos.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.moos.fDOM.2.2019$TOTAL.TIME)
+HI.moos.fDOM.2.2019$Intensity <- HI.moos.fDOM.2.2019$precip/HI.moos.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+moos.lm.fDOM.2 <- lm(HI.moos.fDOM.2.2019$HI ~ HI.moos.fDOM.2.2019$precip + HI.moos.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+ar <- HI.moos.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.SPC.2.2019 <- left_join(HI.moos.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.moos.SPC.2.2019$TOTAL.TIME)
+HI.moos.SPC.2.2019$Intensity <- HI.moos.SPC.2.2019$precip/HI.moos.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+moos.lm.SPC.2 <- lm(HI.moos.SPC.2.2019$HI ~ HI.moos.SPC.2.2019$precip + HI.moos.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+as <- HI.moos.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.turb.2.2019 <- left_join(HI.moos.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.turb.2.2019$TOTAL.TIME <- as.numeric(HI.moos.turb.2.2019$TOTAL.TIME)
+HI.moos.turb.2.2019$Intensity <- HI.moos.turb.2.2019$precip/HI.moos.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+moos.lm.turb.2 <- lm(HI.moos.turb.2.2019$HI ~ HI.moos.turb.2.2019$precip + HI.moos.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+at <- HI.moos.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+MOOS.2019.1$day <- julian(MOOS.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+MOOS.2019.1$day <- as.numeric(MOOS.2019.1$day)
+
+MOOS.2019.per.storm.5 <- MOOS.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.moos.no3.2.2019 <- left_join(HI.moos.no3.2.2019, MOOS.2019.per.storm.5, by = "storm.num")
+moos.lm.no3.5 <- lm(HI.moos.no3.2.2019$HI ~ HI.moos.no3.2.2019$doy)
+
+au <- HI.moos.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.fDOM.2.2019 <- left_join(HI.moos.fDOM.2.2019, MOOS.2019.per.storm.5, by = "storm.num")
+moos.lm.fDOM.5 <- lm(HI.moos.fDOM.2.2019$HI ~ HI.moos.fDOM.2.2019$doy)
+
+av <- HI.moos.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.SPC.2.2019 <- left_join(HI.moos.SPC.2.2019, MOOS.2019.per.storm.5, by = "storm.num")
+moos.lm.SPC.5 <- lm(HI.moos.SPC.2.2019$HI ~ HI.moos.SPC.2.2019$doy)
+
+aw <- HI.moos.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.turb.2.2019 <- left_join(HI.moos.turb.2.2019, MOOS.2019.per.storm.5, by = "storm.num")
+moos.lm.turb.5 <- lm(HI.moos.turb.2.2019$HI ~ HI.moos.turb.2.2019$doy)
+
+ax <- HI.moos.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = moos.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("MOOS turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.moos.2019 <- rbind(HI.moos.no3.2.2019, HI.moos.fDOM.2.2019, HI.moos.SPC.2.2019, HI.moos.turb.2.2019) # merging all responses together 
+HI.moos.2019$burn <- "burned" # adding a burn column
+HI.moos.2019$pf <- "medium" # adding a pf column
+
+write.csv(HI.moos.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.moos.2019.csv")
+
+
+# FRCH # 
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 993),
+                          rep("storm10a", 121),
+                          rep("storm10b", 95),
+                          rep("storm10c", 207),
+                          rep("storm11", 479),
+                          rep("storm12a", 183),
+                          rep("storm12b", 67),
+                          rep("storm12c", 511),
+                          rep("storm12d", 99),
+                          rep("storm12e", 127),
+                          rep("storm13", 391),
+                          rep("storm14", 631),
+                          rep("storm2", 165),
+                          rep("storm3", 201),
+                          rep("storm4", 193),
+                          rep("storm5", 229),
+                          rep("storm6", 257),
+                          rep("storm7", 133),
+                          rep("storm8", 105),
+                          rep("storm9a", 61),
+                          rep("storm9b", 149))
+FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+FRCH.2019.storms.1<- left_join(FRCH_storms, FRCH_RainGauge_2019, by = "DateTime")
+FRCH.2019.storms.1<- left_join(FRCH.2019.storms.1, airtempmean, by = "DateTime")
+
+names(FRCH.2019.storms.1)[names(FRCH.2019.storms.1) == ''] <- 'x'
+
+FRCH.2019.per.storm.1 <- FRCH.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- FRCH.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+FRCH.2019.per.storm.1$temp <- temp$temp
+
+FRCH.2019 <-  subset(chem.2019, site.ID == "FRCH")
+FRCH.2019$DateTime <- as.POSIXct(FRCH.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+FRCH.2019 <- left_join(FRCH.2019, FRCH_RainGauge_2019, by = "DateTime")
+FRCH.2019 <- left_join(FRCH.2019, airtempmean, by = "DateTime")
+FRCH.2019$week <- rollapplyr(FRCH.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2019$month <- rollapplyr(FRCH.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2019$ThreeMonth <- rollapplyr(FRCH.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2019$temp.week <- rollapplyr(FRCH.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+FRCH.2019.1 <- left_join(FRCH.2019.storms.1, FRCH.2019, by = "DateTime") # week month and 3 month precip totals 
+
+FRCH.2019.per.storm.2 <- FRCH.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+FRCH.2019.per.storm.3 <- FRCH.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+FRCH.2019.per.storm.4 <- FRCH.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+FRCH.2019.per.storm.5 <- FRCH.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "NO3")
+HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "fDOM")
+HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "SPC")
+HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "turb")
+
+HI.frch.no3.2019 <- left_join(HI.mean.precip.frch.NO3, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.2, by = "storm.num")
+HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.3, by = "storm.num")
+HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.4, by = "storm.num")
+HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.5, by = "storm.num")
+
+HI.frch.no3.2019 <- HI.frch.no3.2019[,-c(6:7)]
+names(HI.frch.no3.2019) <- c("site.ID", "year", "storm.num","response", "HI", "precip", "temp", "precip.week", 
+                             "precip.month", "ThreeMonth", "temp.week")
+frch.lm.no3 <- lm(HI.frch.no3.2019$HI ~ HI.frch.no3.2019$precip) # model one with just total precip
+
+frch.formula <- y ~ x
+
+ba <- HI.frch.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bb <- HI.frch.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bc <- HI.frch.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bd <- HI.frch.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.frch.fDOM.2019 <- left_join(HI.mean.precip.frch.fDOM, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.fDOM.2019 <- left_join(HI.frch.fDOM.2019, FRCH.2019.per.storm.2, by = "storm.num")
+HI.frch.fDOM.2019 <- left_join(HI.frch.fDOM.2019, FRCH.2019.per.storm.3, by = "storm.num")
+HI.frch.fDOM.2019 <- left_join(HI.frch.fDOM.2019, FRCH.2019.per.storm.4, by = "storm.num")
+HI.frch.fDOM.2019 <- left_join(HI.frch.fDOM.2019, FRCH.2019.per.storm.5, by = "storm.num")
+
+frch.lm.fDOM <- lm(HI.frch.fDOM.2019$HI ~ HI.frch.fDOM.2019$precip) # model one with just total precip
+frch.lm.fDOM.2 <- lm(HI.frch.fDOM.2019$HI ~ HI.frch.fDOM.2019$precip.week) # model one with just total precip
+frch.lm.fDOM.3 <- lm(HI.frch.fDOM.2019$HI ~ HI.frch.fDOM.2019$precip.month) # model one with just total precip
+frch.lm.fDOM.4 <- lm(HI.frch.fDOM.2019$HI ~ HI.frch.fDOM.2019$ThreeMonth) # model one with just total precip
+
+frch.formula <- y ~ x
+
+be <- HI.frch.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bf <- HI.frch.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bg <- HI.frch.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bh <- HI.frch.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.frch.SPC.2019 <- left_join(HI.mean.precip.frch.SPC, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.SPC.2019 <- left_join(HI.frch.SPC.2019, FRCH.2019.per.storm.2, by = "storm.num")
+HI.frch.SPC.2019 <- left_join(HI.frch.SPC.2019, FRCH.2019.per.storm.3, by = "storm.num")
+HI.frch.SPC.2019 <- left_join(HI.frch.SPC.2019, FRCH.2019.per.storm.4, by = "storm.num")
+HI.frch.SPC.2019 <- left_join(HI.frch.SPC.2019, FRCH.2019.per.storm.5, by = "storm.num")
+
+frch.lm.SPC <- lm(HI.frch.SPC.2019$HI ~ HI.frch.SPC.2019$precip) # model one with just total precip
+frch.lm.SPC.2 <- lm(HI.frch.SPC.2019$HI ~ HI.frch.SPC.2019$precip.week) # model one with just total precip
+frch.lm.SPC.3 <- lm(HI.frch.SPC.2019$HI ~ HI.frch.SPC.2019$precip.month) # model one with just total precip
+frch.lm.SPC.4 <- lm(HI.frch.SPC.2019$HI ~ HI.frch.SPC.2019$ThreeMonth) # model one with just total precip
+
+
+bi <- HI.frch.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bj <- HI.frch.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bk <- HI.frch.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bl <- HI.frch.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.frch.turb.2019 <- left_join(HI.mean.precip.frch.turb, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.turb.2019 <- left_join(HI.frch.turb.2019, FRCH.2019.per.storm.2, by = "storm.num")
+HI.frch.turb.2019 <- left_join(HI.frch.turb.2019, FRCH.2019.per.storm.3, by = "storm.num")
+HI.frch.turb.2019 <- left_join(HI.frch.turb.2019, FRCH.2019.per.storm.4, by = "storm.num")
+HI.frch.turb.2019 <- left_join(HI.frch.turb.2019, FRCH.2019.per.storm.5, by = "storm.num")
+
+frch.lm.turb <- lm(HI.frch.turb.2019$HI ~ HI.frch.turb.2019$precip) # model one with just total precip
+frch.lm.turb.2 <- lm(HI.frch.turb.2019$HI ~ HI.frch.turb.2019$precip.week) # model one with just total precip
+frch.lm.turb.3 <- lm(HI.frch.turb.2019$HI ~ HI.frch.turb.2019$precip.month) # model one with just total precip
+frch.lm.turb.4 <- lm(HI.frch.turb.2019$HI ~ HI.frch.turb.2019$ThreeMonth) # model one with just total precip
+
+bm <- HI.frch.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bn <- HI.frch.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bo <- HI.frch.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+bp <- HI.frch.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+
+sum.time <- FRCH.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+HI.frch.no3.2.2019 <- left_join(HI.frch.no3.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.no3.2.2019$TOTAL.TIME <- as.numeric(HI.frch.no3.2.2019$TOTAL.TIME)
+HI.frch.no3.2.2019$Intensity <- HI.frch.no3.2.2019$precip/HI.frch.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+frch.lm.no3.2 <- lm(HI.frch.no3.2.2019$HI ~ HI.frch.no3.2.2019$precip + HI.frch.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+bq <- HI.frch.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.fDOM.2.2019 <- left_join(HI.frch.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.frch.fDOM.2.2019$TOTAL.TIME)
+HI.frch.fDOM.2.2019$Intensity <- HI.frch.fDOM.2.2019$precip/HI.frch.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+frch.lm.fDOM.2 <- lm(HI.frch.fDOM.2.2019$HI ~ HI.frch.fDOM.2.2019$precip + HI.frch.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+br <- HI.frch.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.SPC.2.2019 <- left_join(HI.frch.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.frch.SPC.2.2019$TOTAL.TIME)
+HI.frch.SPC.2.2019$Intensity <- HI.frch.SPC.2.2019$precip/HI.frch.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+frch.lm.SPC.2 <- lm(HI.frch.SPC.2.2019$HI ~ HI.frch.SPC.2.2019$precip + HI.frch.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+bs <- HI.frch.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.turb.2.2019 <- left_join(HI.frch.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.turb.2.2019$TOTAL.TIME <- as.numeric(HI.frch.turb.2.2019$TOTAL.TIME)
+HI.frch.turb.2.2019$Intensity <- HI.frch.turb.2.2019$precip/HI.frch.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+frch.lm.turb.2 <- lm(HI.frch.turb.2.2019$HI ~ HI.frch.turb.2.2019$precip + HI.frch.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+bt <- HI.frch.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+FRCH.2019.1$day <- julian(FRCH.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+FRCH.2019.1$day <- as.numeric(FRCH.2019.1$day)
+
+FRCH.2019.per.storm.5 <- FRCH.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.frch.no3.2.2019 <- left_join(HI.frch.no3.2.2019, FRCH.2019.per.storm.5, by = "storm.num")
+frch.lm.no3.5 <- lm(HI.frch.no3.2.2019$HI ~ HI.frch.no3.2.2019$doy)
+
+bu <- HI.frch.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.fDOM.2.2019 <- left_join(HI.frch.fDOM.2.2019, FRCH.2019.per.storm.5, by = "storm.num")
+frch.lm.fDOM.5 <- lm(HI.frch.fDOM.2.2019$HI ~ HI.frch.fDOM.2.2019$doy)
+
+bv <- HI.frch.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.SPC.2.2019 <- left_join(HI.frch.SPC.2.2019, FRCH.2019.per.storm.5, by = "storm.num")
+frch.lm.SPC.5 <- lm(HI.frch.SPC.2.2019$HI ~ HI.frch.SPC.2.2019$doy)
+
+bw <- HI.frch.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.turb.2.2019 <- left_join(HI.frch.turb.2.2019, FRCH.2019.per.storm.5, by = "storm.num")
+frch.lm.turb.5 <- lm(HI.frch.turb.2.2019$HI ~ HI.frch.turb.2.2019$doy)
+
+bx <- HI.frch.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = frch.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("FRCH turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.frch.2019 <- rbind(HI.frch.no3.2.2019, HI.frch.fDOM.2.2019, HI.frch.SPC.2.2019, HI.frch.turb.2.2019) # merging all responses together 
+HI.frch.2019$burn <- "unburned" # adding a burn column
+HI.frch.2019$pf <- "medium" # adding a pf column
+
+write.csv(HI.frch.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.frch.2019.csv")
+
+
+# POKE # 
+POKEstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
+POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+POKE_storms$storm.num = c(rep("storm1", 103),
+                          rep("storm2", 91),
+                          rep("storm3", 147),
+                          rep("storm4", 115),
+                          rep("storm5a", 87),
+                          rep("storm5b", 239),
+                          rep("storm5c", 111),
+                          rep("storm5d", 99),
+                          rep("storm6a", 51),
+                          rep("storm6b", 227),
+                          rep("storm7", 267),
+                          rep("storm8", 95),
+                          rep("storm9", 211))
+
+POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+POKE.2019.storms.1<- left_join(POKE_storms, POKE_RainGauge_2019, by = "DateTime")
+POKE.2019.storms.1<- left_join(POKE.2019.storms.1, airtempmean, by = "DateTime")
+
+names(POKE.2019.storms.1)[names(POKE.2019.storms.1) == ''] <- 'x'
+
+POKE.2019.per.storm.1 <- POKE.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- POKE.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+POKE.2019.per.storm.1$temp <- temp$temp
+
+POKE.2019 <-  subset(chem.2019, site.ID == "POKE")
+POKE.2019$DateTime <- as.POSIXct(POKE.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+POKE.2019 <- left_join(POKE.2019, POKE_RainGauge_2019, by = "DateTime")
+POKE.2019 <- left_join(POKE.2019, airtempmean, by = "DateTime")
+POKE.2019$week <- rollapplyr(POKE.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+POKE.2019$month <- rollapplyr(POKE.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+POKE.2019$ThreeMonth <- rollapplyr(POKE.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+POKE.2019$temp.week <- rollapplyr(POKE.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+POKE.2019.1 <- left_join(POKE.2019.storms.1, POKE.2019, by = "DateTime") # week month and 3 month precip totals 
+
+POKE.2019.per.storm.2 <- POKE.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+POKE.2019.per.storm.3 <- POKE.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+POKE.2019.per.storm.4 <- POKE.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+POKE.2019.per.storm.5 <- POKE.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.poke.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "NO3")
+HI.mean.precip.poke.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "fDOM")
+HI.mean.precip.poke.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "SPC")
+HI.mean.precip.poke.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "turb")
+
+HI.poke.no3.2019 <- left_join(HI.mean.precip.poke.NO3, POKE.2019.per.storm.1, by = "storm.num")
+HI.poke.no3.2019 <- left_join(HI.poke.no3.2019, POKE.2019.per.storm.2, by = "storm.num")
+HI.poke.no3.2019 <- left_join(HI.poke.no3.2019, POKE.2019.per.storm.3, by = "storm.num")
+HI.poke.no3.2019 <- left_join(HI.poke.no3.2019, POKE.2019.per.storm.4, by = "storm.num")
+HI.poke.no3.2019 <- left_join(HI.poke.no3.2019, POKE.2019.per.storm.5, by = "storm.num")
+
+poke.lm.no3 <- lm(HI.poke.no3.2019$HI ~ HI.poke.no3.2019$precip) # model one with just total precip
+poke.lm.no3.2 <- lm(HI.poke.no3.2019$HI ~ HI.poke.no3.2019$precip.week) # model one with just total precip
+poke.lm.no3.3 <- lm(HI.poke.no3.2019$HI ~ HI.poke.no3.2019$precip.month) # model one with just total precip
+poke.lm.no3.4 <- lm(HI.poke.no3.2019$HI ~ HI.poke.no3.2019$ThreeMonth) # model one with just total precip
+
+poke.formula <- y ~ x
+
+pa <- HI.poke.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pb <- HI.poke.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("One-weeek Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pc <- HI.poke.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pd <- HI.poke.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.poke.fDOM.2019 <- left_join(HI.mean.precip.poke.fDOM, POKE.2019.per.storm.1, by = "storm.num")
+HI.poke.fDOM.2019 <- left_join(HI.poke.fDOM.2019, POKE.2019.per.storm.2, by = "storm.num")
+HI.poke.fDOM.2019 <- left_join(HI.poke.fDOM.2019, POKE.2019.per.storm.3, by = "storm.num")
+HI.poke.fDOM.2019 <- left_join(HI.poke.fDOM.2019, POKE.2019.per.storm.4, by = "storm.num")
+HI.poke.fDOM.2019 <- left_join(HI.poke.fDOM.2019, POKE.2019.per.storm.5, by = "storm.num")
+
+poke.lm.fDOM <- lm(HI.poke.fDOM.2019$HI ~ HI.poke.fDOM.2019$precip) # model one with just total precip
+poke.lm.fDOM.2 <- lm(HI.poke.fDOM.2019$HI ~ HI.poke.fDOM.2019$precip.week) # model one with just total precip
+poke.lm.fDOM.3 <- lm(HI.poke.fDOM.2019$HI ~ HI.poke.fDOM.2019$precip.month) # model one with just total precip
+poke.lm.fDOM.4 <- lm(HI.poke.fDOM.2019$HI ~ HI.poke.fDOM.2019$ThreeMonth) # model one with just total precip
+
+pe <- HI.poke.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pf <- HI.poke.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pg <- HI.poke.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+ph <- HI.poke.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.poke.SPC.2019 <- left_join(HI.mean.precip.poke.SPC, POKE.2019.per.storm.1, by = "storm.num")
+HI.poke.SPC.2019 <- left_join(HI.poke.SPC.2019, POKE.2019.per.storm.2, by = "storm.num")
+HI.poke.SPC.2019 <- left_join(HI.poke.SPC.2019, POKE.2019.per.storm.3, by = "storm.num")
+HI.poke.SPC.2019 <- left_join(HI.poke.SPC.2019, POKE.2019.per.storm.4, by = "storm.num")
+HI.poke.SPC.2019 <- left_join(HI.poke.SPC.2019, POKE.2019.per.storm.5, by = "storm.num")
+
+poke.lm.SPC <- lm(HI.poke.SPC.2019$HI ~ HI.poke.SPC.2019$precip) # model one with just total precip
+poke.lm.SPC.2 <- lm(HI.poke.SPC.2019$HI ~ HI.poke.SPC.2019$precip.week) # model one with just total precip
+poke.lm.SPC.3 <- lm(HI.poke.SPC.2019$HI ~ HI.poke.SPC.2019$precip.month) # model one with just total precip
+poke.lm.SPC.4 <- lm(HI.poke.SPC.2019$HI ~ HI.poke.SPC.2019$ThreeMonth) # model one with just total precip
+
+pi <- HI.poke.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pj <- HI.poke.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pk <- HI.poke.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+pl <- HI.poke.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+HI.poke.turb.2019 <- left_join(HI.mean.precip.poke.turb, POKE.2019.per.storm.1, by = "storm.num")
+HI.poke.turb.2019 <- left_join(HI.poke.turb.2019, POKE.2019.per.storm.2, by = "storm.num")
+HI.poke.turb.2019 <- left_join(HI.poke.turb.2019, POKE.2019.per.storm.3, by = "storm.num")
+HI.poke.turb.2019 <- left_join(HI.poke.turb.2019, POKE.2019.per.storm.4, by = "storm.num")
+HI.poke.turb.2019 <- left_join(HI.poke.turb.2019, POKE.2019.per.storm.5, by = "storm.num")
+
+poke.lm.turb <- lm(HI.poke.turb.2019$HI ~ HI.poke.turb.2019$precip) # model one with just total precip
+poke.lm.turb.2 <- lm(HI.poke.turb.2019$HI ~ HI.poke.turb.2019$precip.week) # model one with just total precip
+poke.lm.turb.3 <- lm(HI.poke.turb.2019$HI ~ HI.poke.turb.2019$precip.month) # model one with just total precip
+poke.lm.turb.4 <- lm(HI.poke.turb.2019$HI ~ HI.poke.turb.2019$ThreeMonth) # model one with just total precip
+
+pm <- HI.poke.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pn <- HI.poke.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+po <- HI.poke.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+pp <- HI.poke.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+
+sum.time <- POKE.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+
+HI.poke.no3.2.2019 <- left_join(HI.poke.no3.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.no3.2.2019$TOTAL.TIME <- as.numeric(HI.poke.no3.2.2019$TOTAL.TIME)
+HI.poke.no3.2.2019$Intensity <- HI.poke.no3.2.2019$precip/HI.poke.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+poke.lm.no3.2 <- lm(HI.poke.no3.2.2019$HI ~ HI.poke.no3.2.2019$precip + HI.poke.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+pq <- HI.poke.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.fDOM.2.2019 <- left_join(HI.poke.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.poke.fDOM.2.2019$TOTAL.TIME)
+HI.poke.fDOM.2.2019$Intensity <- HI.poke.fDOM.2.2019$precip/HI.poke.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+poke.lm.fDOM.2 <- lm(HI.poke.fDOM.2.2019$HI ~ HI.poke.fDOM.2.2019$precip + HI.poke.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+pr <- HI.poke.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.SPC.2.2019 <- left_join(HI.poke.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.poke.SPC.2.2019$TOTAL.TIME)
+HI.poke.SPC.2.2019$Intensity <- HI.poke.SPC.2.2019$precip/HI.poke.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+poke.lm.SPC.2.2019 <- lm(HI.poke.SPC.2.2019$HI ~ HI.poke.SPC.2.2019$precip + HI.poke.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+ps <- HI.poke.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.turb.2.2019 <- left_join(HI.poke.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.turb.2.2019$TOTAL.TIME <- as.numeric(HI.poke.turb.2.2019$TOTAL.TIME)
+HI.poke.turb.2.2019$Intensity <- HI.poke.turb.2.2019$precip/HI.poke.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+poke.lm.turb.2 <- lm(HI.poke.turb.2.2019$HI ~ HI.poke.turb.2.2019$precip + HI.poke.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+pt <- HI.poke.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+POKE.2019.1$day <- julian(POKE.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+POKE.2019.1$day <- as.numeric(POKE.2019.1$day)
+
+POKE.2019.per.storm.5 <- POKE.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.poke.no3.2.2019 <- left_join(HI.poke.no3.2.2019, POKE.2019.per.storm.5, by = "storm.num")
+poke.lm.no3.5 <- lm(HI.poke.no3.2.2019$HI ~ HI.poke.no3.2.2019$doy)
+
+pu <- HI.poke.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.fDOM.2.2019 <- left_join(HI.poke.fDOM.2.2019, POKE.2019.per.storm.5, by = "storm.num")
+poke.lm.fDOM.5 <- lm(HI.poke.fDOM.2.2019$HI ~ HI.poke.fDOM.2.2019$doy)
+
+pv <- HI.poke.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.SPC.2.2019 <- left_join(HI.poke.SPC.2.2019, POKE.2019.per.storm.5, by = "storm.num")
+poke.lm.SPC.5 <- lm(HI.poke.SPC.2.2019$HI ~ HI.poke.SPC.2.2019$doy)
+
+pw <- HI.poke.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.poke.turb.2.2019 <- left_join(HI.poke.turb.2.2019, POKE.2019.per.storm.5, by = "storm.num")
+poke.lm.turb.5 <- lm(HI.poke.turb.2.2019$HI ~ HI.poke.turb.2.2019$doy)
+
+px <- HI.poke.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("POKE turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+#plot_grid(pa,pb,pc,pd,pe,pf,pg,ph,pi,pj,pk,pl,pm,pn,po,pp,pq,pr,ps,pt,pu,pv,pw,px,
+#  ncol = 4)
+
+HI.poke.2019 <- rbind(HI.poke.no3.2.2019, HI.poke.fDOM.2.2019, HI.poke.SPC.2.2019, HI.poke.turb.2.2019) # merging all responses together 
+HI.poke.2019$burn <- "burned" # adding a burn column
+HI.poke.2019$pf <- "medium" # adding a pf column
+
+write.csv(HI.poke.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.poke.2019.csv")
+
+# VAUL # 
+VAULstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="VAUL", 
+                                  full.names=TRUE)
+
+VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+VAUL_storms$storm.num = c(rep("storm1", 191),
+                          rep("storm2", 207),
+                          rep("storm3", 191),
+                          rep("storm4a", 83),
+                          rep("storm4b", 219),
+                          rep("storm4c", 707),
+                          rep("storm5", 275),
+                          rep("storm6", 263),
+                          rep("storm7", 107),
+                          rep("storm8a", 167),
+                          rep("storm8b", 223),
+                          rep("storm8c", 479))
+
+VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+VAUL.2019.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2019, by = "DateTime")
+VAUL.2019.storms.1<- left_join(VAUL.2019.storms.1, airtempmean, by = "DateTime")
+
+names(VAUL.2019.storms.1)[names(VAUL.2019.storms.1) == ''] <- 'x'
+
+VAUL.2019.per.storm.1 <- VAUL.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- VAUL.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+VAUL.2019.per.storm.1$temp <- temp$temp
+
+VAUL.2019 <-  subset(chem.2019, site.ID == "VAUL")
+VAUL.2019$DateTime <- as.POSIXct(VAUL.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+VAUL.2019 <- left_join(VAUL.2019, VAUL_RainGauge_2019, by = "DateTime")
+VAUL.2019 <- left_join(VAUL.2019, airtempmean, by = "DateTime")
+VAUL.2019$week <- rollapplyr(VAUL.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+VAUL.2019$month <- rollapplyr(VAUL.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+VAUL.2019$ThreeMonth <- rollapplyr(VAUL.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+VAUL.2019$temp.week <- rollapplyr(VAUL.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+VAUL.2019.1 <- left_join(VAUL.2019.storms.1, VAUL.2019, by = "DateTime") # week month and 3 month precip totals 
+
+VAUL.2019.per.storm.2 <- VAUL.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+VAUL.2019.per.storm.3 <- VAUL.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+VAUL.2019.per.storm.4 <- VAUL.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+VAUL.2019.per.storm.5 <- VAUL.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.vaul.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "NO3")
+HI.mean.precip.vaul.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "fDOM")
+HI.mean.precip.vaul.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "SPC")
+HI.mean.precip.vaul.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "turb")
+
+HI.vaul.no3.2019 <- left_join(HI.mean.precip.vaul.NO3, VAUL.2019.per.storm.1, by = "storm.num")
+HI.vaul.no3.2019 <- left_join(HI.vaul.no3.2019, VAUL.2019.per.storm.2, by = "storm.num")
+HI.vaul.no3.2019 <- left_join(HI.vaul.no3.2019, VAUL.2019.per.storm.3, by = "storm.num")
+HI.vaul.no3.2019 <- left_join(HI.vaul.no3.2019, VAUL.2019.per.storm.4, by = "storm.num")
+HI.vaul.no3.2019 <- left_join(HI.vaul.no3.2019, VAUL.2019.per.storm.5, by = "storm.num")
+
+vaul.lm.no3 <- lm(HI.vaul.no3.2019$HI ~ HI.vaul.no3.2019$precip) # model one with just total precip
+vaul.lm.no3.2 <- lm(HI.vaul.no3.2019$HI ~ HI.vaul.no3.2019$precip.week) # model one with just total precip
+vaul.lm.no3.3 <- lm(HI.vaul.no3.2019$HI ~ HI.vaul.no3.2019$precip.month) # model one with just total precip
+vaul.lm.no3.4 <- lm(HI.vaul.no3.2019$HI ~ HI.vaul.no3.2019$ThreeMonth) # model one with just total precip
+
+vaul.formula <- y ~ x
+
+va <- HI.vaul.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vb <- HI.vaul.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vc <- HI.vaul.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vd <- HI.vaul.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.vaul.fDOM.2019 <- left_join(HI.mean.precip.vaul.fDOM, VAUL.2019.per.storm.1, by = "storm.num")
+HI.vaul.fDOM.2019 <- left_join(HI.vaul.fDOM.2019, VAUL.2019.per.storm.2, by = "storm.num")
+HI.vaul.fDOM.2019 <- left_join(HI.vaul.fDOM.2019, VAUL.2019.per.storm.3, by = "storm.num")
+HI.vaul.fDOM.2019 <- left_join(HI.vaul.fDOM.2019, VAUL.2019.per.storm.4, by = "storm.num")
+HI.vaul.fDOM.2019 <- left_join(HI.vaul.fDOM.2019, VAUL.2019.per.storm.5, by = "storm.num")
+
+vaul.lm.fDOM <- lm(HI.vaul.fDOM.2019$HI ~ HI.vaul.fDOM.2019$precip) # model one with just total precip
+vaul.lm.fDOM.2 <- lm(HI.vaul.fDOM.2019$HI ~ HI.vaul.fDOM.2019$precip.week) # model one with just total precip
+vaul.lm.fDOM.3 <- lm(HI.vaul.fDOM.2019$HI ~ HI.vaul.fDOM.2019$precip.month) # model one with just total precip
+vaul.lm.fDOM.4 <- lm(HI.vaul.fDOM.2019$HI ~ HI.vaul.fDOM.2019$ThreeMonth) # model one with just total precip
+
+ve <- HI.vaul.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vf <- HI.vaul.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vg <- HI.vaul.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vh <- HI.vaul.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.vaul.SPC.2019 <- left_join(HI.mean.precip.vaul.SPC, VAUL.2019.per.storm.1, by = "storm.num")
+HI.vaul.SPC.2019 <- left_join(HI.vaul.SPC.2019, VAUL.2019.per.storm.2, by = "storm.num")
+HI.vaul.SPC.2019 <- left_join(HI.vaul.SPC.2019, VAUL.2019.per.storm.3, by = "storm.num")
+HI.vaul.SPC.2019 <- left_join(HI.vaul.SPC.2019, VAUL.2019.per.storm.4, by = "storm.num")
+HI.vaul.SPC.2019 <- left_join(HI.vaul.SPC.2019, VAUL.2019.per.storm.5, by = "storm.num")
+
+vaul.lm.SPC <- lm(HI.vaul.SPC.2019$HI ~ HI.vaul.SPC.2019$precip) # model one with just total precip
+vaul.lm.SPC.2 <- lm(HI.vaul.SPC.2019$HI ~ HI.vaul.SPC.2019$precip.week) # model one with just total precip
+vaul.lm.SPC.3 <- lm(HI.vaul.SPC.2019$HI ~ HI.vaul.SPC.2019$precip.month) # model one with just total precip
+vaul.lm.SPC.4 <- lm(HI.vaul.SPC.2019$HI ~ HI.vaul.SPC.2019$ThreeMonth) # model one with just total precip
+
+vi <- HI.vaul.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vj <- HI.vaul.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vk <- HI.vaul.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vl <- HI.vaul.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.vaul.turb.2019 <- left_join(HI.mean.precip.vaul.turb, VAUL.2019.per.storm.1, by = "storm.num")
+HI.vaul.turb.2019 <- left_join(HI.vaul.turb.2019, VAUL.2019.per.storm.2, by = "storm.num")
+HI.vaul.turb.2019 <- left_join(HI.vaul.turb.2019, VAUL.2019.per.storm.3, by = "storm.num")
+HI.vaul.turb.2019 <- left_join(HI.vaul.turb.2019, VAUL.2019.per.storm.4, by = "storm.num")
+HI.vaul.turb.2019 <- left_join(HI.vaul.turb.2019, VAUL.2019.per.storm.5, by = "storm.num")
+
+vaul.lm.turb <- lm(HI.vaul.turb.2019$HI ~ HI.vaul.turb.2019$precip) # model one with just total precip
+vaul.lm.turb.2 <- lm(HI.vaul.turb.2019$HI ~ HI.vaul.turb.2019$precip.week) # model one with just total precip
+vaul.lm.turb.3 <- lm(HI.vaul.turb.2019$HI ~ HI.vaul.turb.2019$precip.month) # model one with just total precip
+vaul.lm.turb.4 <- lm(HI.vaul.turb.2019$HI ~ HI.vaul.turb.2019$ThreeMonth) # model one with just total precip
+
+vm <- HI.vaul.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vn <- HI.vaul.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vo <- HI.vaul.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+vp <- HI.vaul.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+
+sum.time <- VAUL.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+
+HI.vaul.no3.2.2019 <- left_join(HI.vaul.no3.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.no3.2.2019$TOTAL.TIME <- as.numeric(HI.vaul.no3.2.2019$TOTAL.TIME)
+HI.vaul.no3.2.2019$Intensity <- HI.vaul.no3.2.2019$precip/HI.vaul.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+vaul.lm.no3.2 <- lm(HI.vaul.no3.2.2019$HI ~ HI.vaul.no3.2.2019$precip + HI.vaul.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+vq <- HI.vaul.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.fDOM.2.2019 <- left_join(HI.vaul.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.vaul.fDOM.2.2019$TOTAL.TIME)
+HI.vaul.fDOM.2.2019$Intensity <- HI.vaul.fDOM.2.2019$precip/HI.vaul.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+vaul.lm.fDOM.2 <- lm(HI.vaul.fDOM.2.2019$HI ~ HI.vaul.fDOM.2.2019$precip + HI.vaul.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+vr <- HI.vaul.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.SPC.2.2019 <- left_join(HI.vaul.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.vaul.SPC.2.2019$TOTAL.TIME)
+HI.vaul.SPC.2.2019$Intensity <- HI.vaul.SPC.2.2019$precip/HI.vaul.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+vaul.lm.SPC.2 <- lm(HI.vaul.SPC.2.2019$HI ~ HI.vaul.SPC.2.2019$precip + HI.vaul.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+vs <- HI.vaul.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.turb.2.2019 <- left_join(HI.vaul.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.turb.2.2019$TOTAL.TIME <- as.numeric(HI.vaul.turb.2.2019$TOTAL.TIME)
+HI.vaul.turb.2.2019$Intensity <- HI.vaul.turb.2.2019$precip/HI.vaul.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+vaul.lm.turb.2 <- lm(HI.vaul.turb.2.2019$HI ~ HI.vaul.turb.2.2019$precip + HI.vaul.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+vt <- HI.vaul.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+VAUL.2019.1$day <- julian(VAUL.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+VAUL.2019.1$day <- as.numeric(VAUL.2019.1$day)
+
+VAUL.2019.per.storm.5 <- VAUL.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.vaul.no3.2.2019 <- left_join(HI.vaul.no3.2.2019, VAUL.2019.per.storm.5, by = "storm.num")
+vaul.lm.no3.5 <- lm(HI.vaul.no3.2.2019$HI ~ HI.vaul.no3.2.2019$doy)
+
+vu <- HI.vaul.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.fDOM.2.2019 <- left_join(HI.vaul.fDOM.2.2019, VAUL.2019.per.storm.5, by = "storm.num")
+vaul.lm.fDOM.5 <- lm(HI.vaul.fDOM.2.2019$HI ~ HI.vaul.fDOM.2.2019$doy)
+
+vv <- HI.vaul.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = vaul.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.SPC.2.2019 <- left_join(HI.vaul.SPC.2.2019, VAUL.2019.per.storm.5, by = "storm.num")
+vaul.lm.SPC.5 <- lm(HI.vaul.SPC.2.2019$HI ~ HI.vaul.SPC.2.2019$doy)
+
+vw <- HI.vaul.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.vaul.turb.2.2019 <- left_join(HI.vaul.turb.2.2019, VAUL.2019.per.storm.5, by = "storm.num")
+vaul.lm.turb.5 <- lm(HI.vaul.turb.2.2019$HI ~ HI.vaul.turb.2.2019$doy)
+
+vx <- HI.vaul.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = poke.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("VAUL turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+#plot_grid(va,vb,vc,vd,ve,vf,vg,vh,vi,vj,vk,vl,vm,vn,vo,vp,vq,vr,vs,vt,vu,vv,vw,vx,
+#        ncol = 4)
+
+HI.vaul.2019 <- rbind(HI.vaul.no3.2.2019, HI.vaul.fDOM.2.2019, HI.vaul.SPC.2.2019, HI.vaul.turb.2.2019) # merging all responses together 
+HI.vaul.2019$burn <- "unburned" # adding a burn column
+HI.vaul.2019$pf <- "high" # adding a pf column
+
+write.csv(HI.vaul.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.vaul.2019.csv")
+
+
+# STRT # 
+STRTstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="STRT", 
+                                  full.names=TRUE)
+
+STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+STRT_storms$storm.num = c(rep("storm1", 638),
+                          rep("storm2", 274),
+                          rep("storm3a", 1035),
+                          rep("storm3b", 286),
+                          rep("storm3c", 174),
+                          rep("storm4", 466),
+                          rep("storm5", 98),
+                          rep("storm6", 246),
+                          rep("storm7", 218),
+                          rep("storm7b", 266),
+                          rep("storm7c", 258))
+
+STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+STRT.2019.storms.1<- left_join(STRT_storms, FRCH_RainGauge_2019, by = "DateTime")
+STRT.2019.storms.1<- left_join(STRT.2019.storms.1, airtempmean, by = "DateTime")
+
+names(STRT.2019.storms.1)[names(STRT.2019.storms.1) == ''] <- 'x'
+
+STRT.2019.per.storm.1 <- STRT.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- STRT.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+STRT.2019.per.storm.1$temp <- temp$temp
+
+STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
+STRT.2019$DateTime <- as.POSIXct(STRT.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+FRCH_RainGauge_2019$DateTime <- FRCH_RainGauge_2019$Datetime
+STRT.2019 <- left_join(STRT.2019, FRCH_RainGauge_2019, by = "DateTime")
+STRT.2019 <- STRT.2019[,-12] # removing a datetime column that isnt "DateTime
+STRT.2019 <- left_join(STRT.2019, airtempmean, by = "DateTime")
+STRT.2019$week <- rollapplyr(STRT.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+STRT.2019$month <- rollapplyr(STRT.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+STRT.2019$ThreeMonth <- rollapplyr(STRT.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+STRT.2019$temp.week <- rollapplyr(STRT.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+STRT.2019.1 <- left_join(STRT.2019.storms.1, STRT.2019, by = "DateTime") # week month and 3 month precip totals 
+
+STRT.2019.per.storm.2 <- STRT.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+STRT.2019.per.storm.3 <- STRT.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+STRT.2019.per.storm.4 <- STRT.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+STRT.2019.per.storm.5 <- STRT.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.strt.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "NO3")
+HI.mean.precip.strt.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "fDOM")
+HI.mean.precip.strt.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "SPC")
+HI.mean.precip.strt.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "turb")
+
+HI.strt.no3.2019 <- left_join(HI.mean.precip.strt.NO3, STRT.2019.per.storm.1, by = "storm.num")
+HI.strt.no3.2019 <- left_join(HI.strt.no3.2019, STRT.2019.per.storm.2, by = "storm.num")
+HI.strt.no3.2019 <- left_join(HI.strt.no3.2019, STRT.2019.per.storm.3, by = "storm.num")
+HI.strt.no3.2019 <- left_join(HI.strt.no3.2019, STRT.2019.per.storm.4, by = "storm.num")
+HI.strt.no3.2019 <- left_join(HI.strt.no3.2019, STRT.2019.per.storm.5, by = "storm.num")
+
+strt.lm.no3 <- lm(HI.strt.no3.2019$HI ~ HI.strt.no3.2019$precip) # model one with just total precip
+strt.lm.no3.2 <- lm(HI.strt.no3.2019$HI ~ HI.strt.no3.2019$precip.week) # model one with just total precip
+strt.lm.no3.3 <- lm(HI.strt.no3.2019$HI ~ HI.strt.no3.2019$precip.month) # model one with just total precip
+strt.lm.no3.4 <- lm(HI.strt.no3.2019$HI ~ HI.strt.no3.2019$ThreeMonth) # model one with just total precip
+
+strt.formula <- y ~ x
+
+sa <- HI.strt.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sb <- HI.strt.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sc <- HI.strt.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sd <- HI.strt.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+
+HI.strt.fDOM.2019 <- left_join(HI.mean.precip.strt.fDOM, STRT.2019.per.storm.1, by = "storm.num")
+HI.strt.fDOM.2019 <- left_join(HI.strt.fDOM.2019, STRT.2019.per.storm.2, by = "storm.num")
+HI.strt.fDOM.2019 <- left_join(HI.strt.fDOM.2019, STRT.2019.per.storm.3, by = "storm.num")
+HI.strt.fDOM.2019 <- left_join(HI.strt.fDOM.2019, STRT.2019.per.storm.4, by = "storm.num")
+HI.strt.fDOM.2019 <- left_join(HI.strt.fDOM.2019, STRT.2019.per.storm.5, by = "storm.num")
+
+strt.lm.fDOM <- lm(HI.strt.fDOM.2019$HI ~ HI.strt.fDOM.2019$precip) # model one with just total precip
+strt.lm.fDOM.2 <- lm(HI.strt.fDOM.2019$HI ~ HI.strt.fDOM.2019$precip.week) # model one with just total precip
+strt.lm.fDOM.3 <- lm(HI.strt.fDOM.2019$HI ~ HI.strt.fDOM.2019$precip.month) # model one with just total precip
+strt.lm.fDOM.4 <- lm(HI.strt.fDOM.2019$HI ~ HI.strt.fDOM.2019$ThreeMonth) # model one with just total precip
+
+se <- HI.strt.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sf <- HI.strt.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+sg <- HI.strt.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+sh <- HI.strt.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+HI.strt.SPC.2019 <- left_join(HI.mean.precip.strt.SPC, STRT.2019.per.storm.1, by = "storm.num")
+HI.strt.SPC.2019 <- left_join(HI.strt.SPC.2019, STRT.2019.per.storm.2, by = "storm.num")
+HI.strt.SPC.2019 <- left_join(HI.strt.SPC.2019, STRT.2019.per.storm.3, by = "storm.num")
+HI.strt.SPC.2019 <- left_join(HI.strt.SPC.2019, STRT.2019.per.storm.4, by = "storm.num")
+HI.strt.SPC.2019 <- left_join(HI.strt.SPC.2019, STRT.2019.per.storm.5, by = "storm.num")
+
+strt.lm.SPC <- lm(HI.strt.SPC.2019$HI ~ HI.strt.SPC.2019$precip) # model one with just total precip
+strt.lm.SPC.2 <- lm(HI.strt.SPC.2019$HI ~ HI.strt.SPC.2019$precip.week) # model one with just total precip
+strt.lm.SPC.3 <- lm(HI.strt.SPC.2019$HI ~ HI.strt.SPC.2019$precip.month) # model one with just total precip
+strt.lm.SPC.4 <- lm(HI.strt.SPC.2019$HI ~ HI.strt.SPC.2019$ThreeMonth) # model one with just total precip
+
+si <- HI.strt.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sj <- HI.strt.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sk <- HI.strt.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sl <- HI.strt.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.strt.turb.2019 <- left_join(HI.mean.precip.strt.turb, STRT.2019.per.storm.1, by = "storm.num")
+HI.strt.turb.2019 <- left_join(HI.strt.turb.2019, STRT.2019.per.storm.2, by = "storm.num")
+HI.strt.turb.2019 <- left_join(HI.strt.turb.2019, STRT.2019.per.storm.3, by = "storm.num")
+HI.strt.turb.2019 <- left_join(HI.strt.turb.2019, STRT.2019.per.storm.4, by = "storm.num")
+HI.strt.turb.2019 <- left_join(HI.strt.turb.2019, STRT.2019.per.storm.5, by = "storm.num")
+
+strt.lm.turb <- lm(HI.strt.turb.2019$HI ~ HI.strt.turb.2019$precip) # model one with just total precip
+strt.lm.turb.2 <- lm(HI.strt.turb.2019$HI ~ HI.strt.turb.2019$precip.week) # model one with just total precip
+strt.lm.turb.3 <- lm(HI.strt.turb.2019$HI ~ HI.strt.turb.2019$precip.month) # model one with just total precip
+strt.lm.turb.4 <- lm(HI.strt.turb.2019$HI ~ HI.strt.turb.2019$ThreeMonth) # model one with just total precip
+
+sm <- HI.strt.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sn <- HI.strt.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+so <- HI.strt.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sp <- HI.strt.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+STRT.2019.storms.1 <- na.omit(STRT.2019.storms.1)
+
+sum.time <- STRT.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+
+HI.strt.no3.2.2019 <- left_join(sum.time, HI.strt.no3.2019, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.no3.2.2019$TOTAL.TIME <- as.numeric(HI.strt.no3.2.2019$TOTAL.TIME)
+HI.strt.no3.2.2019$Intensity <- HI.strt.no3.2.2019$precip/HI.strt.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+strt.lm.no3.2 <- lm(HI.strt.no3.2.2019$HI ~ HI.strt.no3.2.2019$precip + HI.strt.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+sq <- HI.strt.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.fDOM.2.2019 <- left_join(HI.strt.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.strt.fDOM.2.2019$TOTAL.TIME)
+HI.strt.fDOM.2.2019$Intensity <- HI.strt.fDOM.2.2019$precip/HI.strt.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+strt.lm.fDOM.2 <- lm(HI.strt.fDOM.2.2019$HI ~ HI.strt.fDOM.2.2019$precip + HI.strt.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+sr <- HI.strt.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.SPC.2.2019 <- left_join(HI.strt.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.strt.SPC.2.2019$TOTAL.TIME)
+HI.strt.SPC.2.2019$Intensity <- HI.strt.SPC.2.2019$precip/HI.strt.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+strt.lm.SPC.2 <- lm(HI.strt.SPC.2.2019$HI ~ HI.strt.SPC.2.2019$precip + HI.strt.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+ss <- HI.strt.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.turb.2.2019 <- left_join(HI.strt.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.turb.2.2019$TOTAL.TIME <- as.numeric(HI.strt.turb.2.2019$TOTAL.TIME)
+HI.strt.turb.2.2019$Intensity <- HI.strt.turb.2.2019$precip/HI.strt.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+strt.lm.turb.2 <- lm(HI.strt.turb.2.2019$HI ~ HI.strt.turb.2.2019$precip + HI.strt.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+st <- HI.strt.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+STRT.2019.1$day <- julian(STRT.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+STRT.2019.1$day <- as.numeric(STRT.2019.1$day)
+
+STRT.2019.per.storm.5 <- STRT.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.strt.no3.2.2019 <- left_join(HI.strt.no3.2.2019, STRT.2019.per.storm.5, by = "storm.num")
+strt.lm.no3.5 <- lm(HI.strt.no3.2.2019$HI ~ HI.strt.no3.2.2019$doy)
+
+su <- HI.strt.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.fDOM.2.2019 <- left_join(HI.strt.fDOM.2.2019, STRT.2019.per.storm.5, by = "storm.num")
+strt.lm.fDOM.5 <- lm(HI.strt.fDOM.2.2019$HI ~ HI.strt.fDOM.2.2019$doy)
+
+sv <- HI.strt.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.SPC.2.2019 <- left_join(HI.strt.SPC.2.2019, STRT.2019.per.storm.5, by = "storm.num")
+strt.lm.SPC.5 <- lm(HI.strt.SPC.2.2019$HI ~ HI.strt.SPC.2.2019$doy)
+
+sw <- HI.strt.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.strt.turb.2.2019 <- left_join(HI.strt.turb.2.2019, STRT.2019.per.storm.5, by = "storm.num")
+strt.lm.turb.5 <- lm(HI.strt.turb.2.2019$HI ~ HI.strt.turb.2.2019$doy)
+
+sx <- HI.strt.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = strt.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("STRT turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+#plot_grid(sa,sb,sc,sd,se,sf,sg,sh,si,sj,sk,sl,sm,sn,so,sp,sq,sr,ss,st,su,sv,sw,sx,
+#          ncol = 4)
+
+HI.strt.2019 <- rbind(HI.strt.no3.2.2019, HI.strt.fDOM.2.2019, HI.strt.SPC.2.2019, HI.strt.turb.2.2019) # merging all responses together 
+HI.strt.2019$burn <- "burned" # adding a burn column
+HI.strt.2019$pf <- "high" # adding a pf column
+
+write.csv(HI.strt.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.strt.2019.csv")
+
+
+# CARI # 
+CARIstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="CARI", 
+                                  full.names=TRUE)
+
+CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+CARI_storms$storm.num = c(rep("storm1", 371),
+                          rep("storm2", 143),
+                          rep("storm3", 72),
+                          rep("storm4", 0),
+                          rep("storm5", 135),
+                          rep("storm6a", 83),
+                          rep("storm6b", 235),
+                          rep("storm6c", 426),
+                          rep("storm6d", 135),
+                          rep("storm7a", 51),
+                          rep("storm7b", 217),
+                          rep("storm8", 267))
+
+CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+CARI.2019.storms.1<- left_join(CARI_storms, POKE_RainGauge_2019, by = "DateTime")
+CARI.2019.storms.1<- left_join(CARI.2019.storms.1, airtempmean, by = "DateTime")
+
+names(CARI.2019.storms.1)[names(CARI.2019.storms.1) == ''] <- 'x'
+
+CARI.2019.per.storm.1 <- CARI.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(inst_rainfall_mm), list(precip = sum), na.rm = TRUE)
+
+temp <- CARI.2019.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+CARI.2019.per.storm.1$temp <- temp$temp
+
+
+CARI.2019 <- CARI_storms
+CARI.2019 <- CARI.2019[,-c(1,10)]
+CARI.2019$DateTime <- as.POSIXct(CARI.2019$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+CARI.2019 <- left_join(CARI.2019, POKE_RainGauge_2019, by = "DateTime")
+CARI.2019 <- left_join(CARI.2019, airtempmean, by = "DateTime")
+CARI.2019$week <- rollapplyr(CARI.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+CARI.2019$month <- rollapplyr(CARI.2019$inst_rainfall_mm, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+CARI.2019$ThreeMonth <- rollapplyr(CARI.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+CARI.2019$temp.week <- rollapplyr(CARI.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+CARI.2019.1 <- left_join(CARI.2019.storms.1, CARI.2019, by = "DateTime") # week month and 3 month precip totals 
+
+CARI.2019.per.storm.2 <- CARI.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+CARI.2019.per.storm.3 <- CARI.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+CARI.2019.per.storm.4 <- CARI.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+CARI.2019.per.storm.5 <- CARI.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.mean.precip.cari.NO3 <- subset(HI.mean.precip.response, year == "2019" & site.ID == "CARI" & response == "NO3")
+HI.mean.precip.cari.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "CARI" & response == "fDOM")
+HI.mean.precip.cari.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "CARI" & response == "SPC")
+HI.mean.precip.cari.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "CARI" & response == "turb")
+
+HI.cari.no3.2019 <- left_join(HI.mean.precip.cari.NO3, CARI.2019.per.storm.1, by = "storm.num")
+HI.cari.no3.2019 <- left_join(HI.cari.no3.2019, CARI.2019.per.storm.2, by = "storm.num")
+HI.cari.no3.2019 <- left_join(HI.cari.no3.2019, CARI.2019.per.storm.3, by = "storm.num")
+HI.cari.no3.2019 <- left_join(HI.cari.no3.2019, CARI.2019.per.storm.4, by = "storm.num")
+HI.cari.no3.2019 <- left_join(HI.cari.no3.2019, CARI.2019.per.storm.5, by = "storm.num")
+
+cari.lm.no3 <- lm(HI.cari.no3.2019$HI ~ HI.cari.no3.2019$precip) # model one with just total precip
+cari.lm.no3.2 <- lm(HI.cari.no3.2019$HI ~ HI.cari.no3.2019$precip.week) # model one with just total precip
+cari.lm.no3.3 <- lm(HI.cari.no3.2019$HI ~ HI.cari.no3.2019$precip.month) # model one with just total precip
+cari.lm.no3.4 <- lm(HI.cari.no3.2019$HI ~ HI.cari.no3.2019$ThreeMonth) # model one with just total precip
+
+cari.formula <- y ~ x
+
+sa <- HI.cari.no3.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sb <- HI.cari.no3.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sc <- HI.cari.no3.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sd <- HI.cari.no3.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+
+HI.cari.fDOM.2019 <- left_join(HI.mean.precip.cari.fDOM, CARI.2019.per.storm.1, by = "storm.num")
+HI.cari.fDOM.2019 <- left_join(HI.cari.fDOM.2019, CARI.2019.per.storm.2, by = "storm.num")
+HI.cari.fDOM.2019 <- left_join(HI.cari.fDOM.2019, CARI.2019.per.storm.3, by = "storm.num")
+HI.cari.fDOM.2019 <- left_join(HI.cari.fDOM.2019, CARI.2019.per.storm.4, by = "storm.num")
+HI.cari.fDOM.2019 <- left_join(HI.cari.fDOM.2019, CARI.2019.per.storm.5, by = "storm.num")
+
+cari.lm.fDOM <- lm(HI.cari.fDOM.2019$HI ~ HI.cari.fDOM.2019$precip) # model one with just total precip
+cari.lm.fDOM.2 <- lm(HI.cari.fDOM.2019$HI ~ HI.cari.fDOM.2019$precip.week) # model one with just total precip
+cari.lm.fDOM.3 <- lm(HI.cari.fDOM.2019$HI ~ HI.cari.fDOM.2019$precip.month) # model one with just total precip
+cari.lm.fDOM.4 <- lm(HI.cari.fDOM.2019$HI ~ HI.cari.fDOM.2019$ThreeMonth) # model one with just total precip
+
+se <- HI.cari.fDOM.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sf <- HI.cari.fDOM.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+sg <- HI.cari.fDOM.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+sh <- HI.cari.fDOM.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model
+
+HI.cari.SPC.2019 <- left_join(HI.mean.precip.cari.SPC, CARI.2019.per.storm.1, by = "storm.num")
+HI.cari.SPC.2019 <- left_join(HI.cari.SPC.2019, CARI.2019.per.storm.2, by = "storm.num")
+HI.cari.SPC.2019 <- left_join(HI.cari.SPC.2019, CARI.2019.per.storm.3, by = "storm.num")
+HI.cari.SPC.2019 <- left_join(HI.cari.SPC.2019, CARI.2019.per.storm.4, by = "storm.num")
+HI.cari.SPC.2019 <- left_join(HI.cari.SPC.2019, CARI.2019.per.storm.5, by = "storm.num")
+
+cari.lm.SPC <- lm(HI.cari.SPC.2019$HI ~ HI.cari.SPC.2019$precip) # model one with just total precip
+cari.lm.SPC.2 <- lm(HI.cari.SPC.2019$HI ~ HI.cari.SPC.2019$precip.week) # model one with just total precip
+cari.lm.SPC.3 <- lm(HI.cari.SPC.2019$HI ~ HI.cari.SPC.2019$precip.month) # model one with just total precip
+cari.lm.SPC.4 <- lm(HI.cari.SPC.2019$HI ~ HI.cari.SPC.2019$ThreeMonth) # model one with just total precip
+
+si <- HI.cari.SPC.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sj <- HI.cari.SPC.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sk <- HI.cari.SPC.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sl <- HI.cari.SPC.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+HI.cari.turb.2019 <- left_join(HI.mean.precip.cari.turb, CARI.2019.per.storm.1, by = "storm.num")
+HI.cari.turb.2019 <- left_join(HI.cari.turb.2019, CARI.2019.per.storm.2, by = "storm.num")
+HI.cari.turb.2019 <- left_join(HI.cari.turb.2019, CARI.2019.per.storm.3, by = "storm.num")
+HI.cari.turb.2019 <- left_join(HI.cari.turb.2019, CARI.2019.per.storm.4, by = "storm.num")
+HI.cari.turb.2019 <- left_join(HI.cari.turb.2019, CARI.2019.per.storm.5, by = "storm.num")
+
+cari.lm.turb <- lm(HI.cari.turb.2019$HI ~ HI.cari.turb.2019$precip) # model one with just total precip
+cari.lm.turb.2 <- lm(HI.cari.turb.2019$HI ~ HI.cari.turb.2019$precip.week) # model one with just total precip
+cari.lm.turb.3 <- lm(HI.cari.turb.2019$HI ~ HI.cari.turb.2019$precip.month) # model one with just total precip
+cari.lm.turb.4 <- lm(HI.cari.turb.2019$HI ~ HI.cari.turb.2019$ThreeMonth) # model one with just total precip
+
+sm <- HI.cari.turb.2019 %>%
+  ggplot(aes(x=precip, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sn <- HI.cari.turb.2019 %>%
+  ggplot(aes(x=precip.week, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("One-week Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+so <- HI.cari.turb.2019 %>%
+  ggplot(aes(x=precip.month, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("One-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+sp <- HI.cari.turb.2019 %>%
+  ggplot(aes(x=ThreeMonth, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("Three-month Precip") +
+  ylab("HI-Solute Storage") # plot model 
+
+#CARI.2019.storms.1 <- na.omit(CARI.2019.storms.1)
+
+sum.time <- CARI.2019.storms.1 %>%
+  mutate(grp=data.table::rleid(storm.num))%>%
+  group_by(grp) %>%
+  summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+                                                         min(DateTime),units="hour"))%>%
+  group_by(storm.num) %>%
+  summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
+
+
+HI.cari.no3.2.2019 <- left_join(sum.time, HI.cari.no3.2019, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.cari.no3.2.2019$TOTAL.TIME <- as.numeric(HI.cari.no3.2.2019$TOTAL.TIME)
+HI.cari.no3.2.2019$Intensity <- HI.cari.no3.2.2019$precip/HI.cari.no3.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+cari.lm.no3.2 <- lm(HI.cari.no3.2.2019$HI ~ HI.cari.no3.2.2019$precip + HI.cari.no3.2.2019$Intensity) # model one with total precip and intensity 
+
+sq <- HI.cari.no3.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.fDOM.2.2019 <- left_join(HI.cari.fDOM.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.cari.fDOM.2.2019$TOTAL.TIME <- as.numeric(HI.cari.fDOM.2.2019$TOTAL.TIME)
+HI.cari.fDOM.2.2019$Intensity <- HI.cari.fDOM.2.2019$precip/HI.cari.fDOM.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+cari.lm.fDOM.2 <- lm(HI.cari.fDOM.2.2019$HI ~ HI.cari.fDOM.2.2019$precip + HI.cari.fDOM.2.2019$Intensity) # model one with total precip and intensity 
+
+sr <- HI.cari.fDOM.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.SPC.2.2019 <- left_join(HI.cari.SPC.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.cari.SPC.2.2019$TOTAL.TIME <- as.numeric(HI.cari.SPC.2.2019$TOTAL.TIME)
+HI.cari.SPC.2.2019$Intensity <- HI.cari.SPC.2.2019$precip/HI.cari.SPC.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+cari.lm.SPC.2 <- lm(HI.cari.SPC.2.2019$HI ~ HI.cari.SPC.2.2019$precip + HI.cari.SPC.2.2019$Intensity) # model one with total precip and intensity 
+
+ss <- HI.cari.SPC.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.turb.2.2019 <- left_join(HI.cari.turb.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.cari.turb.2.2019$TOTAL.TIME <- as.numeric(HI.cari.turb.2.2019$TOTAL.TIME)
+HI.cari.turb.2.2019$Intensity <- HI.cari.turb.2.2019$precip/HI.cari.turb.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+cari.lm.turb.2 <- lm(HI.cari.turb.2.2019$HI ~ HI.cari.turb.2.2019$precip + HI.cari.turb.2.2019$Intensity) # model one with total precip and intensity 
+
+st <- HI.cari.turb.2.2019 %>%
+  ggplot(aes(x=Intensity, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("Intensity (mm/hr)") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+# day of year #
+CARI.2019.1$day <- julian(CARI.2019.1$DateTime, origin = as.POSIXct('2019-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+CARI.2019.1$day <- as.numeric(CARI.2019.1$day)
+
+CARI.2019.per.storm.5 <- CARI.2019.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+HI.cari.no3.2.2019 <- left_join(HI.cari.no3.2.2019, CARI.2019.per.storm.5, by = "storm.num")
+cari.lm.no3.5 <- lm(HI.cari.no3.2.2019$HI ~ HI.cari.no3.2.2019$doy)
+
+su <- HI.cari.no3.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI NO3") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.fDOM.2.2019 <- left_join(HI.cari.fDOM.2.2019, CARI.2019.per.storm.5, by = "storm.num")
+cari.lm.fDOM.5 <- lm(HI.cari.fDOM.2.2019$HI ~ HI.cari.fDOM.2.2019$doy)
+
+sv <- HI.cari.fDOM.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI fDOM") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.SPC.2.2019 <- left_join(HI.cari.SPC.2.2019, CARI.2019.per.storm.5, by = "storm.num")
+cari.lm.SPC.5 <- lm(HI.cari.SPC.2.2019$HI ~ HI.cari.SPC.2.2019$doy)
+
+sw <- HI.cari.SPC.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI SPC") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+HI.cari.turb.2.2019 <- left_join(HI.cari.turb.2.2019, CARI.2019.per.storm.5, by = "storm.num")
+cari.lm.turb.5 <- lm(HI.cari.turb.2.2019$HI ~ HI.cari.turb.2.2019$doy)
+
+sx <- HI.cari.turb.2.2019 %>%
+  ggplot(aes(x=doy, 
+             y=HI)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_poly_eq(formula = cari.formula, 
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) +
+  ggtitle("CARI turb") +
+  xlab("Day of year") +
+  ylab("HI-Solute Storage") +
+  theme_classic() # plot model 
+
+#plot_grid(sa,sb,sc,sd,se,sf,sg,sh,si,sj,sk,sl,sm,sn,so,sp,sq,sr,ss,st,su,sv,sw,sx,
+#          ncol = 4)
+
+HI.cari.2019 <- rbind(HI.cari.no3.2.2019, HI.cari.fDOM.2.2019, HI.cari.SPC.2.2019, HI.cari.turb.2.2019) # merging all responses together 
+HI.cari.2019$burn <- "burned" # adding a burn column
+HI.cari.2019$pf <- "medium" # adding a pf column
+
+write.csv(HI.cari.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.cari.2019.csv")
+
+
+HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, HI.vaul.2019, HI.strt.2019, HI.cari.2019) # bind all 2019 together
+
+# add time since peak  Q in chena #
+HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
+origin_date <- as.Date("2019-05-18")
+HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
+
+write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
+
 
 
 

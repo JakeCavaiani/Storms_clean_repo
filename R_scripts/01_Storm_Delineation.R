@@ -3535,9 +3535,6 @@ names(Q.2019) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column he
 Q.2019$datetimeAK <- ymd_hms(Q.2019$datetimeAK) # converting character to datetime
 
 
-SUNA_EXO_int_corr_lab_2019 <- read_csv("processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv", 
-                                       na = "empty")
-
 chem.2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv",
                       na.strings = "NA")
 
@@ -3590,6 +3587,12 @@ VAUL.2019 <- VAUL.2019[-c(14728:15061), ] # removing unnecessary rows that corre
 STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
 STRT.2019 <- STRT.2019[-c(14714:15051), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
+DOD.2019 <- rbind(FRCH.2019, MOOS.2019, POKE.2019,
+                  VAUL.2019, STRT.2019)
+
+DOD.2019 <- full_join(DOD.2019, Q.2019) # merging chem and discharge data 
+
+#write.csv(DOD.2019, "~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2019.csv")
 
 frch.final.discharge.2019 <- subset(Q.2019, site.ID == "FRCH")
 strt.final.discharge.2019 <- subset(Q.2019, site.ID == "STRT")
