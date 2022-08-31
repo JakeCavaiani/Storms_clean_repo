@@ -3508,19 +3508,6 @@ saveRDS(MOOS_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ##########################################################################################
 ############################## 2019 ######################################################
 ##########################################################################################
@@ -9603,5 +9590,6639 @@ saveRDS(MOOS_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2
 saveRDS(POKE_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_turb_storm_list.RData")
 saveRDS(STRT_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_turb_storm_list.RData")
 saveRDS(VAUL_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_turb_storm_list.RData")
+
+
+
+
+##########################################################################################
+############################## 2020 ######################################################
+##########################################################################################
+
+setwd("~/Documents/Storms_clean_repo")
+# Load from local machine #
+Q.daily.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q.daily.2020.csv")
+Q.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q_2020.csv")
+
+names(Q.2020) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column headers to match that of the chem file 
+
+Q.2020$datetimeAK <- ymd_hms(Q.2020$datetimeAK) # converting character to datetime
+
+
+chem.2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+
+chem.2020 <- chem.2020[, -c(1, 3:20, 24:88)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
+# I just want the constituents and datetimeAk
+
+chem.2020 <- chem.2020[, c(6,1,4,2,3,5)] # reorganizing column headers
+
+
+
+chem.2020$datetimeAK <- ymd_hms(chem.2020$datetimeAK) # converting character to datetime
+
+names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU", "nitrateuM")
+
+
+
+# Load in CARI data 
+CARI_2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/WaterQuality2020.csv", 
+                      col_types = cols(fDOM = col_double(), 
+                                       SpCond = col_double(), Turb = col_double()))
+attributes(CARI_2020$DateTime)$tzone <- "America/Anchorage"
+
+CARI_2020$day = format(as.POSIXct(CARI_2020$DateTime,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
+attributes(CARI_2020$DateTime)$tzone <- 'America/Anchorage'
+CARI_2020$day = as.POSIXct(CARI_2020$day, "%Y-%m-%d", tz="America/Anchorage")
+cari.final.discharge.2020 <- CARI_2020[,-c(4:7)]
+
+CARI.daily.2020 = with(CARI_2020, tapply(Discharge, list(day, Site), mean))
+CARI.daily.2020 = as.data.frame(CARI.daily.2020)
+
+CARI.Q.2020 = as.data.frame(CARI.daily.2020$CARI)
+CARI.Q.2020$day = as.Date(rownames(CARI.daily.2020))
+names(CARI.Q.2020) = c("Discharge_Lsec", "day")
+
+
+# subset data by site #
+FRCH.2020 <-  subset(chem.2020, site.ID == "FRCH")
+FRCH.2020 <- FRCH.2020[-c(12061:12290), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+MOOS.2020 <-  subset(chem.2020, site.ID == "MOOS")
+MOOS.2020 <- MOOS.2020[-c(12191:12447), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+POKE.2020 <-  subset(chem.2020, site.ID == "POKE")
+POKE.2020 <- POKE.2020[-c(12668:12967), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+VAUL.2020 <-  subset(chem.2020, site.ID == "VAUL")
+VAUL.2020 <- VAUL.2020[-c(12527:12863), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+STRT.2020 <-  subset(chem.2020, site.ID == "STRT")
+STRT.2020 <- STRT.2020[-c(11320:11571), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+DOD.2020 <- rbind(FRCH.2020, MOOS.2020, POKE.2020,
+                  VAUL.2020, STRT.2020)
+
+DOD.2020 <- full_join(DOD.2020, Q.2020) # merging chem and discharge data 
+
+#write.csv(DOD.2020, "~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2020.csv")
+
+frch.final.discharge.2020 <- subset(Q.2020, site.ID == "FRCH")
+strt.final.discharge.2020 <- subset(Q.2020, site.ID == "STRT")
+poke.final.discharge.2020 <- subset(Q.2020, site.ID == "POKE")
+vaul.final.discharge.2020 <- subset(Q.2020, site.ID == "VAUL")
+moos.final.discharge.2020 <- subset(Q.2020, site.ID == "MOOS")
+
+Q.2020$day = format(as.POSIXct(Q.2020$datetimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
+Q.2020$day = as.POSIXct(Q.2020$day, "%Y-%m-%d", tz="America/Anchorage")
+
+Q.daily.2020 = with(Q.2020, tapply(Q, list(day, site.ID), mean))
+Q.daily.2020 = as.data.frame(Q.daily.2020)
+
+FRCH.Q.2020 = as.data.frame(Q.daily.2020$FRCH)
+FRCH.Q.2020$day = as.Date(rownames(Q.daily.2020))
+names(FRCH.Q.2020) = c("Discharge_Lsec", "day")
+
+STRT.Q.2020 = as.data.frame(Q.daily.2020$STRT)
+STRT.Q.2020$day = as.Date(rownames(Q.daily.2020))
+names(STRT.Q.2020) = c("Discharge_Lsec", "day")
+
+POKE.Q.2020 = as.data.frame(Q.daily.2020$POKE)
+POKE.Q.2020$day = as.Date(rownames(Q.daily.2020))
+names(POKE.Q.2020) = c("Discharge_Lsec", "day")
+
+VAUL.Q.2020 = as.data.frame(Q.daily.2020$VAUL)
+VAUL.Q.2020$day = as.Date(rownames(Q.daily.2020))
+names(VAUL.Q.2020) = c("Discharge_Lsec", "day")
+
+MOOS.Q.2020 = as.data.frame(Q.daily.2020$MOOS)
+MOOS.Q.2020$day = as.Date(rownames(Q.daily.2020))
+names(MOOS.Q.2020) = c("Discharge_Lsec", "day")
+
+# data wrangling - fill gaps #
+# fxn #
+fillgaps15 = function(df, dat, datquotes, largegap.num){
+  ## Document gaps >= largegap.num (1 largegap.num = 15 min) ##
+  # (note - the criteria of what constitutes a "large" gap should be reevaluated depending on the trend being characterized)
+  is.na.rle <- rle(is.na(dat))
+  is.na.rle$values <- is.na.rle$values & is.na.rle$lengths >= (largegap.num)
+  biggaps = df[inverse.rle(is.na.rle), ]
+  tz(biggaps$DateTime) = "America/Anchorage"
+  biggaps = subset(biggaps, select = "DateTime")
+  # Make univariate time series, covert to zoo, then to ts #
+  ts.xts = subset(df, select = c("DateTime",datquotes))
+  ts.xts<-read.zoo(ts.xts, index.column=1, format="%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+  ts.xts<-as.xts(ts.xts)
+  # remove leading and trailing NAs #
+  ts.xts = na.trim(ts.xts, is.na="any")
+  # Apply auto.arima and kalman filter to impute missing values #
+  fit2 = auto.arima(ts.xts) 
+  kal = KalmanSmooth(ts.xts, fit2$model)
+  id.na<-which(is.na(ts.xts))
+  for(i in id.na) 
+    ts.xts[i]<-fit2$model$Z %*% kal$smooth[i,]
+  # revert to dataframe #
+  ts.df = as.data.frame((ts.xts))
+  ts.df$date_timeAK = as.POSIXct(row.names(ts.df), tz="America/Anchorage")
+  names(ts.df) = c("dat_filled", "DateTime")
+  # remove large gaps # 
+  ts.df$dat_filled[ts.df$date_timeAK %in% as.POSIXct(biggaps$DateTime)] = NA
+  # Replace large gaps with linear interpolation #
+  ts.df$dat_filled = na.interpolation(ts.df$dat_filled)
+  ts.df = subset(ts.df, select = c("dat_filled", "DateTime"))
+  return(ts.df)
+}
+
+# join Q and chem data 
+# FRCH #
+FRCH = full_join(frch.final.discharge.2020, FRCH.2020)
+# MOOS #
+MOOS = full_join(moos.final.discharge.2020, MOOS.2020)
+# STRT #
+STRT = full_join(strt.final.discharge.2020, STRT.2020)
+# POKE #
+POKE = full_join(poke.final.discharge.2020, POKE.2020)
+# VAUL #
+VAUL = full_join(vaul.final.discharge.2020, VAUL.2020)
+
+
+# Baseflow Separation #
+
+any(is.na(FRCH.Q.2020$day))
+any(is.na(FRCH.Q.2020$Discharge_Lsec))
+FRCH.Q.2020 <- na.omit(FRCH.Q.2020) # Remove 7 NaNs  # 134 rows to 125 rows
+
+any(is.na(STRT.Q.2020$day))
+any(is.na(STRT.Q.2020$Discharge_Lsec))
+STRT.Q.2020 <- na.omit(STRT.Q.2020) # Remove 18 NaNs # 132 to 114
+
+any(is.na(POKE.Q.2020$day))
+any(is.na(POKE.Q.2020$Discharge_Lsec))
+POKE.Q.2020 <- na.omit(POKE.Q.2020) # Remove 4 NaNs # 132 to 128
+
+any(is.na(VAUL.Q.2020$day))
+any(is.na(VAUL.Q.2020$Discharge_Lsec))
+VAUL.Q.2020 <- na.omit(VAUL.Q.2020) # Remove 9 NaNs #132 to 123
+
+any(is.na(MOOS.Q.2020$day))
+any(is.na(MOOS.Q.2020$Discharge_Lsec))
+MOOS.Q.2020 <- na.omit(MOOS.Q.2020) # Remove 10 NaNs 132 to 122
+
+any(is.na(CARI.Q.2020$day))
+any(is.na(CARI.Q.2020$Discharge_Lsec)) 
+CARI.Q.2020 <- na.omit(CARI.Q.2020) # Removed 10 rows - (86 to 76)
+
+
+frch.final.discharge.2020$MeanDischarge <- frch.final.discharge.2020$Q
+poke.final.discharge.2020$MeanDischarge <- poke.final.discharge.2020$Q
+vaul.final.discharge.2020$MeanDischarge <- vaul.final.discharge.2020$Q
+strt.final.discharge.2020$MeanDischarge <- strt.final.discharge.2020$Q
+moos.final.discharge.2020$MeanDischarge <- moos.final.discharge.2020$Q
+
+frch.final.discharge.2020$DateTime <- frch.final.discharge.2020$datetimeAK
+poke.final.discharge.2020$DateTime <- poke.final.discharge.2020$datetimeAK
+vaul.final.discharge.2020$DateTime <- vaul.final.discharge.2020$datetimeAK
+strt.final.discharge.2020$DateTime <- strt.final.discharge.2020$datetimeAK
+moos.final.discharge.2020$DateTime <- moos.final.discharge.2020$datetimeAK
+
+### examine the recursive digital filter at .9, .925, .95 levels ###
+plot(frch.final.discharge.2020$MeanDischarge ~ frch.final.discharge.2020$DateTime, type = "l", xlab = "", ylab = "Q (L/sec)",
+     xlim =  as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0, 3000), col="blue")
+#
+plot(poke.final.discharge.2020$MeanDischarge ~ poke.final.discharge.2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,3000), col="blue")
+
+plot(vaul.final.discharge.2020$MeanDischarge ~ vaul.final.discharge.2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,3000), col="blue")
+
+plot(strt.final.discharge.2020$MeanDischarge ~ strt.final.discharge.2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,6000), col="blue")
+
+plot(moos.final.discharge.2020$MeanDischarge ~ moos.final.discharge.2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,5000), col="blue")
+
+ggplot(aes(x = DateTime, y = Discharge), data = CARI_2020) +
+  geom_line(color="#A6CEE3", size=1.25) +
+  theme_classic() +
+  ggtitle("CARI measured Q") +
+  xlab("Date") +
+  ylab("Discharge (L/s)") +
+  xlab("")
+
+### Hydrograph Separation ###
+#
+any(is.na(frch.final.discharge.2020$MeanDischarge))
+frch.final.discharge.2020 <- na.omit(frch.final.discharge.2020) # removed 11987-11984
+
+FRCH_Q_bf = BaseflowSeparation(frch.final.discharge.2020$MeanDischarge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(FRCH.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=FRCH_Q_bf$bt) 
+
+#
+any(is.na(strt.final.discharge.2020$MeanDischarge))
+strt.final.discharge.2020 <- na.omit(strt.final.discharge.2020) # removed 10817-10814
+
+STRT_Q_bf = BaseflowSeparation(strt.final.discharge.2020$MeanDischarge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(STRT.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=STRT_Q_bf$bt)
+#
+POKE_Q_bf = BaseflowSeparation(poke.final.discharge.2020$MeanDischarge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(POKE.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=POKE_Q_bf$bt) 
+#
+any(is.na(vaul.final.discharge.2020$MeanDischarge))
+vaul.final.discharge.2020 <- na.omit(vaul.final.discharge.2020) # removed 11687-11686
+
+VAUL_Q_bf = BaseflowSeparation(vaul.final.discharge.2020$MeanDischarge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(VAUL.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=VAUL_Q_bf$bt) 
+
+#
+any(is.na(moos.final.discharge.2020$MeanDischarge))
+moos.final.discharge.2020 <- na.omit(moos.final.discharge.2020) # removed 11582-11581
+
+MOOS_Q_bf = BaseflowSeparation(moos.final.discharge.2020$MeanDischarge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(MOOS.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=MOOS_Q_bf$bt) 
+
+# CARI
+any(is.na(cari.final.discharge.2020$Discharge))
+cari.final.discharge.2020 <- na.omit(cari.final.discharge.2020) # removed 244805-241487
+CARI_Q_bf = BaseflowSeparation(cari.final.discharge.2020$Discharge, filter_parameter = 0.90, passes = 3)
+hydrograph(input=subset(CARI.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=CARI_Q_bf$bt) 
+
+###.925 ###
+FRCH_Q_bf = BaseflowSeparation(frch.final.discharge.2020$MeanDischarge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(FRCH.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=FRCH_Q_bf$bt) 
+#
+STRT_Q_bf = BaseflowSeparation(strt.final.discharge.2020$MeanDischarge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(STRT.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=STRT_Q_bf$bt)
+#
+POKE_Q_bf = BaseflowSeparation(poke.final.discharge.2020$MeanDischarge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(POKE.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=POKE_Q_bf$bt) 
+#
+VAUL_Q_bf = BaseflowSeparation(vaul.final.discharge.2020$MeanDischarge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(VAUL.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=VAUL_Q_bf$bt) 
+
+MOOS_Q_bf = BaseflowSeparation(moos.final.discharge.2020$MeanDischarge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(MOOS.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=MOOS_Q_bf$bt) 
+
+# 
+CARI_Q_bf = BaseflowSeparation(cari.final.discharge.2020$Discharge, filter_parameter = 0.925, passes = 3)
+hydrograph(input=subset(CARI.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=CARI_Q_bf$bt) 
+
+
+### .95 ###
+FRCH_Q_bf = BaseflowSeparation(frch.final.discharge.2020$MeanDischarge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(FRCH.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=FRCH_Q_bf$bt) 
+#
+STRT_Q_bf = BaseflowSeparation(strt.final.discharge.2020$MeanDischarge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(STRT.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=STRT_Q_bf$bt)
+#
+POKE_Q_bf = BaseflowSeparation(poke.final.discharge.2020$MeanDischarge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(POKE.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=POKE_Q_bf$bt) 
+#
+VAUL_Q_bf = BaseflowSeparation(vaul.final.discharge.2020$MeanDischarge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(VAUL.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=VAUL_Q_bf$bt) 
+
+MOOS_Q_bf = BaseflowSeparation(moos.final.discharge.2020$MeanDischarge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(MOOS.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=MOOS_Q_bf$bt) 
+
+# 
+CARI_Q_bf = BaseflowSeparation(cari.final.discharge.2020$Discharge, filter_parameter = 0.95, passes = 3)
+hydrograph(input=subset(CARI.Q.2020, select = c(day, Discharge_Lsec)), streamflow2=CARI_Q_bf$bt) 
+
+
+##Deliniate storms in FRCH ##
+
+# ID storms: Any events where Q reached 2X mean base flow 
+# Pick starting points: manually select inflection pt when Q began to rise
+# Pick ending points: manually select pt when Q reached pre-storm baseflow OR when another event occurred
+
+
+FRCH_bfQ_mn = mean(FRCH_Q_bf$bt)
+FRCH_bfQ_mn
+FRCH_bfQ_mn*2
+
+STRT_bfQ_mn = mean(STRT_Q_bf$bt)
+STRT_bfQ_mn
+STRT_bfQ_mn*2
+
+VAUL_bfQ_mn = mean(VAUL_Q_bf$bt)
+VAUL_bfQ_mn
+VAUL_bfQ_mn*2
+
+POKE_bfQ_mn = mean(POKE_Q_bf$bt)
+POKE_bfQ_mn
+POKE_bfQ_mn*2
+
+MOOS_bfQ_mn = mean(MOOS_Q_bf$bt)
+MOOS_bfQ_mn
+MOOS_bfQ_mn*2
+
+CARI_bfQ_mn = mean(CARI_Q_bf$bt)
+CARI_bfQ_mn
+CARI_bfQ_mn*2
+
+### Merge Discharge and Precip ###
+FRCH.st <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
+attributes(FRCH.st$DateTime)$tzone <- 'America/Anchorage'
+STRT.st <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
+attributes(STRT.st$DateTime)$tzone <- 'America/Anchorage'
+VAUL.st <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
+attributes(VAUL.st$DateTime)$tzone <- 'America/Anchorage'
+POKE.st <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
+attributes(POKE.st$DateTime)$tzone <- 'America/Anchorage'
+
+frch.precip.discharge <- full_join(frch.final.discharge.2020, FRCH.st) # merging precip data and discharge
+strt.precip.discharge <- full_join(strt.final.discharge.2020, STRT.st) # merging precip data and discharge
+vaul.precip.discharge <- full_join(vaul.final.discharge.2020, VAUL.st) # merging precip data and discharge
+poke.precip.discharge <- full_join(poke.final.discharge.2020, POKE.st) # merging precip data and discharge
+
+
+### Sum daily discharge ###
+frch.precip.discharge <- frch.precip.discharge[-c(1:3),] # Remove out of water discharge
+frch.precip.discharge$twentyfour <- rollapplyr(frch.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+frch.precip.discharge$fourtyeight <- rollapplyr(frch.precip.discharge$inst_rainfall_mm, 192, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+
+strt.precip.discharge$twentyfour <- rollapplyr(strt.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+strt.precip.discharge$fourtyeight <- rollapplyr(strt.precip.discharge$inst_rainfall_mm, 192, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+
+vaul.precip.discharge$twentyfour <- rollapplyr(vaul.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+vaul.precip.discharge$fourtyeight <- rollapplyr(vaul.precip.discharge$inst_rainfall_mm, 192, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+
+poke.precip.discharge$twentyfour <- rollapplyr(poke.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+poke.precip.discharge$fourtyeight <- rollapplyr(poke.precip.discharge$inst_rainfall_mm, 192, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+
+# Greater than 5 #
+frch.five.twenty.four <- frch.precip.discharge[which(frch.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+frch.five.fourty.eight <- frch.precip.discharge[which(frch.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+strt.five.twenty.four <- strt.precip.discharge[which(strt.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+strt.five.fourty.eight <- strt.precip.discharge[which(strt.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+vaul.five.twenty.four <- vaul.precip.discharge[which(vaul.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+vaul.five.fourty.eight <- vaul.precip.discharge[which(vaul.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+poke.five.twenty.four <- poke.precip.discharge[which(poke.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+poke.five.fourty.eight <- poke.precip.discharge[which(poke.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+
+# Greater than 10 #
+frch.ten.twenty.four <- frch.precip.discharge[which(frch.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+frch.ten.fourty.eight <- frch.precip.discharge[which(frch.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+strt.ten.twenty.four <- strt.precip.discharge[which(strt.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+strt.ten.fourty.eight <- strt.precip.discharge[which(strt.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+vaul.ten.twenty.four <- vaul.precip.discharge[which(vaul.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+vaul.ten.fourty.eight <- vaul.precip.discharge[which(vaul.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+poke.ten.twenty.four <- poke.precip.discharge[which(poke.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+poke.ten.fourty.eight <- poke.precip.discharge[which(poke.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+# write_csv(frch.precip.discharge, "frch.precip.discharge.csv")
+# write_csv(strt.precip.discharge, "strt.precip.discharge.csv")
+# write_csv(vaul.precip.discharge, "vaul.precip.discharge.csv")
+# write_csv(poke.precip.discharge, "poke.precip.discharge.csv")
+
+#
+#frch.gauge$date <- as.Date(frch.gauge$DateTime)# breaking into days
+#daily.sum <- aggregate(frch.gauge["inst_rainfall_mm"], by = frch.gauge["date"], sum) # summing days
+#frch.ten <- daily.sum[which(daily.sum$inst_rainfall_mm >= 10),] # anything greater than 10 is filtered 
+
+#strt.gauge$date <- as.Date(strt.gauge$DateTime)
+#strt.daily.sum <- aggregate(strt.gauge["inst_rainfall_mm"], by = strt.gauge["date"], sum)
+#strt.ten <- strt.daily.sum[which(strt.daily.sum$inst_rainfall_mm >= 10),]
+
+#vaul.gauge$date <- as.Date(vaul.gauge$DateTime)
+#vaul.daily.sum <- aggregate(vaul.gauge["inst_rainfall_mm"], by = vaul.gauge["date"], sum)
+#vaul.ten <- vaul.daily.sum[which(vaul.daily.sum$inst_rainfall_mm >= 10),]
+#par(mfrow=c(1,1))
+
+#precip.cariboupeak$date <- as.Date(precip.cariboupeak$DateTime)
+#poke.daily.sum <- aggregate(precip.cariboupeak["Precip"], by = precip.cariboupeak["date"], sum)
+#poke.ten <- poke.daily.sum[which(poke.daily.sum$Precip >= 10),]
+
+
+#plot(FRCH_Q$Discharge_Lsec ~ FRCH_Q$day, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="FRCH")
+#lines(FRCH_Q_bf$bt ~ FRCH_Q$day, col="red")
+#lines(FRCH_Q_bf$bt*1.3 ~ FRCH_Q$day, col="red", lty = 2)
+#lines((FRCH_Q_bf$bt*5) ~ FRCH_Q$day, col="red", lty=2)
+#abline(h = FRCH_bfQ_mn*2, col="red", lty=2)
+
+### Discharge/Chem/Precip ###
+# FRCH #
+FRCH.2020.chem <- FRCH
+FRCH.2020.chem$MeanDischarge <- FRCH$Q
+FRCH.2020.chem$DateTime <- FRCH$datetimeAK
+# FRCH.2020.chem$MeanDischarge <- FRCH.2020.chem$Q
+### Import precipitation data into the *ALL document ### 
+# FRCH rain gauge installed on the 11th of June. 
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(20,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+par(mfrow=c(1,1))
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(25,0), 
+     axes=F, xlab="", ylab="")
+par(new = T)
+
+plot(FRCH.2020.chem$MeanDischarge ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+
+### Storms ###
+# FRCH #
+FRCH <- FRCH.2020.chem
+
+#Storm 1 
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-13 03:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-18 05:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm1_06_13 = FRCH[FRCH$DateTime > as.POSIXct("2020-06-13 03:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-06-18 05:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm1_06_13$MeanDischarge ~ as.POSIXct(FRCH_storm1_06_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="FRCH 200613 storm 1",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 2 
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-18 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-20 06:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm2_06_18 = FRCH[FRCH$DateTime > as.POSIXct("2020-06-18 23:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-06-20 06:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm2_06_18$MeanDischarge ~ as.POSIXct(FRCH_storm2_06_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="FRCH 200619 storm 2",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 3a 
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 06:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm3a_06_20 = FRCH[FRCH$DateTime > as.POSIXct("2020-06-20 06:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm3a_06_20$MeanDischarge ~ as.POSIXct(FRCH_storm3a_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2000), col="blue", main="FRCH 200620 storm 3a",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 3b
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-26 12:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm3b_06_21 = FRCH[FRCH$DateTime > as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-06-26 12:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm3b_06_21$MeanDischarge ~ as.POSIXct(FRCH_storm3b_06_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1250,2250), col="blue", main="FRCH 200621 storm 3b",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 30 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 25 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 3c
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-26 12:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-28 04:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm3c_06_26 = FRCH[FRCH$DateTime > as.POSIXct("2020-06-26 12:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-06-28 04:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm3c_06_26$MeanDischarge ~ as.POSIXct(FRCH_storm3c_06_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,2000), col="blue", main="FRCH 200626 storm 3c",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 30 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-10 0:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 4a
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-07 12:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-09 11:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm4a_07_07 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-07 12:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-07-09 11:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm4a_07_07$MeanDischarge ~ as.POSIXct(FRCH_storm4a_07_07$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,2000), col="blue", main="FRCH 200707 storm 4a",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 30 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 4b
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-09 12:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-11 15:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm4b_07_09 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-09 12:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-07-11 15:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm4b_07_09$MeanDischarge ~ as.POSIXct(FRCH_storm4b_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1500), col="blue", main="FRCH 200709 storm 4b",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 5
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-15 22:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-16 13:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm5_07_15 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-15 22:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-07-16 13:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm5_07_15$MeanDischarge ~ as.POSIXct(FRCH_storm5_07_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="FRCH 200715 storm 5",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 6
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-18 11:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-19 13:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm6_07_18 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-18 11:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-07-19 13:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm6_07_18$MeanDischarge ~ as.POSIXct(FRCH_storm6_07_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="FRCH 200717 storm 6",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+#Storm 7
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-20 10:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-23 23:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm7_07_20 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-20 10:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-07-23 23:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm7_07_20$MeanDischarge ~ as.POSIXct(FRCH_storm7_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="FRCH 200720 storm 7",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-26 08:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-30 08:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm8_07_26 = FRCH[FRCH$DateTime > as.POSIXct("2020-07-26 08:30:00", tz="America/Anchorage") &
+                           FRCH$DateTime < as.POSIXct("2020-07-30 08:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm8_07_26$MeanDischarge ~ as.POSIXct(FRCH_storm8_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="FRCH 200726 storm 8",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9a
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-01 12:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm9a_08_01 = FRCH[FRCH$DateTime > as.POSIXct("2020-08-01 12:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm9a_08_01$MeanDischarge ~ as.POSIXct(FRCH_storm9a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="FRCH 200801 storm 9a",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9b
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-02 23:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-05 23:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm9b_08_02 = FRCH[FRCH$DateTime > as.POSIXct("2020-08-02 23:45:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-08-05 23:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm9b_08_02$MeanDischarge ~ as.POSIXct(FRCH_storm9b_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="FRCH 200802 storm 9b",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 10a
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-09 10:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-12 02:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm10a_08_09 = FRCH[FRCH$DateTime > as.POSIXct("2020-08-09 10:30:00", tz="America/Anchorage") &
+                             FRCH$DateTime < as.POSIXct("2020-08-12 02:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm10a_08_09$MeanDischarge ~ as.POSIXct(FRCH_storm10a_08_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="FRCH 200809 storm 10a",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 10b
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-17 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-17 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-12 09:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-16 23:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm10b_08_12 = FRCH[FRCH$DateTime > as.POSIXct("2020-08-12 09:30:00", tz="America/Anchorage") &
+                             FRCH$DateTime < as.POSIXct("2020-08-16 23:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm10b_08_12$MeanDischarge ~ as.POSIXct(FRCH_storm10b_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="FRCH 200812 storm 10b",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-17 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 00:00:00","2020-08-17 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 11
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-20 10:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-21 09:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm11_08_20 = FRCH[FRCH$DateTime > as.POSIXct("2020-08-20 10:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-08-21 09:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm11_08_20$MeanDischarge ~ as.POSIXct(FRCH_storm11_08_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="FRCH 200820 storm 11",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 12
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-06 18:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-07 11:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm12_09_06 = FRCH[FRCH$DateTime > as.POSIXct("2020-09-06 18:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-09-07 11:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm12_09_06$MeanDischarge ~ as.POSIXct(FRCH_storm12_09_06$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="FRCH 200906 storm 12",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 13
+plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-09 06:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-11 11:30:00", tz="America/Anchorage"), col="purple")
+
+FRCH_storm13_09_09 = FRCH[FRCH$DateTime > as.POSIXct("2020-09-09 06:30:00", tz="America/Anchorage") &
+                            FRCH$DateTime < as.POSIXct("2020-09-11 11:30:00", tz="America/Anchorage"),]
+plot(FRCH_storm13_09_09$MeanDischarge ~ as.POSIXct(FRCH_storm13_09_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="FRCH 200909 storm 13",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+## modify format and save FRCH storms ##
+
+# nitrateuM, fDOM.QSU 
+
+  
+FRCH_storm1_06_13_Q = subset(FRCH_storm1_06_13, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm1_06_13_Q) = c("valuedatetime","datavalue")
+FRCH_storm1_06_13_NO3 = subset(FRCH_storm1_06_13, select = c("DateTime","nitrateuM"))
+names(FRCH_storm1_06_13_NO3) = c("valuedatetime","datavalue")
+FRCH_storm1_06_13_fDOM = subset(FRCH_storm1_06_13, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm1_06_13_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm1_06_13_SPC = subset(FRCH_storm1_06_13, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm1_06_13_SPC) = c("valuedatetime","datavalue")
+FRCH_storm1_06_13_turb = subset(FRCH_storm1_06_13, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm1_06_13_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm2_06_18_Q = subset(FRCH_storm2_06_18, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm2_06_18_Q) = c("valuedatetime","datavalue")
+FRCH_storm2_06_18_NO3 = subset(FRCH_storm2_06_18, select = c("DateTime","nitrateuM"))
+names(FRCH_storm2_06_18_NO3) = c("valuedatetime","datavalue")
+FRCH_storm2_06_18_fDOM = subset(FRCH_storm2_06_18, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm2_06_18_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm2_06_18_SPC = subset(FRCH_storm2_06_18, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm2_06_18_SPC) = c("valuedatetime","datavalue")
+FRCH_storm2_06_18_turb = subset(FRCH_storm2_06_18, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm2_06_18_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm3a_06_20_Q = subset(FRCH_storm3a_06_20, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm3a_06_20_Q) = c("valuedatetime","datavalue")
+FRCH_storm3a_06_20_NO3 = subset(FRCH_storm3a_06_20, select = c("DateTime","nitrateuM"))
+names(FRCH_storm3a_06_20_NO3) = c("valuedatetime","datavalue")
+FRCH_storm3a_06_20_fDOM = subset(FRCH_storm3a_06_20, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm3a_06_20_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm3a_06_20_SPC = subset(FRCH_storm3a_06_20, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm3a_06_20_SPC) = c("valuedatetime","datavalue")
+FRCH_storm3a_06_20_turb = subset(FRCH_storm3a_06_20, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm3a_06_20_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm3b_06_21_Q = subset(FRCH_storm3b_06_21, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm3b_06_21_Q) = c("valuedatetime","datavalue")
+FRCH_storm3b_06_21_NO3 = subset(FRCH_storm3b_06_21, select = c("DateTime","nitrateuM"))
+names(FRCH_storm3b_06_21_NO3) = c("valuedatetime","datavalue")
+FRCH_storm3b_06_21_fDOM = subset(FRCH_storm3b_06_21, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm3b_06_21_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm3b_06_21_SPC = subset(FRCH_storm3b_06_21, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm3b_06_21_SPC) = c("valuedatetime","datavalue")
+FRCH_storm3b_06_21_turb = subset(FRCH_storm3b_06_21, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm3b_06_21_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm3c_06_26_Q = subset(FRCH_storm3c_06_26, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm3c_06_26_Q) = c("valuedatetime","datavalue")
+FRCH_storm3c_06_26_NO3 = subset(FRCH_storm3c_06_26, select = c("DateTime","nitrateuM"))
+names(FRCH_storm3c_06_26_NO3) = c("valuedatetime","datavalue")
+FRCH_storm3c_06_26_fDOM = subset(FRCH_storm3c_06_26, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm3c_06_26_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm3c_06_26_SPC = subset(FRCH_storm3c_06_26, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm3c_06_26_SPC) = c("valuedatetime","datavalue")
+FRCH_storm3c_06_26_turb = subset(FRCH_storm3c_06_26, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm3c_06_26_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm4a_07_07_Q = subset(FRCH_storm4a_07_07, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm4a_07_07_Q) = c("valuedatetime","datavalue")
+FRCH_storm4a_07_07_NO3 = subset(FRCH_storm4a_07_07, select = c("DateTime","nitrateuM"))
+names(FRCH_storm4a_07_07_NO3) = c("valuedatetime","datavalue")
+FRCH_storm4a_07_07_fDOM = subset(FRCH_storm4a_07_07, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm4a_07_07_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm4a_07_07_SPC = subset(FRCH_storm4a_07_07, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm4a_07_07_SPC) = c("valuedatetime","datavalue")
+FRCH_storm4a_07_07_turb = subset(FRCH_storm4a_07_07, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm4a_07_07_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm4b_07_09_Q = subset(FRCH_storm4b_07_09, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm4b_07_09_Q) = c("valuedatetime","datavalue")
+FRCH_storm4b_07_09_NO3 = subset(FRCH_storm4b_07_09, select = c("DateTime","nitrateuM"))
+names(FRCH_storm4b_07_09_NO3) = c("valuedatetime","datavalue")
+FRCH_storm4b_07_09_fDOM = subset(FRCH_storm4b_07_09, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm4b_07_09_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm4b_07_09_SPC = subset(FRCH_storm4b_07_09, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm4b_07_09_SPC) = c("valuedatetime","datavalue")
+FRCH_storm4b_07_09_turb = subset(FRCH_storm4b_07_09, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm4b_07_09_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm5_07_15_Q = subset(FRCH_storm5_07_15, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm5_07_15_Q) = c("valuedatetime","datavalue")
+FRCH_storm5_07_15_NO3 = subset(FRCH_storm5_07_15, select = c("DateTime","nitrateuM"))
+names(FRCH_storm5_07_15_NO3) = c("valuedatetime","datavalue")
+FRCH_storm5_07_15_fDOM = subset(FRCH_storm5_07_15, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm5_07_15_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm5_07_15_SPC = subset(FRCH_storm5_07_15, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm5_07_15_SPC) = c("valuedatetime","datavalue")
+FRCH_storm5_07_15_turb = subset(FRCH_storm5_07_15, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm5_07_15_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm6_07_18_Q = subset(FRCH_storm6_07_18, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm6_07_18_Q) = c("valuedatetime","datavalue")
+FRCH_storm6_07_18_NO3 = subset(FRCH_storm6_07_18, select = c("DateTime","nitrateuM"))
+names(FRCH_storm6_07_18_NO3) = c("valuedatetime","datavalue")
+FRCH_storm6_07_18_fDOM = subset(FRCH_storm6_07_18, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm6_07_18_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm6_07_18_SPC = subset(FRCH_storm6_07_18, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm6_07_18_SPC) = c("valuedatetime","datavalue")
+FRCH_storm6_07_18_turb = subset(FRCH_storm6_07_18, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm6_07_18_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm7_07_20_Q = subset(FRCH_storm7_07_20, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm7_07_20_Q) = c("valuedatetime","datavalue")
+FRCH_storm7_07_20_NO3 = subset(FRCH_storm7_07_20, select = c("DateTime","nitrateuM"))
+names(FRCH_storm7_07_20_NO3) = c("valuedatetime","datavalue")
+FRCH_storm7_07_20_fDOM = subset(FRCH_storm7_07_20, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm7_07_20_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm7_07_20_SPC = subset(FRCH_storm7_07_20, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm7_07_20_SPC) = c("valuedatetime","datavalue")
+FRCH_storm7_07_20_turb = subset(FRCH_storm7_07_20, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm7_07_20_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm8_07_26_Q = subset(FRCH_storm8_07_26, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm8_07_26_Q) = c("valuedatetime","datavalue")
+FRCH_storm8_07_26_NO3 = subset(FRCH_storm8_07_26, select = c("DateTime","nitrateuM"))
+names(FRCH_storm8_07_26_NO3) = c("valuedatetime","datavalue")
+FRCH_storm8_07_26_fDOM = subset(FRCH_storm8_07_26, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm8_07_26_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm8_07_26_SPC = subset(FRCH_storm8_07_26, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm8_07_26_SPC) = c("valuedatetime","datavalue")
+FRCH_storm8_07_26_turb = subset(FRCH_storm8_07_26, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm8_07_26_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm9a_08_01_Q = subset(FRCH_storm9a_08_01, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm9a_08_01_Q) = c("valuedatetime","datavalue")
+FRCH_storm9a_08_01_NO3 = subset(FRCH_storm9a_08_01, select = c("DateTime","nitrateuM"))
+names(FRCH_storm9a_08_01_NO3) = c("valuedatetime","datavalue")
+FRCH_storm9a_08_01_fDOM = subset(FRCH_storm9a_08_01, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm9a_08_01_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm9a_08_01_SPC = subset(FRCH_storm9a_08_01, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm9a_08_01_SPC) = c("valuedatetime","datavalue")
+FRCH_storm9a_08_01_turb = subset(FRCH_storm9a_08_01, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm9a_08_01_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm9b_08_02_Q = subset(FRCH_storm9b_08_02, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm9b_08_02_Q) = c("valuedatetime","datavalue")
+FRCH_storm9b_08_02_NO3 = subset(FRCH_storm9b_08_02, select = c("DateTime","nitrateuM"))
+names(FRCH_storm9b_08_02_NO3) = c("valuedatetime","datavalue")
+FRCH_storm9b_08_02_fDOM = subset(FRCH_storm9b_08_02, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm9b_08_02_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm9b_08_02_SPC = subset(FRCH_storm9b_08_02, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm9b_08_02_SPC) = c("valuedatetime","datavalue")
+FRCH_storm9b_08_02_turb = subset(FRCH_storm9b_08_02, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm9b_08_02_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm10a_08_09_Q = subset(FRCH_storm10a_08_09, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm10a_08_09_Q) = c("valuedatetime","datavalue")
+FRCH_storm10a_08_09_NO3 = subset(FRCH_storm10a_08_09, select = c("DateTime","nitrateuM"))
+names(FRCH_storm10a_08_09_NO3) = c("valuedatetime","datavalue")
+FRCH_storm10a_08_09_fDOM = subset(FRCH_storm10a_08_09, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm10a_08_09_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm10a_08_09_SPC = subset(FRCH_storm10a_08_09, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm10a_08_09_SPC) = c("valuedatetime","datavalue")
+FRCH_storm10a_08_09_turb = subset(FRCH_storm10a_08_09, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm10a_08_09_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm10b_08_12_Q = subset(FRCH_storm10b_08_12, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm10b_08_12_Q) = c("valuedatetime","datavalue")
+FRCH_storm10b_08_12_NO3 = subset(FRCH_storm10b_08_12, select = c("DateTime","nitrateuM"))
+names(FRCH_storm10b_08_12_NO3) = c("valuedatetime","datavalue")
+FRCH_storm10b_08_12_fDOM = subset(FRCH_storm10b_08_12, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm10b_08_12_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm10b_08_12_SPC = subset(FRCH_storm10b_08_12, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm10b_08_12_SPC) = c("valuedatetime","datavalue")
+FRCH_storm10b_08_12_turb = subset(FRCH_storm10b_08_12, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm10b_08_12_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm11_08_20_Q = subset(FRCH_storm11_08_20, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm11_08_20_Q) = c("valuedatetime","datavalue")
+FRCH_storm11_08_20_NO3 = subset(FRCH_storm11_08_20, select = c("DateTime","nitrateuM"))
+names(FRCH_storm11_08_20_NO3) = c("valuedatetime","datavalue")
+FRCH_storm11_08_20_fDOM = subset(FRCH_storm11_08_20, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm11_08_20_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm11_08_20_SPC = subset(FRCH_storm11_08_20, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm11_08_20_SPC) = c("valuedatetime","datavalue")
+FRCH_storm11_08_20_turb = subset(FRCH_storm11_08_20, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm11_08_20_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm12_09_06_Q = subset(FRCH_storm12_09_06, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm12_09_06_Q) = c("valuedatetime","datavalue")
+FRCH_storm12_09_06_NO3 = subset(FRCH_storm12_09_06, select = c("DateTime","nitrateuM"))
+names(FRCH_storm12_09_06_NO3) = c("valuedatetime","datavalue")
+FRCH_storm12_09_06_fDOM = subset(FRCH_storm12_09_06, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm12_09_06_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm12_09_06_SPC = subset(FRCH_storm12_09_06, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm12_09_06_SPC) = c("valuedatetime","datavalue")
+FRCH_storm12_09_06_turb = subset(FRCH_storm12_09_06, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm12_09_06_turb) = c("valuedatetime","datavalue")
+
+FRCH_storm13_09_09_Q = subset(FRCH_storm13_09_09, select = c("DateTime","MeanDischarge"))
+names(FRCH_storm13_09_09_Q) = c("valuedatetime","datavalue")
+FRCH_storm13_09_09_NO3 = subset(FRCH_storm13_09_09, select = c("DateTime","nitrateuM"))
+names(FRCH_storm13_09_09_NO3) = c("valuedatetime","datavalue")
+FRCH_storm13_09_09_fDOM = subset(FRCH_storm13_09_09, select = c("DateTime","fDOM.QSU"))
+names(FRCH_storm13_09_09_fDOM) = c("valuedatetime","datavalue")
+FRCH_storm13_09_09_SPC = subset(FRCH_storm13_09_09, select = c("DateTime","SpCond.µS.cm"))
+names(FRCH_storm13_09_09_SPC) = c("valuedatetime","datavalue")
+FRCH_storm13_09_09_turb = subset(FRCH_storm13_09_09, select = c("DateTime","Turbidity.FNU"))
+names(FRCH_storm13_09_09_turb) = c("valuedatetime","datavalue")
+
+### Write csv ###
+write.csv(FRCH_storm1_06_13, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13.csv")
+write.csv(FRCH_storm1_06_13_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Q.csv")
+write.csv(FRCH_storm1_06_13_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_NO3.csv")
+write.csv(FRCH_storm1_06_13_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_fDOM.csv")
+write.csv(FRCH_storm1_06_13_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_SPC.csv")
+write.csv(FRCH_storm1_06_13_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Turb.csv")
+
+write.csv(FRCH_storm2_06_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18.csv")
+write.csv(FRCH_storm2_06_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Q.csv")
+write.csv(FRCH_storm2_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_NO3.csv")
+write.csv(FRCH_storm2_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_fDOM.csv")
+write.csv(FRCH_storm2_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_SPC.csv")
+write.csv(FRCH_storm2_06_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Turb.csv")
+
+write.csv(FRCH_storm3a_06_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20.csv")
+write.csv(FRCH_storm3a_06_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Q.csv")
+write.csv(FRCH_storm3a_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_NO3.csv")
+write.csv(FRCH_storm3a_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_fDOM.csv")
+write.csv(FRCH_storm3a_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_SPC.csv")
+write.csv(FRCH_storm3a_06_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Turb.csv")
+
+write.csv(FRCH_storm3b_06_21, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21.csv")
+write.csv(FRCH_storm3b_06_21_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Q.csv")
+write.csv(FRCH_storm3b_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_NO3.csv")
+write.csv(FRCH_storm3b_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_fDOM.csv")
+write.csv(FRCH_storm3b_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_SPC.csv")
+write.csv(FRCH_storm3b_06_21_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Turb.csv")
+
+write.csv(FRCH_storm3c_06_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26.csv")
+write.csv(FRCH_storm3c_06_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Q.csv")
+write.csv(FRCH_storm3c_06_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_NO3.csv")
+write.csv(FRCH_storm3c_06_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_fDOM.csv")
+write.csv(FRCH_storm3c_06_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_SPC.csv")
+write.csv(FRCH_storm3c_06_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Turb.csv")
+
+write.csv(FRCH_storm4a_07_07, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07.csv")
+write.csv(FRCH_storm4a_07_07_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Q.csv")
+write.csv(FRCH_storm4a_07_07_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_NO3.csv")
+write.csv(FRCH_storm4a_07_07_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_fDOM.csv")
+write.csv(FRCH_storm4a_07_07_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_SPC.csv")
+write.csv(FRCH_storm4a_07_07_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Turb.csv")
+
+write.csv(FRCH_storm4b_07_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09.csv")
+write.csv(FRCH_storm4b_07_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Q.csv")
+write.csv(FRCH_storm4b_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_NO3.csv")
+write.csv(FRCH_storm4b_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_fDOM.csv")
+write.csv(FRCH_storm4b_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_SPC.csv")
+write.csv(FRCH_storm4b_07_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Turb.csv")
+
+write.csv(FRCH_storm5_07_15, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15.csv")
+write.csv(FRCH_storm5_07_15_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Q.csv")
+write.csv(FRCH_storm5_07_15_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_NO3.csv")
+write.csv(FRCH_storm5_07_15_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_fDOM.csv")
+write.csv(FRCH_storm5_07_15_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_SPC.csv")
+write.csv(FRCH_storm5_07_15_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Turb.csv")
+
+write.csv(FRCH_storm6_07_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18.csv")
+write.csv(FRCH_storm6_07_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Q.csv")
+write.csv(FRCH_storm6_07_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_NO3.csv")
+write.csv(FRCH_storm6_07_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_fDOM.csv")
+write.csv(FRCH_storm6_07_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_SPC.csv")
+write.csv(FRCH_storm6_07_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Turb.csv")
+
+write.csv(FRCH_storm7_07_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20.csv")
+write.csv(FRCH_storm7_07_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Q.csv")
+write.csv(FRCH_storm7_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_NO3.csv")
+write.csv(FRCH_storm7_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_fDOM.csv")
+write.csv(FRCH_storm7_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_SPC.csv")
+write.csv(FRCH_storm7_07_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Turb.csv")
+
+write.csv(FRCH_storm8_07_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26.csv")
+write.csv(FRCH_storm8_07_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Q.csv")
+write.csv(FRCH_storm8_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_NO3.csv")
+write.csv(FRCH_storm8_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_fDOM.csv")
+write.csv(FRCH_storm8_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_SPC.csv")
+write.csv(FRCH_storm8_07_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Turb.csv")
+
+write.csv(FRCH_storm9a_08_01, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01.csv")
+write.csv(FRCH_storm9a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Q.csv")
+write.csv(FRCH_storm9a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_NO3.csv")
+write.csv(FRCH_storm9a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_fDOM.csv")
+write.csv(FRCH_storm9a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_SPC.csv")
+write.csv(FRCH_storm9a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Turb.csv")
+
+write.csv(FRCH_storm9b_08_02, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02.csv")
+write.csv(FRCH_storm9b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Q.csv")
+write.csv(FRCH_storm9b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_NO3.csv")
+write.csv(FRCH_storm9b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_fDOM.csv")
+write.csv(FRCH_storm9b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_SPC.csv")
+write.csv(FRCH_storm9b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Turb.csv")
+
+write.csv(FRCH_storm10a_08_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09.csv")
+write.csv(FRCH_storm10a_08_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Q.csv")
+write.csv(FRCH_storm10a_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_NO3.csv")
+write.csv(FRCH_storm10a_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_fDOM.csv")
+write.csv(FRCH_storm10a_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_SPC.csv")
+write.csv(FRCH_storm10a_08_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Turb.csv")
+
+write.csv(FRCH_storm10b_08_12, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12.csv")
+write.csv(FRCH_storm10b_08_12_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Q.csv")
+write.csv(FRCH_storm10b_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_NO3.csv")
+write.csv(FRCH_storm10b_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_fDOM.csv")
+write.csv(FRCH_storm10b_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_SPC.csv")
+write.csv(FRCH_storm10b_08_12_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Turb.csv")
+
+write.csv(FRCH_storm11_08_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20.csv")
+write.csv(FRCH_storm11_08_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Q.csv")
+write.csv(FRCH_storm11_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_NO3.csv")
+write.csv(FRCH_storm11_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_fDOM.csv")
+write.csv(FRCH_storm11_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_SPC.csv")
+write.csv(FRCH_storm11_08_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Turb.csv")
+
+write.csv(FRCH_storm12_09_06, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06.csv")
+write.csv(FRCH_storm12_09_06_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Q.csv")
+write.csv(FRCH_storm12_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_NO3.csv")
+write.csv(FRCH_storm12_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_fDOM.csv")
+write.csv(FRCH_storm12_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_SPC.csv")
+write.csv(FRCH_storm12_09_06_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Turb.csv")
+
+write.csv(FRCH_storm13_09_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09.csv")
+write.csv(FRCH_storm13_09_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Q.csv")
+write.csv(FRCH_storm13_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_NO3.csv")
+write.csv(FRCH_storm13_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_fDOM.csv")
+write.csv(FRCH_storm13_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_SPC.csv")
+write.csv(FRCH_storm13_09_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Turb.csv")
+
+# STRT #
+STRT <- STRT.2020.chem
+STRT$DateTime <- STRT$datetimeAK
+STRT$MeanDischarge <- STRT$Q
+STRT$SpCond.uScm <- STRT$SpCond.µS.cm
+# STRT rain gauge installed on the 29th of July #
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-05 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'STRT precip. (mm)') 
+par(new = T)
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+
+abline(v = as.POSIXct(strt.ten.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.ten.twenty.four$DateTime), col="green", lwd = 0.1)
+par(new = T)
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-05 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+par(new = T)
+plot(strt.final.discharge.2020$MeanDischarge ~ strt.final.discharge.2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage")) 
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+lines(STRT$nitrateuM * 45 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+
+### Storms ###
+# STRT #
+# Storm 1a #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-18 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-20 2:30:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm1a_06_18 = STRT[STRT$DateTime > as.POSIXct("2020-06-18 23:30:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-06-20 02:30:00", tz="America/Anchorage"),]
+plot(STRT_storm1a_06_18$MeanDischarge ~ as.POSIXct(STRT_storm1a_06_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,2700), col="blue", main="STRT 200618 storm 1a",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 45 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1b #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 05:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-21 22:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm1b_06_20 = STRT[STRT$DateTime > as.POSIXct("2020-06-20 05:30:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-06-21 22:00:00", tz="America/Anchorage"),]
+plot(STRT_storm1b_06_20$MeanDischarge ~ as.POSIXct(STRT_storm1b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,5000), col="blue", main="STRT 200620 storm 1b",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 45 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1c #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-23 02:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm1c_06_21 = STRT[STRT$DateTime > as.POSIXct("2020-06-21 23:30:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-06-23 02:00:00", tz="America/Anchorage"),]
+plot(STRT_storm1c_06_21$MeanDischarge ~ as.POSIXct(STRT_storm1c_06_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(4000,6000), col="blue", main="STRT 200621 storm 1c",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 200 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 40 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 100 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1d #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-23 04:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-24 02:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm1d_06_23 = STRT[STRT$DateTime > as.POSIXct("2020-06-23 04:15:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-06-24 02:00:00", tz="America/Anchorage"),]
+plot(STRT_storm1d_06_23$MeanDischarge ~ as.POSIXct(STRT_storm1d_06_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(4000,6000), col="blue", main="STRT 200623 storm 1d",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 200 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 40 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 100 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1e #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-19 00:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-24 02:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-29 02:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm1e_06_24 = STRT[STRT$DateTime > as.POSIXct("2020-06-24 02:45:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-06-28 18:00:00", tz="America/Anchorage"),]
+plot(STRT_storm1e_06_24$MeanDischarge ~ as.POSIXct(STRT_storm1e_06_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(2000,5000), col="blue", main="STRT 200624 storm 1e",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 200 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 40 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 100 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-28 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+
+# Alarm 2? # No discharge response
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-28 00:00:00","2020-07-06 23:45:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+lines(STRT$fDOM.QSU * 40 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-28 00:00:00","2020-07-06 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-28 00:00:00","2020-07-06 20:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-28 0:00:00","2020-07-06 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+#abline(v= as.POSIXct("2020-06-24 02:15:00", tz="America/Anchorage"), col="purple")
+#abline(v= as.POSIXct("2020-06-28 18:00:00", tz="America/Anchorage"), col="purple")
+
+# Storm 2 #
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-07 00:00:00","2020-07-14 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-07 0:00:00","2020-07-14 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-09 10:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-11 04:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm2_07_09 = STRT[STRT$DateTime > as.POSIXct("2020-07-09 10:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-07-11 04:00:00", tz="America/Anchorage"),]
+plot(STRT_storm2_07_09$MeanDischarge ~ as.POSIXct(STRT_storm2_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200709 storm 2",
+     xlim = as.POSIXct(c("2020-07-07 0:00:00","2020-07-14 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 40 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 100 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-07 0:00:00","2020-07-14 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Alarm 3 # No response in discharge or chemistry
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-15 00:00:00","2020-07-20 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-15 00:00:00","2020-07-20 20:00:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-20 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+# Storm 3 # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-20 00:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-20 00:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-20 0:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-20 23:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-25 00:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm3_07_20 = STRT[STRT$DateTime > as.POSIXct("2020-07-20 23:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-07-25 00:00:00", tz="America/Anchorage"),]
+plot(STRT_storm3_07_20$MeanDischarge ~ as.POSIXct(STRT_storm3_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200720 storm 3",
+     xlim = as.POSIXct(c("2020-07-20 0:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 25 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-20 0:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4a # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-01 12:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm4a_08_01 = STRT[STRT$DateTime > as.POSIXct("2020-08-01 12:15:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage"),]
+plot(STRT_storm4a_08_01$MeanDischarge ~ as.POSIXct(STRT_storm4a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200801 storm 4a",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 25 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4b # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-03 02:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-06 11:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm4b_08_03 = STRT[STRT$DateTime > as.POSIXct("2020-08-03 02:15:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-08-06 11:00:00", tz="America/Anchorage"),]
+plot(STRT_storm4b_08_03$MeanDischarge ~ as.POSIXct(STRT_storm4b_08_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,2000), col="blue", main="STRT 200803 storm 4b",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 25 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-06 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 5 # Small response in discharge
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-06 00:00:00","2020-08-12 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-06 0:00:00","2020-08-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-09 13:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-12 04:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm5_08_09 = STRT[STRT$DateTime > as.POSIXct("2020-08-09 13:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-08-12 01:00:00", tz="America/Anchorage"),]
+plot(STRT_storm5_08_09$MeanDischarge ~ as.POSIXct(STRT_storm5_08_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200809 storm 5",
+     xlim = as.POSIXct(c("2020-08-06 0:00:00","2020-08-12 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 10 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-06 0:00:00","2020-08-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6 # Small response in discharge
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-12 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-12 0:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-12 00:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-13 07:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm6_08_12 = STRT[STRT$DateTime > as.POSIXct("2020-08-12 00:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-08-13 07:00:00", tz="America/Anchorage"),]
+plot(STRT_storm6_08_12$MeanDischarge ~ as.POSIXct(STRT_storm6_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200812 storm 6",
+     xlim = as.POSIXct(c("2020-08-12 0:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-12 0:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7a # two storms
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-20 00:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-20 09:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-21 10:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm7a_08_20 = STRT[STRT$DateTime > as.POSIXct("2020-08-20 09:15:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-08-21 10:00:00", tz="America/Anchorage"),]
+plot(STRT_storm7a_08_20$MeanDischarge ~ as.POSIXct(STRT_storm7a_08_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200709 storm 7a",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7b # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-20 00:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-21 11:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-22 11:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm7b_08_21 = STRT[STRT$DateTime > as.POSIXct("2020-08-21 11:00:00", tz="America/Anchorage") &
+                            STRT$DateTime < as.POSIXct("2020-08-22 11:00:00", tz="America/Anchorage"),]
+plot(STRT_storm7b_08_21$MeanDischarge ~ as.POSIXct(STRT_storm7b_08_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200821 storm 7b",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-08-23 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8 # Looks like there is a response after the 26th of August???
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-23 00:00:00","2020-09-01 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-20 00:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 20 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-20 00:00:00","2020-07-27 20:00:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-23 0:00:00","2020-09-01 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-28 09:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-30 06:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm8_08_28= STRT[STRT$DateTime > as.POSIXct("2020-08-28 09:15:00", tz="America/Anchorage") &
+                          STRT$DateTime < as.POSIXct("2020-08-29 06:00:00", tz="America/Anchorage"),]
+plot(STRT_storm8_08_28$MeanDischarge ~ as.POSIXct(STRT_storm8_08_28$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,1400), col="blue", main="STRT 200828 storm 8",
+     xlim = as.POSIXct(c("2020-08-23 0:00:00","2020-09-01 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-23 0:00:00","2020-09-01 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9a # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 0:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-03 13:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-06 15:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm9a_09_03= STRT[STRT$DateTime > as.POSIXct("2020-09-03 13:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-09-06 15:00:00", tz="America/Anchorage"),]
+plot(STRT_storm9a_09_03$MeanDischarge ~ as.POSIXct(STRT_storm9a_09_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,2000), col="blue", main="STRT 200903 storm 9a",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9b # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 0:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-06 18:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-08 04:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm9b_09_06= STRT[STRT$DateTime > as.POSIXct("2020-09-06 18:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-09-08 04:00:00", tz="America/Anchorage"),]
+plot(STRT_storm9b_09_06$MeanDischarge ~ as.POSIXct(STRT_storm9b_09_06$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="STRT 200906 storm 9b",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-12 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9c # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-14 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 0:00:00","2020-09-14 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-09 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-14 09:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm9c_09_09= STRT[STRT$DateTime > as.POSIXct("2020-09-09 08:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-09-14 09:00:00", tz="America/Anchorage"),]
+plot(STRT_storm9c_09_09$MeanDischarge ~ as.POSIXct(STRT_storm9c_09_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,2500), col="blue", main="STRT 200909 storm 9c",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-14 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-14 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 10 # 
+plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-21 00:00:00","2020-09-30 20:00:00"), tz="America/Anchorage"))
+abline(h=STRT_bfQ_mn*2, col="red", lty=2)
+abline(h=STRT_bfQ_mn, col="red")
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-21 0:00:00","2020-09-30 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-23 20:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-26 10:00:00", tz="America/Anchorage"), col="purple")
+
+STRT_storm10_09_23= STRT[STRT$DateTime > as.POSIXct("2020-09-23 20:15:00", tz="America/Anchorage") &
+                           STRT$DateTime < as.POSIXct("2020-09-26 10:00:00", tz="America/Anchorage"),]
+plot(STRT_storm10_09_23$MeanDischarge ~ as.POSIXct(STRT_storm10_09_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,1400), col="blue", main="STRT 200923 storm 10",
+     xlim = as.POSIXct(c("2020-09-21 0:00:00","2020-09-30 20:00:00"), tz="America/Anchorage"))
+lines(STRT$nitrateuM * 50 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$fDOM.QSU * 15 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$SpCond.uScm * 12 ~ STRT$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(STRT$Turbidity.FNU * 120 ~ STRT$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-21 0:00:00","2020-09-30 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# modify format and save STRT storms #
+
+
+STRT_storm1a_06_18_Q = subset(STRT_storm1a_06_18, select = c("DateTime","MeanDischarge"))
+names(STRT_storm1a_06_18_Q) = c("valuedatetime","datavalue")
+STRT_storm1a_06_18_NO3 = subset(STRT_storm1a_06_18, select = c("DateTime","nitrateuM"))
+names(STRT_storm1a_06_18_NO3) = c("valuedatetime","datavalue")
+STRT_storm1a_06_18_fDOM = subset(STRT_storm1a_06_18, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm1a_06_18_fDOM) = c("valuedatetime","datavalue")
+STRT_storm1a_06_18_SPC = subset(STRT_storm1a_06_18, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm1a_06_18_SPC) = c("valuedatetime","datavalue")
+STRT_storm1a_06_18_turb = subset(STRT_storm1a_06_18, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm1a_06_18_turb) = c("valuedatetime","datavalue")
+
+STRT_storm1b_06_20_Q = subset(STRT_storm1b_06_20, select = c("DateTime","MeanDischarge"))
+names(STRT_storm1b_06_20_Q) = c("valuedatetime","datavalue")
+STRT_storm1b_06_20_NO3 = subset(STRT_storm1b_06_20, select = c("DateTime","nitrateuM"))
+names(STRT_storm1b_06_20_NO3) = c("valuedatetime","datavalue")
+STRT_storm1b_06_20_fDOM = subset(STRT_storm1b_06_20, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm1b_06_20_Q) = c("valuedatetime","datavalue")
+STRT_storm1b_06_20_SPC = subset(STRT_storm1b_06_20, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm1b_06_20_SPC) = c("valuedatetime","datavalue")
+STRT_storm1b_06_20_turb = subset(STRT_storm1b_06_20, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm1b_06_20_turb) = c("valuedatetime","datavalue")
+
+STRT_storm1c_06_21_Q = subset(STRT_storm1c_06_21, select = c("DateTime","MeanDischarge"))
+names(STRT_storm1c_06_21_Q) = c("valuedatetime","datavalue")
+STRT_storm1c_06_21_NO3 = subset(STRT_storm1c_06_21, select = c("DateTime","nitrateuM"))
+names(STRT_storm1c_06_21_NO3) = c("valuedatetime","datavalue")
+STRT_storm1c_06_21_fDOM = subset(STRT_storm1c_06_21, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm1c_06_21_fDOM) = c("valuedatetime","datavalue")
+STRT_storm1c_06_21_SPC = subset(STRT_storm1c_06_21, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm1c_06_21_SPC) = c("valuedatetime","datavalue")
+STRT_storm1c_06_21_turb = subset(STRT_storm1c_06_21, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm1c_06_21_turb) = c("valuedatetime","datavalue")
+
+STRT_storm1d_06_23_Q = subset(STRT_storm1d_06_23, select = c("DateTime","MeanDischarge"))
+names(STRT_storm1d_06_23_Q) = c("valuedatetime","datavalue")
+STRT_storm1d_06_23_NO3 = subset(STRT_storm1d_06_23, select = c("DateTime","nitrateuM"))
+names(STRT_storm1d_06_23_NO3) = c("valuedatetime","datavalue")
+STRT_storm1d_06_23_fDOM = subset(STRT_storm1d_06_23, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm1d_06_23_fDOM) = c("valuedatetime","datavalue")
+STRT_storm1d_06_23_SPC = subset(STRT_storm1d_06_23, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm1d_06_23_SPC) = c("valuedatetime","datavalue")
+STRT_storm1d_06_23_turb = subset(STRT_storm1d_06_23, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm1d_06_23_turb) = c("valuedatetime","datavalue")
+
+STRT_storm1e_06_24_Q = subset(STRT_storm1e_06_24, select = c("DateTime","MeanDischarge"))
+names(STRT_storm1e_06_24_Q) = c("valuedatetime","datavalue")
+STRT_storm1e_06_24_NO3 = subset(STRT_storm1e_06_24, select = c("DateTime","nitrateuM"))
+names(STRT_storm1e_06_24_NO3) = c("valuedatetime","datavalue")
+STRT_storm1e_06_24_fDOM = subset(STRT_storm1e_06_24, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm1e_06_24_fDOM) = c("valuedatetime","datavalue")
+STRT_storm1e_06_24_SPC = subset(STRT_storm1e_06_24, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm1e_06_24_SPC) = c("valuedatetime","datavalue")
+STRT_storm1e_06_24_turb = subset(STRT_storm1e_06_24, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm1e_06_24_turb) = c("valuedatetime","datavalue")
+
+# Storm 2 # 
+STRT_storm2_07_09_Q = subset(STRT_storm2_07_09, select = c("DateTime","MeanDischarge"))
+names(STRT_storm2_07_09_Q) = c("valuedatetime","datavalue")
+STRT_storm2_07_09_NO3 = subset(STRT_storm2_07_09, select = c("DateTime", "nitrateuM"))
+names(STRT_storm2_07_09_NO3) = c("valuedatetime","datavalue")
+STRT_storm2_07_09_fDOM = subset(STRT_storm2_07_09, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm2_07_09_fDOM) = c("valuedatetime","datavalue")
+STRT_storm2_07_09_SPC = subset(STRT_storm2_07_09, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm2_07_09_SPC) = c("valuedatetime","datavalue")
+STRT_storm2_07_09_turb = subset(STRT_storm2_07_09, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm2_07_09_turb) = c("valuedatetime","datavalue")
+
+# Storm 3 #
+STRT_storm3_07_20_Q = subset(STRT_storm3_07_20, select = c("DateTime","MeanDischarge"))
+names(STRT_storm3_07_20_Q) = c("valuedatetime","datavalue")
+STRT_storm3_07_20_NO3 = subset(STRT_storm3_07_20, select = c("DateTime", "nitrateuM"))
+names(STRT_storm3_07_20_NO3) = c("valuedatetime","datavalue")
+STRT_storm3_07_20_fDOM = subset(STRT_storm3_07_20, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm3_07_20_fDOM) = c("valuedatetime","datavalue")
+STRT_storm3_07_20_SPC = subset(STRT_storm3_07_20, select = c("DateTime","SpCond.uScm"))
+names(STRT_storm3_07_20_SPC) = c("valuedatetime","datavalue")
+STRT_storm3_07_20_turb = subset(STRT_storm3_07_20, select = c("DateTime","Turbidity.FNU"))
+names(STRT_storm3_07_20_turb) = c("valuedatetime","datavalue")
+
+# Storm 4 #
+STRT_storm4a_08_01_Q = subset(STRT_storm4a_08_01, select = c("DateTime","MeanDischarge"))
+names(STRT_storm4a_08_01_Q) = c("valuedatetime","datavalue")
+STRT_storm4a_08_01_NO3 = subset(STRT_storm4a_08_01, select = c("DateTime", "nitrateuM"))
+names(STRT_storm4a_08_01_NO3) = c("valuedatetime","datavalue")
+STRT_storm4a_08_01_fDOM = subset(STRT_storm4a_08_01, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm4a_08_01_fDOM) = c("valuedatetime","datavalue")
+STRT_storm4a_08_01_SPC = subset(STRT_storm4a_08_01, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm4a_08_01_SPC) = c("valuedatetime","datavalue")
+STRT_storm4a_08_01_turb = subset(STRT_storm4a_08_01, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm4a_08_01_turb) = c("valuedatetime","datavalue")
+
+STRT_storm4b_08_03_Q = subset(STRT_storm4b_08_03, select = c("DateTime","MeanDischarge"))
+names(STRT_storm4b_08_03_Q) = c("valuedatetime","datavalue")
+STRT_storm4b_08_03_NO3 = subset(STRT_storm4b_08_03, select = c("DateTime", "nitrateuM"))
+names(STRT_storm4b_08_03_NO3) = c("valuedatetime","datavalue")
+STRT_storm4b_08_03_fDOM = subset(STRT_storm4b_08_03, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm4b_08_03_fDOM) = c("valuedatetime","datavalue")
+STRT_storm4b_08_03_SPC = subset(STRT_storm4b_08_03, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm4b_08_03_SPC) = c("valuedatetime","datavalue")
+STRT_storm4b_08_03_turb = subset(STRT_storm4b_08_03, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm4b_08_03_turb) = c("valuedatetime","datavalue")
+
+# Storm 5 #
+STRT_storm5_08_09_Q = subset(STRT_storm5_08_09, select = c("DateTime","MeanDischarge"))
+names(STRT_storm5_08_09_Q) = c("valuedatetime","datavalue")
+STRT_storm5_08_09_NO3 = subset(STRT_storm5_08_09, select = c("DateTime", "nitrateuM"))
+names(STRT_storm5_08_09_NO3) = c("valuedatetime","datavalue")
+STRT_storm5_08_09_fDOM = subset(STRT_storm5_08_09, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm5_08_09_fDOM) = c("valuedatetime","datavalue")
+STRT_storm5_08_09_SPC = subset(STRT_storm5_08_09, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm5_08_09_SPC) = c("valuedatetime","datavalue")
+STRT_storm5_08_09_turb = subset(STRT_storm5_08_09, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm5_08_09_turb) = c("valuedatetime","datavalue")
+
+# Storm 6 #
+STRT_storm6_08_12_Q = subset(STRT_storm6_08_12, select = c("DateTime","MeanDischarge"))
+names(STRT_storm6_08_12_Q) = c("valuedatetime","datavalue")
+STRT_storm6_08_12_NO3 = subset(STRT_storm6_08_12, select = c("DateTime", "nitrateuM"))
+names(STRT_storm6_08_12_NO3) = c("valuedatetime","datavalue")
+STRT_storm6_08_12_fDOM = subset(STRT_storm6_08_12, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm6_08_12_fDOM) = c("valuedatetime","datavalue")
+STRT_storm6_08_12_SPC = subset(STRT_storm6_08_12, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm6_08_12_SPC) = c("valuedatetime","datavalue")
+STRT_storm6_08_12_turb = subset(STRT_storm6_08_12, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm6_08_12_turb) = c("valuedatetime","datavalue")
+
+# Storm 7 #
+STRT_storm7a_08_20_Q = subset(STRT_storm7a_08_20, select = c("DateTime","MeanDischarge"))
+names(STRT_storm7a_08_20_Q) = c("valuedatetime","datavalue")
+STRT_storm7a_08_20_NO3 = subset(STRT_storm7a_08_20, select = c("DateTime", "nitrateuM"))
+names(STRT_storm7a_08_20_NO3) = c("valuedatetime","datavalue")
+STRT_storm7a_08_20_fDOM = subset(STRT_storm7a_08_20, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm7a_08_20_fDOM) = c("valuedatetime","datavalue")
+STRT_storm7a_08_20_SPC = subset(STRT_storm7a_08_20, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm7a_08_20_SPC) = c("valuedatetime","datavalue")
+STRT_storm7a_08_20_turb = subset(STRT_storm7a_08_20, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm7a_08_20_turb) = c("valuedatetime","datavalue")
+
+STRT_storm7b_08_21_Q = subset(STRT_storm7b_08_21, select = c("DateTime","MeanDischarge"))
+names(STRT_storm7b_08_21_Q) = c("valuedatetime","datavalue")
+STRT_storm7b_08_21_NO3 = subset(STRT_storm7b_08_21, select = c("DateTime", "nitrateuM"))
+names(STRT_storm7b_08_21_NO3) = c("valuedatetime","datavalue")
+STRT_storm7b_08_21_fDOM = subset(STRT_storm7b_08_21, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm7b_08_21_fDOM) = c("valuedatetime","datavalue")
+STRT_storm7b_08_21_SPC = subset(STRT_storm7b_08_21, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm7b_08_21_SPC) = c("valuedatetime","datavalue")
+STRT_storm7b_08_21_turb = subset(STRT_storm7b_08_21, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm7b_08_21_turb) = c("valuedatetime","datavalue")
+
+# Storm 8 #
+STRT_storm8_08_28_Q = subset(STRT_storm8_08_28, select = c("DateTime","MeanDischarge"))
+names(STRT_storm8_08_28_Q) = c("valuedatetime","datavalue")
+STRT_storm8_08_28_NO3 = subset(STRT_storm8_08_28, select = c("DateTime", "nitrateuM"))
+names(STRT_storm8_08_28_NO3) = c("valuedatetime","datavalue")
+STRT_storm8_08_28_fDOM = subset(STRT_storm8_08_28, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm8_08_28_fDOM) = c("valuedatetime","datavalue")
+STRT_storm8_08_28_SPC = subset(STRT_storm8_08_28, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm8_08_28_SPC) = c("valuedatetime","datavalue")
+STRT_storm8_08_28_turb = subset(STRT_storm8_08_28, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm8_08_28_turb) = c("valuedatetime","datavalue")
+
+# Storm 9 #
+STRT_storm9a_09_03_Q = subset(STRT_storm9a_09_03, select = c("DateTime","MeanDischarge"))
+names(STRT_storm9a_09_03_Q) = c("valuedatetime","datavalue")
+STRT_storm9a_09_03_NO3 = subset(STRT_storm9a_09_03, select = c("DateTime", "nitrateuM"))
+names(STRT_storm9a_09_03_NO3) = c("valuedatetime","datavalue")
+STRT_storm9a_09_03_fDOM = subset(STRT_storm9a_09_03, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm9a_09_03_fDOM) = c("valuedatetime","datavalue")
+STRT_storm9a_09_03_SPC = subset(STRT_storm9a_09_03, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm9a_09_03_SPC) = c("valuedatetime","datavalue")
+STRT_storm9a_09_03_turb = subset(STRT_storm9a_09_03, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm9a_09_03_turb) = c("valuedatetime","datavalue")
+
+STRT_storm9b_09_06_Q = subset(STRT_storm9b_09_06, select = c("DateTime","MeanDischarge"))
+names(STRT_storm9b_09_06_Q) = c("valuedatetime","datavalue")
+STRT_storm9b_09_06_NO3 = subset(STRT_storm9b_09_06, select = c("DateTime", "nitrateuM"))
+names(STRT_storm9b_09_06_NO3) = c("valuedatetime","datavalue")
+STRT_storm9b_09_06_fDOM = subset(STRT_storm9b_09_06, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm9b_09_06_fDOM) = c("valuedatetime","datavalue")
+STRT_storm9b_09_06_SPC = subset(STRT_storm9b_09_06, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm9b_09_06_SPC) = c("valuedatetime","datavalue")
+STRT_storm9b_09_06_turb = subset(STRT_storm9b_09_06, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm9b_09_06_turb) = c("valuedatetime","datavalue")
+
+STRT_storm9c_09_09_Q = subset(STRT_storm9c_09_09, select = c("DateTime","MeanDischarge"))
+names(STRT_storm9c_09_09_Q) = c("valuedatetime","datavalue")
+STRT_storm9c_09_09_NO3 = subset(STRT_storm9c_09_09, select = c("DateTime", "nitrateuM"))
+names(STRT_storm9c_09_09_NO3) = c("valuedatetime","datavalue")
+STRT_storm9c_09_09_fDOM = subset(STRT_storm9c_09_09, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm9c_09_09_fDOM) = c("valuedatetime","datavalue")
+STRT_storm9c_09_09_SPC = subset(STRT_storm9c_09_09, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm9c_09_09_SPC) = c("valuedatetime","datavalue")
+STRT_storm9c_09_09_turb = subset(STRT_storm9c_09_09, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm9c_09_09_turb) = c("valuedatetime","datavalue")
+
+# Storm 10 #
+STRT_storm10_09_23_Q = subset(STRT_storm10_09_23, select = c("DateTime","MeanDischarge"))
+names(STRT_storm10_09_23_Q) = c("valuedatetime","datavalue")
+STRT_storm10_09_23_NO3 = subset(STRT_storm10_09_23, select = c("DateTime", "nitrateuM"))
+names(STRT_storm10_09_23_NO3) = c("valuedatetime","datavalue")
+STRT_storm10_09_23_fDOM = subset(STRT_storm10_09_23, select = c("DateTime","fDOM.QSU"))
+names(STRT_storm10_09_23_fDOM) = c("valuedatetime","datavalue")
+STRT_storm10_09_23_SPC = subset(STRT_storm10_09_23, select = c("DateTime", "SpCond.uScm"))
+names(STRT_storm10_09_23_SPC) = c("valuedatetime","datavalue")
+STRT_storm10_09_23_turb = subset(STRT_storm10_09_23, select = c("DateTime", "Turbidity.FNU"))
+names(STRT_storm10_09_23_turb) = c("valuedatetime","datavalue")
+
+### Write csv ###
+write.csv(STRT_storm1a_06_18, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18.csv")
+write.csv(STRT_storm1a_06_18_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Q.csv")
+write.csv(STRT_storm1a_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_NO3.csv")
+write.csv(STRT_storm1a_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_fDOM.csv")
+write.csv(STRT_storm1a_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_SPC.csv")
+write.csv(STRT_storm1a_06_18_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Turb.csv")
+
+write.csv(STRT_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20.csv")
+write.csv(STRT_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Q.csv")
+write.csv(STRT_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_NO3.csv")
+write.csv(STRT_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_fDOM.csv")
+write.csv(STRT_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_SPC.csv")
+write.csv(STRT_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Turb.csv")
+
+write.csv(STRT_storm1c_06_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21.csv")
+write.csv(STRT_storm1c_06_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Q.csv")
+write.csv(STRT_storm1c_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_NO3.csv")
+write.csv(STRT_storm1c_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_fDOM.csv")
+write.csv(STRT_storm1c_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_SPC.csv")
+write.csv(STRT_storm1c_06_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Turb.csv")
+
+write.csv(STRT_storm1d_06_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23.csv")
+write.csv(STRT_storm1d_06_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Q.csv")
+write.csv(STRT_storm1d_06_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_NO3.csv")
+write.csv(STRT_storm1d_06_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_fDOM.csv")
+write.csv(STRT_storm1d_06_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_SPC.csv")
+write.csv(STRT_storm1d_06_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Turb.csv")
+
+write.csv(STRT_storm1e_06_24, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24.csv")
+write.csv(STRT_storm1e_06_24_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Q.csv")
+write.csv(STRT_storm1e_06_24_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_NO3.csv")
+write.csv(STRT_storm1e_06_24_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_fDOM.csv")
+write.csv(STRT_storm1e_06_24_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_SPC.csv")
+write.csv(STRT_storm1e_06_24_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Turb.csv")
+
+write.csv(STRT_storm2_07_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09.csv")
+write.csv(STRT_storm2_07_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Q.csv")
+write.csv(STRT_storm2_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_NO3.csv")
+write.csv(STRT_storm2_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_fDOM.csv")
+write.csv(STRT_storm2_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_SPC.csv")
+write.csv(STRT_storm2_07_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Turb.csv")
+
+write.csv(STRT_storm3_07_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20.csv")
+write.csv(STRT_storm3_07_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Q.csv")
+write.csv(STRT_storm3_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_NO3.csv")
+write.csv(STRT_storm3_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_fDOM.csv")
+write.csv(STRT_storm3_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_SPC.csv")
+write.csv(STRT_storm3_07_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Turb.csv")
+
+write.csv(STRT_storm4a_08_01, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01.csv")
+write.csv(STRT_storm4a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Q.csv")
+write.csv(STRT_storm4a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_NO3.csv")
+write.csv(STRT_storm4a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_fDOM.csv")
+write.csv(STRT_storm4a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_SPC.csv")
+write.csv(STRT_storm4a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Turb.csv")
+
+write.csv(STRT_storm4b_08_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03.csv")
+write.csv(STRT_storm4b_08_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Q.csv")
+write.csv(STRT_storm4b_08_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_NO3.csv")
+write.csv(STRT_storm4b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_fDOM.csv")
+write.csv(STRT_storm4b_08_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_SPC.csv")
+write.csv(STRT_storm4b_08_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Turb.csv")
+
+write.csv(STRT_storm5_08_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09.csv")
+write.csv(STRT_storm5_08_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Q.csv")
+write.csv(STRT_storm5_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_NO3.csv")
+write.csv(STRT_storm5_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_fDOM.csv")
+write.csv(STRT_storm5_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_SPC.csv")
+write.csv(STRT_storm5_08_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Turb.csv")
+
+write.csv(STRT_storm6_08_12, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12.csv")
+write.csv(STRT_storm6_08_12_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Q.csv")
+write.csv(STRT_storm6_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_NO3.csv")
+write.csv(STRT_storm6_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_fDOM.csv")
+write.csv(STRT_storm6_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_SPC.csv")
+write.csv(STRT_storm6_08_12_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Turb.csv")
+
+write.csv(STRT_storm7a_08_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20.csv")
+write.csv(STRT_storm7a_08_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Q.csv")
+write.csv(STRT_storm7a_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_NO3.csv")
+write.csv(STRT_storm7a_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_fDOM.csv")
+write.csv(STRT_storm7a_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_SPC.csv")
+write.csv(STRT_storm7a_08_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Turb.csv")
+
+write.csv(STRT_storm7b_08_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21.csv")
+write.csv(STRT_storm7b_08_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Q.csv")
+write.csv(STRT_storm7b_08_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_NO3.csv")
+write.csv(STRT_storm7b_08_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_fDOM.csv")
+write.csv(STRT_storm7b_08_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_SPC.csv")
+write.csv(STRT_storm7b_08_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Turb.csv")
+
+write.csv(STRT_storm8_08_28, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28.csv")
+write.csv(STRT_storm8_08_28_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Q.csv")
+write.csv(STRT_storm8_08_28_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_NO3.csv")
+write.csv(STRT_storm8_08_28_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_fDOM.csv")
+write.csv(STRT_storm8_08_28_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_SPC.csv")
+write.csv(STRT_storm8_08_28_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Turb.csv")
+
+write.csv(STRT_storm9a_09_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03.csv")
+write.csv(STRT_storm9a_09_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Q.csv")
+write.csv(STRT_storm9a_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_NO3.csv")
+write.csv(STRT_storm9a_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_fDOM.csv")
+write.csv(STRT_storm9a_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_SPC.csv")
+write.csv(STRT_storm9a_09_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Turb.csv")
+
+write.csv(STRT_storm9b_09_06, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06.csv")
+write.csv(STRT_storm9b_09_06_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Q.csv")
+write.csv(STRT_storm9b_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_NO3.csv")
+write.csv(STRT_storm9b_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_fDOM.csv")
+write.csv(STRT_storm9b_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_SPC.csv")
+write.csv(STRT_storm9b_09_06_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Turb.csv")
+
+write.csv(STRT_storm9c_09_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09.csv")
+write.csv(STRT_storm9c_09_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Q.csv")
+write.csv(STRT_storm9c_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_NO3.csv")
+write.csv(STRT_storm9c_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_fDOM.csv")
+write.csv(STRT_storm9c_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_SPC.csv")
+write.csv(STRT_storm9c_09_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Turb.csv")
+
+write.csv(STRT_storm10_09_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23.csv")
+write.csv(STRT_storm10_09_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Q.csv")
+write.csv(STRT_storm10_09_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_NO3.csv")
+write.csv(STRT_storm10_09_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_fDOM.csv")
+write.csv(STRT_storm10_09_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_SPC.csv")
+write.csv(STRT_storm10_09_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Turb.csv")
+
+# VAUL #
+VAUL <- VAUL.2020.chem
+VAUL$MeanDischarge <- VAUL$Q
+VAUL$DateTime <- VAUL$datetimeAK
+VAUL$SpCond.uScm <- VAUL$SpCond.µS.cm
+
+# VAUL rain gauge installed on the 22nd of June but added FRCH rain gauge on for before that#
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'VAUL precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+par(new = T)
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+par(new = T)
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage")) 
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+### Storms ###
+# VAUL #
+# Storm 1a
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-19 07:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-20 11:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm1a_06_19= VAUL[VAUL$DateTime > as.POSIXct("2020-06-19 07:00:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-06-20 11:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm1a_06_19$MeanDischarge ~ as.POSIXct(VAUL_storm1a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20619 storm 1a",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1b
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 12:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm1b_06_20= VAUL[VAUL$DateTime > as.POSIXct("2020-06-20 12:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm1b_06_20$MeanDischarge ~ as.POSIXct(VAUL_storm1b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="VAUL 20620 storm 1b",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 1c
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-22 23:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-28 05:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm1c_06_22= VAUL[VAUL$DateTime > as.POSIXct("2020-06-22 23:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-06-27 05:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm1c_06_22$MeanDischarge ~ as.POSIXct(VAUL_storm1c_06_22$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20622 storm 1c",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# storm 2 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-28 04:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-30 10:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm2_06_28= VAUL[VAUL$DateTime > as.POSIXct("2020-06-28 04:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-06-30 02:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm2_06_28$MeanDischarge ~ as.POSIXct(VAUL_storm2_06_28$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20628 storm 2",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 3 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-09 04:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-12 18:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm3_07_09= VAUL[VAUL$DateTime > as.POSIXct("2020-07-09 04:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-07-12 10:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm3_07_09$MeanDischarge ~ as.POSIXct(VAUL_storm3_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="VAUL 200708 storm 3",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-12 20:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-16 04:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm4_07_12= VAUL[VAUL$DateTime > as.POSIXct("2020-07-12 20:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-07-16 04:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm4_07_12$MeanDischarge ~ as.POSIXct(VAUL_storm4_07_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="VAUL 20712 storm 4",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 1 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 5 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-26 23:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-29 09:00:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm5_07_26= VAUL[VAUL$DateTime > as.POSIXct("2020-07-26 23:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-07-29 01:00:00", tz="America/Anchorage"),]
+plot(VAUL_storm5_07_26$MeanDischarge ~ as.POSIXct(VAUL_storm5_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="VAUL 20726 storm 5",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 1 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6a #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-01 20:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-02 23:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm6a_08_01= VAUL[VAUL$DateTime > as.POSIXct("2020-08-01 20:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-08-02 23:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm6a_08_01$MeanDischarge ~ as.POSIXct(VAUL_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL 20801 storm 6a",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 1 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6b #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-02 23:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-08 07:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm6b_08_02= VAUL[VAUL$DateTime > as.POSIXct("2020-08-02 23:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-08-08 07:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm6b_08_02$MeanDischarge ~ as.POSIXct(VAUL_storm6b_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL 20802 storm 6b",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-08 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-11 07:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm7_08_08= VAUL[VAUL$DateTime > as.POSIXct("2020-08-08 08:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-08-11 07:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm7_08_08$MeanDischarge ~ as.POSIXct(VAUL_storm7_08_08$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 20808 storm 7",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-11 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-12 07:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm8_08_11= VAUL[VAUL$DateTime > as.POSIXct("2020-08-11 08:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-08-12 07:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm8_08_11$MeanDischarge ~ as.POSIXct(VAUL_storm8_08_11$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200811 storm 8",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-12 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-13 07:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm9_08_12= VAUL[VAUL$DateTime > as.POSIXct("2020-08-12 08:15:00", tz="America/Anchorage") &
+                          VAUL$DateTime < as.POSIXct("2020-08-13 07:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm9_08_12$MeanDischarge ~ as.POSIXct(VAUL_storm9_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200812 storm 9",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 10 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-25 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-27 09:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm10_08_25= VAUL[VAUL$DateTime > as.POSIXct("2020-08-25 08:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-08-27 09:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm10_08_25$MeanDischarge ~ as.POSIXct(VAUL_storm10_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200825 storm 10",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 1 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 11 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-27 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-31 12:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm11_08_27= VAUL[VAUL$DateTime > as.POSIXct("2020-08-27 08:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-08-31 12:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm11_08_27$MeanDischarge ~ as.POSIXct(VAUL_storm11_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200827 storm 11",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 12 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-01 12:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-03 07:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm12_09_01= VAUL[VAUL$DateTime > as.POSIXct("2020-09-01 12:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-09-03 07:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm12_09_01$MeanDischarge ~ as.POSIXct(VAUL_storm12_09_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200901 storm 12",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 13 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-03 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-06 16:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm13_09_03= VAUL[VAUL$DateTime > as.POSIXct("2020-09-03 08:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-09-06 16:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm13_09_03$MeanDischarge ~ as.POSIXct(VAUL_storm13_09_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2000), col="blue", main="VAUL 200903 storm 13",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 14 #
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-06 18:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-08 23:15:00", tz="America/Anchorage"), col="purple")
+
+VAUL_storm14_09_06= VAUL[VAUL$DateTime > as.POSIXct("2020-09-06 18:15:00", tz="America/Anchorage") &
+                           VAUL$DateTime < as.POSIXct("2020-09-08 23:15:00", tz="America/Anchorage"),]
+plot(VAUL_storm14_09_06$MeanDischarge ~ as.POSIXct(VAUL_storm14_09_06$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200906 storm 14",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# no alarms # no response in discharge or chemistry
+plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+# no alarms # no response in discharge or chemistry
+plot(VAUL$MeanDischarge ~ vAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
+     xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
+abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
+abline(h=VAUL_bfQ_mn, col="red")
+lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
+lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+
+
+# rename and subset individual water quality
+VAUL_storm1a_06_19_Q = subset(VAUL_storm1a_06_19, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm1a_06_19_Q) = c("valuedatetime","datavalue")
+VAUL_storm1a_06_19_NO3 = subset(VAUL_storm1a_06_19, select = c("DateTime","nitrateuM"))
+names(VAUL_storm1a_06_19_NO3) = c("valuedatetime","datavalue")
+VAUL_storm1a_06_19_fDOM = subset(VAUL_storm1a_06_19, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm1a_06_19_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm1a_06_19_SPC = subset(VAUL_storm1a_06_19, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm1a_06_19_SPC) = c("valuedatetime","datavalue")
+VAUL_storm1a_06_19_turb = subset(VAUL_storm1a_06_19, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm1a_06_19_turb) = c("valuedatetime","datavalue")
+
+VAUL_storm1b_06_20_Q = subset(VAUL_storm1b_06_20, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm1b_06_20_Q) = c("valuedatetime","datavalue")
+VAUL_storm1b_06_20_NO3 = subset(VAUL_storm1b_06_20, select = c("DateTime","nitrateuM"))
+names(VAUL_storm1b_06_20_NO3) = c("valuedatetime","datavalue")
+VAUL_storm1b_06_20_fDOM = subset(VAUL_storm1b_06_20, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm1b_06_20_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm1b_06_20_SPC = subset(VAUL_storm1b_06_20, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm1b_06_20_SPC) = c("valuedatetime","datavalue")
+VAUL_storm1b_06_20_turb = subset(VAUL_storm1b_06_20, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm1b_06_20_turb) = c("valuedatetime","datavalue")
+
+VAUL_storm1c_06_22_Q = subset(VAUL_storm1c_06_22, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm1c_06_22_Q) = c("valuedatetime","datavalue")
+VAUL_storm1c_06_22_NO3 = subset(VAUL_storm1c_06_22, select = c("DateTime","nitrateuM"))
+names(VAUL_storm1c_06_22_NO3) = c("valuedatetime","datavalue")
+VAUL_storm1c_06_22_fDOM = subset(VAUL_storm1c_06_22, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm1c_06_22_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm1c_06_22_SPC = subset(VAUL_storm1c_06_22, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm1c_06_22_SPC) = c("valuedatetime","datavalue")
+VAUL_storm1c_06_22_turb = subset(VAUL_storm1c_06_22, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm1c_06_22_turb) = c("valuedatetime","datavalue")
+
+# Storm 2 #
+VAUL_storm2_06_28_Q = subset(VAUL_storm2_06_28, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm2_06_28_Q) = c("valuedatetime","datavalue")
+VAUL_storm2_06_28_NO3 = subset(VAUL_storm2_06_28, select = c("DateTime","nitrateuM"))
+names(VAUL_storm2_06_28_NO3) = c("valuedatetime","datavalue")
+VAUL_storm2_06_28_fDOM = subset(VAUL_storm2_06_28, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm2_06_28_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm2_06_28_SPC = subset(VAUL_storm2_06_28, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm2_06_28_SPC) = c("valuedatetime","datavalue")
+VAUL_storm2_06_28_turb = subset(VAUL_storm2_06_28, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm2_06_28_turb) = c("valuedatetime","datavalue")
+
+
+# Storm 3 #
+VAUL_storm3_07_09_Q = subset(VAUL_storm3_07_09, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm3_07_09_Q) = c("valuedatetime","datavalue")
+VAUL_storm3_07_09_NO3 = subset(VAUL_storm3_07_09, select = c("DateTime","nitrateuM"))
+names(VAUL_storm3_07_09_NO3) = c("valuedatetime","datavalue")
+VAUL_storm3_07_09_fDOM = subset(VAUL_storm3_07_09, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm3_07_09_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm3_07_09_SPC = subset(VAUL_storm3_07_09, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm3_07_09_SPC) = c("valuedatetime","datavalue")
+VAUL_storm3_07_09_turb = subset(VAUL_storm3_07_09, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm3_07_09_turb) = c("valuedatetime","datavalue")
+
+# Storm 4 #
+VAUL_storm4_07_12_Q = subset(VAUL_storm4_07_12, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm4_07_12_Q) = c("valuedatetime","datavalue")
+VAUL_storm4_07_12_NO3 = subset(VAUL_storm4_07_12, select = c("DateTime","nitrateuM"))
+names(VAUL_storm4_07_12_NO3) = c("valuedatetime","datavalue")
+VAUL_storm4_07_12_fDOM = subset(VAUL_storm4_07_12, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm4_07_12_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm4_07_12_SPC = subset(VAUL_storm4_07_12, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm4_07_12_SPC) = c("valuedatetime","datavalue")
+VAUL_storm4_07_12_turb = subset(VAUL_storm4_07_12, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm4_07_12_turb) = c("valuedatetime","datavalue")
+
+# Storm 5 #
+VAUL_storm5_07_26_Q = subset(VAUL_storm5_07_26, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm5_07_26_Q) = c("valuedatetime","datavalue")
+VAUL_storm5_07_26_NO3 = subset(VAUL_storm5_07_26, select = c("DateTime","nitrateuM"))
+names(VAUL_storm5_07_26_NO3) = c("valuedatetime","datavalue")
+VAUL_storm5_07_26_fDOM = subset(VAUL_storm5_07_26, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm5_07_26_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm5_07_26_SPC = subset(VAUL_storm5_07_26, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm5_07_26_SPC) = c("valuedatetime","datavalue")
+VAUL_storm5_07_26_turb = subset(VAUL_storm5_07_26, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm5_07_26_turb) = c("valuedatetime","datavalue")
+
+# Storm 6a #
+VAUL_storm6a_08_01_Q = subset(VAUL_storm6a_08_01, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm6a_08_01_Q) = c("valuedatetime","datavalue")
+VAUL_storm6a_08_01_NO3 = subset(VAUL_storm6a_08_01, select = c("DateTime","nitrateuM"))
+names(VAUL_storm6a_08_01_NO3) = c("valuedatetime","datavalue")
+VAUL_storm6a_08_01_fDOM = subset(VAUL_storm6a_08_01, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm6a_08_01_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm6a_08_01_SPC = subset(VAUL_storm6a_08_01, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm6a_08_01_SPC) = c("valuedatetime","datavalue")
+VAUL_storm6a_08_01_turb = subset(VAUL_storm6a_08_01, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm6a_08_01_turb) = c("valuedatetime","datavalue")
+
+# Storm 6b #
+VAUL_storm6b_08_02_Q = subset(VAUL_storm6b_08_02, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm6b_08_02_Q) = c("valuedatetime","datavalue")
+VAUL_storm6b_08_02_NO3 = subset(VAUL_storm6b_08_02, select = c("DateTime","nitrateuM"))
+names(VAUL_storm6b_08_02_NO3) = c("valuedatetime","datavalue")
+VAUL_storm6b_08_02_fDOM = subset(VAUL_storm6b_08_02, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm6b_08_02_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm6b_08_02_SPC = subset(VAUL_storm6b_08_02, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm6b_08_02_SPC) = c("valuedatetime","datavalue")
+VAUL_storm6b_08_02_turb = subset(VAUL_storm6b_08_02, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm6b_08_02_turb) = c("valuedatetime","datavalue")
+
+# Storm 7 #
+VAUL_storm7_08_08_Q = subset(VAUL_storm7_08_08, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm7_08_08_Q) = c("valuedatetime","datavalue")
+VAUL_storm7_08_08_NO3 = subset(VAUL_storm7_08_08, select = c("DateTime","nitrateuM"))
+names(VAUL_storm7_08_08_NO3) = c("valuedatetime","datavalue")
+VAUL_storm7_08_08_fDOM = subset(VAUL_storm7_08_08, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm7_08_08_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm7_08_08_SPC = subset(VAUL_storm7_08_08, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm7_08_08_SPC) = c("valuedatetime","datavalue")
+VAUL_storm7_08_08_turb = subset(VAUL_storm7_08_08, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm7_08_08_turb) = c("valuedatetime","datavalue")
+
+# Storm 8 #
+VAUL_storm8_08_11_Q = subset(VAUL_storm8_08_11, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm8_08_11_Q) = c("valuedatetime","datavalue")
+VAUL_storm8_08_11_NO3 = subset(VAUL_storm8_08_11, select = c("DateTime","nitrateuM"))
+names(VAUL_storm8_08_11_NO3) = c("valuedatetime","datavalue")
+VAUL_storm8_08_11_fDOM = subset(VAUL_storm8_08_11, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm8_08_11_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm8_08_11_SPC = subset(VAUL_storm8_08_11, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm8_08_11_SPC) = c("valuedatetime","datavalue")
+VAUL_storm8_08_11_turb = subset(VAUL_storm8_08_11, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm8_08_11_turb) = c("valuedatetime","datavalue")
+
+# Storm 9 #
+VAUL_storm9_08_12_Q = subset(VAUL_storm9_08_12, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm9_08_12_Q) = c("valuedatetime","datavalue")
+VAUL_storm9_08_12_NO3 = subset(VAUL_storm9_08_12, select = c("DateTime","nitrateuM"))
+names(VAUL_storm9_08_12_NO3) = c("valuedatetime","datavalue")
+VAUL_storm9_08_12_fDOM = subset(VAUL_storm9_08_12, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm9_08_12_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm9_08_12_SPC = subset(VAUL_storm9_08_12, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm9_08_12_SPC) = c("valuedatetime","datavalue")
+VAUL_storm9_08_12_turb = subset(VAUL_storm9_08_12, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm9_08_12_turb) = c("valuedatetime","datavalue")
+
+# Storm 10 #
+VAUL_storm10_08_25_Q = subset(VAUL_storm10_08_25, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm10_08_25_Q) = c("valuedatetime","datavalue")
+VAUL_storm10_08_25_NO3 = subset(VAUL_storm10_08_25, select = c("DateTime","nitrateuM"))
+names(VAUL_storm10_08_25_NO3) = c("valuedatetime","datavalue")
+VAUL_storm10_08_25_fDOM = subset(VAUL_storm10_08_25, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm10_08_25_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm10_08_25_SPC = subset(VAUL_storm10_08_25, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm10_08_25_SPC) = c("valuedatetime","datavalue")
+VAUL_storm10_08_25_turb = subset(VAUL_storm10_08_25, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm10_08_25_turb) = c("valuedatetime","datavalue")
+
+# Storm 11 #
+VAUL_storm11_08_27_Q = subset(VAUL_storm11_08_27, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm11_08_27_Q) = c("valuedatetime","datavalue")
+VAUL_storm11_08_27_NO3 = subset(VAUL_storm11_08_27, select = c("DateTime","nitrateuM"))
+names(VAUL_storm11_08_27_NO3) = c("valuedatetime","datavalue")
+VAUL_storm11_08_27_fDOM = subset(VAUL_storm11_08_27, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm11_08_27_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm11_08_27_SPC = subset(VAUL_storm11_08_27, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm11_08_27_SPC) = c("valuedatetime","datavalue")
+VAUL_storm11_08_27_turb = subset(VAUL_storm11_08_27, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm11_08_27_turb) = c("valuedatetime","datavalue")
+
+# Storm 12 #
+VAUL_storm12_09_01_Q = subset(VAUL_storm12_09_01, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm12_09_01_Q) = c("valuedatetime","datavalue")
+VAUL_storm12_09_01_NO3 = subset(VAUL_storm12_09_01, select = c("DateTime","nitrateuM"))
+names(VAUL_storm12_09_01_NO3) = c("valuedatetime","datavalue")
+VAUL_storm12_09_01_fDOM = subset(VAUL_storm12_09_01, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm12_09_01_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm12_09_01_SPC = subset(VAUL_storm12_09_01, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm12_09_01_SPC) = c("valuedatetime","datavalue")
+VAUL_storm12_09_01_turb = subset(VAUL_storm12_09_01, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm12_09_01_turb) = c("valuedatetime","datavalue")
+
+# Storm 13 #
+VAUL_storm13_09_03_Q = subset(VAUL_storm13_09_03, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm13_09_03_Q) = c("valuedatetime","datavalue")
+VAUL_storm13_09_03_NO3 = subset(VAUL_storm13_09_03, select = c("DateTime","nitrateuM"))
+names(VAUL_storm13_09_03_NO3) = c("valuedatetime","datavalue")
+VAUL_storm13_09_03_fDOM = subset(VAUL_storm13_09_03, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm13_09_03_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm13_09_03_SPC = subset(VAUL_storm13_09_03, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm13_09_03_SPC) = c("valuedatetime","datavalue")
+VAUL_storm13_09_03_turb = subset(VAUL_storm13_09_03, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm13_09_03_turb) = c("valuedatetime","datavalue")
+
+# Storm 14 #
+VAUL_storm14_09_06_Q = subset(VAUL_storm14_09_06, select = c("DateTime", "MeanDischarge"))
+names(VAUL_storm14_09_06_Q) = c("valuedatetime","datavalue")
+VAUL_storm14_09_06_NO3 = subset(VAUL_storm14_09_06, select = c("DateTime","nitrateuM"))
+names(VAUL_storm14_09_06_NO3) = c("valuedatetime","datavalue")
+VAUL_storm14_09_06_fDOM = subset(VAUL_storm14_09_06, select = c("DateTime","fDOM.QSU"))
+names(VAUL_storm14_09_06_fDOM) = c("valuedatetime","datavalue")
+VAUL_storm14_09_06_SPC = subset(VAUL_storm14_09_06, select = c("DateTime","SpCond.uScm"))
+names(VAUL_storm14_09_06_SPC) = c("valuedatetime","datavalue")
+VAUL_storm14_09_06_turb = subset(VAUL_storm14_09_06, select = c("DateTime","Turbidity.FNU"))
+names(VAUL_storm14_09_06_turb) = c("valuedatetime","datavalue")
+
+# write csv # 
+write.csv(VAUL_storm1a_06_19, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19.csv")
+write.csv(VAUL_storm1a_06_19_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Q.csv")
+write.csv(VAUL_storm1a_06_19_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_NO3.csv")
+write.csv(VAUL_storm1a_06_19_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_fDOM.csv")
+write.csv(VAUL_storm1a_06_19_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_SPC.csv")
+write.csv(VAUL_storm1a_06_19_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Turb.csv")
+
+write.csv(VAUL_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20.csv")
+write.csv(VAUL_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Q.csv")
+write.csv(VAUL_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_NO3.csv")
+write.csv(VAUL_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_fDOM.csv")
+write.csv(VAUL_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_SPC.csv")
+write.csv(VAUL_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Turb.csv")
+
+write.csv(VAUL_storm1c_06_22, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22.csv")
+write.csv(VAUL_storm1c_06_22_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Q.csv")
+write.csv(VAUL_storm1c_06_22_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_NO3.csv")
+write.csv(VAUL_storm1c_06_22_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_fDOM.csv")
+write.csv(VAUL_storm1c_06_22_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_SPC.csv")
+write.csv(VAUL_storm1c_06_22_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Turb.csv")
+
+write.csv(VAUL_storm2_06_28, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28.csv")
+write.csv(VAUL_storm2_06_28_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Q.csv")
+write.csv(VAUL_storm2_06_28_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_NO3.csv")
+write.csv(VAUL_storm2_06_28_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_fDOM.csv")
+write.csv(VAUL_storm2_06_28_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_SPC.csv")
+write.csv(VAUL_storm2_06_28_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Turb.csv")
+
+write.csv(VAUL_storm3_07_09, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09.csv")
+write.csv(VAUL_storm3_07_09_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Q.csv")
+write.csv(VAUL_storm3_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_NO3.csv")
+write.csv(VAUL_storm3_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_fDOM.csv")
+write.csv(VAUL_storm3_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_SPC.csv")
+write.csv(VAUL_storm3_07_09_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Turb.csv")
+
+write.csv(VAUL_storm4_07_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12.csv")
+write.csv(VAUL_storm4_07_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Q.csv")
+write.csv(VAUL_storm4_07_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_NO3.csv")
+write.csv(VAUL_storm4_07_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_fDOM.csv")
+write.csv(VAUL_storm4_07_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_SPC.csv")
+write.csv(VAUL_storm4_07_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Turb.csv")
+
+write.csv(VAUL_storm5_07_26, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26.csv")
+write.csv(VAUL_storm5_07_26_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Q.csv")
+write.csv(VAUL_storm5_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_NO3.csv")
+write.csv(VAUL_storm5_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_fDOM.csv")
+write.csv(VAUL_storm5_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_SPC.csv")
+write.csv(VAUL_storm5_07_26_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Turb.csv")
+
+write.csv(VAUL_storm6a_08_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01.csv")
+write.csv(VAUL_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Q.csv")
+write.csv(VAUL_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_NO3.csv")
+write.csv(VAUL_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_fDOM.csv")
+write.csv(VAUL_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_SPC.csv")
+write.csv(VAUL_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Turb.csv")
+
+write.csv(VAUL_storm6b_08_02, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02.csv")
+write.csv(VAUL_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Q.csv")
+write.csv(VAUL_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_NO3.csv")
+write.csv(VAUL_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_fDOM.csv")
+write.csv(VAUL_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_SPC.csv")
+write.csv(VAUL_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Turb.csv")
+
+write.csv(VAUL_storm7_08_08, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08.csv")
+write.csv(VAUL_storm7_08_08_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Q.csv")
+write.csv(VAUL_storm7_08_08_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_NO3.csv")
+write.csv(VAUL_storm7_08_08_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_fDOM.csv")
+write.csv(VAUL_storm7_08_08_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_SPC.csv")
+write.csv(VAUL_storm7_08_08_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Turb.csv")
+
+write.csv(VAUL_storm8_08_11, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11.csv")
+write.csv(VAUL_storm8_08_11_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Q.csv")
+write.csv(VAUL_storm8_08_11_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_NO3.csv")
+write.csv(VAUL_storm8_08_11_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_fDOM.csv")
+write.csv(VAUL_storm8_08_11_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_SPC.csv")
+write.csv(VAUL_storm8_08_11_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Turb.csv")
+
+write.csv(VAUL_storm9_08_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12.csv")
+write.csv(VAUL_storm9_08_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Q.csv")
+write.csv(VAUL_storm9_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_NO3.csv")
+write.csv(VAUL_storm9_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_fDOM.csv")
+write.csv(VAUL_storm9_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_SPC.csv")
+write.csv(VAUL_storm9_08_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Turb.csv")
+
+write.csv(VAUL_storm10_08_25, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25.csv")
+write.csv(VAUL_storm10_08_25_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Q.csv")
+write.csv(VAUL_storm10_08_25_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_NO3.csv")
+write.csv(VAUL_storm10_08_25_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_fDOM.csv")
+write.csv(VAUL_storm10_08_25_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_SPC.csv")
+write.csv(VAUL_storm10_08_25_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Turb.csv")
+
+write.csv(VAUL_storm11_08_27, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27.csv")
+write.csv(VAUL_storm11_08_27_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Q.csv")
+write.csv(VAUL_storm11_08_27_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_NO3.csv")
+write.csv(VAUL_storm11_08_27_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_fDOM.csv")
+write.csv(VAUL_storm11_08_27_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_SPC.csv")
+write.csv(VAUL_storm11_08_27_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Turb.csv")
+
+write.csv(VAUL_storm12_09_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01.csv")
+write.csv(VAUL_storm12_09_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Q.csv")
+write.csv(VAUL_storm12_09_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_NO3.csv")
+write.csv(VAUL_storm12_09_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_fDOM.csv")
+write.csv(VAUL_storm12_09_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_SPC.csv")
+write.csv(VAUL_storm12_09_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Turb.csv")
+
+write.csv(VAUL_storm13_09_03, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03.csv")
+write.csv(VAUL_storm13_09_03_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Q.csv")
+write.csv(VAUL_storm13_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_NO3.csv")
+write.csv(VAUL_storm13_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_fDOM.csv")
+write.csv(VAUL_storm13_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_SPC.csv")
+write.csv(VAUL_storm13_09_03_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Turb.csv")
+
+write.csv(VAUL_storm14_09_06, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06.csv")
+write.csv(VAUL_storm14_09_06_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Q.csv")
+write.csv(VAUL_storm14_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_NO3.csv")
+write.csv(VAUL_storm14_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_fDOM.csv")
+write.csv(VAUL_storm14_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_SPC.csv")
+write.csv(VAUL_storm14_09_06_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Turb.csv")
+
+
+## POKE ##
+poke.gauge <- POKE.st
+poke.gauge$Precip <- poke.gauge$inst_rainfall_mm
+poke.final.discharge <- poke.final.discharge.2020
+
+FRCH.2020.chem <- FRCH
+FRCH.2020.chem$MeanDischarge <- FRCH$Q
+FRCH.2020.chem$DateTime <- FRCH$datetimeAK
+
+POKE$MeanDischarge <- POKE$Q
+POKE$DateTime <- POKE$datetimeAK
+POKE$fDOM.RFU <- POKE$fDOM.QSU
+POKE$SpCond.uScm <- POKE$SpCond.µS.cm
+
+### Import precipitation data from LTER ### 
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-31 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'POKE precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+par(new = T)
+
+plot(poke.final.discharge$MeanDischarge ~ poke.final.discharge$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+### STORMS ###
+
+# Storm 1 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-09 11:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-10 11:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm1_06_09 = POKE[POKE$DateTime > as.POSIXct("2020-06-09 11:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-06-10 11:00:00", tz="America/Anchorage"),]
+plot(POKE_storm1_06_09$MeanDischarge ~ as.POSIXct(POKE_storm1_06_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200609 storm 1",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 2 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-12 13:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-13 11:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm2_06_12 = POKE[POKE$DateTime > as.POSIXct("2020-06-12 13:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-06-13 11:00:00", tz="America/Anchorage"),]
+plot(POKE_storm2_06_12$MeanDischarge ~ as.POSIXct(POKE_storm2_06_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200612 storm 2",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 3 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-15 09:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-16 15:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm3_06_15 = POKE[POKE$DateTime > as.POSIXct("2020-06-15 09:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-06-16 15:00:00", tz="America/Anchorage"),]
+plot(POKE_storm3_06_15$MeanDischarge ~ as.POSIXct(POKE_storm3_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200615 storm 3",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4a #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-19 06:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-20 07:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm4a_06_19 = POKE[POKE$DateTime > as.POSIXct("2020-06-19 06:15:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-06-20 07:00:00", tz="America/Anchorage"),]
+plot(POKE_storm4a_06_19$MeanDischarge ~ as.POSIXct(POKE_storm4a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2000), col="blue", main="POKE 200619 storm 4a",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4b #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 07:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-21 07:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm4b_06_20 = POKE[POKE$DateTime > as.POSIXct("2020-06-20 07:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-06-21 07:00:00", tz="America/Anchorage"),]
+plot(POKE_storm4b_06_20$MeanDischarge ~ as.POSIXct(POKE_storm4b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2200), col="blue", main="POKE 200620 storm 4b",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4c #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-21 07:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm4c_06_21 = POKE[POKE$DateTime > as.POSIXct("2020-06-21 07:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage"),]
+plot(POKE_storm4c_06_21$MeanDischarge ~ as.POSIXct(POKE_storm4c_06_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1400), col="blue", main="POKE 200621 storm 4c",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 30 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 12 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 5 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-25 06:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm5_06_22 = POKE[POKE$DateTime > as.POSIXct("2020-06-22 23:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-06-25 06:00:00", tz="America/Anchorage"),]
+plot(POKE_storm5_06_22$MeanDischarge ~ as.POSIXct(POKE_storm5_06_22$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1400), col="blue", main="POKE 200622 storm 5",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 30 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 12 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-29 10:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-30 10:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm6_06_29 = POKE[POKE$DateTime > as.POSIXct("2020-06-29 10:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-06-30 10:00:00", tz="America/Anchorage"),]
+plot(POKE_storm6_06_29$MeanDischarge ~ as.POSIXct(POKE_storm6_06_29$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200629 storm 6",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-04 06:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-05 14:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm7_07_04 = POKE[POKE$DateTime > as.POSIXct("2020-07-04 06:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-07-05 14:00:00", tz="America/Anchorage"),]
+plot(POKE_storm7_07_04$MeanDischarge ~ as.POSIXct(POKE_storm7_07_04$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200704 storm 7",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-09 04:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-10 14:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm8_07_09 = POKE[POKE$DateTime > as.POSIXct("2020-07-09 04:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-07-10 14:00:00", tz="America/Anchorage"),]
+plot(POKE_storm8_07_09$MeanDischarge ~ as.POSIXct(POKE_storm8_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200709 storm 8",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-12 20:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-15 14:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm9_07_12 = POKE[POKE$DateTime > as.POSIXct("2020-07-12 20:00:00", tz="America/Anchorage") &
+                           POKE$DateTime < as.POSIXct("2020-07-15 14:00:00", tz="America/Anchorage"),]
+plot(POKE_storm9_07_12$MeanDischarge ~ as.POSIXct(POKE_storm9_07_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200712 storm 9",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 10 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-16 22:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-17 23:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm10_07_16 = POKE[POKE$DateTime > as.POSIXct("2020-07-16 22:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-07-17 23:00:00", tz="America/Anchorage"),]
+plot(POKE_storm10_07_16$MeanDischarge ~ as.POSIXct(POKE_storm10_07_16$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200716 storm 10",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 11 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-18 08:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-20 10:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm11_07_18 = POKE[POKE$DateTime > as.POSIXct("2020-07-18 08:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-07-20 10:00:00", tz="America/Anchorage"),]
+plot(POKE_storm11_07_18$MeanDischarge ~ as.POSIXct(POKE_storm11_07_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200718 storm 11",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 12 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-20 18:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-23 23:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm12_07_20 = POKE[POKE$DateTime > as.POSIXct("2020-07-20 18:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-07-23 23:00:00", tz="America/Anchorage"),]
+plot(POKE_storm12_07_20$MeanDischarge ~ as.POSIXct(POKE_storm12_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200720 storm 12",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 13 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-24 08:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-26 06:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm13_07_24 = POKE[POKE$DateTime > as.POSIXct("2020-07-24 08:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-07-25 06:00:00", tz="America/Anchorage"),]
+plot(POKE_storm13_07_24$MeanDischarge ~ as.POSIXct(POKE_storm13_07_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200724 storm 13",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 14 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-26 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-30 23:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm14_07_26 = POKE[POKE$DateTime > as.POSIXct("2020-07-26 23:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-07-30 23:00:00", tz="America/Anchorage"),]
+plot(POKE_storm14_07_26$MeanDischarge ~ as.POSIXct(POKE_storm14_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200726 storm 14",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 15 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-02 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-06 11:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm15_08_02 = POKE[POKE$DateTime > as.POSIXct("2020-08-02 23:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-08-06 11:00:00", tz="America/Anchorage"),]
+plot(POKE_storm15_08_02$MeanDischarge ~ as.POSIXct(POKE_storm15_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,5000), col="blue", main="POKE 200802 storm 15",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 16 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+lines(POKE$nitrateuM * 45 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 50 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-12 13:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-13 13:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm16_08_12 = POKE[POKE$DateTime > as.POSIXct("2020-08-12 13:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-08-13 13:00:00", tz="America/Anchorage"),]
+plot(POKE_storm16_08_12$MeanDischarge ~ as.POSIXct(POKE_storm16_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200812 storm 16",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 17 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-23 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-25 05:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm17_08_23 = POKE[POKE$DateTime > as.POSIXct("2020-08-23 23:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-08-25 05:00:00", tz="America/Anchorage"),]
+plot(POKE_storm17_08_23$MeanDischarge ~ as.POSIXct(POKE_storm17_08_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200823 storm 17",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 18 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-25 05:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-26 05:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm18_08_25 = POKE[POKE$DateTime > as.POSIXct("2020-08-25 05:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-08-26 05:00:00", tz="America/Anchorage"),]
+plot(POKE_storm18_08_25$MeanDischarge ~ as.POSIXct(POKE_storm18_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200825 storm 18",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 19 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-27 10:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-28 20:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm19_08_27 = POKE[POKE$DateTime > as.POSIXct("2020-08-27 10:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-08-28 20:00:00", tz="America/Anchorage"),]
+plot(POKE_storm19_08_27$MeanDischarge ~ as.POSIXct(POKE_storm19_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200827 storm 19",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 20 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-01 18:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-03 05:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm20_09_01 = POKE[POKE$DateTime > as.POSIXct("2020-09-01 18:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-09-03 05:00:00", tz="America/Anchorage"),]
+plot(POKE_storm20_09_01$MeanDischarge ~ as.POSIXct(POKE_storm20_09_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200901 storm 20",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 21 #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+lines(POKE$nitrateuM * 45 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 50 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-03 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-06 14:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm21_09_03 = POKE[POKE$DateTime > as.POSIXct("2020-09-03 23:00:00", tz="America/Anchorage") &
+                            POKE$DateTime < as.POSIXct("2020-09-06 06:00:00", tz="America/Anchorage"),]
+plot(POKE_storm21_09_03$MeanDischarge ~ as.POSIXct(POKE_storm21_09_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200903 storm 21",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 22a #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-07 20:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-08 23:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm22a_09_07 = POKE[POKE$DateTime > as.POSIXct("2020-09-07 20:00:00", tz="America/Anchorage") &
+                             POKE$DateTime < as.POSIXct("2020-09-08 23:00:00", tz="America/Anchorage"),]
+plot(POKE_storm22a_09_07$MeanDischarge ~ as.POSIXct(POKE_storm22a_09_07$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200907 storm 22a",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 22b #
+plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=POKE_bfQ_mn*2, col="red", lty=2)
+abline(h=POKE_bfQ_mn, col="red")
+
+par(new = T)
+
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-09 05:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-11 10:00:00", tz="America/Anchorage"), col="purple")
+
+POKE_storm22b_09_09 = POKE[POKE$DateTime > as.POSIXct("2020-09-09 05:45:00", tz="America/Anchorage") &
+                             POKE$DateTime < as.POSIXct("2020-09-11 10:00:00", tz="America/Anchorage"),]
+plot(POKE_storm22b_09_09$MeanDischarge ~ as.POSIXct(POKE_storm22b_09_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200909 storm 22b",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# nitrateuM, fDOM.RFU POKE #
+# Storm 1 #
+POKE_storm1_06_09_Q = subset(POKE_storm1_06_09, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm1_06_09_Q) = c("valuedatetime","datavalue")
+POKE_storm1_06_09_NO3 = subset(POKE_storm1_06_09, select = c("DateTime","nitrateuM"))
+names(POKE_storm1_06_09_NO3) = c("valuedatetime","datavalue")
+POKE_storm1_06_09_fDOM = subset(POKE_storm1_06_09, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm1_06_09_fDOM) = c("valuedatetime","datavalue")
+POKE_storm1_06_09_SPC = subset(POKE_storm1_06_09, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm1_06_09_SPC) = c("valuedatetime","datavalue")
+POKE_storm1_06_09_turb = subset(POKE_storm1_06_09, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm1_06_09_turb) = c("valuedatetime","datavalue")
+
+POKE_storm2_06_12_Q = subset(POKE_storm2_06_12, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm2_06_12_Q) = c("valuedatetime","datavalue")
+POKE_storm2_06_12_NO3 = subset(POKE_storm2_06_12, select = c("DateTime","nitrateuM"))
+names(POKE_storm2_06_12_NO3) = c("valuedatetime","datavalue")
+POKE_storm2_06_12_fDOM = subset(POKE_storm2_06_12, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm2_06_12_fDOM) = c("valuedatetime","datavalue")
+POKE_storm2_06_12_SPC = subset(POKE_storm2_06_12, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm2_06_12_SPC) = c("valuedatetime","datavalue")
+POKE_storm2_06_12_turb = subset(POKE_storm2_06_12, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm2_06_12_turb) = c("valuedatetime","datavalue")
+
+POKE_storm3_06_15_Q = subset(POKE_storm3_06_15, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm3_06_15_Q) = c("valuedatetime","datavalue")
+POKE_storm3_06_15_NO3 = subset(POKE_storm3_06_15, select = c("DateTime","nitrateuM"))
+names(POKE_storm3_06_15_NO3) = c("valuedatetime","datavalue")
+POKE_storm3_06_15_fDOM = subset(POKE_storm3_06_15, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm3_06_15_fDOM) = c("valuedatetime","datavalue")
+POKE_storm3_06_15_SPC = subset(POKE_storm3_06_15, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm3_06_15_SPC) = c("valuedatetime","datavalue")
+POKE_storm3_06_15_turb = subset(POKE_storm3_06_15, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm3_06_15_turb) = c("valuedatetime","datavalue")
+
+POKE_storm4a_06_19_Q = subset(POKE_storm4a_06_19, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm4a_06_19_Q) = c("valuedatetime","datavalue")
+POKE_storm4a_06_19_NO3 = subset(POKE_storm4a_06_19, select = c("DateTime","nitrateuM"))
+names(POKE_storm4a_06_19_NO3) = c("valuedatetime","datavalue")
+POKE_storm4a_06_19_fDOM = subset(POKE_storm4a_06_19, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm4a_06_19_fDOM) = c("valuedatetime","datavalue")
+POKE_storm4a_06_19_SPC = subset(POKE_storm4a_06_19, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm4a_06_19_SPC) = c("valuedatetime","datavalue")
+POKE_storm4a_06_19_turb = subset(POKE_storm4a_06_19, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm4a_06_19_turb) = c("valuedatetime","datavalue")
+
+POKE_storm4b_06_20_Q = subset(POKE_storm4b_06_20, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm4b_06_20_Q) = c("valuedatetime","datavalue")
+POKE_storm4b_06_20_NO3 = subset(POKE_storm4b_06_20, select = c("DateTime","nitrateuM"))
+names(POKE_storm4b_06_20_NO3) = c("valuedatetime","datavalue")
+POKE_storm4b_06_20_fDOM = subset(POKE_storm4b_06_20, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm4b_06_20_fDOM) = c("valuedatetime","datavalue")
+POKE_storm4b_06_20_SPC = subset(POKE_storm4b_06_20, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm4b_06_20_SPC) = c("valuedatetime","datavalue")
+POKE_storm4b_06_20_turb = subset(POKE_storm4b_06_20, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm4b_06_20_turb) = c("valuedatetime","datavalue")
+
+POKE_storm4c_06_21_Q = subset(POKE_storm4c_06_21, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm4c_06_21_Q) = c("valuedatetime","datavalue")
+POKE_storm4c_06_21_NO3 = subset(POKE_storm4c_06_21, select = c("DateTime","nitrateuM"))
+names(POKE_storm4c_06_21_NO3) = c("valuedatetime","datavalue")
+POKE_storm4c_06_21_fDOM = subset(POKE_storm4c_06_21, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm4c_06_21_fDOM) = c("valuedatetime","datavalue")
+POKE_storm4c_06_21_SPC = subset(POKE_storm4c_06_21, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm4c_06_21_SPC) = c("valuedatetime","datavalue")
+POKE_storm4c_06_21_turb = subset(POKE_storm4c_06_21, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm4c_06_21_turb) = c("valuedatetime","datavalue")
+
+POKE_storm5_06_22_Q = subset(POKE_storm5_06_22, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm5_06_22_Q) = c("valuedatetime","datavalue")
+POKE_storm5_06_22_NO3 = subset(POKE_storm5_06_22, select = c("DateTime","nitrateuM"))
+names(POKE_storm5_06_22_NO3) = c("valuedatetime","datavalue")
+POKE_storm5_06_22_fDOM = subset(POKE_storm5_06_22, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm5_06_22_fDOM) = c("valuedatetime","datavalue")
+POKE_storm5_06_22_SPC = subset(POKE_storm5_06_22, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm5_06_22_SPC) = c("valuedatetime","datavalue")
+POKE_storm5_06_22_turb = subset(POKE_storm5_06_22, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm5_06_22_turb) = c("valuedatetime","datavalue")
+
+POKE_storm6_06_29_Q = subset(POKE_storm6_06_29, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm6_06_29_Q) = c("valuedatetime","datavalue")
+POKE_storm6_06_29_NO3 = subset(POKE_storm6_06_29, select = c("DateTime","nitrateuM"))
+names(POKE_storm6_06_29_NO3) = c("valuedatetime","datavalue")
+POKE_storm6_06_29_fDOM = subset(POKE_storm6_06_29, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm6_06_29_fDOM) = c("valuedatetime","datavalue")
+POKE_storm6_06_29_SPC = subset(POKE_storm6_06_29, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm6_06_29_SPC) = c("valuedatetime","datavalue")
+POKE_storm6_06_29_turb = subset(POKE_storm6_06_29, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm6_06_29_turb) = c("valuedatetime","datavalue")
+
+POKE_storm7_07_04_Q = subset(POKE_storm7_07_04, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm7_07_04_Q) = c("valuedatetime","datavalue")
+POKE_storm7_07_04_NO3 = subset(POKE_storm7_07_04, select = c("DateTime","nitrateuM"))
+names(POKE_storm7_07_04_NO3) = c("valuedatetime","datavalue")
+POKE_storm7_07_04_fDOM = subset(POKE_storm7_07_04, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm7_07_04_fDOM) = c("valuedatetime","datavalue")
+POKE_storm7_07_04_SPC = subset(POKE_storm7_07_04, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm7_07_04_SPC) = c("valuedatetime","datavalue")
+POKE_storm7_07_04_turb = subset(POKE_storm7_07_04, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm7_07_04_turb) = c("valuedatetime","datavalue")
+
+POKE_storm8_07_09_Q = subset(POKE_storm8_07_09, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm8_07_09_Q) = c("valuedatetime","datavalue")
+POKE_storm8_07_09_NO3 = subset(POKE_storm8_07_09, select = c("DateTime","nitrateuM"))
+names(POKE_storm8_07_09_NO3) = c("valuedatetime","datavalue")
+POKE_storm8_07_09_fDOM = subset(POKE_storm8_07_09, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm8_07_09_fDOM) = c("valuedatetime","datavalue")
+POKE_storm8_07_09_SPC = subset(POKE_storm8_07_09, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm8_07_09_SPC) = c("valuedatetime","datavalue")
+POKE_storm8_07_09_turb = subset(POKE_storm8_07_09, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm8_07_09_turb) = c("valuedatetime","datavalue")
+
+POKE_storm9_07_12_Q = subset(POKE_storm9_07_12, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm9_07_12_Q) = c("valuedatetime","datavalue")
+POKE_storm9_07_12_NO3 = subset(POKE_storm9_07_12, select = c("DateTime","nitrateuM"))
+names(POKE_storm9_07_12_NO3) = c("valuedatetime","datavalue")
+POKE_storm9_07_12_fDOM = subset(POKE_storm9_07_12, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm9_07_12_fDOM) = c("valuedatetime","datavalue")
+POKE_storm9_07_12_SPC = subset(POKE_storm9_07_12, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm9_07_12_SPC) = c("valuedatetime","datavalue")
+POKE_storm9_07_12_turb = subset(POKE_storm9_07_12, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm9_07_12_turb) = c("valuedatetime","datavalue")
+
+POKE_storm10_07_16_Q = subset(POKE_storm10_07_16, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm10_07_16_Q) = c("valuedatetime","datavalue")
+POKE_storm10_07_16_NO3 = subset(POKE_storm10_07_16, select = c("DateTime","nitrateuM"))
+names(POKE_storm10_07_16_NO3) = c("valuedatetime","datavalue")
+POKE_storm10_07_16_fDOM = subset(POKE_storm10_07_16, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm10_07_16_fDOM) = c("valuedatetime","datavalue")
+POKE_storm10_07_16_SPC = subset(POKE_storm10_07_16, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm10_07_16_SPC) = c("valuedatetime","datavalue")
+POKE_storm10_07_16_turb = subset(POKE_storm10_07_16, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm10_07_16_turb) = c("valuedatetime","datavalue")
+
+POKE_storm11_07_18_Q = subset(POKE_storm11_07_18, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm11_07_18_Q) = c("valuedatetime","datavalue")
+POKE_storm11_07_18_NO3 = subset(POKE_storm11_07_18, select = c("DateTime","nitrateuM"))
+names(POKE_storm11_07_18_NO3) = c("valuedatetime","datavalue")
+POKE_storm11_07_18_fDOM = subset(POKE_storm11_07_18, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm11_07_18_fDOM) = c("valuedatetime","datavalue")
+POKE_storm11_07_18_SPC = subset(POKE_storm11_07_18, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm11_07_18_SPC) = c("valuedatetime","datavalue")
+POKE_storm11_07_18_turb = subset(POKE_storm11_07_18, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm11_07_18_turb) = c("valuedatetime","datavalue")
+
+POKE_storm12_07_20_Q = subset(POKE_storm12_07_20, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm12_07_20_Q) = c("valuedatetime","datavalue")
+POKE_storm12_07_20_NO3 = subset(POKE_storm12_07_20, select = c("DateTime","nitrateuM"))
+names(POKE_storm12_07_20_NO3) = c("valuedatetime","datavalue")
+POKE_storm12_07_20_fDOM = subset(POKE_storm12_07_20, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm12_07_20_fDOM) = c("valuedatetime","datavalue")
+POKE_storm12_07_20_SPC = subset(POKE_storm12_07_20, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm12_07_20_SPC) = c("valuedatetime","datavalue")
+POKE_storm12_07_20_turb = subset(POKE_storm12_07_20, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm12_07_20_turb) = c("valuedatetime","datavalue")
+
+POKE_storm13_07_24_Q = subset(POKE_storm13_07_24, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm13_07_24_Q) = c("valuedatetime","datavalue")
+POKE_storm13_07_24_NO3 = subset(POKE_storm13_07_24, select = c("DateTime","nitrateuM"))
+names(POKE_storm13_07_24_NO3) = c("valuedatetime","datavalue")
+POKE_storm13_07_24_fDOM = subset(POKE_storm13_07_24, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm13_07_24_fDOM) = c("valuedatetime","datavalue")
+POKE_storm13_07_24_SPC = subset(POKE_storm13_07_24, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm13_07_24_SPC) = c("valuedatetime","datavalue")
+POKE_storm13_07_24_turb = subset(POKE_storm13_07_24, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm13_07_24_turb) = c("valuedatetime","datavalue")
+
+POKE_storm14_07_26_Q = subset(POKE_storm14_07_26, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm14_07_26_Q) = c("valuedatetime","datavalue")
+POKE_storm14_07_26_NO3 = subset(POKE_storm14_07_26, select = c("DateTime","nitrateuM"))
+names(POKE_storm14_07_26_NO3) = c("valuedatetime","datavalue")
+POKE_storm14_07_26_fDOM = subset(POKE_storm14_07_26, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm14_07_26_fDOM) = c("valuedatetime","datavalue")
+POKE_storm14_07_26_SPC = subset(POKE_storm14_07_26, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm14_07_26_SPC) = c("valuedatetime","datavalue")
+POKE_storm14_07_26_turb = subset(POKE_storm14_07_26, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm14_07_26_turb) = c("valuedatetime","datavalue")
+
+POKE_storm15_08_02_Q = subset(POKE_storm15_08_02, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm15_08_02_Q) = c("valuedatetime","datavalue")
+POKE_storm15_08_02_NO3 = subset(POKE_storm15_08_02, select = c("DateTime","nitrateuM"))
+names(POKE_storm15_08_02_NO3) = c("valuedatetime","datavalue")
+POKE_storm15_08_02_fDOM = subset(POKE_storm15_08_02, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm15_08_02_fDOM) = c("valuedatetime","datavalue")
+POKE_storm15_08_02_SPC = subset(POKE_storm15_08_02, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm15_08_02_SPC) = c("valuedatetime","datavalue")
+POKE_storm15_08_02_turb = subset(POKE_storm15_08_02, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm15_08_02_turb) = c("valuedatetime","datavalue")
+
+POKE_storm16_08_12_Q = subset(POKE_storm16_08_12, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm16_08_12_Q) = c("valuedatetime","datavalue")
+POKE_storm16_08_12_NO3 = subset(POKE_storm16_08_12, select = c("DateTime","nitrateuM"))
+names(POKE_storm16_08_12_NO3) = c("valuedatetime","datavalue")
+POKE_storm16_08_12_fDOM = subset(POKE_storm16_08_12, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm16_08_12_fDOM) = c("valuedatetime","datavalue")
+POKE_storm16_08_12_SPC = subset(POKE_storm16_08_12, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm16_08_12_SPC) = c("valuedatetime","datavalue")
+POKE_storm16_08_12_turb = subset(POKE_storm16_08_12, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm16_08_12_turb) = c("valuedatetime","datavalue")
+
+POKE_storm17_08_23_Q = subset(POKE_storm17_08_23, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm17_08_23_Q) = c("valuedatetime","datavalue")
+POKE_storm17_08_23_NO3 = subset(POKE_storm17_08_23, select = c("DateTime","nitrateuM"))
+names(POKE_storm17_08_23_NO3) = c("valuedatetime","datavalue")
+POKE_storm17_08_23_fDOM = subset(POKE_storm17_08_23, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm17_08_23_fDOM) = c("valuedatetime","datavalue")
+POKE_storm17_08_23_SPC = subset(POKE_storm17_08_23, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm17_08_23_SPC) = c("valuedatetime","datavalue")
+POKE_storm17_08_23_turb = subset(POKE_storm17_08_23, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm17_08_23_turb) = c("valuedatetime","datavalue")
+
+POKE_storm18_08_25_Q = subset(POKE_storm18_08_25, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm18_08_25_Q) = c("valuedatetime","datavalue")
+POKE_storm18_08_25_NO3 = subset(POKE_storm18_08_25, select = c("DateTime","nitrateuM"))
+names(POKE_storm18_08_25_NO3) = c("valuedatetime","datavalue")
+POKE_storm18_08_25_fDOM = subset(POKE_storm18_08_25, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm18_08_25_fDOM) = c("valuedatetime","datavalue")
+POKE_storm18_08_25_SPC = subset(POKE_storm18_08_25, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm18_08_25_SPC) = c("valuedatetime","datavalue")
+POKE_storm18_08_25_turb = subset(POKE_storm18_08_25, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm18_08_25_turb) = c("valuedatetime","datavalue")
+
+POKE_storm19_08_27_Q = subset(POKE_storm19_08_27, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm19_08_27_Q) = c("valuedatetime","datavalue")
+POKE_storm19_08_27_NO3 = subset(POKE_storm19_08_27, select = c("DateTime","nitrateuM"))
+names(POKE_storm19_08_27_NO3) = c("valuedatetime","datavalue")
+POKE_storm19_08_27_fDOM = subset(POKE_storm19_08_27, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm19_08_27_fDOM) = c("valuedatetime","datavalue")
+POKE_storm19_08_27_SPC = subset(POKE_storm19_08_27, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm19_08_27_SPC) = c("valuedatetime","datavalue")
+POKE_storm19_08_27_turb = subset(POKE_storm19_08_27, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm19_08_27_turb) = c("valuedatetime","datavalue")
+
+POKE_storm20_09_01_Q = subset(POKE_storm20_09_01, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm20_09_01_Q) = c("valuedatetime","datavalue")
+POKE_storm20_09_01_NO3 = subset(POKE_storm20_09_01, select = c("DateTime","nitrateuM"))
+names(POKE_storm20_09_01_NO3) = c("valuedatetime","datavalue")
+POKE_storm20_09_01_fDOM = subset(POKE_storm20_09_01, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm20_09_01_fDOM) = c("valuedatetime","datavalue")
+POKE_storm20_09_01_SPC = subset(POKE_storm20_09_01, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm20_09_01_SPC) = c("valuedatetime","datavalue")
+POKE_storm20_09_01_turb = subset(POKE_storm20_09_01, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm20_09_01_turb) = c("valuedatetime","datavalue")
+
+POKE_storm21_09_03_Q = subset(POKE_storm21_09_03, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm21_09_03_Q) = c("valuedatetime","datavalue")
+POKE_storm21_09_03_NO3 = subset(POKE_storm21_09_03, select = c("DateTime","nitrateuM"))
+names(POKE_storm21_09_03_NO3) = c("valuedatetime","datavalue")
+POKE_storm21_09_03_fDOM = subset(POKE_storm21_09_03, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm21_09_03_fDOM) = c("valuedatetime","datavalue")
+POKE_storm21_09_03_SPC = subset(POKE_storm21_09_03, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm21_09_03_SPC) = c("valuedatetime","datavalue")
+POKE_storm21_09_03_turb = subset(POKE_storm21_09_03, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm21_09_03_turb) = c("valuedatetime","datavalue")
+
+POKE_storm22a_09_07_Q = subset(POKE_storm22a_09_07, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm22a_09_07_Q) = c("valuedatetime","datavalue")
+POKE_storm22a_09_07_NO3 = subset(POKE_storm22a_09_07, select = c("DateTime","nitrateuM"))
+names(POKE_storm22a_09_07_NO3) = c("valuedatetime","datavalue")
+POKE_storm22a_09_07_fDOM = subset(POKE_storm22a_09_07, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm22a_09_07_fDOM) = c("valuedatetime","datavalue")
+POKE_storm22a_09_07_SPC = subset(POKE_storm22a_09_07, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm22a_09_07_SPC) = c("valuedatetime","datavalue")
+POKE_storm22a_09_07_turb = subset(POKE_storm22a_09_07, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm22a_09_07_turb) = c("valuedatetime","datavalue")
+
+POKE_storm22b_09_09_Q = subset(POKE_storm22b_09_09, select = c("DateTime", "MeanDischarge"))
+names(POKE_storm22b_09_09_Q) = c("valuedatetime","datavalue")
+POKE_storm22b_09_09_NO3 = subset(POKE_storm22b_09_09, select = c("DateTime","nitrateuM"))
+names(POKE_storm22b_09_09_NO3) = c("valuedatetime","datavalue")
+POKE_storm22b_09_09_fDOM = subset(POKE_storm22b_09_09, select = c("DateTime","fDOM.RFU"))
+names(POKE_storm22b_09_09_fDOM) = c("valuedatetime","datavalue")
+POKE_storm22b_09_09_SPC = subset(POKE_storm22b_09_09, select = c("DateTime","SpCond.uScm"))
+names(POKE_storm22b_09_09_SPC) = c("valuedatetime","datavalue")
+POKE_storm22b_09_09_turb = subset(POKE_storm22b_09_09, select = c("DateTime","Turbidity.FNU"))
+names(POKE_storm22b_09_09_turb) = c("valuedatetime","datavalue")
+
+
+### Write csv ###
+write.csv(POKE_storm1_06_09, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09.csv")
+write.csv(POKE_storm1_06_09_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09_Q.csv")
+write.csv(POKE_storm1_06_09_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09_NO3.csv")
+write.csv(POKE_storm1_06_09_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09_fDOM.csv")
+write.csv(POKE_storm1_06_09_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09_SPC.csv")
+write.csv(POKE_storm1_06_09_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm1_06_09_turb.csv")
+
+write.csv(POKE_storm2_06_12, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12.csv")
+write.csv(POKE_storm2_06_12_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12_Q.csv")
+write.csv(POKE_storm2_06_12_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12_NO3.csv")
+write.csv(POKE_storm2_06_12_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12_fDOM.csv")
+write.csv(POKE_storm2_06_12_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12_SPC.csv")
+write.csv(POKE_storm2_06_12_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm2_06_12_turb.csv")
+
+write.csv(POKE_storm3_06_15, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15.csv")
+write.csv(POKE_storm3_06_15_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15_Q.csv")
+write.csv(POKE_storm3_06_15_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15_NO3.csv")
+write.csv(POKE_storm3_06_15_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15_fDOM.csv")
+write.csv(POKE_storm3_06_15_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15_SPC.csv")
+write.csv(POKE_storm3_06_15_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm3_06_15_turb.csv")
+
+write.csv(POKE_storm4a_06_19, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19.csv")
+write.csv(POKE_storm4a_06_19_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19_Q.csv")
+write.csv(POKE_storm4a_06_19_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19_NO3.csv")
+write.csv(POKE_storm4a_06_19_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19_fDOM.csv")
+write.csv(POKE_storm4a_06_19_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19_SPC.csv")
+write.csv(POKE_storm4a_06_19_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4a_06_19_turb.csv")
+
+write.csv(POKE_storm4b_06_20, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20.csv")
+write.csv(POKE_storm4b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20_Q.csv")
+write.csv(POKE_storm4b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20_NO3.csv")
+write.csv(POKE_storm4b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20_fDOM.csv")
+write.csv(POKE_storm4b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20_SPC.csv")
+write.csv(POKE_storm4b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4b_06_20_turb.csv")
+
+write.csv(POKE_storm4c_06_21, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21.csv")
+write.csv(POKE_storm4c_06_21_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21_Q.csv")
+write.csv(POKE_storm4c_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21_NO3.csv")
+write.csv(POKE_storm4c_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21_fDOM.csv")
+write.csv(POKE_storm4c_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21_SPC.csv")
+write.csv(POKE_storm4c_06_21_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm4c_06_21_turb.csv")
+
+write.csv(POKE_storm5_06_22, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22.csv")
+write.csv(POKE_storm5_06_22_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22_Q.csv")
+write.csv(POKE_storm5_06_22_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22_NO3.csv")
+write.csv(POKE_storm5_06_22_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22_fDOM.csv")
+write.csv(POKE_storm5_06_22_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22_SPC.csv")
+write.csv(POKE_storm5_06_22_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm5_06_22_turb.csv")
+
+write.csv(POKE_storm6_06_29, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29.csv")
+write.csv(POKE_storm6_06_29_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29_Q.csv")
+write.csv(POKE_storm6_06_29_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29_NO3.csv")
+write.csv(POKE_storm6_06_29_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29_fDOM.csv")
+write.csv(POKE_storm6_06_29_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29_SPC.csv")
+write.csv(POKE_storm6_06_29_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm6_06_29_turb.csv")
+
+write.csv(POKE_storm7_07_04, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04.csv")
+write.csv(POKE_storm7_07_04_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04_Q.csv")
+write.csv(POKE_storm7_07_04_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04_NO3.csv")
+write.csv(POKE_storm7_07_04_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04_fDOM.csv")
+write.csv(POKE_storm7_07_04_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04_SPC.csv")
+write.csv(POKE_storm7_07_04_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm7_07_04_turb.csv")
+
+write.csv(POKE_storm8_07_09, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09.csv")
+write.csv(POKE_storm8_07_09_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09_Q.csv")
+write.csv(POKE_storm8_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09_NO3.csv")
+write.csv(POKE_storm8_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09_fDOM.csv")
+write.csv(POKE_storm8_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09_SPC.csv")
+write.csv(POKE_storm8_07_09_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm8_07_09_turb.csv")
+
+write.csv(POKE_storm9_07_12, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12.csv")
+write.csv(POKE_storm9_07_12_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12_Q.csv")
+write.csv(POKE_storm9_07_12_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12_NO3.csv")
+write.csv(POKE_storm9_07_12_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12_fDOM.csv")
+write.csv(POKE_storm9_07_12_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12_SPC.csv")
+write.csv(POKE_storm9_07_12_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm9_07_12_turb.csv")
+
+write.csv(POKE_storm10_07_16, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16.csv")
+write.csv(POKE_storm10_07_16_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16_Q.csv")
+write.csv(POKE_storm10_07_16_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16_NO3.csv")
+write.csv(POKE_storm10_07_16_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16_fDOM.csv")
+write.csv(POKE_storm10_07_16_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16_SPC.csv")
+write.csv(POKE_storm10_07_16_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm10_07_16_turb.csv")
+
+write.csv(POKE_storm11_07_18, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18.csv")
+write.csv(POKE_storm11_07_18_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18_Q.csv")
+write.csv(POKE_storm11_07_18_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18_NO3.csv")
+write.csv(POKE_storm11_07_18_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18_fDOM.csv")
+write.csv(POKE_storm11_07_18_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18_SPC.csv")
+write.csv(POKE_storm11_07_18_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm11_07_18_turb.csv")
+
+write.csv(POKE_storm12_07_20, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20.csv")
+write.csv(POKE_storm12_07_20_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20_Q.csv")
+write.csv(POKE_storm12_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20_NO3.csv")
+write.csv(POKE_storm12_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20_fDOM.csv")
+write.csv(POKE_storm12_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20_SPC.csv")
+write.csv(POKE_storm12_07_20_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm12_07_20_turb.csv")
+
+write.csv(POKE_storm13_07_24, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24.csv")
+write.csv(POKE_storm13_07_24_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24_Q.csv")
+write.csv(POKE_storm13_07_24_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24_NO3.csv")
+write.csv(POKE_storm13_07_24_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24_fDOM.csv")
+write.csv(POKE_storm13_07_24_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24_SPC.csv")
+write.csv(POKE_storm13_07_24_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm13_07_24_turb.csv")
+
+write.csv(POKE_storm14_07_26, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26.csv")
+write.csv(POKE_storm14_07_26_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26_Q.csv")
+write.csv(POKE_storm14_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26_NO3.csv")
+write.csv(POKE_storm14_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26_fDOM.csv")
+write.csv(POKE_storm14_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26_SPC.csv")
+write.csv(POKE_storm14_07_26_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm14_07_26_turb.csv")
+
+write.csv(POKE_storm15_08_02, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02.csv")
+write.csv(POKE_storm15_08_02_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02_Q.csv")
+write.csv(POKE_storm15_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02_NO3.csv")
+write.csv(POKE_storm15_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02_fDOM.csv")
+write.csv(POKE_storm15_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02_SPC.csv")
+write.csv(POKE_storm15_08_02_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm15_08_02_turb.csv")
+
+write.csv(POKE_storm16_08_12, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12.csv")
+write.csv(POKE_storm16_08_12_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12_Q.csv")
+write.csv(POKE_storm16_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12_NO3.csv")
+write.csv(POKE_storm16_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12_fDOM.csv")
+write.csv(POKE_storm16_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12_SPC.csv")
+write.csv(POKE_storm16_08_12_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm16_08_12_turb.csv")
+
+write.csv(POKE_storm17_08_23, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23.csv")
+write.csv(POKE_storm17_08_23_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23_Q.csv")
+write.csv(POKE_storm17_08_23_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23_NO3.csv")
+write.csv(POKE_storm17_08_23_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23_fDOM.csv")
+write.csv(POKE_storm17_08_23_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23_SPC.csv")
+write.csv(POKE_storm17_08_23_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm17_08_23_turb.csv")
+
+write.csv(POKE_storm18_08_25, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25.csv")
+write.csv(POKE_storm18_08_25_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25_Q.csv")
+write.csv(POKE_storm18_08_25_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25_NO3.csv")
+write.csv(POKE_storm18_08_25_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25_fDOM.csv")
+write.csv(POKE_storm18_08_25_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25_SPC.csv")
+write.csv(POKE_storm18_08_25_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm18_08_25_turb.csv")
+
+write.csv(POKE_storm19_08_27, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27.csv")
+write.csv(POKE_storm19_08_27_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27_Q.csv")
+write.csv(POKE_storm19_08_27_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27_NO3.csv")
+write.csv(POKE_storm19_08_27_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27_fDOM.csv")
+write.csv(POKE_storm19_08_27_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27_SPC.csv")
+write.csv(POKE_storm19_08_27_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm19_08_27_turb.csv")
+
+write.csv(POKE_storm20_09_01, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01.csv")
+write.csv(POKE_storm20_09_01_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01_Q.csv")
+write.csv(POKE_storm20_09_01_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01_NO3.csv")
+write.csv(POKE_storm20_09_01_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01_fDOM.csv")
+write.csv(POKE_storm20_09_01_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01_SPC.csv")
+write.csv(POKE_storm20_09_01_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm20_09_01_turb.csv")
+
+write.csv(POKE_storm21_09_03, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03.csv")
+write.csv(POKE_storm21_09_03_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03_Q.csv")
+write.csv(POKE_storm21_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03_NO3.csv")
+write.csv(POKE_storm21_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03_fDOM.csv")
+write.csv(POKE_storm21_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03_SPC.csv")
+write.csv(POKE_storm21_09_03_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm21_09_03_turb.csv")
+
+write.csv(POKE_storm22a_09_07, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07.csv")
+write.csv(POKE_storm22a_09_07_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07_Q.csv")
+write.csv(POKE_storm22a_09_07_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07_NO3.csv")
+write.csv(POKE_storm22a_09_07_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07_fDOM.csv")
+write.csv(POKE_storm22a_09_07_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07_SPC.csv")
+write.csv(POKE_storm22a_09_07_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22a_09_07_turb.csv")
+
+write.csv(POKE_storm22b_09_09, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09.csv")
+write.csv(POKE_storm22b_09_09_Q, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09_Q.csv")
+write.csv(POKE_storm22b_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09_NO3.csv")
+write.csv(POKE_storm22b_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09_fDOM.csv")
+write.csv(POKE_storm22b_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09_SPC.csv")
+write.csv(POKE_storm22b_09_09_turb, "~/Documents/Storms/Storm_Events/2020/POKE/POKE_storm22b_09_09_turb.csv")
+
+
+### MOOS ###
+MOOS$MeanDischarge <- MOOS$Q
+MOOS$DateTime <- MOOS$datetimeAK
+MOOS$SpCond.uScm <- MOOS$SpCond.µS.cm
+### Import precipitation data into the *ALL document ### 
+# FRCH rain gauge installed on the 11th of June. 
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-05 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'FRCH precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-05 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(15,0), 
+     axes=F, xlab="", ylab="")
+par(new = T)
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 20 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+### STORMS ###
+# Storm 1 #
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-21 00:00:00","2020-07-10 00:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-21 0:00:00","2020-07-10 00:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 19:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-28 08:00:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm1_06_20 = MOOS[MOOS$DateTime > as.POSIXct("2020-06-20 19:00:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-06-28 00:00:00", tz="America/Anchorage"),]
+plot(MOOS_storm1_06_20$MeanDischarge ~ as.POSIXct(MOOS_storm1_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,4200), col="blue", main="MOOS 200620 storm 1",
+     xlim = as.POSIXct(c("2020-06-20 0:00:00","2020-07-10 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 50 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-20 00:00:00","2020-07-10 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 2 #
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-21 00:00:00","2020-07-10 00:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-21 0:00:00","2020-07-10 00:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-28 10:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-01 20:00:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm2_06_28 = MOOS[MOOS$DateTime > as.POSIXct("2020-06-28 10:00:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-07-01 20:00:00", tz="America/Anchorage"),]
+plot(MOOS_storm2_06_28$MeanDischarge ~ as.POSIXct(MOOS_storm2_06_28$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1800,3000), col="blue", main="MOOS 200628 storm 2",
+     xlim = as.POSIXct(c("2020-06-21 0:00:00","2020-07-10 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 20 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-21 00:00:00","2020-07-10 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Alarm # Doesnt show an increase in discharge or chem = NO STORM
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-14 00:00:00","2020-07-15 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+lines(moos.no3.final$nitrateuM * 40 ~ moos.no3.final$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-14 00:00:00","2020-07-15 01:00:00"), tz="America/Anchorage"))
+lines(moos.fdom.final$fDOM.QSU * 20 ~ moos.fdom.final$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-07-14 00:00:00","2020-07-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-14 0:00:00","2020-07-16 00:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+
+# Storm 3 #
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-18 11:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-19 20:00:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm3_07_18 = MOOS[MOOS$DateTime > as.POSIXct("2020-07-18 11:30:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-07-19 20:00:00", tz="America/Anchorage"),]
+plot(MOOS_storm3_07_18$MeanDischarge ~ as.POSIXct(MOOS_storm3_07_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1200), col="blue", main="MOOS 200718 storm 3",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 20 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4 #
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-20 11:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-23 20:00:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm4_07_20 = MOOS[MOOS$DateTime > as.POSIXct("2020-07-20 11:30:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-07-23 20:00:00", tz="America/Anchorage"),]
+plot(MOOS_storm4_07_20$MeanDischarge ~ as.POSIXct(MOOS_storm4_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1500), col="blue", main="MOOS 200720 storm 4",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-16 0:00:00","2020-07-24 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 5 # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-24 00:00:00","2020-07-31 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-24 00:00:00","2020-07-31 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-26 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-29 14:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm5_07_26 = MOOS[MOOS$DateTime > as.POSIXct("2020-07-26 23:30:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-07-29 14:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm5_07_26$MeanDischarge ~ as.POSIXct(MOOS_storm5_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,1500), col="blue", main="MOOS 200726 storm 5",
+     xlim = as.POSIXct(c("2020-07-24 00:00:00","2020-07-31 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-24 00:00:00","2020-07-31 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6a # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-08-01 20:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-02 23:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm6a_08_01 = MOOS[MOOS$DateTime > as.POSIXct("2020-08-01 20:30:00", tz="America/Anchorage") &
+                            MOOS$DateTime < as.POSIXct("2020-08-02 23:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm6a_08_01$MeanDischarge ~ as.POSIXct(MOOS_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1200), col="blue", main="MOOS 200801 storm 6a",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"))
+
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 9 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 9 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6b # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-05 23:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm6b_08_02 = MOOS[MOOS$DateTime > as.POSIXct("2020-08-02 23:30:00", tz="America/Anchorage") &
+                            MOOS$DateTime < as.POSIXct("2020-08-05 23:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm6b_08_02$MeanDischarge ~ as.POSIXct(MOOS_storm6b_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1700), col="blue", main="MOOS 200802 storm 6b",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-01 0:00:00","2020-08-08 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7a # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-08-09 10:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-12 07:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm7a_08_09 = MOOS[MOOS$DateTime > as.POSIXct("2020-08-09 10:30:00", tz="America/Anchorage") &
+                            MOOS$DateTime < as.POSIXct("2020-08-12 07:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm7a_08_09$MeanDischarge ~ as.POSIXct(MOOS_storm7a_08_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1500), col="blue", main="MOOS 200809 storm 7a",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7b # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-08-12 09:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-14 07:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm7b_08_12 = MOOS[MOOS$DateTime > as.POSIXct("2020-08-12 09:00:00", tz="America/Anchorage") &
+                            MOOS$DateTime < as.POSIXct("2020-08-14 07:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm7b_08_12$MeanDischarge ~ as.POSIXct(MOOS_storm7b_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,1500), col="blue", main="MOOS 200812 storm 7b",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-09 00:00:00","2020-08-19 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# alarm # Not showing an increase in discharge or chemistry...no storm 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-09-02 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+lines(moos.no3.final$nitrateuM * 40 ~ moos.no3.final$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-09-02 20:00:00"), tz="America/Anchorage"))
+lines(moos.fdom.final$fDOM.QSU * 20 ~ moos.fdom.final$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-09-02 20:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-20 0:00:00","2020-09-02 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-08-12 08:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-16 19:45:00", tz="America/Anchorage"), col="purple")
+
+# Storm 8 # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 15 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-09-06 17:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-08 18:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm8_09_06 = MOOS[MOOS$DateTime > as.POSIXct("2020-09-06 17:45:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-09-08 18:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm8_09_06$MeanDischarge ~ as.POSIXct(MOOS_storm8_09_06$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="MOOS 200906 storm 8",
+     xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-03 0:00:00","2020-09-08 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+
+# Storm 9 # 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-08 00:00:00","2020-09-13 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-08 00:00:00","2020-09-13 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-09-09 08:15:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-13 13:45:00", tz="America/Anchorage"), col="purple")
+
+MOOS_storm9_09_09 = MOOS[MOOS$DateTime > as.POSIXct("2020-09-09 08:15:00", tz="America/Anchorage") &
+                           MOOS$DateTime < as.POSIXct("2020-09-13 13:45:00", tz="America/Anchorage"),]
+plot(MOOS_storm9_09_09$MeanDischarge ~ as.POSIXct(MOOS_storm9_09_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,2300), col="blue", main="MOOS 200909 storm 9",
+     xlim = as.POSIXct(c("2020-09-08 00:00:00","2020-09-13 20:00:00"), tz="America/Anchorage"))
+lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$fDOM.QSU * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$SpCond.uScm * 15 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+lines(MOOS$Turbidity.FNU * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
+
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-09 0:00:00","2020-09-13 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Checking to see if the rest of the data set has a storm in it and it doesnt appear so 
+plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-09-13 0:00:00","2020-10-13 20:00:00"), tz="America/Anchorage"))
+abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
+abline(h=MOOS_bfQ_mn, col="red")
+par(new = T)
+
+
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-09-13 0:00:00","2020-10-13 20:00:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.3)
+abline(v= as.POSIXct("2020-09-09 08:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-13 18:45:00", tz="America/Anchorage"), col="purple")
+
+# modify format and save MOOS storms #
+
+MOOS_storm1_06_20_Q = subset(MOOS_storm1_06_20, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm1_06_20_Q) = c("valuedatetime","datavalue")
+MOOS_storm1_06_20_NO3 = subset(MOOS_storm1_06_20, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm1_06_20_NO3) = c("valuedatetime","datavalue")
+MOOS_storm1_06_20_fDOM = subset(MOOS_storm1_06_20, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm1_06_20_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm1_06_20_SPC = subset(MOOS_storm1_06_20, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm1_06_20_SPC) = c("valuedatetime","datavalue")
+MOOS_storm1_06_20_turb = subset(MOOS_storm1_06_20, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm1_06_20_turb) = c("valuedatetime","datavalue")
+
+# Storm 2 #
+MOOS_storm2_06_28_Q = subset(MOOS_storm2_06_28, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm2_06_28_Q) = c("valuedatetime","datavalue")
+MOOS_storm2_06_28_NO3 = subset(MOOS_storm2_06_28, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm2_06_28_NO3) = c("valuedatetime","datavalue")
+MOOS_storm2_06_28_fDOM = subset(MOOS_storm2_06_28, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm2_06_28_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm2_06_28_SPC = subset(MOOS_storm2_06_28, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm2_06_28_SPC) = c("valuedatetime","datavalue")
+MOOS_storm2_06_28_turb = subset(MOOS_storm2_06_28, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm2_06_28_turb) = c("valuedatetime","datavalue")
+
+# Storm 3 #
+MOOS_storm3_07_18_Q = subset(MOOS_storm3_07_18, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm3_07_18_Q) = c("valuedatetime","datavalue")
+MOOS_storm3_07_18_NO3 = subset(MOOS_storm3_07_18, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm3_07_18_NO3) = c("valuedatetime","datavalue")
+MOOS_storm3_07_18_fDOM = subset(MOOS_storm3_07_18, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm3_07_18_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm3_07_18_SPC = subset(MOOS_storm3_07_18, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm3_07_18_SPC) = c("valuedatetime","datavalue")
+MOOS_storm3_07_18_turb = subset(MOOS_storm3_07_18, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm3_07_18_turb) = c("valuedatetime","datavalue")
+
+# Storm 4 #
+MOOS_storm4_07_20_Q = subset(MOOS_storm4_07_20, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm4_07_20_Q) = c("valuedatetime","datavalue")
+MOOS_storm4_07_20_NO3 = subset(MOOS_storm4_07_20, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm4_07_20_NO3) = c("valuedatetime","datavalue")
+MOOS_storm4_07_20_fDOM = subset(MOOS_storm4_07_20, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm4_07_20_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm4_07_20_SPC = subset(MOOS_storm4_07_20, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm4_07_20_SPC) = c("valuedatetime","datavalue")
+MOOS_storm4_07_20_turb = subset(MOOS_storm4_07_20, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm4_07_20_turb) = c("valuedatetime","datavalue")
+
+# Storm 5 #
+MOOS_storm5_07_26_Q = subset(MOOS_storm5_07_26, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm5_07_26_Q) = c("valuedatetime","datavalue")
+MOOS_storm5_07_26_NO3 = subset(MOOS_storm5_07_26, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm5_07_26_NO3) = c("valuedatetime","datavalue")
+MOOS_storm5_07_26_fDOM = subset(MOOS_storm5_07_26, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm5_07_26_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm5_07_26_SPC = subset(MOOS_storm5_07_26, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm5_07_26_SPC) = c("valuedatetime","datavalue")
+MOOS_storm5_07_26_turb = subset(MOOS_storm5_07_26, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm5_07_26_turb) = c("valuedatetime","datavalue")
+
+# Storm 6a #
+MOOS_storm6a_08_01_Q = subset(MOOS_storm6a_08_01, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm6a_08_01_Q) = c("valuedatetime","datavalue")
+MOOS_storm6a_08_01_NO3 = subset(MOOS_storm6a_08_01, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm6a_08_01_NO3) = c("valuedatetime","datavalue")
+MOOS_storm6a_08_01_fDOM = subset(MOOS_storm6a_08_01, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm6a_08_01_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm6a_08_01_SPC = subset(MOOS_storm6a_08_01, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm6a_08_01_SPC) = c("valuedatetime","datavalue")
+MOOS_storm6a_08_01_turb = subset(MOOS_storm6a_08_01, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm6a_08_01_turb) = c("valuedatetime","datavalue")
+
+# Storm 6b #
+MOOS_storm6b_08_02_Q = subset(MOOS_storm6b_08_02, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm6b_08_02_Q) = c("valuedatetime","datavalue")
+MOOS_storm6b_08_02_NO3 = subset(MOOS_storm6b_08_02, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm6b_08_02_NO3) = c("valuedatetime","datavalue")
+MOOS_storm6b_08_02_fDOM = subset(MOOS_storm6b_08_02, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm6b_08_02_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm6b_08_02_SPC = subset(MOOS_storm6b_08_02, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm6b_08_02_SPC) = c("valuedatetime","datavalue")
+MOOS_storm6b_08_02_turb = subset(MOOS_storm6b_08_02, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm6b_08_02_turb) = c("valuedatetime","datavalue")
+
+
+# Storm 7a #
+MOOS_storm7a_08_09_Q = subset(MOOS_storm7a_08_09, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm7a_08_09_Q) = c("valuedatetime","datavalue")
+MOOS_storm7a_08_09_NO3 = subset(MOOS_storm7a_08_09, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm7a_08_09_NO3) = c("valuedatetime","datavalue")
+MOOS_storm7a_08_09_fDOM = subset(MOOS_storm7a_08_09, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm7a_08_09_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm7a_08_09_SPC = subset(MOOS_storm7a_08_09, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm7a_08_09_SPC) = c("valuedatetime","datavalue")
+MOOS_storm7a_08_09_turb = subset(MOOS_storm7a_08_09, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm7a_08_09_turb) = c("valuedatetime","datavalue")
+
+# Storm 7b #
+MOOS_storm7b_08_12_Q = subset(MOOS_storm7b_08_12, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm7b_08_12_Q) = c("valuedatetime","datavalue")
+MOOS_storm7b_08_12_NO3 = subset(MOOS_storm7b_08_12, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm7b_08_12_NO3) = c("valuedatetime","datavalue")
+MOOS_storm7b_08_12_fDOM = subset(MOOS_storm7b_08_12, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm7b_08_12_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm7b_08_12_SPC = subset(MOOS_storm7b_08_12, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm7b_08_12_SPC) = c("valuedatetime","datavalue")
+MOOS_storm7b_08_12_turb = subset(MOOS_storm7b_08_12, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm7b_08_12_turb) = c("valuedatetime","datavalue")
+
+# Storm 8 #
+MOOS_storm8_09_06_Q = subset(MOOS_storm8_09_06, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm8_09_06_Q) = c("valuedatetime","datavalue")
+MOOS_storm8_09_06_NO3 = subset(MOOS_storm8_09_06, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm8_09_06_NO3) = c("valuedatetime","datavalue")
+MOOS_storm8_09_06_fDOM = subset(MOOS_storm8_09_06, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm8_09_06_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm8_09_06_SPC = subset(MOOS_storm8_09_06, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm8_09_06_SPC) = c("valuedatetime","datavalue")
+MOOS_storm8_09_06_turb = subset(MOOS_storm8_09_06, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm8_09_06_turb) = c("valuedatetime","datavalue")
+
+# Storm 9 #
+MOOS_storm9_09_09_Q = subset(MOOS_storm9_09_09, select = c("DateTime","MeanDischarge"))
+names(MOOS_storm9_09_09_Q) = c("valuedatetime","datavalue")
+MOOS_storm9_09_09_NO3 = subset(MOOS_storm9_09_09, select = c("DateTime", "nitrateuM"))
+names(MOOS_storm9_09_09_NO3) = c("valuedatetime","datavalue")
+MOOS_storm9_09_09_fDOM = subset(MOOS_storm9_09_09, select = c("DateTime","fDOM.QSU"))
+names(MOOS_storm9_09_09_fDOM) = c("valuedatetime","datavalue")
+MOOS_storm9_09_09_SPC = subset(MOOS_storm9_09_09, select = c("DateTime", "SpCond.uScm"))
+names(MOOS_storm9_09_09_SPC) = c("valuedatetime","datavalue")
+MOOS_storm9_09_09_turb = subset(MOOS_storm9_09_09, select = c("DateTime", "Turbidity.FNU"))
+names(MOOS_storm9_09_09_turb) = c("valuedatetime","datavalue")
+
+### Write csv ###
+write.csv(MOOS_storm1_06_20, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20.csv")
+write.csv(MOOS_storm1_06_20_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20_Q.csv")
+write.csv(MOOS_storm1_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20_NO3.csv")
+write.csv(MOOS_storm1_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20_fDOM.csv")
+write.csv(MOOS_storm1_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20_SPC.csv")
+write.csv(MOOS_storm1_06_20_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm1_06_20_Turb.csv")
+
+write.csv(MOOS_storm2_06_28, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28.csv")
+write.csv(MOOS_storm2_06_28_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28_Q.csv")
+write.csv(MOOS_storm2_06_28_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28_NO3.csv")
+write.csv(MOOS_storm2_06_28_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28_fDOM.csv")
+write.csv(MOOS_storm2_06_28_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28_SPC.csv")
+write.csv(MOOS_storm2_06_28_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm2_06_28_Turb.csv")
+
+write.csv(MOOS_storm3_07_18, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18.csv")
+write.csv(MOOS_storm3_07_18_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18_Q.csv")
+write.csv(MOOS_storm3_07_18_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18_NO3.csv")
+write.csv(MOOS_storm3_07_18_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18_fDOM.csv")
+write.csv(MOOS_storm3_07_18_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18_SPC.csv")
+write.csv(MOOS_storm3_07_18_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm3_07_18_Turb.csv")
+
+write.csv(MOOS_storm4_07_20, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20.csv")
+write.csv(MOOS_storm4_07_20_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20_Q.csv")
+write.csv(MOOS_storm4_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20_NO3.csv")
+write.csv(MOOS_storm4_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20_fDOM.csv")
+write.csv(MOOS_storm4_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20_SPC.csv")
+write.csv(MOOS_storm4_07_20_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm4_07_20_Turb.csv")
+
+write.csv(MOOS_storm5_07_26, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26.csv")
+write.csv(MOOS_storm5_07_26_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26_Q.csv")
+write.csv(MOOS_storm5_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26_NO3.csv")
+write.csv(MOOS_storm5_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26_fDOM.csv")
+write.csv(MOOS_storm5_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26_SPC.csv")
+write.csv(MOOS_storm5_07_26_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm5_07_26_Turb.csv")
+
+write.csv(MOOS_storm6a_08_01, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01.csv")
+write.csv(MOOS_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01_Q.csv")
+write.csv(MOOS_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01_NO3.csv")
+write.csv(MOOS_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01_fDOM.csv")
+write.csv(MOOS_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01_SPC.csv")
+write.csv(MOOS_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6a_08_01_Turb.csv")
+
+write.csv(MOOS_storm6b_08_02, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02.csv")
+write.csv(MOOS_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02_Q.csv")
+write.csv(MOOS_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02_NO3.csv")
+write.csv(MOOS_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02_fDOM.csv")
+write.csv(MOOS_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02_SPC.csv")
+write.csv(MOOS_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm6b_08_02_Turb.csv")
+
+write.csv(MOOS_storm7a_08_09, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09.csv")
+write.csv(MOOS_storm7a_08_09_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09_Q.csv")
+write.csv(MOOS_storm7a_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09_NO3.csv")
+write.csv(MOOS_storm7a_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09_fDOM.csv")
+write.csv(MOOS_storm7a_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09_SPC.csv")
+write.csv(MOOS_storm7a_08_09_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7a_08_09_Turb.csv")
+
+write.csv(MOOS_storm7b_08_12, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12.csv")
+write.csv(MOOS_storm7b_08_12_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12_Q.csv")
+write.csv(MOOS_storm7b_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12_NO3.csv")
+write.csv(MOOS_storm7b_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12_fDOM.csv")
+write.csv(MOOS_storm7b_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12_SPC.csv")
+write.csv(MOOS_storm7b_08_12_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm7b_08_12_Turb.csv")
+
+write.csv(MOOS_storm8_09_06, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06.csv")
+write.csv(MOOS_storm8_09_06_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06_Q.csv")
+write.csv(MOOS_storm8_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06_NO3.csv")
+write.csv(MOOS_storm8_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06_fDOM.csv")
+write.csv(MOOS_storm8_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06_SPC.csv")
+write.csv(MOOS_storm8_09_06_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm8_09_06_Turb.csv")
+
+write.csv(MOOS_storm9_09_09, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09.csv")
+write.csv(MOOS_storm9_09_09_Q, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09_Q.csv")
+write.csv(MOOS_storm9_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09_NO3.csv")
+write.csv(MOOS_storm9_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09_fDOM.csv")
+write.csv(MOOS_storm9_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09_SPC.csv")
+write.csv(MOOS_storm9_09_09_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOOS_storm9_09_09_Turb.csv")
+
+
+
+# CARI #
+# entire record  # 
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 20 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 300 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+
+par(new = T)
+
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.3)
+
+
+# Storm 1 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-15 16:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-17 09:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm1_06_15 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-15 06:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-06-17 09:45:00", tz="America/Anchorage"),]
+plot(CARI_storm1_06_15$Discharge ~ as.POSIXct(CARI_storm1_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200615 storm 1",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 2a #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-19 12:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm2a_06_19 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-19 12:45:00", tz="America/Anchorage") &
+                                 CARI_2020$DateTime < as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage"),]
+plot(CARI_storm2a_06_19$Discharge ~ as.POSIXct(CARI_storm2a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200619 storm 2a",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 2b #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm2b_06_20 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage") &
+                                 CARI_2020$DateTime < as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage"),]
+plot(CARI_storm2b_06_20$Discharge ~ as.POSIXct(CARI_storm2b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200620 storm 2b",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 2c #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-23 05:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm2c_06_21 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage") &
+                                 CARI_2020$DateTime < as.POSIXct("2020-06-23 05:45:00", tz="America/Anchorage"),]
+plot(CARI_storm2c_06_21$Discharge ~ as.POSIXct(CARI_storm2c_06_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200621 storm 2c",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 3 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-06-23 07:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-06-26 01:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm3_06_23 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-23 07:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-06-26 05:45:00", tz="America/Anchorage"),]
+plot(CARI_storm3_06_23$Discharge ~ as.POSIXct(CARI_storm3_06_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200623 storm 3",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 4 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-09 10:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-11 01:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm4_07_09 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-07-09 10:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-07-11 01:45:00", tz="America/Anchorage"),]
+plot(CARI_storm4_07_09$Discharge ~ as.POSIXct(CARI_storm4_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200709 storm 4",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 5 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-13 05:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-15 12:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm5_07_13 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-07-13 05:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-07-15 12:45:00", tz="America/Anchorage"),]
+plot(CARI_storm5_07_13$Discharge ~ as.POSIXct(CARI_storm5_07_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200713 storm 5",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 6 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-24 14:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-26 12:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm6_07_24 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-07-24 14:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-07-26 12:45:00", tz="America/Anchorage"),]
+plot(CARI_storm6_07_24$Discharge ~ as.POSIXct(CARI_storm6_07_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200724 storm 6",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 7 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-07-27 07:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-07-30 12:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm7_07_27 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-07-27 07:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-07-30 12:45:00", tz="America/Anchorage"),]
+plot(CARI_storm7_07_27$Discharge ~ as.POSIXct(CARI_storm7_07_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200727 storm 7",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-15 0:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8a #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-02 01:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-03 05:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm8a_08_02 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-08-02 01:45:00", tz="America/Anchorage") &
+                                 CARI_2020$DateTime < as.POSIXct("2020-08-03 05:45:00", tz="America/Anchorage"),]
+plot(CARI_storm8a_08_02$Discharge ~ as.POSIXct(CARI_storm8a_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200802 storm 8a",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 8b #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-08-03 05:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-08-08 05:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm8b_08_03 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-08-03 05:45:00", tz="America/Anchorage") &
+                                 CARI_2020$DateTime < as.POSIXct("2020-08-08 05:45:00", tz="America/Anchorage"),]
+plot(CARI_storm8b_08_03$Discharge ~ as.POSIXct(CARI_storm8b_08_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,4500), col="blue", main="CARI 200803 storm 8b",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-07-31 0:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# Storm 9 #
+plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2020-08-31 0:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+abline(h=CARI_bfQ_mn*2, col="red", lty=2)
+abline(h=CARI_bfQ_mn, col="red")
+par(new = T)
+plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-31 0:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
+abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
+abline(v= as.POSIXct("2020-09-07 01:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2020-09-08 02:45:00", tz="America/Anchorage"), col="purple")
+
+CARI_storm9_09_07 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-09-07 01:45:00", tz="America/Anchorage") &
+                                CARI_2020$DateTime < as.POSIXct("2020-09-08 02:45:00", tz="America/Anchorage"),]
+plot(CARI_storm9_09_07$Discharge ~ as.POSIXct(CARI_storm9_09_07$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,750), col="blue", main="CARI 200907 storm 9",
+     xlim = as.POSIXct(c("2020-08-31 0:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
+par(new = T)
+plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
+     xlim = as.POSIXct(c("2020-08-31 0:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"),
+     ylim = c(5,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+
+# NO3 fDOM SPC Turb #
+
+CARI_storm1_06_15_Q = subset(CARI_storm1_06_15, select = c("DateTime","Discharge"))
+names(CARI_storm1_06_15_Q) = c("valuedatetime","datavalue")
+CARI_storm1_06_15_NO3 = subset(CARI_storm1_06_15, select = c("DateTime", "NO3"))
+names(CARI_storm1_06_15_NO3) = c("valuedatetime","datavalue")
+CARI_storm1_06_15_fDOM = subset(CARI_storm1_06_15, select = c("DateTime","fDOM"))
+names(CARI_storm1_06_15_fDOM) = c("valuedatetime","datavalue")
+CARI_storm1_06_15_SPC = subset(CARI_storm1_06_15, select = c("DateTime", "SpCond"))
+names(CARI_storm1_06_15_SPC) = c("valuedatetime","datavalue")
+CARI_storm1_06_15_turb = subset(CARI_storm1_06_15, select = c("DateTime", "Turb"))
+names(CARI_storm1_06_15_turb) = c("valuedatetime","datavalue")
+
+CARI_storm2a_06_19_Q = subset(CARI_storm2a_06_19, select = c("DateTime","Discharge"))
+names(CARI_storm2a_06_19_Q) = c("valuedatetime","datavalue")
+CARI_storm2a_06_19_NO3 = subset(CARI_storm2a_06_19, select = c("DateTime", "NO3"))
+names(CARI_storm2a_06_19_NO3) = c("valuedatetime","datavalue")
+CARI_storm2a_06_19_fDOM = subset(CARI_storm2a_06_19, select = c("DateTime","fDOM"))
+names(CARI_storm2a_06_19_fDOM) = c("valuedatetime","datavalue")
+CARI_storm2a_06_19_SPC = subset(CARI_storm2a_06_19, select = c("DateTime", "SpCond"))
+names(CARI_storm2a_06_19_SPC) = c("valuedatetime","datavalue")
+CARI_storm2a_06_19_turb = subset(CARI_storm2a_06_19, select = c("DateTime", "Turb"))
+names(CARI_storm2a_06_19_turb) = c("valuedatetime","datavalue")
+
+CARI_storm2b_06_20_Q = subset(CARI_storm2b_06_20, select = c("DateTime","Discharge"))
+names(CARI_storm2b_06_20_Q) = c("valuedatetime","datavalue")
+CARI_storm2b_06_20_NO3 = subset(CARI_storm2b_06_20, select = c("DateTime", "NO3"))
+names(CARI_storm2b_06_20_NO3) = c("valuedatetime","datavalue")
+CARI_storm2b_06_20_fDOM = subset(CARI_storm2b_06_20, select = c("DateTime","fDOM"))
+names(CARI_storm2b_06_20_fDOM) = c("valuedatetime","datavalue")
+CARI_storm2b_06_20_SPC = subset(CARI_storm2b_06_20, select = c("DateTime", "SpCond"))
+names(CARI_storm2b_06_20_SPC) = c("valuedatetime","datavalue")
+CARI_storm2b_06_20_turb = subset(CARI_storm2b_06_20, select = c("DateTime", "Turb"))
+names(CARI_storm2b_06_20_turb) = c("valuedatetime","datavalue")
+
+CARI_storm2c_06_21_Q = subset(CARI_storm2c_06_21, select = c("DateTime","Discharge"))
+names(CARI_storm2c_06_21_Q) = c("valuedatetime","datavalue")
+CARI_storm2c_06_21_NO3 = subset(CARI_storm2c_06_21, select = c("DateTime", "NO3"))
+names(CARI_storm2c_06_21_NO3) = c("valuedatetime","datavalue")
+CARI_storm2c_06_21_fDOM = subset(CARI_storm2c_06_21, select = c("DateTime","fDOM"))
+names(CARI_storm2c_06_21_fDOM) = c("valuedatetime","datavalue")
+CARI_storm2c_06_21_SPC = subset(CARI_storm2c_06_21, select = c("DateTime", "SpCond"))
+names(CARI_storm2c_06_21_SPC) = c("valuedatetime","datavalue")
+CARI_storm2c_06_21_turb = subset(CARI_storm2c_06_21, select = c("DateTime", "Turb"))
+names(CARI_storm2c_06_21_turb) = c("valuedatetime","datavalue")
+
+CARI_storm3_06_23_Q = subset(CARI_storm3_06_23, select = c("DateTime","Discharge"))
+names(CARI_storm3_06_23_Q) = c("valuedatetime","datavalue")
+CARI_storm3_06_23_NO3 = subset(CARI_storm3_06_23, select = c("DateTime", "NO3"))
+names(CARI_storm3_06_23_NO3) = c("valuedatetime","datavalue")
+CARI_storm3_06_23_fDOM = subset(CARI_storm3_06_23, select = c("DateTime","fDOM"))
+names(CARI_storm3_06_23_fDOM) = c("valuedatetime","datavalue")
+CARI_storm3_06_23_SPC = subset(CARI_storm3_06_23, select = c("DateTime", "SpCond"))
+names(CARI_storm3_06_23_SPC) = c("valuedatetime","datavalue")
+CARI_storm3_06_23_turb = subset(CARI_storm3_06_23, select = c("DateTime", "Turb"))
+names(CARI_storm3_06_23_turb) = c("valuedatetime","datavalue")
+
+CARI_storm4_07_09_Q = subset(CARI_storm4_07_09, select = c("DateTime","Discharge"))
+names(CARI_storm4_07_09_Q) = c("valuedatetime","datavalue")
+CARI_storm4_07_09_NO3 = subset(CARI_storm4_07_09, select = c("DateTime", "NO3"))
+names(CARI_storm4_07_09_NO3) = c("valuedatetime","datavalue")
+CARI_storm4_07_09_fDOM = subset(CARI_storm4_07_09, select = c("DateTime","fDOM"))
+names(CARI_storm4_07_09_fDOM) = c("valuedatetime","datavalue")
+CARI_storm4_07_09_SPC = subset(CARI_storm4_07_09, select = c("DateTime", "SpCond"))
+names(CARI_storm4_07_09_SPC) = c("valuedatetime","datavalue")
+CARI_storm4_07_09_turb = subset(CARI_storm4_07_09, select = c("DateTime", "Turb"))
+names(CARI_storm4_07_09_turb) = c("valuedatetime","datavalue")
+
+CARI_storm5_07_13_Q = subset(CARI_storm5_07_13, select = c("DateTime","Discharge"))
+names(CARI_storm5_07_13_Q) = c("valuedatetime","datavalue")
+CARI_storm5_07_13_NO3 = subset(CARI_storm5_07_13, select = c("DateTime", "NO3"))
+names(CARI_storm5_07_13_NO3) = c("valuedatetime","datavalue")
+CARI_storm5_07_13_fDOM = subset(CARI_storm5_07_13, select = c("DateTime","fDOM"))
+names(CARI_storm5_07_13_fDOM) = c("valuedatetime","datavalue")
+CARI_storm5_07_13_SPC = subset(CARI_storm5_07_13, select = c("DateTime", "SpCond"))
+names(CARI_storm5_07_13_SPC) = c("valuedatetime","datavalue")
+CARI_storm5_07_13_turb = subset(CARI_storm5_07_13, select = c("DateTime", "Turb"))
+names(CARI_storm5_07_13_turb) = c("valuedatetime","datavalue")
+
+CARI_storm6_07_24_Q = subset(CARI_storm6_07_24, select = c("DateTime","Discharge"))
+names(CARI_storm6_07_24_Q) = c("valuedatetime","datavalue")
+CARI_storm6_07_24_NO3 = subset(CARI_storm6_07_24, select = c("DateTime", "NO3"))
+names(CARI_storm6_07_24_NO3) = c("valuedatetime","datavalue")
+CARI_storm6_07_24_fDOM = subset(CARI_storm6_07_24, select = c("DateTime","fDOM"))
+names(CARI_storm6_07_24_fDOM) = c("valuedatetime","datavalue")
+CARI_storm6_07_24_SPC = subset(CARI_storm6_07_24, select = c("DateTime", "SpCond"))
+names(CARI_storm6_07_24_SPC) = c("valuedatetime","datavalue")
+CARI_storm6_07_24_turb = subset(CARI_storm6_07_24, select = c("DateTime", "Turb"))
+names(CARI_storm6_07_24_turb) = c("valuedatetime","datavalue")
+
+CARI_storm7_07_27_Q = subset(CARI_storm7_07_27, select = c("DateTime","Discharge"))
+names(CARI_storm7_07_27_Q) = c("valuedatetime","datavalue")
+CARI_storm7_07_27_NO3 = subset(CARI_storm7_07_27, select = c("DateTime", "NO3"))
+names(CARI_storm7_07_27_NO3) = c("valuedatetime","datavalue")
+CARI_storm7_07_27_fDOM = subset(CARI_storm7_07_27, select = c("DateTime","fDOM"))
+names(CARI_storm7_07_27_fDOM) = c("valuedatetime","datavalue")
+CARI_storm7_07_27_SPC = subset(CARI_storm7_07_27, select = c("DateTime", "SpCond"))
+names(CARI_storm7_07_27_SPC) = c("valuedatetime","datavalue")
+CARI_storm7_07_27_turb = subset(CARI_storm7_07_27, select = c("DateTime", "Turb"))
+names(CARI_storm7_07_27_turb) = c("valuedatetime","datavalue")
+
+CARI_storm8a_08_02_Q = subset(CARI_storm8a_08_02, select = c("DateTime","Discharge"))
+names(CARI_storm8a_08_02_Q) = c("valuedatetime","datavalue")
+CARI_storm8a_08_02_NO3 = subset(CARI_storm8a_08_02, select = c("DateTime", "NO3"))
+names(CARI_storm8a_08_02_NO3) = c("valuedatetime","datavalue")
+CARI_storm8a_08_02_fDOM = subset(CARI_storm8a_08_02, select = c("DateTime","fDOM"))
+names(CARI_storm8a_08_02_fDOM) = c("valuedatetime","datavalue")
+CARI_storm8a_08_02_SPC = subset(CARI_storm8a_08_02, select = c("DateTime", "SpCond"))
+names(CARI_storm8a_08_02_SPC) = c("valuedatetime","datavalue")
+CARI_storm8a_08_02_turb = subset(CARI_storm8a_08_02, select = c("DateTime", "Turb"))
+names(CARI_storm8a_08_02_turb) = c("valuedatetime","datavalue")
+
+CARI_storm8b_08_03_Q = subset(CARI_storm8b_08_03, select = c("DateTime","Discharge"))
+names(CARI_storm8b_08_03_Q) = c("valuedatetime","datavalue")
+CARI_storm8b_08_03_NO3 = subset(CARI_storm8b_08_03, select = c("DateTime", "NO3"))
+names(CARI_storm8b_08_03_NO3) = c("valuedatetime","datavalue")
+CARI_storm8b_08_03_fDOM = subset(CARI_storm8b_08_03, select = c("DateTime","fDOM"))
+names(CARI_storm8b_08_03_fDOM) = c("valuedatetime","datavalue")
+CARI_storm8b_08_03_SPC = subset(CARI_storm8b_08_03, select = c("DateTime", "SpCond"))
+names(CARI_storm8b_08_03_SPC) = c("valuedatetime","datavalue")
+CARI_storm8b_08_03_turb = subset(CARI_storm8b_08_03, select = c("DateTime", "Turb"))
+names(CARI_storm8b_08_03_turb) = c("valuedatetime","datavalue")
+
+CARI_storm9_09_07_Q = subset(CARI_storm9_09_07, select = c("DateTime","Discharge"))
+names(CARI_storm9_09_07_Q) = c("valuedatetime","datavalue")
+CARI_storm9_09_07_NO3 = subset(CARI_storm9_09_07, select = c("DateTime", "NO3"))
+names(CARI_storm9_09_07_NO3) = c("valuedatetime","datavalue")
+CARI_storm9_09_07_fDOM = subset(CARI_storm9_09_07, select = c("DateTime","fDOM"))
+names(CARI_storm9_09_07_fDOM) = c("valuedatetime","datavalue")
+CARI_storm9_09_07_SPC = subset(CARI_storm9_09_07, select = c("DateTime", "SpCond"))
+names(CARI_storm9_09_07_SPC) = c("valuedatetime","datavalue")
+CARI_storm9_09_07_turb = subset(CARI_storm9_09_07, select = c("DateTime", "Turb"))
+names(CARI_storm9_09_07_turb) = c("valuedatetime","datavalue")
+
+# Write csv #
+write.csv(CARI_storm1_06_15, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15.csv")
+write.csv(CARI_storm1_06_15_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15_Q.csv")
+write.csv(CARI_storm1_06_15_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15_NO3.csv")
+write.csv(CARI_storm1_06_15_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15_fDOM.csv")
+write.csv(CARI_storm1_06_15_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15_SPC.csv")
+write.csv(CARI_storm1_06_15_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm1_06_15_Turb.csv")
+
+write.csv(CARI_storm2a_06_19, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19.csv")
+write.csv(CARI_storm2a_06_19_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19_Q.csv")
+write.csv(CARI_storm2a_06_19_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19_NO3.csv")
+write.csv(CARI_storm2a_06_19_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19_fDOM.csv")
+write.csv(CARI_storm2a_06_19_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19_SPC.csv")
+write.csv(CARI_storm2a_06_19_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2a_06_19_Turb.csv")
+
+write.csv(CARI_storm2b_06_20, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20.csv")
+write.csv(CARI_storm2b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20_Q.csv")
+write.csv(CARI_storm2b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20_NO3.csv")
+write.csv(CARI_storm2b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20_fDOM.csv")
+write.csv(CARI_storm2b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20_SPC.csv")
+write.csv(CARI_storm2b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2b_06_20_Turb.csv")
+
+write.csv(CARI_storm2c_06_21, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21.csv")
+write.csv(CARI_storm2c_06_21_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21_Q.csv")
+write.csv(CARI_storm2c_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21_NO3.csv")
+write.csv(CARI_storm2c_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21_fDOM.csv")
+write.csv(CARI_storm2c_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21_SPC.csv")
+write.csv(CARI_storm2c_06_21_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm2c_06_21_Turb.csv")
+
+write.csv(CARI_storm3_06_23, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23.csv")
+write.csv(CARI_storm3_06_23_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23_Q.csv")
+write.csv(CARI_storm3_06_23_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23_NO3.csv")
+write.csv(CARI_storm3_06_23_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23_fDOM.csv")
+write.csv(CARI_storm3_06_23_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23_SPC.csv")
+write.csv(CARI_storm3_06_23_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm3_06_23_Turb.csv")
+
+write.csv(CARI_storm4_07_09, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09.csv")
+write.csv(CARI_storm4_07_09_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09_Q.csv")
+write.csv(CARI_storm4_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09_NO3.csv")
+write.csv(CARI_storm4_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09_fDOM.csv")
+write.csv(CARI_storm4_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09_SPC.csv")
+write.csv(CARI_storm4_07_09_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm4_07_09_Turb.csv")
+
+write.csv(CARI_storm5_07_13, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13.csv")
+write.csv(CARI_storm5_07_13_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13_Q.csv")
+write.csv(CARI_storm5_07_13_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13_NO3.csv")
+write.csv(CARI_storm5_07_13_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13_fDOM.csv")
+write.csv(CARI_storm5_07_13_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13_SPC.csv")
+write.csv(CARI_storm5_07_13_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm5_07_13_Turb.csv")
+
+write.csv(CARI_storm6_07_24, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24.csv")
+write.csv(CARI_storm6_07_24_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24_Q.csv")
+write.csv(CARI_storm6_07_24_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24_NO3.csv")
+write.csv(CARI_storm6_07_24_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24_fDOM.csv")
+write.csv(CARI_storm6_07_24_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24_SPC.csv")
+write.csv(CARI_storm6_07_24_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm6_07_24_Turb.csv")
+
+write.csv(CARI_storm7_07_27, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27.csv")
+write.csv(CARI_storm7_07_27_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27_Q.csv")
+write.csv(CARI_storm7_07_27_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27_NO3.csv")
+write.csv(CARI_storm7_07_27_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27_fDOM.csv")
+write.csv(CARI_storm7_07_27_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27_SPC.csv")
+write.csv(CARI_storm7_07_27_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm7_07_27_Turb.csv")
+
+write.csv(CARI_storm8a_08_02, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02.csv")
+write.csv(CARI_storm8a_08_02_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02_Q.csv")
+write.csv(CARI_storm8a_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02_NO3.csv")
+write.csv(CARI_storm8a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02_fDOM.csv")
+write.csv(CARI_storm8a_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02_SPC.csv")
+write.csv(CARI_storm8a_08_02_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8a_08_02_Turb.csv")
+
+write.csv(CARI_storm8b_08_03, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03.csv")
+write.csv(CARI_storm8b_08_03_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03_Q.csv")
+write.csv(CARI_storm8b_08_03_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03_NO3.csv")
+write.csv(CARI_storm8b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03_fDOM.csv")
+write.csv(CARI_storm8b_08_03_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03_SPC.csv")
+write.csv(CARI_storm8b_08_03_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm8b_08_03_Turb.csv")
+
+write.csv(CARI_storm9_09_07, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07.csv")
+write.csv(CARI_storm9_09_07_Q, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_Q.csv")
+write.csv(CARI_storm9_09_07_NO3, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_NO3.csv")
+write.csv(CARI_storm9_09_07_fDOM, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_fDOM.csv")
+write.csv(CARI_storm9_09_07_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_SPC.csv")
+write.csv(CARI_storm9_09_07_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_Turb.csv")
+
+
+
+
+
+
+
+
+
+
+
 
 
