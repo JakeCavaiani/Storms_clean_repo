@@ -4203,10 +4203,10 @@ STRT.hyst.results.df$storm.ID = c("STRT_storm1_05_31_NO3",
                                   "STRT_storm7b_10_04_fDOM",
                                   "STRT_storm7b_10_04_SPC",
                                   "STRT_storm7b_10_04_turb",
-                                  "STRT_storm7e_10_09_NO3",
-                                  "STRT_storm7e_10_09_fDOM",
-                                  "STRT_storm7e_10_09_SPC",
-                                  "STRT_storm7e_10_09_turb"
+                                  "STRT_storm7c_10_09_NO3",
+                                  "STRT_storm7c_10_09_fDOM",
+                                  "STRT_storm7c_10_09_SPC",
+                                  "STRT_storm7c_10_09_turb"
                                   )
 
 
@@ -4283,10 +4283,10 @@ STRT.HI.df$storm.ID = c(rep("STRT_storm1_05_31_NO3", 50),
                         rep("STRT_storm7b_10_04_fDOM", 50),
                         rep("STRT_storm7b_10_04_SPC", 50),
                         rep("STRT_storm7b_10_04_turb", 50),
-                        rep("STRT_storm7e_10_09_NO3", 50),
-                        rep("STRT_storm7e_10_09_fDOM", 50),
-                        rep("STRT_storm7e_10_09_SPC", 50),
-                        rep("STRT_storm7e_10_09_turb", 50))
+                        rep("STRT_storm7c_10_09_NO3", 50),
+                        rep("STRT_storm7c_10_09_fDOM", 50),
+                        rep("STRT_storm7c_10_09_SPC", 50),
+                        rep("STRT_storm7c_10_09_turb", 50))
 
 
 STRT.HI.df$storm.ID = as.factor(STRT.HI.df$storm.ID)

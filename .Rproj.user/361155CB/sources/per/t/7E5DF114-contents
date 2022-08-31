@@ -517,3 +517,46 @@ HI_FI = left_join(HI_FI, beta_2020, by=c("site.ID", "storm.ID", "response_var", 
 HI_FI <- left_join(HI_FI, antecedent_2020, by = c("site.ID", "storm.ID", "response_var", "year"))
 
 write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
+
+
+
+
+#### ALL YEARS #######
+
+### Input values that werent run properly in the script when generating antecedent moisture conditions
+# When generating antecedent conditions (storm attributes/precipitation values) 
+ # for each storm... some didn't properly run and so I got back NAs when there should be 
+    # values. The point of this section is to fill those in with the proper values
+
+# This output files are the 07_Combine_HI_BETA_FI csv that includes all the storms and 
+  # there antecedent conditions. I have a csv for each year and when I have all the years (2018-2021)
+    # I will merge them. So I am going to do this year by year here and then rewrite to csv to make a final csv
+
+# 2018 csv is all good! It handle all the summaries with ease! go 2018!
+
+#2019
+AMC_2019 <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2019.csv")
+
+
+# # Duration 
+# # STRT storm 2
+# AMC_2019$TOTAL.TIME <- ifelse(AMC_2019$site.ID == "STRT" & AMC_2019$storm.ID == "storm2",
+#                               68.75, AMC_2019$TOTAL.TIME)
+# # STRT storm 3b
+# AMC_2019$TOTAL.TIME <- ifelse(AMC_2019$site.ID == "STRT" & AMC_2019$storm.ID == "storm3b",
+#                               71.25, AMC_2019$TOTAL.TIME)
+#                       
+
+#2020
+AMC_2020 <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
+
+
+
+
+
+
+
+
+
+
+

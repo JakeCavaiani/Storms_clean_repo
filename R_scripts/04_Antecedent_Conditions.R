@@ -3694,7 +3694,7 @@ STRT.2019.per.storm.1$temp <- temp$temp
 
 STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
 STRT.2019$DateTime <- as.POSIXct(STRT.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
-FRCH_RainGauge_2019$DateTime <- FRCH_RainGauge_2019$Datetime
+
 STRT.2019 <- left_join(STRT.2019, FRCH_RainGauge_2019, by = "DateTime")
 STRT.2019 <- STRT.2019[,-12] # removing a datetime column that isnt "DateTime
 STRT.2019 <- left_join(STRT.2019, airtempmean, by = "DateTime")
@@ -3704,6 +3704,7 @@ STRT.2019$ThreeMonth <- rollapplyr(STRT.2019$inst_rainfall_mm, 8064, sum, na.rm 
 STRT.2019$temp.week <- rollapplyr(STRT.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
 
 STRT.2019.1 <- left_join(STRT.2019.storms.1, STRT.2019, by = "DateTime") # week month and 3 month precip totals 
+VAUL.2019.1 <- left_join(VAUL.2019.storms.1, VAUL.2019, by = "DateTime") # week month and 3 month precip totals 
 
 STRT.2019.per.storm.2 <- STRT.2019.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
@@ -3958,7 +3959,7 @@ sp <- HI.strt.turb.2019 %>%
   xlab("Three-month Precip") +
   ylab("HI-Solute Storage") # plot model 
 
-STRT.2019.storms.1 <- na.omit(STRT.2019.storms.1)
+#STRT.2019.storms.1 <- na.omit(STRT.2019.storms.1)
 
 sum.time <- STRT.2019.storms.1 %>%
   mutate(grp=data.table::rleid(storm.num))%>%
@@ -4601,7 +4602,7 @@ HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, HI.vaul.2019, HI.strt
 
 # add time since peak  Q in chena #
 HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
-origin_date <- as.Date("2019-05-18")
+origin_date <- as.Date("2019-05-12")
 HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
 
 write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
@@ -6868,6 +6869,15 @@ sum.time <- STRT.2020.storms.1 %>%
   group_by(storm.num) %>%
   summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
 
+# this sumtime works for some of the storms but not all so I am manually creating the dataframe below and merging that 
+
+sum.time <- data.frame(
+  storm.num = c("storm10", "storm1a", "storm1b", "storm1c", "storm1e", "storm2",
+                "storm3", "storm4a", "storm4b", "storm5", "storm6", "storm7a",
+                "storm7b", "storm9a", "storm9b", "storm9c", "storm1d", "storm8"),
+  TOTAL.TIME = c(61.25, 26.5, 40,26,110.75,41.25,
+                 96.25,34.75,80.25,68.25,30.25,24.25,
+                 23.5,73.25,21.25,120.25,21.25,20.25))
 
 HI.strt.no3.2.2020 <- left_join(HI.strt.no3.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
 HI.strt.no3.2.2020$TOTAL.TIME <- as.numeric(HI.strt.no3.2.2020$TOTAL.TIME)
@@ -7501,7 +7511,7 @@ HI.2020 <- rbind(HI.moos.2020, HI.frch.2020, HI.poke.2020, HI.vaul.2020,
 
 # add time since peak  Q in chena #
 HI.2020$date <- as.Date(HI.2020$doy, origin = "2020-01-01")
-origin_date <- as.Date("2020-05-12")
+origin_date <- as.Date("2020-05-13")
 HI.2020$TimeSinceChena <- julian(HI.2020$date, origin_date)
 
 write.csv(HI.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
