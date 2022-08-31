@@ -10011,9 +10011,9 @@ poke.ten.fourty.eight <- poke.precip.discharge[which(poke.precip.discharge$fourt
 
 ### Discharge/Chem/Precip ###
 # FRCH #
-FRCH.2020.chem <- FRCH
-FRCH.2020.chem$MeanDischarge <- FRCH$Q
-FRCH.2020.chem$DateTime <- FRCH$datetimeAK
+# FRCH.2020.chem <- FRCH
+# FRCH.2020.chem$MeanDischarge <- FRCH$Q
+# FRCH.2020.chem$DateTime <- FRCH$datetimeAK
 # FRCH.2020.chem$MeanDischarge <- FRCH.2020.chem$Q
 ### Import precipitation data into the *ALL document ### 
 # FRCH rain gauge installed on the 11th of June. 
@@ -10049,8 +10049,10 @@ lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xla
 
 ### Storms ###
 # FRCH #
-FRCH <- FRCH.2020.chem
-
+FRCH$MeanDischarge <- FRCH$Q
+FRCH$DateTime <- FRCH$datetimeAK
+FRCH$SpCond.µS.cm <- FRCH$SpCond.µS.cm
+FRCH.2020.chem <- FRCH
 #Storm 1 
 plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-10 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
