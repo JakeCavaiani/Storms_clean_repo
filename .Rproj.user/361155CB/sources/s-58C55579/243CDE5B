@@ -1,0 +1,27 @@
+{
+    "id": "243CDE5B",
+    "path": "~/Documents/Storms_clean_repo/R_scripts/06_BETA.R",
+    "project_path": "R_scripts/06_BETA.R",
+    "type": "r_source",
+    "hash": "1636255544",
+    "contents": "",
+    "dirty": false,
+    "created": 1661929633520.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "3779,0",
+        "scrollLine": "3759"
+    },
+    "folds": "35|48|177|1|\n178|12|333|0|\n334|11|473|0|\n474|10|613|0|\n614|11|763|0|\n764|48|1025|1|\n1026|12|1294|0|\n1295|11|1568|0|\n1569|10|1841|0|\n2129|10|2254|2|\n2255|40|2302|0|\n",
+    "lastKnownWriteTime": 1661931184,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1661931184326,
+    "read_only": false,
+    "read_only_alternatives": []
+}
