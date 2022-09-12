@@ -1,0 +1,17 @@
+"0","summary(turb.mod.gls) # AIC is 22425.38	
+"
+"1","Generalized least squares fit by "
+"1","REML
+"
+"1","  Model:"
+"1"," "
+"1","dailyTurb ~ site.ID * year"
+"1"," "
+"1","
+"
+"1","  Data:"
+"1"," "
+"1","mean_daily"
+"1"," "
+"1","
+"

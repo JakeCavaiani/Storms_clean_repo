@@ -1,0 +1,628 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={10\_gls\_models},
+  pdfauthor={Jake Cavaiani},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{10\_gls\_models}
+\author{Jake Cavaiani}
+\date{9/12/2022}
+
+\begin{document}
+\maketitle
+
+\#load libraries
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(here)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## here() starts at /Users/jakecavaiani/Documents/Storms_clean_repo
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.7
+## v tidyr   1.1.3     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(nlme)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'nlme'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     collapse
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(forecast)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'quantmod':
+##   method            from
+##   as.zoo.data.frame zoo
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'forecast'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:nlme':
+## 
+##     getResponse
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(stats)}
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(plotly)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'plotly'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     last_plot
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     filter
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     layout
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(GGally)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'GGally':
+##   method from   
+##   +.gg   ggplot2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggpmisc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: ggpp
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'ggpp'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     annotate
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggpubr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'ggpubr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:forecast':
+## 
+##     gghistogram
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggExtra)}
+\FunctionTok{library}\NormalTok{(lubridate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'lubridate'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(nlme)}
+\FunctionTok{library}\NormalTok{(MuMIn)}
+\FunctionTok{library}\NormalTok{(multcomp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: mvtnorm
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: survival
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: TH.data
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MASS
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'MASS'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:plotly':
+## 
+##     select
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'TH.data'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:MASS':
+## 
+##     geyser
+\end{verbatim}
+
+\hypertarget{no3-simple-model}{%
+\section{NO3 simple model}\label{no3-simple-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{no3.mod.gls }\OtherTok{\textless{}{-}} \FunctionTok{gls}\NormalTok{(dailyNO3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ site.ID}\SpecialCharTok{*}\NormalTok{year, }
+                   \AttributeTok{na.action =}\NormalTok{ na.omit, }
+                   \AttributeTok{data =}\NormalTok{ mean\_daily)}
+\FunctionTok{summary}\NormalTok{(no3.mod.gls) }\CommentTok{\# AIC is 11938.37}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized least squares fit by REML
+##   Model: dailyNO3 ~ site.ID * year 
+##   Data: mean_daily 
+##        AIC      BIC    logLik
+##   11938.37 12010.13 -5956.186
+## 
+## Coefficients:
+##                       Value Std.Error    t-value p-value
+## (Intercept)        -330.312  579.6639  -0.569834  0.5689
+## site.IDFRCH        1113.935  855.2601   1.302451  0.1929
+## site.IDMOOS        1418.306  858.2591   1.652538  0.0986
+## site.IDPOKE       -4286.582 1218.2334  -3.518687  0.0004
+## site.IDSTRT       -2959.577 1130.8402  -2.617149  0.0089
+## site.IDVAUL      -17452.576 1040.5199 -16.772938  0.0000
+## year                  0.178    0.2870   0.618444  0.5364
+## site.IDFRCH:year     -0.552    0.4235  -1.303660  0.1925
+## site.IDMOOS:year     -0.705    0.4250  -1.658793  0.0973
+## site.IDPOKE:year      2.122    0.6032   3.518667  0.0004
+## site.IDSTRT:year      1.463    0.5598   2.613225  0.0090
+## site.IDVAUL:year      8.636    0.5152  16.764921  0.0000
+## 
+##  Correlation: 
+##                  (Intr) st.IDFRCH st.IDMOOS st.IDPOKE st.IDSTRT st.IDVAUL
+## site.IDFRCH      -0.678                                                  
+## site.IDMOOS      -0.675  0.458                                           
+## site.IDPOKE      -0.476  0.322     0.321                                 
+## site.IDSTRT      -0.513  0.347     0.346     0.244                       
+## site.IDVAUL      -0.557  0.378     0.376     0.265     0.286             
+## year             -1.000  0.678     0.675     0.476     0.513     0.557   
+## site.IDFRCH:year  0.678 -1.000    -0.458    -0.322    -0.347    -0.378   
+## site.IDMOOS:year  0.675 -0.458    -1.000    -0.321    -0.346    -0.376   
+## site.IDPOKE:year  0.476 -0.323    -0.321    -1.000    -0.244    -0.265   
+## site.IDSTRT:year  0.513 -0.347    -0.346    -0.244    -1.000    -0.286   
+## site.IDVAUL:year  0.557 -0.378    -0.376    -0.265    -0.286    -1.000   
+##                  year   s.IDFRCH: s.IDMOOS: s.IDPOKE: s.IDSTRT:
+## site.IDFRCH                                                    
+## site.IDMOOS                                                    
+## site.IDPOKE                                                    
+## site.IDSTRT                                                    
+## site.IDVAUL                                                    
+## year                                                           
+## site.IDFRCH:year -0.678                                        
+## site.IDMOOS:year -0.675  0.458                                 
+## site.IDPOKE:year -0.476  0.323     0.321                       
+## site.IDSTRT:year -0.513  0.347     0.346     0.244             
+## site.IDVAUL:year -0.557  0.378     0.376     0.265     0.286   
+## 
+## Standardized residuals:
+##         Min          Q1         Med          Q3         Max 
+## -2.88615102 -0.56989874  0.06311857  0.61126156  6.86078895 
+## 
+## Residual standard error: 6.006299 
+## Degrees of freedom: 1856 total; 1844 residual
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value}
+\NormalTok{E }\OtherTok{\textless{}{-}} \FunctionTok{residuals}\NormalTok{(no3.mod.gls, }\AttributeTok{type=}\StringTok{"normalized"}\NormalTok{)}
+\NormalTok{I1 }\OtherTok{\textless{}{-}} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3)}
+\NormalTok{Efull }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length=}\FunctionTok{length}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3))}
+\NormalTok{Efull }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{Efull[I1] }\OtherTok{\textless{}{-}}\NormalTok{ E}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{))}
+\FunctionTok{acf}\NormalTok{(Efull, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\FunctionTok{pacf}\NormalTok{(Efull, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{10_gls_models_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{compound-symmetry}{%
+\subsection{Compound symmetry}\label{compound-symmetry}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Compound symmetry}
+\NormalTok{no3.mod.cs }\OtherTok{\textless{}{-}} \FunctionTok{gls}\NormalTok{(dailyNO3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ site.ID}\SpecialCharTok{*}\NormalTok{year, }
+              \AttributeTok{na.action =}\NormalTok{ na.omit, }
+              \AttributeTok{data =}\NormalTok{ mean\_daily, }
+              \AttributeTok{correlation =} \FunctionTok{corCompSymm}\NormalTok{(}\AttributeTok{form =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ julian))}
+
+\FunctionTok{summary}\NormalTok{(no3.mod.cs) }\CommentTok{\# covariance \textasciitilde{} 0  \# AIC is 11940.37}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized least squares fit by REML
+##   Model: dailyNO3 ~ site.ID * year 
+##   Data: mean_daily 
+##        AIC      BIC    logLik
+##   11940.37 12017.65 -5956.186
+## 
+## Correlation Structure: Compound symmetry
+##  Formula: ~julian 
+##  Parameter estimate(s):
+##           Rho 
+## -9.866646e-07 
+## 
+## Coefficients:
+##                       Value Std.Error    t-value p-value
+## (Intercept)        -330.312  579.6639  -0.569834  0.5689
+## site.IDFRCH        1113.935  855.2601   1.302451  0.1929
+## site.IDMOOS        1418.306  858.2591   1.652538  0.0986
+## site.IDPOKE       -4286.582 1218.2334  -3.518687  0.0004
+## site.IDSTRT       -2959.577 1130.8402  -2.617149  0.0089
+## site.IDVAUL      -17452.576 1040.5199 -16.772938  0.0000
+## year                  0.178    0.2870   0.618444  0.5364
+## site.IDFRCH:year     -0.552    0.4235  -1.303660  0.1925
+## site.IDMOOS:year     -0.705    0.4250  -1.658793  0.0973
+## site.IDPOKE:year      2.122    0.6032   3.518667  0.0004
+## site.IDSTRT:year      1.463    0.5598   2.613225  0.0090
+## site.IDVAUL:year      8.636    0.5152  16.764921  0.0000
+## 
+##  Correlation: 
+##                  (Intr) st.IDFRCH st.IDMOOS st.IDPOKE st.IDSTRT st.IDVAUL
+## site.IDFRCH      -0.678                                                  
+## site.IDMOOS      -0.675  0.458                                           
+## site.IDPOKE      -0.476  0.322     0.321                                 
+## site.IDSTRT      -0.513  0.347     0.346     0.244                       
+## site.IDVAUL      -0.557  0.378     0.376     0.265     0.286             
+## year             -1.000  0.678     0.675     0.476     0.513     0.557   
+## site.IDFRCH:year  0.678 -1.000    -0.458    -0.322    -0.347    -0.378   
+## site.IDMOOS:year  0.675 -0.458    -1.000    -0.321    -0.346    -0.376   
+## site.IDPOKE:year  0.476 -0.323    -0.321    -1.000    -0.244    -0.265   
+## site.IDSTRT:year  0.513 -0.347    -0.346    -0.244    -1.000    -0.286   
+## site.IDVAUL:year  0.557 -0.378    -0.376    -0.265    -0.286    -1.000   
+##                  year   s.IDFRCH: s.IDMOOS: s.IDPOKE: s.IDSTRT:
+## site.IDFRCH                                                    
+## site.IDMOOS                                                    
+## site.IDPOKE                                                    
+## site.IDSTRT                                                    
+## site.IDVAUL                                                    
+## year                                                           
+## site.IDFRCH:year -0.678                                        
+## site.IDMOOS:year -0.675  0.458                                 
+## site.IDPOKE:year -0.476  0.323     0.321                       
+## site.IDSTRT:year -0.513  0.347     0.346     0.244             
+## site.IDVAUL:year -0.557  0.378     0.376     0.265     0.286   
+## 
+## Standardized residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.8861524 -0.5698990  0.0631186  0.6112619  6.8607923 
+## 
+## Residual standard error: 6.006296 
+## Degrees of freedom: 1856 total; 1844 residual
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Ecs }\OtherTok{\textless{}{-}} \FunctionTok{residuals}\NormalTok{(no3.mod.cs, }\AttributeTok{type=}\StringTok{"normalized"}\NormalTok{)}
+\NormalTok{I1 }\OtherTok{\textless{}{-}} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3)}
+\NormalTok{Efullc }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length=}\FunctionTok{length}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3))}
+\NormalTok{Efullc }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\NormalTok{Efullc[I1] }\OtherTok{\textless{}{-}}\NormalTok{ Ecs}
+\FunctionTok{acf}\NormalTok{(Efullc, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{10_gls_models_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(Efullc, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{10_gls_models_files/figure-latex/unnamed-chunk-5-2.pdf}
+
+\hypertarget{corar1-structure}{%
+\subsubsection{CorAR1 structure}\label{corar1-structure}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#errors structured as AR1}
+\NormalTok{no3.mod.ar1 }\OtherTok{\textless{}{-}} \FunctionTok{gls}\NormalTok{(dailyNO3 }\SpecialCharTok{\textasciitilde{}}\NormalTok{ site.ID}\SpecialCharTok{*}\NormalTok{year, }
+               \AttributeTok{na.action =}\NormalTok{ na.omit, }
+               \AttributeTok{data =}\NormalTok{ mean\_daily, }
+               \AttributeTok{correlation =} \FunctionTok{corAR1}\NormalTok{(}\AttributeTok{form =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ julian}\SpecialCharTok{|}\NormalTok{site.ID}\SpecialCharTok{/}\NormalTok{year))}
+
+\FunctionTok{summary}\NormalTok{(no3.mod.ar1) }\CommentTok{\# Phi1 = 0.9431369  \# AIC is 8256.072}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized least squares fit by REML
+##   Model: dailyNO3 ~ site.ID * year 
+##   Data: mean_daily 
+##        AIC      BIC    logLik
+##   8256.072 8333.347 -4114.036
+## 
+## Correlation Structure: ARMA(1,0)
+##  Formula: ~julian | site.ID/year 
+##  Parameter estimate(s):
+##      Phi1 
+## 0.9431369 
+## 
+## Coefficients:
+##                       Value Std.Error    t-value p-value
+## (Intercept)        -671.039  2983.447 -0.2249206  0.8221
+## site.IDFRCH        2603.924  4276.654  0.6088695  0.5427
+## site.IDMOOS        1095.052  4222.695  0.2593255  0.7954
+## site.IDPOKE       -4334.266  6045.457 -0.7169460  0.4735
+## site.IDSTRT       -3452.959  5524.525 -0.6250238  0.5320
+## site.IDVAUL      -16616.097  5513.149 -3.0139030  0.0026
+## year                  0.346     1.477  0.2343345  0.8148
+## site.IDFRCH:year     -1.290     2.118 -0.6091118  0.5425
+## site.IDMOOS:year     -0.544     2.091 -0.2603287  0.7946
+## site.IDPOKE:year      2.146     2.993  0.7169833  0.4735
+## site.IDSTRT:year      1.707     2.735  0.6240652  0.5327
+## site.IDVAUL:year      8.222     2.729  3.0124774  0.0026
+## 
+##  Correlation: 
+##                  (Intr) st.IDFRCH st.IDMOOS st.IDPOKE st.IDSTRT st.IDVAUL
+## site.IDFRCH      -0.698                                                  
+## site.IDMOOS      -0.707  0.493                                           
+## site.IDPOKE      -0.494  0.344     0.349                                 
+## site.IDSTRT      -0.540  0.377     0.382     0.267                       
+## site.IDVAUL      -0.541  0.378     0.382     0.267     0.292             
+## year             -1.000  0.698     0.707     0.494     0.540     0.541   
+## site.IDFRCH:year  0.698 -1.000    -0.493    -0.344    -0.377    -0.378   
+## site.IDMOOS:year  0.707 -0.493    -1.000    -0.349    -0.382    -0.382   
+## site.IDPOKE:year  0.494 -0.344    -0.349    -1.000    -0.267    -0.267   
+## site.IDSTRT:year  0.540 -0.377    -0.382    -0.267    -1.000    -0.292   
+## site.IDVAUL:year  0.541 -0.378    -0.382    -0.267    -0.292    -1.000   
+##                  year   s.IDFRCH: s.IDMOOS: s.IDPOKE: s.IDSTRT:
+## site.IDFRCH                                                    
+## site.IDMOOS                                                    
+## site.IDPOKE                                                    
+## site.IDSTRT                                                    
+## site.IDVAUL                                                    
+## year                                                           
+## site.IDFRCH:year -0.698                                        
+## site.IDMOOS:year -0.707  0.493                                 
+## site.IDPOKE:year -0.494  0.344     0.349                       
+## site.IDSTRT:year -0.540  0.377     0.382     0.267             
+## site.IDVAUL:year -0.541  0.378     0.382     0.267     0.292   
+## 
+## Standardized residuals:
+##          Min           Q1          Med           Q3          Max 
+## -2.660892820 -0.522474137  0.003078766  0.582382448  6.413645254 
+## 
+## Residual standard error: 6.576789 
+## Degrees of freedom: 1856 total; 1844 residual
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# \textasciitilde{}t|g}
+\CommentTok{\# t is the time covariate }
+\CommentTok{\# g is the group factor and when a grouping factor is present in the form argument, the correlation structure is assumed to apply only to observations within the same grouping level and observations with different grouping levels are assumed to be uncorrelated }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Ear1}\OtherTok{\textless{}{-}}\FunctionTok{residuals}\NormalTok{(no3.mod.ar1, }\AttributeTok{type=}\StringTok{"normalized"}\NormalTok{)}
+\NormalTok{I1}\OtherTok{\textless{}{-}}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3)}
+\NormalTok{Efulla}\OtherTok{\textless{}{-}}\FunctionTok{vector}\NormalTok{(}\AttributeTok{length =} \FunctionTok{length}\NormalTok{(mean\_daily}\SpecialCharTok{$}\NormalTok{dailyNO3))}
+\NormalTok{Efulla}\OtherTok{\textless{}{-}}\ConstantTok{NA}
+\NormalTok{Efulla[I1]}\OtherTok{\textless{}{-}}\NormalTok{Ear1}
+\FunctionTok{acf}\NormalTok{(Efulla, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{10_gls_models_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pacf}\NormalTok{(Efulla, }\AttributeTok{na.action=}\NormalTok{na.pass)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{10_gls_models_files/figure-latex/unnamed-chunk-7-2.pdf}
+
+\end{document}

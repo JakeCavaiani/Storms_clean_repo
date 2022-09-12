@@ -1,0 +1,22 @@
+"0","SPC.mod.cs <- gls(dailySPC ~ site.ID*year, 
+              na.action = na.omit, 
+              data = mean_daily, 
+              correlation = corCompSymm(form = ~ julian))
+
+summary(SPC.mod.cs) # covariance ~ 2.16733e-19  # AIC is 22427.38
+"
+"1","Generalized least squares fit by "
+"1","REML
+"
+"1","  Model:"
+"1"," "
+"1","dailySPC ~ site.ID * year"
+"1"," "
+"1","
+"
+"1","  Data:"
+"1"," "
+"1","mean_daily"
+"1"," "
+"1","
+"

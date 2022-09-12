@@ -1,0 +1,333 @@
+---
+title: "10_gls_models"
+author: "Jake Cavaiani"
+date: "9/12/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+#load libraries 
+```{r}
+library(here)
+library(tidyverse)
+library(nlme)
+library(forecast)
+library(stats)
+library(readr)
+library(ggplot2)
+library(plotly)
+library(GGally)
+library(ggpmisc)
+library(ggpubr)
+library(ggExtra)
+library(lubridate)
+library(nlme)
+library(MuMIn)
+library(multcomp)
+```
+
+
+
+```{r setup, include=FALSE}
+mean_daily <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
+```
+
+# NO3 simple model 
+```{r}
+no3.mod.gls <- gls(dailyNO3 ~ site.ID*year, 
+                   na.action = na.omit, 
+                   data = mean_daily)
+summary(no3.mod.gls) # AIC is 11938.37
+
+
+```
+
+```{r}
+#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value
+E <- residuals(no3.mod.gls, type="normalized")
+I1 <- !is.na(mean_daily$dailyNO3)
+Efull <- vector(length=length(mean_daily$dailyNO3))
+Efull <- NA
+Efull[I1] <- E
+par(mfrow=c(2,1))
+acf(Efull, na.action=na.pass)
+pacf(Efull, na.action=na.pass)
+
+```
+
+## Compound symmetry
+```{r}
+## Compound symmetry
+no3.mod.cs <- gls(dailyNO3 ~ site.ID*year, 
+              na.action = na.omit, 
+              data = mean_daily, 
+              correlation = corCompSymm(form = ~ julian))
+
+summary(no3.mod.cs) # covariance ~ 0  # AIC is 11940.37
+
+```
+
+```{r}
+Ecs <- residuals(no3.mod.cs, type="normalized")
+I1 <- !is.na(mean_daily$dailyNO3)
+Efullc <- vector(length=length(mean_daily$dailyNO3))
+Efullc <- NA
+Efullc[I1] <- Ecs
+acf(Efullc, na.action=na.pass)
+pacf(Efullc, na.action=na.pass)
+
+```
+
+### CorAR1 structure
+```{r}
+#errors structured as AR1
+no3.mod.ar1 <- gls(dailyNO3 ~ site.ID*year, 
+               na.action = na.omit, 
+               data = mean_daily, 
+               correlation = corAR1(form = ~ julian|site.ID/year))
+
+summary(no3.mod.ar1) # Phi1 = 0.9431369  # AIC is 8256.072
+
+# ~t|g
+# t is the time covariate 
+# g is the group factor and when a grouping factor is present in the form argument, the correlation structure is assumed to apply only to observations within the same grouping level and observations with different grouping levels are assumed to be uncorrelated 
+
+```
+
+```{r}
+Ear1<-residuals(no3.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily$dailyNO3)
+Efulla<-vector(length = length(mean_daily$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+
+```
+
+
+# fDOM simple model 
+```{r}
+fDOM.mod.gls <- gls(dailyfDOM ~ site.ID*year, 
+                   na.action = na.omit, 
+                   data = mean_daily)
+summary(fDOM.mod.gls) # AIC is 18992.24	
+
+
+```
+
+```{r}
+#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value
+E <- residuals(fDOM.mod.gls, type="normalized")
+I1 <- !is.na(mean_daily$dailyfDOM)
+Efull <- vector(length=length(mean_daily$dailyfDOM))
+Efull <- NA
+Efull[I1] <- E
+par(mfrow=c(2,1))
+acf(Efull, na.action=na.pass)
+pacf(Efull, na.action=na.pass)
+
+```
+
+## Compound symmetry
+```{r}
+## Compound symmetry
+fDOM.mod.cs <- gls(dailyfDOM ~ site.ID*year, 
+              na.action = na.omit, 
+              data = mean_daily, 
+              correlation = corCompSymm(form = ~ julian))
+
+summary(fDOM.mod.cs) # covariance ~ 0  # AIC is 18994.24
+
+```
+
+```{r}
+Ecs <- residuals(fDOM.mod.cs, type="normalized")
+I1 <- !is.na(mean_daily$dailyfDOM)
+Efullc <- vector(length=length(mean_daily$dailyfDOM))
+Efullc <- NA
+Efullc[I1] <- Ecs
+acf(Efullc, na.action=na.pass)
+pacf(Efullc, na.action=na.pass)
+
+```
+
+### CorAR1 structure
+```{r}
+#errors structured as AR1
+fDOM.mod.ar1 <- gls(dailyfDOM ~ site.ID*year, 
+               na.action = na.omit, 
+               data = mean_daily, 
+               correlation = corAR1(form = ~ julian|site.ID/year))
+
+summary(fDOM.mod.ar1) # Phi1 = .790946  # AIC is 17236.82	
+
+# ~t|g
+# t is the time covariate 
+# g is the group factor and when a grouping factor is present in the form argument, the correlation structure is assumed to apply only to observations within the same grouping level and observations with different grouping levels are assumed to be uncorrelated 
+
+```
+
+```{r}
+Ear1<-residuals(fDOM.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily$dailyfDOM)
+Efulla<-vector(length = length(mean_daily$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+
+```
+
+# SPC simple model 
+```{r}
+SPC.mod.gls <- gls(dailySPC ~ site.ID*year, 
+                   na.action = na.omit, 
+                   data = mean_daily)
+summary(SPC.mod.gls) # AIC is 22425.38	
+
+
+```
+
+```{r}
+#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value
+E <- residuals(SPC.mod.gls, type="normalized")
+I1 <- !is.na(mean_daily$dailySPC)
+Efull <- vector(length=length(mean_daily$dailySPC))
+Efull <- NA
+Efull[I1] <- E
+par(mfrow=c(2,1))
+acf(Efull, na.action=na.pass)
+pacf(Efull, na.action=na.pass)
+
+```
+
+## Compound symmetry
+```{r}
+## Compound symmetry
+SPC.mod.cs <- gls(dailySPC ~ site.ID*year, 
+              na.action = na.omit, 
+              data = mean_daily, 
+              correlation = corCompSymm(form = ~ julian))
+
+summary(SPC.mod.cs) # covariance ~ 2.16733e-19  # AIC is 22427.38
+
+```
+
+```{r}
+Ecs <- residuals(SPC.mod.cs, type="normalized")
+I1 <- !is.na(mean_daily$dailySPC)
+Efullc <- vector(length=length(mean_daily$dailySPC))
+Efullc <- NA
+Efullc[I1] <- Ecs
+acf(Efullc, na.action=na.pass)
+pacf(Efullc, na.action=na.pass)
+
+```
+
+### CorAR1 structure
+```{r}
+#errors structured as AR1
+SPC.mod.ar1 <- gls(dailySPC ~ site.ID*year, 
+               na.action = na.omit, 
+               data = mean_daily, 
+               correlation = corAR1(form = ~ julian|site.ID/year))
+
+summary(SPC.mod.ar1) # Phi1 = 0.9749659  # AIC is 16750.35	
+
+# ~t|g
+# t is the time covariate 
+# g is the group factor and when a grouping factor is present in the form argument, the correlation structure is assumed to apply only to observations within the same grouping level and observations with different grouping levels are assumed to be uncorrelated 
+
+```
+
+```{r}
+Ear1<-residuals(SPC.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily$dailySPC)
+Efulla<-vector(length = length(mean_daily$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+
+```
+
+
+# turb simple model 
+```{r}
+turb.mod.gls <- gls(dailyTurb ~ site.ID*year, 
+                   na.action = na.omit, 
+                   data = mean_daily)
+summary(turb.mod.gls) # AIC is 21132.81
+
+
+```
+
+```{r}
+#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value
+E <- residuals(turb.mod.gls, type="normalized")
+I1 <- !is.na(mean_daily$dailyTurb)
+Efull <- vector(length=length(mean_daily$dailyTurb))
+Efull <- NA
+Efull[I1] <- E
+par(mfrow=c(2,1))
+acf(Efull, na.action=na.pass)
+pacf(Efull, na.action=na.pass)
+
+```
+
+## Compound symmetry
+```{r}
+## Compound symmetry
+turb.mod.cs <- gls(dailyTurb ~ site.ID*year, 
+              na.action = na.omit, 
+              data = mean_daily, 
+              correlation = corCompSymm(form = ~ julian))
+
+summary(turb.mod.cs) # covariance 0  # AIC is 21134.81
+
+```
+
+```{r}
+Ecs <- residuals(turb.mod.cs, type="normalized")
+I1 <- !is.na(mean_daily$dailyTurb)
+Efullc <- vector(length=length(mean_daily$dailyTurb))
+Efullc <- NA
+Efullc[I1] <- Ecs
+acf(Efullc, na.action=na.pass)
+pacf(Efullc, na.action=na.pass)
+
+```
+
+### CorAR1 structure
+```{r}
+#errors structured as AR1
+turb.mod.ar1 <- gls(dailyTurb ~ site.ID*year, 
+               na.action = na.omit, 
+               data = mean_daily, 
+               correlation = corAR1(form = ~ julian|site.ID/year))
+
+summary(turb.mod.ar1) # Phi1 = 0.6012503  # AIC is 20226.75
+
+# ~t|g
+# t is the time covariate 
+# g is the group factor and when a grouping factor is present in the form argument, the correlation structure is assumed to apply only to observations within the same grouping level and observations with different grouping levels are assumed to be uncorrelated 
+
+```
+
+```{r}
+Ear1<-residuals(turb.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily$dailyTurb)
+Efulla<-vector(length = length(mean_daily$dailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+
+```
+
+
+
+
+

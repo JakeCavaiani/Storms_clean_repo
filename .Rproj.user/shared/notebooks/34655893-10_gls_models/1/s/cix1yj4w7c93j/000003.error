@@ -1,0 +1,1 @@
+{"frames":[{"func":"residuals(SPC.mod.cs, type = \"normalized\")","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in residuals(SPC.mod.cs, type = \"normalized\") : \n  object 'SPC.mod.cs' not found\n"}
