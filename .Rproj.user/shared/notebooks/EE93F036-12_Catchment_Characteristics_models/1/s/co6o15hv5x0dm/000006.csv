@@ -1,0 +1,8 @@
+"0","ggplot(NO3_data_year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +"
+"0","  geom_point() +"
+"0","  geom_smooth(method = ""lm"", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +"
+"0","  stat_poly_eq(formula = y~x,"
+"0","               label.y = ""top"", label.x = ""right"","
+"0","               aes(label = paste(..eq.label.., ..rr.label.., sep = ""~~~"")), "
+"0","               parse = TRUE) + "
+"0","  theme_classic()"

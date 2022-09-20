@@ -1,0 +1,7 @@
+"0","plot(HI.no3.year, type=c(""p"",""smooth""), col.line=1)
+plot(HI.no3.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c(""p"",""smooth""), col.line=1)
+"
+"0","lattice::qqmath(HI.no3.year)"
+"0",""

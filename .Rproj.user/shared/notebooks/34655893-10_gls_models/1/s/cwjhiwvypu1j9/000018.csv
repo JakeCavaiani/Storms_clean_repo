@@ -1,0 +1,8 @@
+"0","mean_daily_character_dropped <- transform(na.omit(mean_daily_character), site.IDyear=droplevels(interaction(site.ID,year)))"
+"0",""
+"0","no3.mod.gls <- gls(dailyNO3 ~ site.ID*year,"
+"0","                   na.action = na.omit,"
+"0","                   data = mean_daily_character_dropped)"
+"2","Error in glsEstimate(glsSt, control = glsEstControl) : 
+  computed ""gls"" fit is singular, rank 22
+"

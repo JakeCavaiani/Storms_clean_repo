@@ -1,0 +1,37 @@
+"0","library(here)
+"
+"2","here() starts at /Users/jakecavaiani/Documents/Storms_clean_repo
+"
+"0","library(tidyverse)"
+"0","library(nlme)"
+"0","library(forecast)"
+"2","Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+"
+"2","
+Attaching package: ‘forecast’
+
+"
+"2","The following object is masked from ‘package:nlme’:
+
+    getResponse
+
+"
+"2","The following object is masked from ‘package:ggpubr’:
+
+    gghistogram
+
+"
+"0","library(stats)"
+"0","library(readr)"
+"0","library(ggplot2)"
+"0","library(plotly)"
+"0","library(GGally)"
+"0","library(ggpmisc)"
+"0","library(ggpubr)"
+"0","library(ggExtra)"
+"0","library(lubridate)"
+"0","library(nlme)"
+"0","library(MuMIn)"
+"0","library(multcomp)"

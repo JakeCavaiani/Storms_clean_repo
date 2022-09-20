@@ -687,7 +687,7 @@ AMC_2019 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_F
 AMC_2020 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
 AMC_2021 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv", 
                                   col_types = cols(date = col_date(format = "%m/%d/%Y")))
-
+AMC_2021 <- AMC_2021[,-c(16)]
 AMC <- rbind(AMC_2018, AMC_2019, AMC_2020, AMC_2021)
 
 write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv")

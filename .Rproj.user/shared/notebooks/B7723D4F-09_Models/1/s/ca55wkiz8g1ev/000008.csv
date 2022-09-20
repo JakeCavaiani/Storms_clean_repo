@@ -1,0 +1,18 @@
+"0","# taking the mean HI for each catchment and year 
+CV.all <- AMC %>% group_by(response_var,site.ID, year) %>%
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI = as.numeric(NDVI_p50))
+"
+"2","`summarise()` has grouped output by 'response_var', 'site.ID', 'year'. You can override using the `.groups` argument."

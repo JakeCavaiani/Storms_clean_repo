@@ -1,0 +1,15 @@
+"0","AMC <- AMC %>% 
+  group_by(site.ID, response_var, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                   CVhi = sdHI/meanHI,
+                   CVbeta = sdBETA/meanBETA,
+                   response_var = paste(response_var),
+                   Date = as.Date(date),
+                   DOY = as.numeric(doy),
+                   burn = paste(burn),
+                   PF = paste(pf))
+"
+"2","`summarise()` has grouped output by 'site.ID', 'response_var', 'year'. You can override using the `.groups` argument."

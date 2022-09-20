@@ -1,0 +1,10 @@
+"0","pr <- ggpredict(BETA.no3.year)"
+"0","plot(pr, add.data = TRUE)"
+"1","$CatPF
+"
+"1","
+"
+"1","$pctburn_lg
+"
+"1","
+"

@@ -1,0 +1,5 @@
+"0","site.ID.comp <- glht(no3.mod.arma.1, linfct = mcp(site.ID = ""Tukey""))
+"
+"2","Error in mcp2matrix(model, linfct = linfct) : 
+  Variable(s) ‘site.ID’ of class ‘character’ is/are not contained as a factor in ‘model’.
+"

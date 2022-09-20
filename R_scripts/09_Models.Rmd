@@ -811,3 +811,214 @@ ggsave(path = "~/Documents/Storms_clean_repo/plots/Coefficient_Plots/BETA",
        width = 7, height = 7)
 
 ```
+
+############################################################################################################################################### Catchment characteristics  ################################################
+#########################################################################################################
+
+
+``` {r}
+# reading in data 
+AMC <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+
+# removing a bunch of the catchment characteristic columns that are unnecessary 
+AMC <- AMC[,-c(1:3,9,10,18,19,21,22,25:28,42:50,52:56,60:65,67:81,83,85,86)]
+AMC <- AMC[!duplicated(AMC$Hyst_index), ] # removing duplicated rows 
+
+```
+
+
+```{r}
+# taking the mean HI for each catchment and year 
+CV.all <- AMC %>% group_by(response_var,site.ID, year) %>%
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI = as.numeric(NDVI_p50))
+
+
+CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
+# NDVI didnt properly merge over so manually putting in the NDVI value for each year 
+CV.all[c(1,22,42,63),17] <- 0.192390502 # CARI 2018
+CV.all[c(2,23,43,64),17] <- 0.247047948 # CARI 2019
+CV.all[c(3,24,44,65),17] <- 0.192382581 # CARI 2020
+
+CV.all[c(5,26,46,67),17] <- 0.186534723 # FRCH 2018
+CV.all[c(6,27,47,68),17] <- 0.26075781 # FRCH 2019
+CV.all[c(7,28,48,69),17] <- 0.190424498 # FRCH 2020
+
+CV.all[c(9,30,50,71),17] <- 0.200191538 # MOOS 2018
+CV.all[c(10,31,51,72),17] <- 0.258797953 # MOOS 2019
+CV.all[c(11,32,52,73),17] <- 0.229493425 # MOOS 2020
+
+CV.all[c(13,34,54,75),17] <- 0.247071561 # POKE 2019
+CV.all[c(14,35,55,76),17] <- 0.217774775 # POKE 2020
+
+CV.all[c(16,36,57,78),17] <- 0.274414997 # STRT 2019
+CV.all[c(17,37,58,79),17] <- 0.23730122 # STRT 2020
+
+CV.all[c(19,39,60,81),17] <- 0.229493954 # VAUL 2019
+CV.all[c(20,40,61,82),17] <- 0.225580538 # VAUL 2020
+
+
+```
+
+```{r}
+# scaling data # 
+#scaling # 
+CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+
+CV_all_NO3 = subset(CV.all, response_var == "NO3")
+# fDOM #
+CV_all_fDOM = subset(CV.all, response_var == "fDOM")
+# SPC #
+CV_all_SPC = subset(CV.all, response_var == "SPC")
+# turb #
+CV_all_turb = subset(CV.all, response_var == "turb")
+
+```
+
+
+# NO3
+```{r}
+NO3_data<- CV_all_NO3[,c("site.ID", "year", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")]
+
+
+pairs(~ meanHI + Slope + Burn + PF + NDVI, data = NO3_data1, col = NO3_data1$site.ID)
+
+ggpairs(NO3_data,
+        columns = 3:9,
+        ggplot2::aes(colour = site.ID))
+
+# ggsave("pairs1.pdf",
+#        width = 10, height = 10)
+
+```
+
+
+# HI model 
+```{r}
+NO3_data$year <- as.factor(NO3_data$year)
+HI.no3 <- lmer(meanHI ~ PF + areaburn_lg + Slope + NDVI + (1|year), 
+             data = NO3_data)
+summary(HI.no3)
+
+vif(HI.no3)
+
+```
+
+```{r}
+pr <- ggpredict(HI.no3)
+plot(pr, add.data = TRUE)
+
+```
+
+```{r, echo=FALSE}
+qqnorm(resid(HI.no3))
+```
+
+# BETA model 
+```{r}
+BETA.no3 <- lmer(meanBETA ~ PF  + Slope + NDVI + (1|year), 
+             data = NO3_data)
+summary(BETA.no3)
+
+vif(BETA.no3)
+
+```
+
+```{r}
+pr <- ggpredict(BETA.no3)
+plot(pr, add.data = TRUE)
+
+```
+
+```{r, echo=FALSE}
+qqnorm(resid(BETA.no3))
+```
+
+# CVHI model 
+```{r}
+CVhi.no3 <- lmer(CVhi ~ PF + areaburn_lg + Slope + NDVI + (1|year), 
+             data = NO3_data)
+summary(CVhi.no3)
+
+vif(CVhi.no3)
+
+```
+
+```{r}
+pr <- ggpredict(CVhi.no3)
+plot(pr, add.data = TRUE)
+
+```
+
+```{r, echo=FALSE}
+qqnorm(resid(CVhi.no3))
+```
+
+# CVBETA model 
+```{r}
+CVbeta.no3 <- lmer(CVbeta ~ PF + areaburn_lg + Slope + NDVI + (1|year), 
+             data = NO3_data)
+summary(CVbeta.no3)
+
+vif(CVhi.no3)
+
+```
+
+```{r}
+pr <- ggpredict(CVbeta.no3)
+plot(pr, add.data = TRUE)
+
+```
+
+```{r, echo=FALSE}
+qqnorm(resid(CVbeta.no3))
+```
+
+
+# fDOM # 
+```{r}
+fDOM_data <- HI_FI_fDOM[,c("site.ID", "Hyst_index", "SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "year")]
+fDOM_data <- fDOM_data[!duplicated(fDOM_data$Hyst_index), ]
+
+fDOM_data1 <- fDOM_data %>% 
+  group_by(site.ID, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   Slope = paste(SLOPE_MEAN),
+                   Burn = paste(pctburn_lg),
+                   PF = paste(Pf_Prob_1m_mean_x),
+                   NDVI = paste(NDVI_p50__mean))
+fDOM_data1 <- fDOM_data1[!duplicated(fDOM_data1$meanHI), ]
+
+
+fDOM_data1$Slope <- as.numeric(fDOM_data1$Slope)
+fDOM_data1$Burn <- as.numeric(fDOM_data1$Burn)
+fDOM_data1$PF <- as.numeric(fDOM_data1$PF)
+fDOM_data1$NDVI <- as.numeric(fDOM_data1$NDVI)
+        
+pairs(~ meanHI + Slope + Burn + PF + NDVI, data = NO3_data1, col = fDOM_data1$site.ID)
+
+ggpairs(fDOM_data1,
+        columns = 3:7,
+        ggplot2::aes(colour = site.ID))
+
+ggsave("pairs1.pdf",
+       width = 10, height = 10)
+```
+
+
+
+
+
+

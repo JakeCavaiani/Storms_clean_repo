@@ -1,0 +1,208 @@
+"0","library(magrittr)"
+"2","
+Attaching package: ‘magrittr’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    set_names
+
+"
+"2","The following object is masked from ‘package:tidyr’:
+
+    extract
+
+"
+"0","library(knitr)"
+"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","library(tidyverse)"
+"0","library(lubridate)"
+"0","library(data.table)"
+"2","data.table 1.14.0 using 1 threads (see ?getDTthreads).  Latest news: r-datatable.com
+"
+"2","**********
+This installation of data.table has not detected OpenMP support. It should still work but in single-threaded mode.
+This is a Mac. Please read https://mac.r-project.org/openmp/. Please engage with Apple and ask them for support. Check r-datatable.com for updates, and our Mac instructions here: https://github.com/Rdatatable/data.table/wiki/Installation. After several years of many reports of installation problems on Mac, it's time to gingerly point out that there have been no similar problems on Windows or Linux.
+**********
+"
+"2","
+Attaching package: ‘data.table’
+
+"
+"2","The following objects are masked from ‘package:lubridate’:
+
+    hour, isoweek, mday, minute, month, quarter, second, wday, week, yday, year
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    transpose
+
+"
+"0","library(scales)"
+"2","
+Attaching package: ‘scales’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    discard
+
+"
+"2","The following object is masked from ‘package:readr’:
+
+    col_factor
+
+"
+"0","library(lme4)"
+"2","Loading required package: Matrix
+"
+"2","
+Attaching package: ‘Matrix’
+
+"
+"2","The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+"
+"2","Registered S3 methods overwritten by 'lme4':
+  method                          from
+  cooks.distance.influence.merMod car 
+  influence.merMod                car 
+  dfbeta.influence.merMod         car 
+  dfbetas.influence.merMod        car 
+"
+"2","
+Attaching package: ‘lme4’
+
+"
+"2","The following object is masked from ‘package:nlme’:
+
+    lmList
+
+"
+"0","library(nlme)"
+"0","library(datasets)"
+"0","library(arm)"
+"2","
+arm (Version 1.12-2, built: 2021-10-15)
+
+"
+"2","Working directory is /Users/jakecavaiani/Documents/Storms_clean_repo/R_scripts
+
+"
+"2","
+Attaching package: ‘arm’
+
+"
+"2","The following object is masked from ‘package:scales’:
+
+    rescale
+
+"
+"0","library(AICcmodavg)"
+"2","
+Attaching package: ‘AICcmodavg’
+
+"
+"2","The following object is masked from ‘package:lme4’:
+
+    checkConv
+
+"
+"2","The following objects are masked from ‘package:MuMIn’:
+
+    AICc, DIC, importance
+
+"
+"0","library(gridExtra)"
+"2","
+Attaching package: ‘gridExtra’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    combine
+
+"
+"0","library(grid)"
+"0","library(ggpmisc)"
+"0","library(boot)"
+"2","
+Attaching package: ‘boot’
+
+"
+"2","The following object is masked from ‘package:arm’:
+
+    logit
+
+"
+"2","The following object is masked from ‘package:survival’:
+
+    aml
+
+"
+"0","library(here)"
+"0","library(broom)"
+"0","library(viridis)"
+"2","Loading required package: viridisLite
+"
+"2","
+Attaching package: ‘viridis’
+
+"
+"2","The following object is masked from ‘package:scales’:
+
+    viridis_pal
+
+"
+"0","library(car)"
+"2","Loading required package: carData
+"
+"2","
+Attaching package: ‘car’
+
+"
+"2","The following object is masked from ‘package:boot’:
+
+    logit
+
+"
+"2","The following object is masked from ‘package:arm’:
+
+    logit
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    recode
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    some
+
+"
+"0","library(MuMIn)"
+"0","library(ggeffects)"
+"0","library(dotwhisker)"
+"0",""
+"0","library(ggeffects)"
+"0","library(dotwhisker)"
+"0","library(broom)"
+"0","library(jtools)"
+"2","
+Attaching package: ‘jtools’
+
+"
+"2","The following object is masked from ‘package:arm’:
+
+    standardize
+
+"

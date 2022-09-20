@@ -1,0 +1,84 @@
+"0","HI_FI_SPC_MOOS <- subset(HI_FI_SPC, site.ID == ""MOOS"")
+HI_FI_SPC_FRCH <- subset(HI_FI_SPC, site.ID == ""FRCH"")
+HI_FI_SPC_CARI <- subset(HI_FI_SPC, site.ID == ""CARI"")
+HI_FI_SPC_POKE <- subset(HI_FI_SPC, site.ID == ""POKE"")
+HI_FI_SPC_VAUL <- subset(HI_FI_SPC, site.ID == ""VAUL"")
+HI_FI_SPC_STRT <- subset(HI_FI_SPC, site.ID == ""STRT"")
+
+MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_MOOS)
+
+FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_FRCH)
+
+CARI.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_CARI)
+
+POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_POKE)
+
+VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_VAUL)
+
+STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_STRT)
+
+Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
+           CARI.model, POKE.model, 
+           VAUL.model, STRT.model, scale = TRUE,
+           model.names = c(""MOOS"", ""FRCH"", ""CARI"", ""POKE"", ""VAUL"", ""STRT""),
+          colors = c(""#A6761D"", ""#FF7F00"",""#3288BD"", ""#6A3D9A"", ""#E7298A"", ""#66C2A5""))
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"2","Loading required namespace: broom.mixed
+"
+"2","Failed with error:  "
+"2",""
+"2","‘there is no package called ‘broom.mixed’’"
+"2",""
+"2","
+"
+"0","Plot_1 + "
+"0","  xlab(""Coefficient estimate"") + ylab("""") +"
+"0","  geom_vline(xintercept = 0,"
+"0","             colour = ""grey80"","
+"0","             linetype = 1) +  "
+"0","scale_y_discrete(labels= c(""Seasonality"", "
+"0","                             ""Precipitation Month"", "
+"0","                             ""Precipitation Week"","
+"0","                             ""Storm Precipitation"")) +"
+"0","  theme_bw()"
+"0",""
