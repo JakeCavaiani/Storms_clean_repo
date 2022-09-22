@@ -307,7 +307,8 @@ HI_BETA_turb.p =
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
   theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ylim(-1.5, 1.5) + 
+  xlim(-1.5, 1.5) +
   ggtitle("Turb")+ 
   ylab("") +
   xlab("BETA") +
@@ -339,8 +340,29 @@ ggsave(path = "~/Documents/Storms_clean_repo/plots/HI_BETA",
 
 #### Storm summary stats ####
 ### Investigating which storms are negative beta for Turbidity ####
+# by year 
 HI_FI_turb_year <- HI_FI_turb
 HI_FI_turb_year$year <- as.character(HI_FI_turb_year$year)
+
+HI_FI_turb_year_2021 <- subset(HI_FI_turb_year, year == "2021")
+
+ggplot(HI_FI_turb_year_2021, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID)), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-5, 5)+
+  ggtitle("Turb")+ 
+  ylab("") +
+  xlab("BETA") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "bottom") 
 
 ggplot(HI_FI_turb_year, aes(Beta_index, Hyst_index)) + 
   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
@@ -349,7 +371,7 @@ ggplot(HI_FI_turb_year, aes(Beta_index, Hyst_index)) +
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
   theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ylim(-1.5, 1.5) + xlim(-5, 5)+
   ggtitle("Turb")+ 
   ylab("") +
   xlab("BETA") +
@@ -1514,10 +1536,34 @@ DOD_2021$datetimeAK <- as.character(DOD_2021$datetimeAK)
 DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021)
 
 # read in Caribou data 
-CARI_2018 <- read_csv("~/Documents/NEON/CARI/WaterQuality2018.csv")
-CARI_2019 <- read_csv("~/Documents/NEON/CARI/WaterQuality2019.csv")
-CARI_2020 <- read_csv("~/Documents/NEON/CARI/WaterQuality2020.csv")
-CARI_2021 <- read_csv("~/Documents/NEON/CARI/WaterQuality2021.csv")
+CARI_2018 <- read_csv("~/Documents/NEON/CARI/WaterQuality2018.csv", 
+                      col_types = cols(NO3 = col_double()))
+CARI_2018$Discharge <- NA
+CARI_2018 <- CARI_2018[, c(1,2,8,3,4,5,6,7)] # reorganizing column headers
+
+CARI_2019 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2019.csv", 
+                                    col_types = cols(fDOM = col_double(), 
+                                                     SPC = col_double(), Turb = col_double()))
+CARI_2019 <- CARI_2019[,-c(4)]
+names(CARI_2019)[names(CARI_2019) == 'site.ID.x'] <- 'site.ID'
+CARI_2019$site.ID <- "CARI"
+
+CARI_2020 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2020.csv", 
+                                    col_types = cols(site.ID.y = col_double(), 
+                                                     NO3 = col_double(), fDOM = col_double(), 
+                                                     SPC = col_double(), Turb = col_double()))
+CARI_2020 <- CARI_2020[,-c(4)]
+names(CARI_2020)[names(CARI_2020) == 'site.ID.x'] <- 'site.ID'
+CARI_2020$site.ID <- "CARI"
+
+CARI_2021 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2021.csv", 
+                                     col_types = cols(NO3 = col_double(), 
+                                                      fDOM = col_double(), SPC = col_double(), 
+                                                      Turb = col_double()))
+CARI_2021 <- CARI_2021[,-c(4)]
+names(CARI_2021)[names(CARI_2021) == 'site.ID.x'] <- 'site.ID'
+CARI_2021$site.ID <- "CARI"
+
 
 CARI_2018$year <- "2018"
 CARI_2019$year <- "2019"
@@ -1525,18 +1571,57 @@ CARI_2020$year <- "2020"
 CARI_2021$year <- "2021"
 
 CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021)
-CARI_chem$day <- as.character(CARI_chem$DateTime)
-CARI_chem <- CARI_chem[, c(1,2,5,6,7,4,3,9,8)] # reorganizing column headers
+CARI_chem$day <- as.character(CARI_chem$DateTimeAK)
+CARI_chem <- CARI_chem[, c(2,1,5,6,7,4,3,9,8)] # reorganizing column headers
 
 
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
 names(CARI_chem)<- colNames # renaming columns 
+
+# # plotting to see if they came out correctly
+# # CARI 
+# chem.2021.long <- CARI_2021 %>%
+#   pivot_longer(
+#     cols = NO3:Turb,
+#     names_to = "response_var",
+#     values_to = "concentration",
+#     values_drop_na = TRUE
+#   ) # converting to a long format so each response_var is within a single column
+# 
+# 
+# 
+# ggplot(chem.2021.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+#   geom_point(size = 0.5) +
+#   scale_color_manual(values=c("#3288BD")) +
+#   facet_wrap(~response_var, scales = "free") +
+#   theme_classic()
+
+
 # merge CARI and DOD sites 
 CARI_chem$datetimeAK <- ymd_hms(CARI_chem$datetimeAK)
 DOD_chem$datetimeAK <- ymd_hms(DOD_chem$datetimeAK)
 
 DOD_chem <- rbind(DOD_chem, CARI_chem)
 DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
+DOD_chem$julian <- yday(DOD_chem$datetimeAK)
+
+# check for outliers
+which(DOD_chem$Turb > 1500)
+DOD_chem <- DOD_chem[-c(94689, 207878, 213192, 213198, 213474, 213480, 268683), ]
+
+# plotting to make sure this merged properly
+chem.long <- DOD_chem %>%
+     pivot_longer(
+       cols = fDOM:NO3,
+       names_to = "response_var",
+       values_to = "concentration",
+       values_drop_na = TRUE) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.long, aes(x = julian, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_grid(response_var~year, scales = "free")
+
 # Filtering by year to compare concentrations across years 
 
 chem_2018 <- subset(DOD_chem, year == "2018")
@@ -1598,8 +1683,8 @@ mean_daily[c(291:928), 9] <- mean_daily[c(291:928), 8] - 132 # 2019
 mean_daily[c(929:1541), 9] <- mean_daily[c(929:1541), 8] - 134 # 2020
 mean_daily[c(1542:2074), 9] <- mean_daily[c(1542:2074), 8] - 128 # 2021
 
-mean_daily <- mean_daily[-2075,]
-#write.csv(mean_daily, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
+mean_daily <- mean_daily[-2130, ] # last row
+write.csv(mean_daily, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
 # plot
 # across all years 
 # NO3

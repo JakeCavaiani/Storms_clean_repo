@@ -1,6 +1,0 @@
-"0","plot((no3.mod.ar1.log))
-
-plot(no3.mod.ar1.log, resid(., type = ""p"") ~ fitted(.) | site.ID, abline = 0)
-"
-"0",""
-"0","plot(no3.mod.ar1.log, logdailyNO3 ~ fitted(.) | site.ID, abline = c(0,1))"

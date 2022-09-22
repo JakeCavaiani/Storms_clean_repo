@@ -1,16 +1,8 @@
-"0","setwd(""~/Documents/Storms_clean_repo"")"
+"0","setwd(""~/Documents/Storms_clean_repo"")
+"
 "2","The working directory was changed to /Users/jakecavaiani/Documents/Storms_clean_repo inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
 "0","knitr::opts_chunk$set(echo = TRUE)"
 "0","library(reticulate)"
-"2","
-Attaching package: ‘reticulate’
-
-"
-"2","The following object is masked from ‘package:rio’:
-
-    import
-
-"
 "0","Sys.which(""python"")"
 "1","                 python "
 "1","
@@ -21,6 +13,14 @@ Attaching package: ‘reticulate’
 "0","use_python(""/usr/bin/python"")"
 "0","library(tidyverse)"
 "0","options(tz=""America/Anchorage"")"
+"1","$tz
+"
+"1","[1]"
+"1"," ""America/Anchorage"""
+"1","
+"
+"1","
+"
 "0","library(ggplot2)"
 "0","library(gridExtra)"
 "0","library(boot)"

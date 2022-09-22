@@ -13,6 +13,7 @@
 # French Creek: 7.3% 
 # Moose Creek: 65.7%
 # Stuart Creek: 67.4%
+# Caribou Creek: 0 % 
 
 # Permafrost extent # 
 # Poker Creek Low
@@ -80,6 +81,7 @@ HI.dat_2020 <- rbind(FRCH_HI_doy_df_2020, MOOS_HI_doy_df_2020, POKE_HI_doy_df_20
 HI.dat_2020$year <- "2020"
 
 
+#HI.dat <- HI.dat_2018
 HI.dat <- rbind(HI.dat_2018, HI.dat_2019, HI.dat_2020)
 #write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -115,7 +117,7 @@ STRT.fDOM$burn <- "burned"
 
 VAUL.fDOM$burn <- "unburned"
 
-CARI.fDOM$burn <- "burned"
+CARI.fDOM$burn <- "unburned"
 
 FRCH.NO3$burn <- "unburned"
 
@@ -127,7 +129,7 @@ STRT.NO3$burn <- "burned"
 
 VAUL.NO3$burn <- "unburned"
 
-CARI.NO3$burn <- "burned"
+CARI.NO3$burn <- "unburned"
 
 fdom.hi <- rbind(FRCH.fDOM, POKE.fDOM, MOOS.fDOM, STRT.fDOM, VAUL.fDOM, CARI.fDOM)
 no3.hi <- rbind(FRCH.NO3, POKE.NO3, MOOS.NO3, STRT.NO3, VAUL.NO3, CARI.NO3)
@@ -256,7 +258,7 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-FRCH_storms$storm.num = c(rep("storm1", 285),
+FRCH_storms$storm.num = c(
                           rep("storm10", 1379),
                           rep("storm11a", 155),
                           rep("storm11b", 486),
@@ -793,7 +795,7 @@ MOOS_storms$storm.num = c(rep("storm1", 116),
                           rep("storm2b", 291),
                           rep("storm2c", 363),
                           rep("storm3", 459),
-                          rep("storm4", 487),
+                          
                           rep("storm5", 563),
                           rep("storm6", 663),
                           rep("storm7", 255),
@@ -1272,20 +1274,19 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-CARI_storms$storm.num = c(rep("storm1", 0),
+CARI_storms$storm.num = c(
                           rep("storm10", 248),
-                          rep("storm11", 191),
+                          rep("storm11", 215),
                           rep("storm12a", 418),
                           rep("storm12b", 517),
-                          rep("storm2", 181),
+                          
                           rep("storm3", 24),
-                          rep("storm4a", 0),
-                          rep("storm4b", 0),
+                         
                           rep("storm5a", 77),
                           rep("storm5b", 121),
                           rep("storm5c", 575),
                           rep("storm6", 644),
-                          rep("storm7", 167),
+                          
                           rep("storm8", 191),
                           rep("storm9", 359))
 
@@ -7045,17 +7046,17 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-CARI_storms$storm.num = c(rep("storm1", 0),
+CARI_storms$storm.num = c(rep("storm1", 239),
                           rep("storm2a", 103),
                           rep("storm2b", 95),
                           rep("storm2c", 155),
-                          rep("storm3", 262),
+                          rep("storm3", 305),
                           rep("storm4", 155),
                           rep("storm5", 219),
                           rep("storm6", 183),
                           rep("storm7", 307),
                           rep("storm8a", 111),
-                          rep("storm8b", 473),
+                          rep("storm8b", 491),
                           rep("storm9", 99))
 
 CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
@@ -7074,7 +7075,8 @@ CARI.2020.per.storm.1$temp <- temp$temp
 
 
 CARI.2020 <- CARI_storms
-CARI.2020 <- CARI.2020[,-c(1,10)]
+CARI.2020 <- CARI.2020[,-c(1)]
+
 CARI.2020$DateTime <- as.POSIXct(CARI.2020$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 CARI.2020 <- left_join(CARI.2020, POKE_RainGauge_2020, by = "DateTime")
 CARI.2020 <- left_join(CARI.2020, airtempmean, by = "DateTime")
@@ -7084,6 +7086,8 @@ CARI.2020$ThreeMonth <- rollapplyr(CARI.2020$inst_rainfall_mm, 8064, sum, na.rm 
 CARI.2020$temp.week <- rollapplyr(CARI.2020$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
 
 CARI.2020.1 <- left_join(CARI.2020.storms.1, CARI.2020, by = "DateTime") # week month and 3 month precip totals 
+names(CARI.2020.1)[names(CARI.2020.1) == 'storm.num.x'] <- 'storm.num'
+
 
 CARI.2020.per.storm.2 <- CARI.2020.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event

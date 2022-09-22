@@ -1,15 +1,18 @@
-"0","reticulate::repl_python()"
+"0","reticulate::repl_python()
+"
 "2","Python 3.6.13 (/Users/jakecavaiani/Library/r-miniconda/envs/r-reticulate/bin/python)
 Reticulate 1.20 REPL -- A Python interpreter in R.
 "
-"0","import pickle"
+"0","mport pickle"
+"2","SyntaxError: invalid syntax (<string>, line 1)
+"
 "0","import pandas as pd"
 "0","import datetime"
 "0","from hysteresis_metrics import hysteresisMetrics"
 "0","pd.set_option('display.max_columns', 500)"
 "0","pd.set_option('display.width', 1000)"
 "0","datetime.date.today()"
-"1","datetime.date(2022, 8, 31)
+"1","datetime.date(2022, 9, 21)
 "
 "0","quit()"
 "2","SystemExit: None

@@ -1,0 +1,17 @@
+"0","FRCH.HI.df$date <- as.Date(with(FRCH.HI.df, paste(month, day, sep = ""-"")), ""%m-%d"")
+FRCH.HI.df$doy <- yday(FRCH.HI.df$date) 
+
+g0 <- ggplot(FRCH.HI.df, aes(x = doy, y = HI, label=doy, fill=response))
+g1 = g0 + geom_jitter(width = 0.1, fill = ""grey"", colour = ""#0571B0"", alpha=0.25, size=3) + 
+  theme(axis.text.x = element_text(angle = 0))+  labs(x="""") + facet_wrap(~ response, scales = ""free_x"") +
+  theme_bw() +geom_hline(yintercept=0) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + theme(legend.position = ""none"")
+g2 <- g1 + 
+  stat_summary(fun.data = median_cl_boot, geom = ""errorbar"",
+               colour = ""black"", width = 0.2, size=1) + 
+  stat_summary(fun.y = median, geom = ""point"", 
+               colour = ""black"", size = 3)
+"
+"2","`fun.y` is deprecated. Use `fun` instead."
+"0","ggsave(""~/Documents/Storms_clean_repo/plots/HI_plots/2018/FRCH/FRCH.HI.median.boot.doy.pdf"", plot=g2, width = 8, height = 6, units =""in"")"
+"0","write.csv(FRCH.HI.df, ""~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv"")"
+"0",""

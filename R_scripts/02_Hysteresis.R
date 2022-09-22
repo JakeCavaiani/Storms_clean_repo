@@ -27,12 +27,12 @@ library(dplyr)
 # load data #
 # any storm that is commented out is an empty dataframe due to gaps in the data
 setwd("~/Documents/Storms_clean_repo")
-#FRCH_storm1_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm1_06_21.csv")
-FRCH_storm1_06_21_Q <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_Q.csv")
-FRCH_storm1_06_21_NO3 <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_NO3.csv")
-FRCH_storm1_06_21_fDOM <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_fDOM.csv")
-FRCH_storm1_06_21_SPC <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_SPC.csv")
-FRCH_storm1_06_21_turb <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_Turb.csv")
+#FRCH_storm1_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm1_06_21.csv") # not a storm!!!!
+# FRCH_storm1_06_21_Q <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_Q.csv")
+# FRCH_storm1_06_21_NO3 <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_NO3.csv")
+# FRCH_storm1_06_21_fDOM <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_fDOM.csv")
+# FRCH_storm1_06_21_SPC <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_SPC.csv")
+# FRCH_storm1_06_21_turb <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_Turb.csv")
 
 #FRCH_storm2a_06_29 <- read_csv("~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm2a_06_29.csv")
 FRCH_storm2a_06_29_Q <- read_csv("Storm_Events/2018/FRCH/FRCH_storm2a_06_29_Q.csv")
@@ -263,13 +263,13 @@ MOOS_storm12_09_24_turb <- read_csv("Storm_Events/2018/MOOS/MOOS_storm12_09_24_T
 #CARI_storm1_06_10_SPC <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm1_06_10_SPC.csv")
 #CARI_storm1_06_10_turb <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm1_06_10_Turb.csv")
 
-#CARI_storm2_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm2_06_21.csv")
-CARI_storm2_06_21_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_Q.csv")
-CARI_storm2_06_21_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_NO3.csv")
-CARI_storm2_06_21_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_fDOM.csv", 
-                                   col_types = cols(datavalue = col_double()))
-CARI_storm2_06_21_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_SPC.csv")
-CARI_storm2_06_21_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_Turb.csv")
+# #CARI_storm2_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm2_06_21.csv")
+# CARI_storm2_06_21_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_Q.csv")
+# CARI_storm2_06_21_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_NO3.csv")
+# CARI_storm2_06_21_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_fDOM.csv", 
+#                                    col_types = cols(datavalue = col_double()))
+# CARI_storm2_06_21_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_SPC.csv")
+# CARI_storm2_06_21_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm2_06_21_Turb.csv")
 
 #CARI_storm3_06_29 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm2_06_21.csv")
 CARI_storm3_06_29_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm3_06_29_Q.csv")
@@ -328,13 +328,13 @@ CARI_storm6_08_13_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm6_08_13_fDO
 CARI_storm6_08_13_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm6_08_13_SPC.csv")
 CARI_storm6_08_13_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm6_08_13_Turb.csv")
 
-#CARI_storm7_08_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm7_08_21.csv")
-CARI_storm7_08_21_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_Q.csv")
-CARI_storm7_08_21_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_NO3.csv")
-CARI_storm7_08_21_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_fDOM.csv", 
-                                   col_types = cols(datavalue = col_double()))
-CARI_storm7_08_21_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_SPC.csv")
-CARI_storm7_08_21_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_Turb.csv")
+# #CARI_storm7_08_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm7_08_21.csv")
+# CARI_storm7_08_21_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_Q.csv")
+# CARI_storm7_08_21_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_NO3.csv")
+# CARI_storm7_08_21_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_fDOM.csv", 
+#                                    col_types = cols(datavalue = col_double()))
+# CARI_storm7_08_21_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_SPC.csv")
+# CARI_storm7_08_21_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm7_08_21_Turb.csv")
 
 #CARI_storm8_08_24 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm8_08_24.csv")
 CARI_storm8_08_24_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm8_08_24_Q.csv")
@@ -361,12 +361,12 @@ CARI_storm10_08_30_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm10_08_30_SP
 CARI_storm10_08_30_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm10_08_30_Turb.csv")
 
 #CARI_storm11_09_02 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm11_09_02.csv")
-CARI_storm11_09_02_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_02_Q.csv")
-CARI_storm11_09_02_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_02_NO3.csv")
-CARI_storm11_09_02_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_02_fDOM.csv", 
+CARI_storm11_09_01_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_01_Q.csv")
+CARI_storm11_09_01_NO3 <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_01_NO3.csv")
+CARI_storm11_09_01_fDOM <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_01_fDOM.csv", 
                                     col_types = cols(datavalue = col_double()))
-CARI_storm11_09_02_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_02_SPC.csv")
-CARI_storm11_09_02_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_02_Turb.csv")
+CARI_storm11_09_01_SPC <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_01_SPC.csv")
+CARI_storm11_09_01_turb <- read_csv("Storm_Events/2018/CARI/CARI_storm11_09_01_Turb.csv")
 
 #CARI_storm12a_09_20 <- read_csv("~/Documents/Storms/Storm_Events/2018/CARI/CARI_storm12a_09_20.csv")
 CARI_storm12a_09_20_Q <- read_csv("Storm_Events/2018/CARI/CARI_storm12a_09_20_Q.csv")
@@ -449,7 +449,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 # plot FRCH loops #
-FRCH_storm1_06_21_NO3.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_NO3, "FRCH", "NO3", "0621")
+#FRCH_storm1_06_21_NO3.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_NO3, "FRCH", "NO3", "0621")
 FRCH_storm2a_06_29_NO3.p = hyst_plot(FRCH_storm2a_06_29_Q, FRCH_storm2a_06_29_NO3, "FRCH", "NO3", "0629")
 FRCH_storm2b_07_04_NO3.p = hyst_plot(FRCH_storm2b_07_04_Q, FRCH_storm2b_07_04_NO3, "FRCH", "NO3", "0704")
 FRCH_storm3_07_10_NO3.p = hyst_plot(FRCH_storm3_07_10_Q, FRCH_storm3_07_10_NO3, "FRCH", "NO3", "0710")
@@ -466,7 +466,7 @@ FRCH_storm5_08_04_NO3.p = hyst_plot(FRCH_storm5_08_04_Q, FRCH_storm5_08_04_NO3, 
 #FRCH_storm11b_09_24_NO3.p = hyst_plot(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_NO3, "FRCH", "NO3", "0924b")
 
 # NO3
-multiplot(FRCH_storm1_06_21_NO3.p)
+#multiplot(FRCH_storm1_06_21_NO3.p)
 multiplot(FRCH_storm2a_06_29_NO3.p)
 multiplot(FRCH_storm2b_07_04_NO3.p)
 multiplot(FRCH_storm3_07_10_NO3.p)
@@ -475,7 +475,7 @@ multiplot(FRCH_storm4b_07_16_NO3.p)
 multiplot(FRCH_storm5_08_04_NO3.p)
 
 # fDOM #
-FRCH_storm1_06_21_fDOM.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_fDOM, "FRCH", "fDOM", "0621")
+#FRCH_storm1_06_21_fDOM.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_fDOM, "FRCH", "fDOM", "0621")
 FRCH_storm2a_06_29_fDOM.p = hyst_plot(FRCH_storm2a_06_29_Q, FRCH_storm2a_06_29_fDOM, "FRCH", "fDOM", "0629")
 FRCH_storm2b_07_04_fDOM.p = hyst_plot(FRCH_storm2b_07_04_Q, FRCH_storm2b_07_04_fDOM, "FRCH", "fDOM", "0704")
 FRCH_storm3_07_10_fDOM.p = hyst_plot(FRCH_storm3_07_10_Q, FRCH_storm3_07_10_fDOM, "FRCH", "fDOM", "0710")
@@ -509,7 +509,7 @@ multiplot(FRCH_storm11b_09_24_fDOM.p)
 
 
 # SPC #
-FRCH_storm1_06_21_SPC.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_SPC, "FRCH", "SPC", "0621")
+#FRCH_storm1_06_21_SPC.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_SPC, "FRCH", "SPC", "0621")
 FRCH_storm2a_06_29_SPC.p = hyst_plot(FRCH_storm2a_06_29_Q, FRCH_storm2a_06_29_SPC, "FRCH", "SPC", "0629")
 FRCH_storm2b_07_04_SPC.p = hyst_plot(FRCH_storm2b_07_04_Q, FRCH_storm2b_07_04_SPC, "FRCH", "SPC", "0704")
 FRCH_storm3_07_10_SPC.p = hyst_plot(FRCH_storm3_07_10_Q, FRCH_storm3_07_10_SPC, "FRCH", "SPC", "0710")
@@ -525,7 +525,7 @@ FRCH_storm10_09_01_SPC.p = hyst_plot(FRCH_storm10_09_01_Q, FRCH_storm10_09_01_SP
 FRCH_storm11a_09_22_SPC.p = hyst_plot(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_SPC, "FRCH", "SPC", "0922a")
 FRCH_storm11b_09_24_SPC.p = hyst_plot(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_SPC, "FRCH", "SPC", "0924b")
 
-multiplot(FRCH_storm1_06_21_SPC.p)
+#multiplot(FRCH_storm1_06_21_SPC.p)
 multiplot(FRCH_storm2a_06_29_SPC.p)
 multiplot(FRCH_storm2b_07_04_SPC.p)
 multiplot(FRCH_storm3_07_10_SPC.p)
@@ -543,7 +543,7 @@ multiplot(FRCH_storm11b_09_24_SPC.p)
 
 
 # Turb
-FRCH_storm1_06_21_turb.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_turb, "FRCH", "turb", "0621")
+#FRCH_storm1_06_21_turb.p = hyst_plot(FRCH_storm1_06_21_Q, FRCH_storm1_06_21_turb, "FRCH", "turb", "0621")
 FRCH_storm2a_06_29_turb.p = hyst_plot(FRCH_storm2a_06_29_Q, FRCH_storm2a_06_29_turb, "FRCH", "turb", "0629")
 FRCH_storm2b_07_04_turb.p = hyst_plot(FRCH_storm2b_07_04_Q, FRCH_storm2b_07_04_turb, "FRCH", "turb", "0704")
 FRCH_storm3_07_10_turb.p = hyst_plot(FRCH_storm3_07_10_Q, FRCH_storm3_07_10_turb, "FRCH", "turb", "0710")
@@ -614,7 +614,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-FRCH_HI_Loops <- multiplot(FRCH_storm1_06_21_NO3.p, FRCH_storm1_06_21_fDOM.p, FRCH_storm1_06_21_SPC.p, FRCH_storm1_06_21_turb.p,
+FRCH_HI_Loops <- multiplot(
           FRCH_storm2a_06_29_NO3.p, FRCH_storm2a_06_29_fDOM.p, FRCH_storm2a_06_29_SPC.p, FRCH_storm2a_06_29_turb.p,
           FRCH_storm2b_07_04_NO3.p, FRCH_storm2b_07_04_fDOM.p, FRCH_storm2b_07_04_SPC.p, FRCH_storm2b_07_04_turb.p,
           FRCH_storm3_07_10_NO3.p, FRCH_storm3_07_10_fDOM.p, FRCH_storm3_07_10_SPC.p, FRCH_storm3_07_10_turb.p,
@@ -640,12 +640,12 @@ dir.create(file.path("plots", "HI_plots", "2018", "FRCH"))
 dir.create(file.path("plots", "HI_plots", "2018", "MOOS"))
 dir.create(file.path("plots", "HI_plots", "2018", "CARI"))
 
-# export pdf 20 x 30
-setwd("~/Documents/Storms_clean_repo/plots/HI_plots/2018")
-# ggsave(FRCH_HI_Loops, 
-#        file = "FRCH_HI_Loops_2018.pdf", 
-#        path = "FRCH/", 
-#        width = 20, height = 30, units = "in")
+# # export pdf 20 x 30
+# setwd("~/Documents/Storms_clean_repo/plots/HI_plots/2018")
+# # ggsave(FRCH_HI_Loops, 
+# #        file = "FRCH_HI_Loops_2018.pdf", 
+# #        path = "FRCH/", 
+# #        width = 20, height = 30, units = "in")
 
 # MOOS #
 # fxn: plot hysteresis loop #
@@ -876,7 +876,7 @@ setwd("~/Documents/Storms_clean_repo/plots/HI_plots/2018")
 ### CARI ###
 #NO3
 #CARI_storm1_06_10_NO3.p = hyst_plot(CARI_storm1_06_10_Q, CARI_storm1_06_10_NO3, "CARI", "NO3", "0610")
-CARI_storm2_06_21_NO3.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_NO3, "CARI", "NO3", "0621")
+#CARI_storm2_06_21_NO3.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_NO3, "CARI", "NO3", "0621")
 CARI_storm3_06_29_NO3.p = hyst_plot(CARI_storm3_06_29_Q, CARI_storm3_06_29_NO3, "CARI", "NO3", "0629")
 #CARI_storm4a_06_30_NO3.p = hyst_plot(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_NO3, "CARI", "NO3", "0630a")
 #CARI_storm4b_07_01_NO3.p = hyst_plot(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_NO3, "CARI", "NO3", "0701b")
@@ -884,11 +884,11 @@ CARI_storm5a_08_04_NO3.p = hyst_plot(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_NO
 CARI_storm5b_08_05_NO3.p = hyst_plot(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_NO3, "CARI", "NO3", "0805b")
 CARI_storm5c_08_06_NO3.p = hyst_plot(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_NO3, "CARI", "NO3", "0806c")
 CARI_storm6_08_13_NO3.p = hyst_plot(CARI_storm6_08_13_Q, CARI_storm6_08_13_NO3, "CARI", "NO3", "0813")
-CARI_storm7_08_21_NO3.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_NO3, "CARI", "NO3", "0821")
+#CARI_storm7_08_21_NO3.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_NO3, "CARI", "NO3", "0821")
 CARI_storm8_08_24_NO3.p = hyst_plot(CARI_storm8_08_24_Q, CARI_storm8_08_24_NO3, "CARI", "NO3", "0824")
 CARI_storm9_08_26_NO3.p = hyst_plot(CARI_storm9_08_26_Q, CARI_storm9_08_26_NO3, "CARI", "NO3", "0826")
 CARI_storm10_08_30_NO3.p = hyst_plot(CARI_storm10_08_30_Q, CARI_storm10_08_30_NO3, "CARI", "NO3", "0830")
-CARI_storm11_09_02_NO3.p = hyst_plot(CARI_storm11_09_02_Q, CARI_storm11_09_02_NO3, "CARI", "NO3", "0902")
+CARI_storm11_09_01_NO3.p = hyst_plot(CARI_storm11_09_01_Q, CARI_storm11_09_01_NO3, "CARI", "NO3", "0901")
 CARI_storm12a_09_20_NO3.p = hyst_plot(CARI_storm12a_09_20_Q, CARI_storm12a_09_20_NO3, "CARI", "NO3", "0920a")
 CARI_storm12b_09_25_NO3.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_NO3, "CARI", "NO3", "0925b")
 
@@ -910,7 +910,7 @@ multiplot(CARI_storm12b_09_25_NO3.p)
 
 #fDOM
 #CARI_storm1_06_10_fDOM.p = hyst_plot(CARI_storm1_06_10_Q, CARI_storm1_06_10_fDOM, "CARI", "fDOM", "0610")
-CARI_storm2_06_21_fDOM.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_fDOM, "CARI", "fDOM", "0621")
+#CARI_storm2_06_21_fDOM.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_fDOM, "CARI", "fDOM", "0621")
 CARI_storm3_06_29_fDOM.p = hyst_plot(CARI_storm3_06_29_Q, CARI_storm3_06_29_fDOM, "CARI", "fDOM", "0629")
 #CARI_storm4a_06_30_fDOM.p = hyst_plot(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_fDOM, "CARI", "fDOM", "0630a")
 #CARI_storm4b_07_01_fDOM.p = hyst_plot(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_fDOM, "CARI", "fDOM", "0701b")
@@ -918,11 +918,11 @@ CARI_storm5a_08_04_fDOM.p = hyst_plot(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_f
 CARI_storm5b_08_05_fDOM.p = hyst_plot(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_fDOM, "CARI", "fDOM", "0805b")
 CARI_storm5c_08_06_fDOM.p = hyst_plot(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_fDOM, "CARI", "fDOM", "0806c")
 CARI_storm6_08_13_fDOM.p = hyst_plot(CARI_storm6_08_13_Q, CARI_storm6_08_13_fDOM, "CARI", "fDOM", "0813")
-CARI_storm7_08_21_fDOM.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_fDOM, "CARI", "fDOM", "0821")
+#CARI_storm7_08_21_fDOM.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_fDOM, "CARI", "fDOM", "0821")
 CARI_storm8_08_24_fDOM.p = hyst_plot(CARI_storm8_08_24_Q, CARI_storm8_08_24_fDOM, "CARI", "fDOM", "0824")
 CARI_storm9_08_26_fDOM.p = hyst_plot(CARI_storm9_08_26_Q, CARI_storm9_08_26_fDOM, "CARI", "fDOM", "0826")
 CARI_storm10_08_30_fDOM.p = hyst_plot(CARI_storm10_08_30_Q, CARI_storm10_08_30_fDOM, "CARI", "fDOM", "0830")
-CARI_storm11_09_02_fDOM.p = hyst_plot(CARI_storm11_09_02_Q, CARI_storm11_09_02_fDOM, "CARI", "fDOM", "0902")
+CARI_storm11_09_01_fDOM.p = hyst_plot(CARI_storm11_09_01_Q, CARI_storm11_09_01_fDOM, "CARI", "fDOM", "0901")
 CARI_storm12a_09_20_fDOM.p = hyst_plot(CARI_storm12a_09_20_Q, CARI_storm12a_09_20_fDOM, "CARI", "fDOM", "0920a")
 CARI_storm12b_09_25_fDOM.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_fDOM, "CARI", "v", "0925b")
 
@@ -944,7 +944,7 @@ multiplot(CARI_storm12b_09_25_fDOM.p)
 
 #SPC
 #CARI_storm1_06_10_SPC.p = hyst_plot(CARI_storm1_06_10_Q, CARI_storm1_06_10_SPC, "CARI", "SPC", "0610")
-CARI_storm2_06_21_SPC.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_SPC, "CARI", "SPC", "0621")
+#CARI_storm2_06_21_SPC.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_SPC, "CARI", "SPC", "0621")
 CARI_storm3_06_29_SPC.p = hyst_plot(CARI_storm3_06_29_Q, CARI_storm3_06_29_SPC, "CARI", "SPC", "0629")
 #CARI_storm4a_06_30_SPC.p = hyst_plot(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_SPC, "CARI", "SPC", "0630a")
 #CARI_storm4b_07_01_SPC.p = hyst_plot(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_SPC, "CARI", "SPC", "0701b")
@@ -952,11 +952,11 @@ CARI_storm5a_08_04_SPC.p = hyst_plot(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_SP
 CARI_storm5b_08_05_SPC.p = hyst_plot(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_SPC, "CARI", "SPC", "0805b")
 CARI_storm5c_08_06_SPC.p = hyst_plot(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_SPC, "CARI", "SPC", "0806c")
 CARI_storm6_08_13_SPC.p = hyst_plot(CARI_storm6_08_13_Q, CARI_storm6_08_13_SPC, "CARI", "SPC", "0813")
-CARI_storm7_08_21_SPC.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_SPC, "CARI", "SPC", "0821")
+#CARI_storm7_08_21_SPC.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_SPC, "CARI", "SPC", "0821")
 CARI_storm8_08_24_SPC.p = hyst_plot(CARI_storm8_08_24_Q, CARI_storm8_08_24_SPC, "CARI", "SPC", "0824")
 CARI_storm9_08_26_SPC.p = hyst_plot(CARI_storm9_08_26_Q, CARI_storm9_08_26_SPC, "CARI", "SPC", "0826")
 CARI_storm10_08_30_SPC.p = hyst_plot(CARI_storm10_08_30_Q, CARI_storm10_08_30_SPC, "CARI", "SPC", "0830")
-CARI_storm11_09_02_SPC.p = hyst_plot(CARI_storm11_09_02_Q, CARI_storm11_09_02_SPC, "CARI", "SPC", "0902")
+CARI_storm11_09_01_SPC.p = hyst_plot(CARI_storm11_09_01_Q, CARI_storm11_09_01_SPC, "CARI", "SPC", "0901")
 CARI_storm12a_09_20_SPC.p = hyst_plot(CARI_storm12a_09_20_Q, CARI_storm12a_09_20_SPC, "CARI", "SPC", "0920a")
 CARI_storm12b_09_25_SPC.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_SPC, "CARI", "SPC", "0925b")
 
@@ -979,7 +979,7 @@ multiplot(CARI_storm12b_09_25_SPC.p)
 
 #Turb
 #CARI_storm1_06_10_turb.p = hyst_plot(CARI_storm1_06_10_Q, CARI_storm1_06_10_turb, "CARI", "turb", "0610")
-CARI_storm2_06_21_turb.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_turb, "CARI", "turb", "0621")
+#CARI_storm2_06_21_turb.p = hyst_plot(CARI_storm2_06_21_Q, CARI_storm2_06_21_turb, "CARI", "turb", "0621")
 CARI_storm3_06_29_turb.p = hyst_plot(CARI_storm3_06_29_Q, CARI_storm3_06_29_turb, "CARI", "turb", "0629")
 #CARI_storm4a_06_30_turb.p = hyst_plot(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_turb, "CARI", "turb", "0630a")
 #CARI_storm4b_07_01_turb.p = hyst_plot(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_turb, "CARI", "turb", "0701b")
@@ -987,11 +987,11 @@ CARI_storm5a_08_04_turb.p = hyst_plot(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_t
 CARI_storm5b_08_05_turb.p = hyst_plot(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_turb, "CARI", "turb", "0805b")
 CARI_storm5c_08_06_turb.p = hyst_plot(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_turb, "CARI", "turb", "0806c")
 CARI_storm6_08_13_turb.p = hyst_plot(CARI_storm6_08_13_Q, CARI_storm6_08_13_turb, "CARI", "turb", "0813")
-CARI_storm7_08_21_turb.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_turb, "CARI", "turb", "0821")
+#CARI_storm7_08_21_turb.p = hyst_plot(CARI_storm7_08_21_Q, CARI_storm7_08_21_turb, "CARI", "turb", "0821")
 CARI_storm8_08_24_turb.p = hyst_plot(CARI_storm8_08_24_Q, CARI_storm8_08_24_turb, "CARI", "turb", "0824")
 CARI_storm9_08_26_turb.p = hyst_plot(CARI_storm9_08_26_Q, CARI_storm9_08_26_turb, "CARI", "turb", "0826")
 CARI_storm10_08_30_turb.p = hyst_plot(CARI_storm10_08_30_Q, CARI_storm10_08_30_turb, "CARI", "turb", "0830")
-CARI_storm11_09_02_turb.p = hyst_plot(CARI_storm11_09_02_Q, CARI_storm11_09_02_turb, "CARI", "turb", "0902")
+CARI_storm11_09_01_turb.p = hyst_plot(CARI_storm11_09_01_Q, CARI_storm11_09_01_turb, "CARI", "turb", "0901")
 CARI_storm12a_09_20_turb.p = hyst_plot(CARI_storm12a_09_20_Q, CARI_storm12a_09_20_turb, "CARI", "turb", "0920a")
 CARI_storm12b_09_25_turb.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_turb, "CARI", "turb", "0925b")
 
@@ -1013,18 +1013,17 @@ multiplot(CARI_storm12a_09_20_turb.p)
 multiplot(CARI_storm12b_09_25_turb.p)
 
 multiplot(
-  CARI_storm2_06_21_NO3.p,CARI_storm2_06_21_fDOM.p,CARI_storm2_06_21_SPC.p,CARI_storm2_06_21_turb.p,
   CARI_storm3_06_29_NO3.p,CARI_storm3_06_29_fDOM.p,CARI_storm3_06_29_SPC.p,CARI_storm3_06_29_turb.p,
   
   CARI_storm5a_08_04_NO3.p, CARI_storm5a_08_04_fDOM.p,CARI_storm5a_08_04_SPC.p,CARI_storm5a_08_04_turb.p,
   CARI_storm5b_08_05_NO3.p, CARI_storm5b_08_05_fDOM.p,CARI_storm5b_08_05_SPC.p,CARI_storm5b_08_05_turb.p,
   CARI_storm5c_08_06_NO3.p,CARI_storm5c_08_06_fDOM.p,CARI_storm5c_08_06_SPC.p,CARI_storm5c_08_06_turb.p,
   CARI_storm6_08_13_NO3.p, CARI_storm6_08_13_fDOM.p,CARI_storm6_08_13_SPC.p,CARI_storm6_08_13_turb.p,
-  CARI_storm7_08_21_NO3.p, CARI_storm7_08_21_fDOM.p,CARI_storm7_08_21_SPC.p,CARI_storm7_08_21_turb.p,
+
   CARI_storm8_08_24_NO3.p, CARI_storm8_08_24_fDOM.p,CARI_storm8_08_24_SPC.p,CARI_storm8_08_24_turb.p,
   CARI_storm9_08_26_NO3.p, CARI_storm9_08_26_fDOM.p,CARI_storm9_08_26_SPC.p,CARI_storm9_08_26_turb.p,
   CARI_storm10_08_30_NO3.p, CARI_storm10_08_30_fDOM.p,CARI_storm10_08_30_SPC.p,CARI_storm10_08_30_turb.p,
-  CARI_storm11_09_02_NO3.p, CARI_storm11_09_02_fDOM.p,CARI_storm11_09_02_SPC.p,CARI_storm11_09_02_turb.p,
+  CARI_storm11_09_01_NO3.p, CARI_storm11_09_01_fDOM.p,CARI_storm11_09_01_SPC.p,CARI_storm11_09_01_turb.p,
   CARI_storm12a_09_20_NO3.p, CARI_storm12a_09_20_fDOM.p,CARI_storm12a_09_20_SPC.p,CARI_storm12a_09_20_turb.p,
   CARI_storm12b_09_25_NO3.p, CARI_storm12b_09_25_fDOM.p,CARI_storm12b_09_25_SPC.p,CARI_storm12b_09_25_turb.p,
   cols = 7

@@ -690,6 +690,26 @@ AMC_2021 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_F
 AMC_2021 <- AMC_2021[,-c(16)]
 AMC <- rbind(AMC_2018, AMC_2019, AMC_2020, AMC_2021)
 
+# CHECK FOR OUTLIERS #
+ggplot(AMC, aes(x = date, y = Beta_index)) +
+  geom_point()
+
+which(AMC$Beta_index > 10) # 548 (CARI 2C, 2020), 549 (CARI 2C, 2020), 760 (STRT 1e,2020)
+
+which(AMC$Beta_index < -10) # 512 (MOOS 2, 2020), 757, 759 (STRT 1e 2020)
+
+AMC <- AMC %>%
+  mutate(across(c(Hyst_index, Beta_index), 
+                ~ifelse(site.ID == "CARI" & storm.ID == "storm2c" & year == "2020", NA, .))) # storm 2c CARI 2020
+
+AMC <- AMC %>%
+  mutate(across(c(Hyst_index, Beta_index), 
+                ~ifelse(site.ID == "STRT" & storm.ID == "storm1e" & year == "2020", NA, .)))
+
+AMC <- AMC %>%
+  mutate(across(c(Hyst_index, Beta_index), 
+                ~ifelse(site.ID == "MOOS" & storm.ID == "storm2" & year == "2020", NA, .)))
+
 write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv")
 
 

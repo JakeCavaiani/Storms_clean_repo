@@ -1,8 +1,8 @@
-"0","reticulate::repl_python()"
+"0","reticulate::repl_python()
+"
 "2","Python 3.6.13 (/Users/jakecavaiani/Library/r-miniconda/envs/r-reticulate/bin/python)
 Reticulate 1.20 REPL -- A Python interpreter in R.
 "
-"0","# MOOS #"
 "0","MOOS_storm1_06_21_Q = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_Q.csv"")"
 "0","MOOS_storm1_06_21_NO3 = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_NO3.csv"")"
 "0","MOOS_storm1_06_21_fDOM = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_fDOM.csv"")"
@@ -13,7 +13,7 @@ Reticulate 1.20 REPL -- A Python interpreter in R.
 "0","MOOS_storm2a_06_30_NO3 = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_NO3.csv"")"
 "0","MOOS_storm2a_06_30_fDOM = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_fDOM.csv"")"
 "0","MOOS_storm2a_06_30_SPC = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_SPC.csv"")"
-"0","MOOS_storm2a_06_30_turb = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_turb.csv"")"
+"0","MOOS_storm2a_06_30_turb = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_Turb.csv"")"
 "0",""
 "0","MOOS_storm2b_07_01_Q = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_01_Q.csv"")"
 "0","MOOS_storm2b_07_01_NO3 = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_01_NO3.csv"")"
@@ -98,6 +98,3 @@ Reticulate 1.20 REPL -- A Python interpreter in R.
 "0","MOOS_storm12_09_24_fDOM = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_24_fDOM.csv"")"
 "0","MOOS_storm12_09_24_SPC = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_24_SPC.csv"")"
 "0","MOOS_storm12_09_24_turb = pd.read_csv(""~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_24_turb.csv"")"
-"0",""
-"0",""
-"0",""

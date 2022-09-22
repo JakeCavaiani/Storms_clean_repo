@@ -68,6 +68,24 @@ chem.2018$datetimeAK <- ymd_hms(chem.2018$datetimeAK) # converting character to 
 
 names(chem.2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
 
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+chem_2018_long <- chem.2018 %>%
+  pivot_longer(
+    cols = fDOM:NO3,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem_2018_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#FF7F00","#A6761D")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
 ### when merging the previous file in another script the dates got all screwed up ###
 # I am reading in the file and separating by site and then ordering the dates in ascending order and then remerging 
 FRCH.2018 <-  subset(chem.2018, site.ID == "FRCH")
@@ -86,15 +104,16 @@ DOD.2018 <- full_join(chem.2018, Q.2018) # merging chem and discharge data
 ### READ in CARI Data ###
 # this is data directly from the NEON data base website that I downloaded 
 
-CARI.2018 <- read_csv("NEON_WaterQuality2018.csv",
+CARI.2018 <- read_csv("NEON_Q_WaterQuality2018.csv",
                       col_types = cols(Discharge = col_double(), 
                                        fDOM = col_double(), NO3 = col_double(), 
-                                       SpCond = col_double(), Turb = col_double()))
-names(CARI.2018)[names(CARI.2018) == 'DateTime'] <- 'datetimeAK'
-names(CARI.2018)[names(CARI.2018) == 'Site'] <- 'site.ID'
+                                       SPC = col_double(), Turb = col_double()))
+CARI.2018 <- CARI.2018[,-4]
+names(CARI.2018)[names(CARI.2018) == 'DateTimeAK'] <- 'datetimeAK'
+names(CARI.2018)[names(CARI.2018) == 'site.ID.x'] <- 'site.ID'
 
-#plot(CARI.2018$datetimeAK, CARI.2018$Discharge)
-attributes(CARI.2018$datetimeAK)$tzone <- "America/Anchorage" # making sure it is in AK timezone
+CARI.2018$site.ID <- "CARI"
+
 
 CARI.2018$day <-  format(as.POSIXct(CARI.2018$datetimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
 CARI.2018$day <-  as.POSIXct(CARI.2018$day, "%Y-%m-%d", tz="America/Anchorage")
@@ -107,6 +126,32 @@ CARI.daily.2018 <-  as.data.frame(CARI.daily.2018)
 CARI.Q.2018 <-  as.data.frame(CARI.daily.2018$CARI)
 CARI.Q.2018$day <-  as.Date(rownames(CARI.daily.2018))
 names(CARI.Q.2018) <-  c("Discharge_Lsec", "day")
+
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+cari_2018_long <- CARI.2018 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(cari_2018_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+chem_total <- full_join(cari_2018_long, chem_2018_long)
+
+ggplot(chem_total, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD","#FF7F00","#A6761D")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
 
 # subset data by site #
 setwd("~/Documents/Storms_clean_repo")
@@ -480,7 +525,7 @@ lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(FRCH$SpCond.uScm * 4 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$Turbidity.FNU * 100 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
+lines(FRCH$Turbidity.FNU * 70 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 par(new = T)
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -2151,7 +2196,7 @@ write.csv(MOOS_storm12_09_24_turb, "MOOS_storm12_09_24_Turb.csv")
 #CARI#
 setwd("~/Documents/Storms_clean_repo")
 CARI_2018 <- CARI.2018 # renaming this to save me lots of time from old script
-names(CARI_2018) <- c("DateTime", "Site", "Discharge", "NO3",
+names(CARI_2018) <- c("Site","DateTime", "Discharge", "NO3",
                       "fDOM", "SpCond", "Turb", "day")
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -2270,11 +2315,11 @@ plot(CARI_storm1_06_10$Discharge ~ as.POSIXct(CARI_storm1_06_10$DateTime, tz="Am
      xlim = as.POSIXct(c("2018-05-31 00:00:00","2018-06-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
-lines(CARI_2018$fDOM * 7 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2018$fDOM * 10 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
 lines(CARI_2018$SpCond * 5 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
-lines(CARI_2018$Turb * 300 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="black",
+lines(CARI_2018$Turb * 500 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="black",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
 par(new = T)
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -2333,11 +2378,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-06-29 06:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-06-30 15:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-06-29 00:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-06-30 07:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm3_06_29 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-06-29 06:30:00", tz="America/Anchorage") &
-                                CARI_2018$DateTime < as.POSIXct("2018-06-30 15:00:00", tz="America/Anchorage"),]
+CARI_storm3_06_29 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-06-29 00:30:00", tz="America/Anchorage") &
+                                CARI_2018$DateTime < as.POSIXct("2018-06-30 07:00:00", tz="America/Anchorage"),]
 plot(CARI_storm3_06_29$Discharge ~ as.POSIXct(CARI_storm3_06_29$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,800), col="blue", main="CARI 180629 storm 3",
      xlim = as.POSIXct(c("2018-06-15 00:00:00","2018-06-30 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2369,11 +2414,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-06-30 15:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-07-01 12:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-06-30 06:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-07-01 04:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm4a_06_30 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-06-30 15:30:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-07-01 12:00:00", tz="America/Anchorage"),]
+CARI_storm4a_06_30 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-06-30 06:30:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-07-01 04:00:00", tz="America/Anchorage"),]
 plot(CARI_storm4a_06_30$Discharge ~ as.POSIXct(CARI_storm4a_06_30$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,800), col="blue", main="CARI 180630 storm 4a",
      xlim = as.POSIXct(c("2018-06-30 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2405,11 +2450,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-07-01 14:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-07-03 12:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-07-01 06:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-07-03 04:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm4b_07_01 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-07-01 14:30:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-07-03 12:00:00", tz="America/Anchorage"),]
+CARI_storm4b_07_01 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-07-01 06:30:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-07-03 04:00:00", tz="America/Anchorage"),]
 plot(CARI_storm4b_07_01$Discharge ~ as.POSIXct(CARI_storm4b_07_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,1000), col="blue", main="CARI 180701 storm 4b",
      xlim = as.POSIXct(c("2018-06-30 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2441,11 +2486,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-04 12:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-05 08:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-04 04:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-05 00:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm5a_08_04 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-04 12:30:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-08-05 08:00:00", tz="America/Anchorage"),]
+CARI_storm5a_08_04 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-04 04:30:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-08-05 00:00:00", tz="America/Anchorage"),]
 plot(CARI_storm5a_08_04$Discharge ~ as.POSIXct(CARI_storm5a_08_04$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,600), col="blue", main="CARI 180804 storm 5a",
      xlim = as.POSIXct(c("2018-07-31 00:00:00","2018-08-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2477,11 +2522,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-05 08:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-06 15:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-05 00:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-06 07:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm5b_08_05 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-05 08:30:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-08-06 15:00:00", tz="America/Anchorage"),]
+CARI_storm5b_08_05 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-05 00:30:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-08-06 07:00:00", tz="America/Anchorage"),]
 plot(CARI_storm5b_08_05$Discharge ~ as.POSIXct(CARI_storm5b_08_05$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,1000), col="blue", main="CARI 180805 storm 5b",
      xlim = as.POSIXct(c("2018-07-31 00:00:00","2018-08-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 30 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2513,11 +2558,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-06 15:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-12 15:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-06 07:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-12 07:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm5c_08_06 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-06 15:00:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-08-12 15:00:00", tz="America/Anchorage"),]
+CARI_storm5c_08_06 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-06 07:00:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-08-12 07:00:00", tz="America/Anchorage"),]
 plot(CARI_storm5c_08_06$Discharge ~ as.POSIXct(CARI_storm5c_08_06$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,1000), col="blue", main="CARI 180806 storm 5c",
      xlim = as.POSIXct(c("2018-07-31 00:00:00","2018-08-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2549,11 +2594,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-13 17:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-20 15:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-13 09:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-20 07:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm6_08_13 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-13 17:00:00", tz="America/Anchorage") &
-                                CARI_2018$DateTime < as.POSIXct("2018-08-20 15:00:00", tz="America/Anchorage"),]
+CARI_storm6_08_13 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-13 09:00:00", tz="America/Anchorage") &
+                                CARI_2018$DateTime < as.POSIXct("2018-08-20 07:00:00", tz="America/Anchorage"),]
 plot(CARI_storm6_08_13$Discharge ~ as.POSIXct(CARI_storm6_08_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,1200), col="blue", main="CARI 180813 storm 6",
      xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2585,11 +2630,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-21 05:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-22 23:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-21 00:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-22 15:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm7_08_21 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-21 05:00:00", tz="America/Anchorage") &
-                                CARI_2018$DateTime < as.POSIXct("2018-08-22 23:00:00", tz="America/Anchorage"),]
+CARI_storm7_08_21 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-21 00:00:00", tz="America/Anchorage") &
+                                CARI_2018$DateTime < as.POSIXct("2018-08-22 15:00:00", tz="America/Anchorage"),]
 plot(CARI_storm7_08_21$Discharge ~ as.POSIXct(CARI_storm7_08_21$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,700), col="blue", main="CARI 180821 storm 7",
      xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2621,11 +2666,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-24 12:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-26 12:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-24 04:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-26 04:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm8_08_24 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-24 12:00:00", tz="America/Anchorage") &
-                                CARI_2018$DateTime < as.POSIXct("2018-08-26 12:00:00", tz="America/Anchorage"),]
+CARI_storm8_08_24 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-24 04:00:00", tz="America/Anchorage") &
+                                CARI_2018$DateTime < as.POSIXct("2018-08-26 04:00:00", tz="America/Anchorage"),]
 plot(CARI_storm8_08_24$Discharge ~ as.POSIXct(CARI_storm8_08_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,700), col="blue", main="CARI 180824 storm 8",
      xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2657,11 +2702,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-26 12:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-30 06:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-26 04:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-30 00:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm9_08_26 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-26 12:00:00", tz="America/Anchorage") &
-                                CARI_2018$DateTime < as.POSIXct("2018-08-30 06:00:00", tz="America/Anchorage"),]
+CARI_storm9_08_26 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-26 04:00:00", tz="America/Anchorage") &
+                                CARI_2018$DateTime < as.POSIXct("2018-08-30 00:00:00", tz="America/Anchorage"),]
 plot(CARI_storm9_08_26$Discharge ~ as.POSIXct(CARI_storm9_08_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(200,700), col="blue", main="CARI 180826 storm 9",
      xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2693,11 +2738,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-30 10:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-09-02 03:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-30 02:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-01 20:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm10_08_30 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-30 10:00:00", tz="America/Anchorage") &
-                                 CARI_2018$DateTime < as.POSIXct("2018-09-02 03:00:00", tz="America/Anchorage"),]
+CARI_storm10_08_30 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-08-30 02:00:00", tz="America/Anchorage") &
+                                 CARI_2018$DateTime < as.POSIXct("2018-09-01 20:00:00", tz="America/Anchorage"),]
 plot(CARI_storm10_08_30$Discharge ~ as.POSIXct(CARI_storm10_08_30$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="CARI 180830 storm 10",
      xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2729,12 +2774,12 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-09-02 03:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-01 21:00:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2018-09-04 03:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm11_09_02 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-02 03:00:00", tz="America/Anchorage") &
+CARI_storm11_09_01 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-01 21:00:00", tz="America/Anchorage") &
                                  CARI_2018$DateTime < as.POSIXct("2018-09-04 03:00:00", tz="America/Anchorage"),]
-plot(CARI_storm11_09_02$Discharge ~ as.POSIXct(CARI_storm11_09_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="CARI 180902 storm 11",
+plot(CARI_storm11_09_01$Discharge ~ as.POSIXct(CARI_storm11_09_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="CARI 180901 storm 11",
      xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
@@ -2765,11 +2810,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-09-20 23:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-09-25 08:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-20 15:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-25 00:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm12a_09_20 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-20 23:00:00", tz="America/Anchorage") &
-                                  CARI_2018$DateTime < as.POSIXct("2018-09-25 08:00:00", tz="America/Anchorage"),]
+CARI_storm12a_09_20 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-20 15:00:00", tz="America/Anchorage") &
+                                  CARI_2018$DateTime < as.POSIXct("2018-09-25 00:00:00", tz="America/Anchorage"),]
 plot(CARI_storm12a_09_20$Discharge ~ as.POSIXct(CARI_storm12a_09_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="CARI 180920 storm 12a",
      xlim = as.POSIXct(c("2018-09-15 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2801,11 +2846,11 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-09-25 09:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-09-30 20:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-25 01:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-30 12:00:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm12b_09_25 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-25 09:00:00", tz="America/Anchorage") &
-                                  CARI_2018$DateTime < as.POSIXct("2018-09-30 20:00:00", tz="America/Anchorage"),]
+CARI_storm12b_09_25 = CARI_2018[CARI_2018$DateTime > as.POSIXct("2018-09-25 01:00:00", tz="America/Anchorage") &
+                                  CARI_2018$DateTime < as.POSIXct("2018-09-30 :00:00", tz="America/Anchorage"),]
 plot(CARI_storm12b_09_25$Discharge ~ as.POSIXct(CARI_storm12b_09_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="CARI 180925 storm 12b",
      xlim = as.POSIXct(c("2018-09-15 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2018$NO3 * 20 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -2968,16 +3013,16 @@ names(CARI_storm10_08_30_SPC) = c("valuedatetime","datavalue")
 CARI_storm10_08_30_turb = subset(CARI_storm10_08_30, select = c("DateTime","Turb"))
 names(CARI_storm10_08_30_turb) = c("valuedatetime","datavalue")
 
-CARI_storm11_09_02_Q = subset(CARI_storm11_09_02, select = c("DateTime","Discharge"))
-names(CARI_storm11_09_02_Q) = c("valuedatetime","datavalue")
-CARI_storm11_09_02_NO3 = subset(CARI_storm11_09_02, select = c("DateTime","NO3"))
-names(CARI_storm11_09_02_NO3) = c("valuedatetime","datavalue")
-CARI_storm11_09_02_fDOM = subset(CARI_storm11_09_02, select = c("DateTime","fDOM"))
-names(CARI_storm11_09_02_fDOM) = c("valuedatetime","datavalue")
-CARI_storm11_09_02_SPC = subset(CARI_storm11_09_02, select = c("DateTime","SpCond"))
-names(CARI_storm11_09_02_SPC) = c("valuedatetime","datavalue")
-CARI_storm11_09_02_turb = subset(CARI_storm11_09_02, select = c("DateTime","Turb"))
-names(CARI_storm11_09_02_turb) = c("valuedatetime","datavalue")
+CARI_storm11_09_01_Q = subset(CARI_storm11_09_01, select = c("DateTime","Discharge"))
+names(CARI_storm11_09_01_Q) = c("valuedatetime","datavalue")
+CARI_storm11_09_01_NO3 = subset(CARI_storm11_09_01, select = c("DateTime","NO3"))
+names(CARI_storm11_09_01_NO3) = c("valuedatetime","datavalue")
+CARI_storm11_09_01_fDOM = subset(CARI_storm11_09_01, select = c("DateTime","fDOM"))
+names(CARI_storm11_09_01_fDOM) = c("valuedatetime","datavalue")
+CARI_storm11_09_01_SPC = subset(CARI_storm11_09_01, select = c("DateTime","SpCond"))
+names(CARI_storm11_09_01_SPC) = c("valuedatetime","datavalue")
+CARI_storm11_09_01_turb = subset(CARI_storm11_09_01, select = c("DateTime","Turb"))
+names(CARI_storm11_09_01_turb) = c("valuedatetime","datavalue")
 
 CARI_storm12a_09_20_Q = subset(CARI_storm12a_09_20, select = c("DateTime","Discharge"))
 names(CARI_storm12a_09_20_Q) = c("valuedatetime","datavalue")
@@ -3096,12 +3141,12 @@ write.csv(CARI_storm10_08_30_fDOM, "CARI_storm10_08_30_fDOM.csv")
 write.csv(CARI_storm10_08_30_SPC, "CARI_storm10_08_30_SPC.csv")
 write.csv(CARI_storm10_08_30_turb, "CARI_storm10_08_30_Turb.csv")
 
-write.csv(CARI_storm11_09_02, "CARI_storm11_09_02.csv")
-write.csv(CARI_storm11_09_02_Q, "CARI_storm11_09_02_Q.csv")
-write.csv(CARI_storm11_09_02_NO3, "CARI_storm11_09_02_NO3.csv")
-write.csv(CARI_storm11_09_02_fDOM, "CARI_storm11_09_02_fDOM.csv")
-write.csv(CARI_storm11_09_02_SPC, "CARI_storm11_09_02_SPC.csv")
-write.csv(CARI_storm11_09_02_turb, "CARI_storm11_09_02_Turb.csv")
+write.csv(CARI_storm11_09_01, "CARI_storm11_09_01.csv")
+write.csv(CARI_storm11_09_01_Q, "CARI_storm11_09_01_Q.csv")
+write.csv(CARI_storm11_09_01_NO3, "CARI_storm11_09_01_NO3.csv")
+write.csv(CARI_storm11_09_01_fDOM, "CARI_storm11_09_01_fDOM.csv")
+write.csv(CARI_storm11_09_01_SPC, "CARI_storm11_09_01_SPC.csv")
+write.csv(CARI_storm11_09_01_turb, "CARI_storm11_09_01_Turb.csv")
 
 write.csv(CARI_storm12a_09_20, "CARI_storm12a_09_20.csv")
 write.csv(CARI_storm12a_09_20_Q, "CARI_storm12a_09_20_Q.csv")
@@ -3536,26 +3581,94 @@ chem.2019$datetimeAK <- ymd_hms(chem.2019$datetimeAK) # converting character to 
 
 names(chem.2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
 
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+chem_2019_long <- chem.2019 %>%
+  filter(site.ID %in% c("CRBU", "FRCH", "MOOS", "POKE", "STRT", "VAUL")) %>%
+  pivot_longer(
+    cols = fDOM:NO3,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem_2019_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
 
 
 
 # Load in CARI data 
-CARI_2019 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/WaterQuality2019.csv", 
-                      col_types = cols(fDOM = col_double(), 
-                                       SpCond = col_double(), Turb = col_double()))
-attributes(CARI_2019$DateTime)$tzone <- "America/Anchorage"
+CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
 
-CARI_2019$day = format(as.POSIXct(CARI_2019$DateTime,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
-attributes(CARI_2019$DateTime)$tzone <- 'America/Anchorage'
+# time zones are the bane of my existence
+# when I import the file that had AKDT time from the last repo it loads in as UTC 
+# but when I try and change it all over it gets all wonky so here is my horrible 
+# way to solve the issue
+# 
+CARI_Q <- CARI_2019[,-c(4:8)] # clipping out just Q 
+CARI_Q$DateTimeAK <- ymd_hms(CARI_Q$DateTimeAK) # changing to posixct format
+attributes(CARI_Q$DateTimeAK)$tzone <- 'America/Anchorage' # changing to AK time
+CARI_Q <- CARI_Q[order(CARI_Q$DateTimeAK),] # there were weird NAs on the bottom that were causing the dates to not be merged properly
+
+CARI_chem <- CARI_2019[,-c(3,4)] # clipping out just chem 
+CARI_chem$DateTimeAK <- ymd_hms(CARI_chem$DateTimeAK) # changing to posixct format
+CARI_chem$DateTimeAK <- force_tz(CARI_chem$DateTimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+CARI_chem <- CARI_chem[order(CARI_chem$DateTimeAK),] # reordering it as before 
+
+CARI_2019 <- full_join(CARI_Q, CARI_chem) # merging 
+
+# cleaning up column headers 
+names(CARI_2019)[names(CARI_2019) == 'DateTimeAK'] <- 'datetimeAK'
+names(CARI_2019)[names(CARI_2019) == 'site.ID.x'] <- 'site.ID'
+
+CARI_2019$site.ID <- "CARI"
+
+### ARE THE TIMES ON THE SAME TZ ###
+ggplot(CARI_2019) +
+  geom_line(aes(datetimeAK, fDOM*7, color = "red")) +
+  geom_line(aes(datetimeAK, Discharge)) +
+  xlim(as.POSIXct(c("2019-08-01 0:00:00","2019-08-15 23:45:00")))
+
+
+CARI_2019$day = format(as.POSIXct(CARI_2019$datetimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
+attributes(CARI_2019$datetimeAK)$tzone <- 'America/Anchorage'
 CARI_2019$day = as.POSIXct(CARI_2019$day, "%Y-%m-%d", tz="America/Anchorage")
 cari.final.discharge.2019 <- CARI_2019[,-c(4:7)]
 
-CARI.daily.2019 = with(CARI_2019, tapply(Discharge, list(day, Site), mean))
+CARI.daily.2019 = with(CARI_2019, tapply(Discharge, list(day, site.ID), mean))
 CARI.daily.2019 = as.data.frame(CARI.daily.2019)
 
 CARI.Q.2019 = as.data.frame(CARI.daily.2019$CARI)
 CARI.Q.2019$day = as.Date(rownames(CARI.daily.2019))
 names(CARI.Q.2019) = c("Discharge_Lsec", "day")
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+cari_2019_long <- CARI_2019 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(cari_2019_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+chem_total <- full_join(cari_2019_long, chem_2019_long)
+
+ggplot(chem_total, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  filter(chem_total$site.ID != "CRBU") +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
 
 
 # subset data by site #
@@ -8325,6 +8438,9 @@ write.csv(MOOS_storm9_10_02_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS
 write.csv(MOOS_storm9_10_02_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Turb.csv")
 
 #CARI#
+CARI_2019$DateTime <- CARI_2019$datetimeAK
+CARI_2019$SpCond <- CARI_2019$SPC
+
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      xlim = as.POSIXct(c("2019-05-01 0:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"),
      ylim = c(10,0), 
@@ -8438,6 +8554,15 @@ CARI_storm2_06_30 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-06-30 08:15:
                                 CARI_2019$DateTime < as.POSIXct("2019-07-01 20:15:00", tz="America/Anchorage"),]
 plot(CARI_storm2_06_30$Discharge ~ as.POSIXct(CARI_storm2_06_30$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 190630 storm 2",
      xlim = as.POSIXct(c("2019-06-28 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"))
+lines(CARI_2019$NO3 * 20 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$fDOM * 10 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$SpCond * 5 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$Turb * 1000 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+
 par(new = T)
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      xlim = as.POSIXct(c("2019-06-28 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"),
@@ -9624,22 +9749,67 @@ names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Tur
 
 
 # Load in CARI data 
-CARI_2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/WaterQuality2020.csv", 
-                      col_types = cols(fDOM = col_double(), 
-                                       SpCond = col_double(), Turb = col_double()))
-attributes(CARI_2020$DateTime)$tzone <- "America/Anchorage"
 
-CARI_2020$day = format(as.POSIXct(CARI_2020$DateTime,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
-attributes(CARI_2020$DateTime)$tzone <- 'America/Anchorage'
+CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
+
+# time zones are the bane of my existence
+# when I import the file that had AKDT time from the last repo it loads in as UTC 
+  # but when I try and change it all over it gets all wonky so here is my horrible 
+    # way to solve the issue
+# 
+CARI_Q <- CARI_2020[,-c(4:8)] # clipping out just Q 
+CARI_Q$DateTimeAK <- ymd_hms(CARI_Q$DateTimeAK) # changing to posixct format
+attributes(CARI_Q$DateTimeAK)$tzone <- 'America/Anchorage' # changing to AK time
+CARI_Q <- CARI_Q[order(CARI_Q$DateTimeAK),] # there were weird NAs on the bottom that were causing the dates to not be merged properly
+
+CARI_chem <- CARI_2020[,-c(3,4)] # clipping out just chem 
+CARI_chem$DateTimeAK <- ymd_hms(CARI_chem$DateTimeAK) # changing to posixct format
+CARI_chem$DateTimeAK <- force_tz(CARI_chem$DateTimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+CARI_chem <- CARI_chem[order(CARI_chem$DateTimeAK),] # reordering it as before 
+
+CARI_2020 <- full_join(CARI_Q, CARI_chem) # merging 
+
+# cleaning up column headers 
+names(CARI_2020)[names(CARI_2020) == 'DateTimeAK'] <- 'datetimeAK'
+names(CARI_2020)[names(CARI_2020) == 'site.ID.x'] <- 'site.ID'
+
+CARI_2020$site.ID <- "CARI"
+
+### ARE THE TIMES ON THE SAME TZ ###
+ggplot(CARI_2020) +
+  geom_line(aes(datetimeAK, fDOM*25, color = "red")) +
+  geom_line(aes(datetimeAK, Discharge)) +
+  xlim(as.POSIXct(c("2020-08-01 0:00:00","2020-08-15 23:45:00")))
+
+
+CARI_2020$day = format(as.POSIXct(CARI_2020$datetimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
 CARI_2020$day = as.POSIXct(CARI_2020$day, "%Y-%m-%d", tz="America/Anchorage")
 cari.final.discharge.2020 <- CARI_2020[,-c(4:7)]
 
-CARI.daily.2020 = with(CARI_2020, tapply(Discharge, list(day, Site), mean))
+CARI.daily.2020 = with(CARI_2020, tapply(Discharge, list(day, site.ID), mean))
 CARI.daily.2020 = as.data.frame(CARI.daily.2020)
 
 CARI.Q.2020 = as.data.frame(CARI.daily.2020$CARI)
 CARI.Q.2020$day = as.Date(rownames(CARI.daily.2020))
 names(CARI.Q.2020) = c("Discharge_Lsec", "day")
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+cari_2020_long <- CARI_2020 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(cari_2020_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
 
 
 # subset data by site #
@@ -15538,7 +15708,10 @@ write.csv(MOOS_storm9_09_09_turb, "~/Documents/Storms/Storm_Events/2020/MOOS/MOO
 
 
 # CARI #
-# entire record  # 
+# entire record  #
+CARI_2020$DateTime <- CARI_2020$datetimeAK
+CARI_2020$SpCond <- CARI_2020$SPC
+
 plot(CARI_2020$Discharge ~ CARI_2020$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 abline(h=CARI_bfQ_mn*2, col="red", lty=2)
@@ -15584,11 +15757,11 @@ abline(v= as.POSIXct("2020-06-17 09:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm1_06_15 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-15 06:45:00", tz="America/Anchorage") &
                                 CARI_2020$DateTime < as.POSIXct("2020-06-17 09:45:00", tz="America/Anchorage"),]
-plot(CARI_storm1_06_15$Discharge ~ as.POSIXct(CARI_storm1_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200615 storm 1",
-     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
+plot(CARI_storm1_06_15$Discharge ~ as.POSIXct(CARI_storm1_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(300,700), col="blue", main="CARI 200615 storm 1",
+     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-06-19 23:45:00"), tz="America/Anchorage"))
+lines(CARI_2020$NO3 * 20 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 5 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
@@ -15620,15 +15793,15 @@ abline(v= as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm2a_06_19 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-19 12:45:00", tz="America/Anchorage") &
                                  CARI_2020$DateTime < as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage"),]
-plot(CARI_storm2a_06_19$Discharge ~ as.POSIXct(CARI_storm2a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200619 storm 2a",
-     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+plot(CARI_storm2a_06_19$Discharge ~ as.POSIXct(CARI_storm2a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(300,1000), col="blue", main="CARI 200619 storm 2a",
+     xlim = as.POSIXct(c("2020-06-19 0:00:00","2020-06-23 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 4 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+lines(CARI_2020$Turb * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
@@ -15656,11 +15829,11 @@ abline(v= as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm2b_06_20 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-20 14:45:00", tz="America/Anchorage") &
                                  CARI_2020$DateTime < as.POSIXct("2020-06-21 14:45:00", tz="America/Anchorage"),]
-plot(CARI_storm2b_06_20$Discharge ~ as.POSIXct(CARI_storm2b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200620 storm 2b",
-     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+plot(CARI_storm2b_06_20$Discharge ~ as.POSIXct(CARI_storm2b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1500), col="blue", main="CARI 200620 storm 2b",
+     xlim = as.POSIXct(c("2020-06-20 0:00:00","2020-06-21 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 5 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
@@ -15728,15 +15901,15 @@ abline(v= as.POSIXct("2020-06-26 01:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm3_06_23 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-06-23 07:45:00", tz="America/Anchorage") &
                                 CARI_2020$DateTime < as.POSIXct("2020-06-26 05:45:00", tz="America/Anchorage"),]
-plot(CARI_storm3_06_23$Discharge ~ as.POSIXct(CARI_storm3_06_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="CARI 200623 storm 3",
-     xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
+plot(CARI_storm3_06_23$Discharge ~ as.POSIXct(CARI_storm3_06_23$DateTime), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1400), col="blue", main="CARI 200623 storm 3",
+     xlim = as.POSIXct(c("2020-06-23 0:00:00","2020-06-27 23:45:00")))
 lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 7 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$Turb * 100 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
+lines(CARI_2020$Turb * 400 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="black",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
@@ -15800,11 +15973,11 @@ abline(v= as.POSIXct("2020-07-15 12:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm5_07_13 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-07-13 05:45:00", tz="America/Anchorage") &
                                 CARI_2020$DateTime < as.POSIXct("2020-07-15 12:45:00", tz="America/Anchorage"),]
-plot(CARI_storm5_07_13$Discharge ~ as.POSIXct(CARI_storm5_07_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="CARI 200713 storm 5",
+plot(CARI_storm5_07_13$Discharge ~ as.POSIXct(CARI_storm5_07_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)", col="blue", main="CARI 200713 storm 5",
      xlim = as.POSIXct(c("2020-06-15 0:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$NO3 * 50 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 7 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
@@ -15980,11 +16153,11 @@ abline(v= as.POSIXct("2020-09-08 02:45:00", tz="America/Anchorage"), col="purple
 
 CARI_storm9_09_07 = CARI_2020[CARI_2020$DateTime > as.POSIXct("2020-09-07 01:45:00", tz="America/Anchorage") &
                                 CARI_2020$DateTime < as.POSIXct("2020-09-08 02:45:00", tz="America/Anchorage"),]
-plot(CARI_storm9_09_07$Discharge ~ as.POSIXct(CARI_storm9_09_07$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,750), col="blue", main="CARI 200907 storm 9",
-     xlim = as.POSIXct(c("2020-08-31 0:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
+plot(CARI_storm9_09_07$Discharge ~ as.POSIXct(CARI_storm9_09_07$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,800), col="blue", main="CARI 200907 storm 9",
+     xlim = as.POSIXct(c("2020-09-07 0:00:00","2020-09-10 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$NO3 * 10 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
-lines(CARI_2020$fDOM * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(CARI_2020$fDOM * 7 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
 lines(CARI_2020$SpCond * 2 ~ CARI_2020$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-05-01 0:00:00","2020-10-31 23:45:00"), tz="America/Anchorage"))
@@ -15996,6 +16169,12 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$DateTime, type="h",
      ylim = c(5,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
+
+ggplot(CARI_2020, aes(DateTime, Discharge)) +
+  geom_line(aes(color = "red")) +
+  geom_line(aes(x = DateTime, y = fDOM*25)) +
+  xlim(as.POSIXct(c("2020-08-01 0:00:00","2020-08-15 23:45:00")))
+  
 
 # NO3 fDOM SPC Turb #
 

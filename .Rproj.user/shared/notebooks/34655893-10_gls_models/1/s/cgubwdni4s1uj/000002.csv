@@ -1,0 +1,8 @@
+"0","no3.mod.arma.1.2.no.2018 <- gls(dailyNO3 ~ site.ID*year, 
+               na.action = na.omit, 
+               data = mean_daily, 
+               correlation = corARMA(form = ~ julian|site.ID/year, p = 1, q = 2))
+"
+"2","Error in glsEstimate(object, control = control) : 
+  computed ""gls"" fit is singular, rank 22
+"
