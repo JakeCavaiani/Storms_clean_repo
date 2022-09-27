@@ -1,0 +1,6 @@
+"0","fDOM <- aov(CVconc ~ site.ID*year, 
+           data = CV_fDOM)
+
+plot(fDOM)
+"
+"0",""

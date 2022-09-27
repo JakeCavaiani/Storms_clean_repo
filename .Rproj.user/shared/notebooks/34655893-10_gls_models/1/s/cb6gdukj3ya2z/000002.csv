@@ -1,0 +1,5 @@
+"0","#log transform "
+"0","CV_SPC$logCVconc <- log(abs(CV_SPC$CVconc))"
+"0","SPC.log <- aov(logCVconc ~ site.ID*year, "
+"0","           data = CV_SPC)"
+"0","plot(SPC.log)"

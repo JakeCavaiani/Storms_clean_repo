@@ -1,0 +1,6 @@
+"0","Ear1<-residuals(fDOM.mod.arma.1.1, type=""normalized"")"
+"0","I1<-!is.na(mean_daily_2021$logDailyfDOM)"
+"0","Efulla<-vector(length = length(mean_daily_2021$logDailyfDOM))"
+"0","Efulla<-NA"
+"0","Efulla[I1]<-Ear1"
+"0","acf(Efulla, na.action=na.pass)"

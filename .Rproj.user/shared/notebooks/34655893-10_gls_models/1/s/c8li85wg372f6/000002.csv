@@ -1,0 +1,7 @@
+"0","Ear1<-residuals(SPC.mod.ar1, type=""normalized"")"
+"0","I1<-!is.na(mean_daily_2019$dailySPC)"
+"0","Efulla<-vector(length = length(mean_daily_2019$dailySPC))"
+"0","Efulla<-NA"
+"0","Efulla[I1]<-Ear1"
+"2","number of items to replace is not a multiple of replacement length"
+"0","acf(Efulla, na.action=na.pass)"

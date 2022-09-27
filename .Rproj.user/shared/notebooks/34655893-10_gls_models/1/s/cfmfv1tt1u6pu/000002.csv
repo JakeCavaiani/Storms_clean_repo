@@ -1,0 +1,7 @@
+"0","mean_daily_2020$logDailySPC <- log(mean_daily_2020$dailySPC)"
+"0",""
+"0","SPC.mod.ar1.log <- gls(logDailySPC ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2020, "
+"0","               correlation = corAR1(form = ~ julian|site.ID))"
+"0",""

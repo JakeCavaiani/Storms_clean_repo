@@ -1,0 +1,1204 @@
+### Read me ###
+# the purpose of this script is to export NEON discharge and stream chemistry data 
+
+
+# Important NOTES:
+# Name: Water quality
+
+#Description: In situ sensor-based specific conductivity, concentration of chlorophyll a, dissolved oxygen content, fDOM concentration, pH, and turbidity, available as one- or five-minute instantaneous measurements in surface water of lakes, wadeable streams, and non-wadeable streams.
+
+#NEON Science Team Supplier: Aquatic Instrument System
+
+#Abstract: Water quality is measured once per minute at stream sensor sets and once per 5 minutes on buoys at lake and river sites. It is reported as 1- or 5-minute instantaneous measurements.
+
+#Latency: Data collected in any given month are published during the second full week of the following month.
+
+#Brief Design Description: The water quality sondes are deployed at stream sensor sets and lake and river buoys. At stream sites, the sondes are affixed to a post at a static depth relative to the stream bottom. The upstream sensor set #1 (S1) collects specific conductance, dissolved oxygen, pH, chlorophyll, and turbidity, but no fDOM. The downstream sensor set #2 (S2) collects specific conductance, dissolved oxygen, pH, chlorophyll, turbidity and fDOM. The buoy-deployed multisondes collect specific conductance, dissolved oxygen, pH, chlorophyll, turbidity, fDOM, and depth. At all but the Flint River, GA (FLNT) buoys, the water quality multisonde is fixed to a profiling winch to collect data from multiple depths every 4 hours and from 0.5 m parked depth when not profiling. Due to the high velocity of the Flint River, there are two sondes. One is deployed at a fixed depth of 0.5 m below the water surface and one monitors water pumped from two depths, which are reported with the data.
+
+#Brief Study Area Description: S1 (upstream) and S2 (downstream) sensor sets are at all wadeable stream sites within NEON. Buoys are deployed at all lake and large river sites within NEON.
+
+#Sensor(s): YSI EXO2 Multiparameter Sonde; YSI EXO turbidity sensor; YSI EXO total algae PC sensor; YSI EXO pH sensor; YSI EXO dissolved oxygen sensor; YSI EXO fDOm sensor; YSI EXO conductivity and temperature sensor; YSI EXO central wiper
+
+
+# Step 1: import raw data files which is site, datetime, absolute pressure and water level
+# Step 2: Clean errant points within the data that could be due to installation/decommission or gaps in data
+# Step 3: Write final output of cleaned site, datetime, absolute pressure and water level
+
+
+### load packages ### 
+library(tidyverse)
+library(lubridate)
+library(data.table)
+library(rio)
+library(ggplot2)
+library(scales)
+library(psych)
+library(here)
+library(googledrive)
+library(readxl)
+library(cowplot)
+library(zoo)
+library(readr)
+library(dplyr)
+library(RColorBrewer)
+library(gridExtra)
+library(ggpmisc)
+library(here)
+library(neonUtilities)
+library(raster)
+
+
+#### 2018 ####
+# Load in Continuous Discharge for each site ####
+
+CARI_Q_2018 <- loadByProduct(dpID = "DP4.00130.001",
+                             startdate = "2018-01",
+                             enddate = "2018-12",
+                             site = c("CARI"),
+                             package = "basic")
+
+#CARI
+CARI_Q_2018$csd_continuousDischarge <- CARI_Q_2018$csd_continuousDischarge[,-c(2,3,5,6,7,8,9,10,11,13,14,15,16,17,18,19)] # clean rows just to have datetime and site and discharge
+CARI_Q_2018 <- CARI_Q_2018$csd_continuousDischarge
+names(CARI_Q_2018) <- c("Site", "DateTimeAK", "Discharge")
+
+
+CARI_Q_2018 <- na.omit(CARI_Q_2018) # removing NAs (uninstalled dates)
+CARI_Q_2018 <- CARI_Q_2018[-c(1:8), ] # making it start on a 15 min time 
+
+CARI_Q_2018$by15 = cut(CARI_Q_2018$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+CARI_Q_2018 = aggregate(Discharge ~ by15, FUN = mean, data = CARI_Q_2018)
+CARI_Q_2018$site.ID <- "CARI"
+CARI_Q_2018$DateTimeAK <- ymd_hms(CARI_Q_2018$by15)
+CARI_Q_2018 <- CARI_Q_2018[, -1]
+
+CARI_Q_2018 <- CARI_Q_2018[, c(2,3,1)]
+
+CARI_Q_2018 <- subset(CARI_Q_2018, DateTimeAK < "2018-10-05")
+
+
+
+# plot 
+# 
+ggplot(aes(x = DateTimeAK, y = Discharge), data = CARI_Q_2018) +
+  geom_line(color="#A6CEE3", size=1.25) +
+  theme_classic() +
+  ggtitle("CARI measured Q") +
+  xlab("Date") +
+  ylab("Discharge (L/s)") +
+  xlab("")
+
+write.csv(CARI_Q_2018, 
+          "~/Documents/NEON/CARI/FinalDischarge_2018.csv", 
+          row.names=F)
+
+
+
+# Load in water quality at each site #####
+CARI_WQ_2018 <- loadByProduct(dpID = "DP1.20288.001",
+                              startdate = "2018-01",
+                              enddate = "2018-12",
+                              site = c("CARI"),
+                              package = "basic")
+# no3
+CARI_NO3_2018 <- loadByProduct(dpID = "DP1.20033.001",
+                               startdate = "2018-01",
+                               enddate = "2018-12",
+                               site = c("CARI"),
+                               package = "basic")
+
+# CARI #
+CARI.SpCond.2018 <- subset(CARI_WQ_2018$waq_instantaneous, select = c("startDateTime", "specificConductance" ))
+CARI.Turb.2018 <- subset(CARI_WQ_2018$waq_instantaneous, select = c("startDateTime", "turbidity"))
+CARI.fDOM.2018 <- subset(CARI_WQ_2018$waq_instantaneous, select = c("startDateTime", "fDOM"))
+CARI.NO3.2018 <- subset(CARI_NO3_2018$NSW_15_minute, select = c("startDateTime", "surfWaterNitrateMean"))
+
+# renaming columns 
+names(CARI.SpCond.2018) <- c("DateTimeAK", "SPC")
+names(CARI.Turb.2018) <- c("DateTimeAK", "Turb")
+names(CARI.fDOM.2018) <- c("DateTimeAK", "fDOM")
+names(CARI.NO3.2018) <- c("DateTimeAK", "NO3")
+
+
+# taking the 15 minute average to get a value at 15 minute mark
+# NO3
+CARI.NO3.2018$by15 = cut(CARI.NO3.2018$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+NO3.summary = aggregate(NO3 ~ by15, FUN = mean, data = CARI.NO3.2018)
+NO3.summary$site.ID <- "CARI"
+NO3.summary$DateTimeAK <- ymd_hms(NO3.summary$by15)
+NO3.summary <- NO3.summary[, -1]
+
+NO3.summary <- NO3.summary[, c(2,3,1)]
+
+# fDOM
+CARI.fDOM.2018$by15 = cut(CARI.fDOM.2018$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+fDOM.summary = aggregate(fDOM ~ by15, FUN = mean, data = CARI.fDOM.2018)
+fDOM.summary$site.ID <- "CARI"
+fDOM.summary$DateTimeAK <- ymd_hms(fDOM.summary$by15)
+fDOM.summary <- fDOM.summary[, -1]
+
+fDOM.summary <- fDOM.summary[, c(2,3,1)]
+
+# SPC 
+CARI.SpCond.2018$by15 = cut(CARI.SpCond.2018$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+SPC.summary = aggregate(SPC ~ by15, FUN = mean, data = CARI.SpCond.2018)
+SPC.summary$site.ID <- "CARI"
+SPC.summary$DateTimeAK <- ymd_hms(SPC.summary$by15)
+SPC.summary <- SPC.summary[, -1]
+
+SPC.summary <- SPC.summary[, c(2,3,1)]
+
+# Turb
+CARI.Turb.2018$by15 = cut(CARI.Turb.2018$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+turb.summary = aggregate(Turb ~ by15, FUN = mean, data = CARI.Turb.2018)
+turb.summary$site.ID <- "CARI"
+turb.summary$DateTimeAK <- ymd_hms(turb.summary$by15)
+turb.summary <- turb.summary[, -1]
+
+turb.summary <- turb.summary[, c(2,3,1)]
+
+
+# Merge together 
+df_list <- list(NO3.summary, fDOM.summary, SPC.summary, turb.summary)
+
+#merge all data frames in list
+CARI.WQ.2018 <- Reduce(function(x, y) merge(x, y, all=TRUE), df_list)
+
+
+chem.2018.long <- CARI.WQ.2018 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2018.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+
+# Cleaning CARI data ####
+#fDOM
+plot(as.POSIXct(CARI.WQ.2018$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2018$fDOM, pch=20, col="black", 
+     xlab = "", 
+     ylab = "fDOM",
+     ylim = c(20, 35),
+     xlim = as.POSIXct(c("2018-10-05 00:00:00", "2018-10-10 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(fDOM < 0, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-06" & DateTimeAK <= "2018-06-07" & fDOM < 47, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-12" & DateTimeAK <= "2018-06-13" & fDOM < 48, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-15" & DateTimeAK <= "2018-06-17" & fDOM < 36, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-17" & DateTimeAK <= "2018-06-18" & fDOM < 35, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-18" & DateTimeAK <= "2018-06-19" & fDOM < 34, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-20" & DateTimeAK <= "2018-06-21" & fDOM < 31, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-26" & DateTimeAK <= "2018-06-27" & fDOM < 25, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-27 09:00:00" & DateTimeAK <= "2018-06-28" & fDOM < 47, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-28" & DateTimeAK <= "2018-06-29" & fDOM < 52, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-06-29" & DateTimeAK <= "2018-07-02" & fDOM > 0, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-03 05:00" & DateTimeAK <= "2018-07-03 12:00:00" & fDOM < 210, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-04" & DateTimeAK <= "2018-07-05" & fDOM < 160, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-08" & DateTimeAK <= "2018-07-09" & fDOM < 85, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-10" & DateTimeAK <= "2018-07-12" & fDOM < 75, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-11" & DateTimeAK <= "2018-07-12" & fDOM < 82, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-20" & DateTimeAK <= "2018-07-25" & fDOM > 0, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-27" & DateTimeAK <= "2018-07-28" & fDOM < 90, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-07-28" & DateTimeAK <= "2018-07-29" & fDOM < 94, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-08-04 09:00:00" & DateTimeAK <= "2018-08-06" & fDOM < 40, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-08-05 03:00:00" & DateTimeAK <= "2018-08-06" & fDOM < 45, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-08-05 12:00:00" & DateTimeAK <= "2018-08-06" & fDOM < 77, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-08-15 00:00:00" & DateTimeAK <= "2018-08-15 12:00" & fDOM < 115, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-08-20 00:00:00" & DateTimeAK <= "2018-08-25 00:00" & fDOM < 65, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-09-06 00:00:00" & DateTimeAK <= "2018-09-08 00:00" & fDOM < 65, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-09-08 00:00:00" & DateTimeAK <= "2018-09-09 00:00" & fDOM < 61, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-09-13 00:00:00" & DateTimeAK <= "2018-09-15 00:00" & fDOM < 41, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2018-10-05 00:00:00" & DateTimeAK <= "2018-10-10 00:00" & fDOM < 33, NA, .)))
+
+
+plot(as.POSIXct(CARI.WQ.2018$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2018$fDOM, pch=20, col="black", 
+     xlab = "", 
+     ylab = "fDOM",
+     #ylim = c(20, 35),
+     xlim = as.POSIXct(c("2018-05-31 00:00:00", "2018-10-15 00:00:00")))
+
+# NO3
+plot(as.POSIXct(CARI.WQ.2018$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2018$NO3, pch=20, col="black", 
+     xlab = "", 
+     ylab = "NO3",
+     #ylim = c(20, 35),
+     xlim = as.POSIXct(c("2018-05-31 00:00:00", "2018-10-15 00:00:00")))
+
+# looks good 
+
+# SPC
+plot(as.POSIXct(CARI.WQ.2018$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2018$SPC, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(20, 35),
+     xlim = as.POSIXct(c("2018-10-07 00:00:00", "2018-10-16 00:00:00")))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2018-07-01 00:00:00" & DateTimeAK <= "2018-07-22 00:00" & SPC > 60, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2018-08-01 00:00:00" & DateTimeAK <= "2018-08-22 00:00" & SPC < 40, NA, .)))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2018-10-06 00:00:00" & DateTimeAK <= "2018-10-16 00:00" & SPC < 70, NA, .)))
+
+# turb
+plot(as.POSIXct(CARI.WQ.2018$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2018$Turb, pch=20, col="black", 
+     xlab = "", 
+     ylab = "Turb",
+     #ylim = c(20, 35),
+     xlim = as.POSIXct(c("2018-06-01 00:00:00", "2018-10-15 00:00:00")))
+
+CARI.WQ.2018 <- CARI.WQ.2018 %>%
+  mutate(across(c(Turb), 
+                ~ifelse(Turb > 150, NA, .)))
+
+
+cari.2018.long.clean <- CARI.WQ.2018 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(cari.2018.long.clean, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+write_csv(CARI.WQ.2018, 
+          "~/Documents/NEON/CARI/WaterQuality2018.csv")
+
+
+CARI.Q.WQ.2018 <- full_join(CARI_Q_2018, CARI.WQ.2018, by = "DateTimeAK")
+attr(CARI.Q.WQ.2018$DateTimeAK, "tzone") <-  "America/Anchorage"
+
+
+write_csv(CARI.Q.WQ.2018, 
+          "~/Documents/NEON/CARI/NEON_Q_WaterQuality2018.csv")
+
+
+
+
+#
+
+#### 2019 ####
+# Load in Continuous Discharge for each site ####
+CARI_Q_2019 <- loadByProduct(dpID = "DP4.00130.001",
+                             startdate = "2019-01",
+                             enddate = "2019-12",
+                             site = c("CARI"),
+                             package = "basic")
+
+#CARI
+CARI_Q_2019$csd_continuousDischarge <- CARI_Q_2019$csd_continuousDischarge[,-c(2,3,5,6,7,8,9,10,11,13,14,15,16,17,18,19)] # clean rows just to have datetime and site and discharge
+CARI_Q_2019 <- CARI_Q_2019$csd_continuousDischarge
+names(CARI_Q_2019) <- c("Site", "DateTimeAK", "Discharge")
+
+
+CARI_Q_2019 <- na.omit(CARI_Q_2019) # removing NAs (uninstalled dates)
+
+CARI_Q_2019$by15 = cut(CARI_Q_2019$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+CARI_Q_2019 = aggregate(Discharge ~ by15, FUN = mean, data = CARI_Q_2019)
+CARI_Q_2019$site.ID <- "CARI"
+CARI_Q_2019$DateTimeAK <- ymd_hms(CARI_Q_2019$by15)
+CARI_Q_2019 <- CARI_Q_2019[, -1]
+
+CARI_Q_2019 <- CARI_Q_2019[, c(2,3,1)]
+
+CARI_Q_2019 <- subset(CARI_Q_2019, DateTimeAK < "2019-10-07")
+
+
+
+# plot 
+# 
+ggplot(aes(x = DateTimeAK, y = Discharge), data = CARI_Q_2019) +
+  geom_line(color="#A6CEE3", size=1.25) +
+  theme_classic() +
+  ggtitle("CARI measured Q") +
+  xlab("Date") +
+  ylab("Discharge (L/s)") +
+  xlab("")
+
+write.csv(CARI_Q_2019, 
+          "~/Documents/NEON/CARI/FinalDischarge_2019.csv", 
+          row.names=F)
+
+
+
+# Load in water quality at each site #####
+CARI_WQ_2019 <- loadByProduct(dpID = "DP1.20288.001",
+                              startdate = "2019-01",
+                              enddate = "2019-12",
+                              site = c("CARI"),
+                              package = "basic")
+# no3
+CARI_NO3_2019 <- loadByProduct(dpID = "DP1.20033.001",
+                               startdate = "2019-01",
+                               enddate = "2019-12",
+                               site = c("CARI"),
+                               package = "basic")
+
+# CARI #
+CARI.SpCond.2019 <- subset(CARI_WQ_2019$waq_instantaneous, select = c("startDateTime", "specificConductance" ))
+CARI.Turb.2019 <- subset(CARI_WQ_2019$waq_instantaneous, select = c("startDateTime", "turbidity"))
+CARI.fDOM.2019 <- subset(CARI_WQ_2019$waq_instantaneous, select = c("startDateTime", "fDOM"))
+CARI.NO3.2019 <- subset(CARI_NO3_2019$NSW_15_minute, select = c("startDateTime", "surfWaterNitrateMean"))
+
+# renaming columns 
+names(CARI.SpCond.2019) <- c("DateTimeAK", "SPC")
+names(CARI.Turb.2019) <- c("DateTimeAK", "Turb")
+names(CARI.fDOM.2019) <- c("DateTimeAK", "fDOM")
+names(CARI.NO3.2019) <- c("DateTimeAK", "NO3")
+
+# taking the 15 minute average to get a value at 15 minute mark
+# NO3
+CARI.NO3.2019$by15 = cut(CARI.NO3.2019$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+NO3.summary = aggregate(NO3 ~ by15, FUN = mean, data = CARI.NO3.2019)
+NO3.summary$site.ID <- "CARI"
+NO3.summary$DateTimeAK <- ymd_hms(NO3.summary$by15)
+NO3.summary <- NO3.summary[, -1]
+
+NO3.summary <- NO3.summary[, c(2,3,1)]
+
+# fDOM
+CARI.fDOM.2019$by15 = cut(CARI.fDOM.2019$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+fDOM.summary = aggregate(fDOM ~ by15, FUN = mean, data = CARI.fDOM.2019)
+fDOM.summary$site.ID <- "CARI"
+fDOM.summary$DateTimeAK <- ymd_hms(fDOM.summary$by15)
+fDOM.summary <- fDOM.summary[, -1]
+
+fDOM.summary <- fDOM.summary[, c(2,3,1)]
+
+# SPC 
+CARI.SpCond.2019$by15 = cut(CARI.SpCond.2019$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+SPC.summary = aggregate(SPC ~ by15, FUN = mean, data = CARI.SpCond.2019)
+SPC.summary$site.ID <- "CARI"
+SPC.summary$DateTimeAK <- ymd_hms(SPC.summary$by15)
+SPC.summary <- SPC.summary[, -1]
+
+SPC.summary <- SPC.summary[, c(2,3,1)]
+
+# Turb
+CARI.Turb.2019$by15 = cut(CARI.Turb.2019$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+turb.summary = aggregate(Turb ~ by15, FUN = mean, data = CARI.Turb.2019)
+turb.summary$site.ID <- "CARI"
+turb.summary$DateTimeAK <- ymd_hms(turb.summary$by15)
+turb.summary <- turb.summary[, -1]
+
+turb.summary <- turb.summary[, c(2,3,1)]
+
+
+# Merge together 
+df_list <- list(NO3.summary, fDOM.summary, SPC.summary, turb.summary)
+
+#merge all data frames in list
+CARI.WQ.2019 <- Reduce(function(x, y) merge(x, y, all=TRUE), df_list)
+
+
+chem.2019.long <- CARI.WQ.2019 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2019.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD", "#FF7F00","#A6761D")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+# Cleaning CARI data ####
+#fDOM
+plot(as.POSIXct(CARI.WQ.2019$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2019$fDOM, pch=20, col="black", 
+     xlab = "", 
+     ylab = "fDOM",
+     #ylim = c(0, 50),
+     xlim = as.POSIXct(c("2019-05-15 00:00:00", "2019-10-30 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(fDOM < 0, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2019-05-15" & DateTimeAK <= "2019-05-20" & fDOM < 60, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2019-05-29" & DateTimeAK <= "2019-05-31" & fDOM < 60, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2019-07-15" & DateTimeAK <= "2019-08-30" & fDOM < 20, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2019-08-12" & DateTimeAK <= "2019-08-15" & fDOM > 130, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2019-09-01" & DateTimeAK <= "2019-09-30" & fDOM > 70, NA, .)))
+
+
+
+# NO3
+plot(as.POSIXct(CARI.WQ.2019$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2019$NO3, pch=20, col="black", 
+     xlab = "", 
+     ylab = "NO3",
+     #ylim = c(0, 50),
+     xlim = as.POSIXct(c("2019-05-01 00:00:00", "2019-10-30 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(NO3), 
+                ~ifelse(NO3 > 50, NA, .)))
+
+
+# SPC
+plot(as.POSIXct(CARI.WQ.2019$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2019$SPC, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(35, 65),
+     xlim = as.POSIXct(c("2019-08-20 00:00:00", "2019-10-26 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2019-05-29" & DateTimeAK <= "2019-06-01" & SPC < 71, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2019-07-25" & DateTimeAK <= "2019-07-26" & SPC < 100, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2019-08-20" & DateTimeAK <= "2019-08-26" & SPC < 50, NA, .)))
+
+# Turb
+plot(as.POSIXct(CARI.WQ.2019$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2019$Turb, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     ylim = c(0, 65),
+     xlim = as.POSIXct(c("2019-08-20 00:00:00", "2019-09-01 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(Turb), 
+                ~ifelse(Turb > 150, NA, .)))
+
+CARI.WQ.2019 <- CARI.WQ.2019 %>%
+  mutate(across(c(Turb), 
+                ~ifelse(DateTimeAK > "2019-08-20" & DateTimeAK <= "2019-09-01" & Turb > 10, NA, .)))
+
+
+
+
+#
+
+chem.2019.long.clean <- CARI.WQ.2019 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2019.long.clean, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+write_csv(CARI.WQ.2019, 
+          "~/Documents/NEON/CARI/WaterQuality2010.csv")
+
+
+CARI.Q.WQ.2019 <- full_join(CARI_Q_2019, CARI.WQ.2019, by = "DateTimeAK")
+attr(CARI.Q.WQ.2019$DateTimeAK, "tzone") <-  "America/Anchorage"
+
+write_csv(CARI.Q.WQ.2019, 
+          "~/Documents/NEON/CARI/NEON_Q_WaterQuality2019.csv")
+
+#### 2020 ####
+# Load in Continuous Discharge for each site ####
+
+CARI_Q_2020 <- loadByProduct(dpID = "DP4.00130.001",
+                             startdate = "2020-01",
+                             enddate = "2020-12",
+                             site = c("CARI"),
+                             package = "basic")
+
+#CARI
+CARI_Q_2020$csd_continuousDischarge <- CARI_Q_2020$csd_continuousDischarge[,-c(2,3,5,6,7,8,9,10,11,13,14,15,16,17,18,19)] # clean rows just to have datetime and site and discharge
+CARI_Q_2020 <- CARI_Q_2020$csd_continuousDischarge
+names(CARI_Q_2020) <- c("Site", "DateTimeAK", "Discharge")
+#attr(CARI_Q_2019$DateTimeAK, "tzone") <- "America/Anchorage"
+
+
+CARI_Q_2020 <- na.omit(CARI_Q_2020) # removing NAs (uninstalled dates)
+
+CARI_Q_2020$by15 = cut(CARI_Q_2020$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+CARI_Q_2020 = aggregate(Discharge ~ by15, FUN = mean, data = CARI_Q_2020)
+CARI_Q_2020$site.ID <- "CARI"
+CARI_Q_2020$DateTimeAK <- ymd_hms(CARI_Q_2020$by15)
+CARI_Q_2020 <- CARI_Q_2020[, -1]
+
+CARI_Q_2020 <- CARI_Q_2020[, c(2,3,1)]
+
+CARI_Q_2020 <- subset(CARI_Q_2020, DateTimeAK > "2020-05-01" & DateTimeAK < "2020-10-31")
+
+
+
+# plot 
+# 
+ggplot(aes(x = DateTimeAK, y = Discharge), data = CARI_Q_2020) +
+  geom_line(color="#A6CEE3", size=1.25) +
+  theme_classic() +
+  ggtitle("CARI measured Q") +
+  xlab("Date") +
+  ylab("Discharge (L/s)") +
+  xlab("")
+
+write.csv(CARI_Q_2020, 
+          "~/Documents/NEON/CARI/FinalDischarge_2020.csv", 
+          row.names=F)
+
+
+
+# Load in water quality at each site #####
+CARI_WQ_2020 <- loadByProduct(dpID = "DP1.20288.001",
+                              startdate = "2020-01",
+                              enddate = "2020-12",
+                              site = c("CARI"),
+                              package = "basic")
+# no3
+CARI_NO3_2020 <- loadByProduct(dpID = "DP1.20033.001",
+                               startdate = "2020-01",
+                               enddate = "2020-12",
+                               site = c("CARI"),
+                               package = "basic")
+
+# CARI #
+CARI.SpCond.2020 <- subset(CARI_WQ_2020$waq_instantaneous, select = c("startDateTime", "specificConductance" ))
+CARI.Turb.2020 <- subset(CARI_WQ_2020$waq_instantaneous, select = c("startDateTime", "turbidity"))
+CARI.fDOM.2020 <- subset(CARI_WQ_2020$waq_instantaneous, select = c("startDateTime", "fDOM"))
+CARI.NO3.2020 <- subset(CARI_NO3_2020$NSW_15_minute, select = c("startDateTime", "surfWaterNitrateMean"))
+
+# renaming columns 
+names(CARI.SpCond.2020) <- c("DateTimeAK", "SPC")
+names(CARI.Turb.2020) <- c("DateTimeAK", "Turb")
+names(CARI.fDOM.2020) <- c("DateTimeAK", "fDOM")
+names(CARI.NO3.2020) <- c("DateTimeAK", "NO3")
+
+# making it anchorage timezone
+# attr(CARI.SpCond.2020$DateTimeAK, "tzone") <- "America/Anchorage"
+# attr(CARI.Turb.2020$DateTimeAK, "tzone") <- "America/Anchorage"
+# attr(CARI.fDOM.2020$DateTimeAK, "tzone") <- "America/Anchorage"
+# attr(CARI.NO3.2020$DateTimeAK, "tzone") <- "America/Anchorage"
+
+# taking the 15 minute average to get a value at 15 minute mark
+# NO3
+CARI.NO3.2020$by15 = cut(CARI.NO3.2020$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+NO3.summary = aggregate(NO3 ~ by15, FUN = mean, data = CARI.NO3.2020)
+NO3.summary$site.ID <- "CARI"
+NO3.summary$DateTimeAK <- ymd_hms(NO3.summary$by15)
+NO3.summary <- NO3.summary[, -1]
+
+NO3.summary <- NO3.summary[, c(2,3,1)]
+
+# fDOM
+CARI.fDOM.2020$by15 = cut(CARI.fDOM.2020$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+fDOM.summary = aggregate(fDOM ~ by15, FUN = mean, data = CARI.fDOM.2020)
+fDOM.summary$site.ID <- "CARI"
+fDOM.summary$DateTimeAK <- ymd_hms(fDOM.summary$by15)
+fDOM.summary <- fDOM.summary[, -1]
+
+fDOM.summary <- fDOM.summary[, c(2,3,1)]
+
+# SPC 
+CARI.SpCond.2020$by15 = cut(CARI.SpCond.2020$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+SPC.summary = aggregate(SPC ~ by15, FUN = mean, data = CARI.SpCond.2020)
+SPC.summary$site.ID <- "CARI"
+SPC.summary$DateTimeAK <- ymd_hms(SPC.summary$by15)
+SPC.summary <- SPC.summary[, -1]
+
+SPC.summary <- SPC.summary[, c(2,3,1)]
+
+# Turb
+CARI.Turb.2020$by15 = cut(CARI.Turb.2020$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+turb.summary = aggregate(Turb ~ by15, FUN = mean, data = CARI.Turb.2020)
+turb.summary$site.ID <- "CARI"
+turb.summary$DateTimeAK <- ymd_hms(turb.summary$by15)
+turb.summary <- turb.summary[, -1]
+
+turb.summary <- turb.summary[, c(2,3,1)]
+
+
+# Merge together 
+df_list <- list(NO3.summary, fDOM.summary, SPC.summary, turb.summary)
+
+#merge all data frames in list
+CARI.WQ.2020 <- Reduce(function(x, y) merge(x, y, all=TRUE), df_list)
+
+
+chem.2020.long <- CARI.WQ.2020 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+
+
+ggplot(chem.2020.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+# Cleaning CARI data ####
+#fDOM
+plot(as.POSIXct(CARI.WQ.2020$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2020$fDOM, pch=20, col="black", 
+     xlab = "", 
+     ylab = "fDOM",
+     ylim = c(0, 250),
+     xlim = as.POSIXct(c("2020-05-02 00:00:00", "2020-09-30 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(fDOM < 0, NA, .)))
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2020-06-27" & DateTimeAK <= "2020-07-01" & fDOM < 60, NA, .)))
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2020-07-27" & DateTimeAK <= "2020-07-30" & fDOM < 70, NA, .)))
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2020-07-31" & DateTimeAK <= "2020-08-06" & fDOM < 20, NA, .)))
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2020-08-02 12:00" & DateTimeAK <= "2020-08-06" & fDOM < 100, NA, .)))
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2020-09-01 00:00" & DateTimeAK <= "2020-09-30" & fDOM > 150, NA, .)))
+
+
+# NO3
+plot(as.POSIXct(CARI.WQ.2020$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2020$NO3, pch=20, col="black", 
+     xlab = "", 
+     ylab = "NO3",
+     #ylim = c(0, 50),
+     xlim = as.POSIXct(c("2020-05-01 00:00:00", "2020-10-30 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(NO3), 
+                ~ifelse(NO3 > 32, NA, .)))
+
+# SPC
+plot(as.POSIXct(CARI.WQ.2020$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2020$SPC, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(35, 65),
+     xlim = as.POSIXct(c("2020-07-01 00:00:00", "2020-09-01 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(DateTimeAK > "2020-06-25" & DateTimeAK <= "2020-07-01" & SPC < 48, NA, .)))
+
+# Turb
+plot(as.POSIXct(CARI.WQ.2020$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2020$Turb, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(0, 65),
+     xlim = as.POSIXct(c("2020-05-20 00:00:00", "2020-10-01 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2020 <- CARI.WQ.2020 %>%
+  mutate(across(c(Turb), 
+                ~ifelse(Turb > 600, NA, .)))
+
+
+#
+
+chem.2020.long.clean <- CARI.WQ.2020 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2020.long.clean, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+write_csv(CARI.WQ.2020, 
+          "~/Documents/NEON/CARI/WaterQuality2020.csv")
+
+
+CARI.Q.WQ.2020 <- full_join(CARI_Q_2020, CARI.WQ.2020, by = "DateTimeAK")
+attr(CARI.Q.WQ.2020$DateTimeAK, "tzone") <-  "America/Anchorage"
+
+write_csv(CARI.Q.WQ.2020, 
+          "~/Documents/NEON/CARI/NEON_Q_WaterQuality2020.csv")
+
+
+
+
+ggplot(CARI.Q.WQ.2020) +
+  geom_line(aes(DateTimeAK, fDOM*25, color = "red")) +
+  geom_line(aes(DateTimeAK, Discharge)) +
+  ylim(0,7500) +
+  xlim(as.POSIXct(c("2020-08-01 0:00:00","2020-08-15 23:45:00")))
+
+
+### 2021 ####
+# Load in Continuous Discharge for each site ####
+
+CARI_Q_2021 <- loadByProduct(dpID = "DP4.00130.001",
+                             startdate = "2021-01",
+                             enddate = "2021-12",
+                             site = c("CARI"),
+                             package = "basic")
+
+#CARI
+CARI_Q_2021$csd_continuousDischarge <- CARI_Q_2021$csd_continuousDischarge[,-c(2,3,5,6,7,8,9,10,11,13,14,15,16,17,18,19)] # clean rows just to have datetime and site and discharge
+CARI_Q_2021 <- CARI_Q_2021$csd_continuousDischarge
+names(CARI_Q_2021) <- c("Site", "DateTimeAK", "Discharge")
+attr(CARI_Q_2019$DateTimeAK, "tzone") <- "America/Anchorage"
+
+
+CARI_Q_2021 <- na.omit(CARI_Q_2021) # removing NAs (uninstalled dates)
+
+CARI_Q_2021$by15 = cut(CARI_Q_2021$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+CARI_Q_2021 = aggregate(Discharge ~ by15, FUN = mean, data = CARI_Q_2021)
+CARI_Q_2021$site.ID <- "CARI"
+CARI_Q_2021$DateTimeAK <- ymd_hms(CARI_Q_2021$by15)
+CARI_Q_2021 <- CARI_Q_2021[, -1]
+
+CARI_Q_2021 <- CARI_Q_2021[, c(2,3,1)]
+
+CARI_Q_2021 <- subset(CARI_Q_2021, DateTimeAK > "2021-05-01" & DateTimeAK < "2021-10-15")
+
+
+
+# plot 
+# 
+ggplot(aes(x = DateTimeAK, y = Discharge), data = CARI_Q_2021) +
+  geom_line(color="#A6CEE3", size=1.25) +
+  theme_classic() +
+  ggtitle("CARI measured Q") +
+  xlab("Date") +
+  ylab("Discharge (L/s)") +
+  xlab("")
+
+write.csv(CARI_Q_2021, 
+          "~/Documents/NEON/CARI/FinalDischarge_2021.csv", 
+          row.names=F)
+
+
+
+# Load in water quality at each site #####
+CARI_WQ_2021 <- loadByProduct(dpID = "DP1.20288.001",
+                              startdate = "2021-01",
+                              enddate = "2021-12",
+                              site = c("CARI"),
+                              package = "basic")
+# no3
+CARI_NO3_2021 <- loadByProduct(dpID = "DP1.20033.001",
+                               startdate = "2021-01",
+                               enddate = "2021-12",
+                               site = c("CARI"),
+                               package = "basic")
+
+# CARI #
+CARI.SpCond.2021 <- subset(CARI_WQ_2021$waq_instantaneous, select = c("startDateTime", "specificConductance" ))
+CARI.Turb.2021 <- subset(CARI_WQ_2021$waq_instantaneous, select = c("startDateTime", "turbidity"))
+CARI.fDOM.2021 <- subset(CARI_WQ_2021$waq_instantaneous, select = c("startDateTime", "fDOM"))
+CARI.NO3.2021 <- subset(CARI_NO3_2021$NSW_15_minute, select = c("startDateTime", "surfWaterNitrateMean"))
+
+# renaming columns 
+names(CARI.SpCond.2021) <- c("DateTimeAK", "SPC")
+names(CARI.Turb.2021) <- c("DateTimeAK", "Turb")
+names(CARI.fDOM.2021) <- c("DateTimeAK", "fDOM")
+names(CARI.NO3.2021) <- c("DateTimeAK", "NO3")
+
+# making it anchorage timezone
+attr(CARI.SpCond.2021$DateTimeAK, "tzone") <- "America/Anchorage"
+attr(CARI.Turb.2021$DateTimeAK, "tzone") <- "America/Anchorage"
+attr(CARI.fDOM.2021$DateTimeAK, "tzone") <- "America/Anchorage"
+attr(CARI.NO3.2021$DateTimeAK, "tzone") <- "America/Anchorage"
+
+# taking the 15 minute average to get a value at 15 minute mark
+# NO3
+CARI.NO3.2021$by15 = cut(CARI.NO3.2021$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+NO3.summary = aggregate(NO3 ~ by15, FUN = mean, data = CARI.NO3.2021)
+NO3.summary$site.ID <- "CARI"
+NO3.summary$DateTimeAK <- ymd_hms(NO3.summary$by15)
+NO3.summary <- NO3.summary[, -1]
+
+NO3.summary <- NO3.summary[, c(2,3,1)]
+
+# fDOM
+CARI.fDOM.2021$by15 = cut(CARI.fDOM.2021$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+fDOM.summary = aggregate(fDOM ~ by15, FUN = mean, data = CARI.fDOM.2021)
+fDOM.summary$site.ID <- "CARI"
+fDOM.summary$DateTimeAK <- ymd_hms(fDOM.summary$by15)
+fDOM.summary <- fDOM.summary[, -1]
+
+fDOM.summary <- fDOM.summary[, c(2,3,1)]
+
+# SPC 
+CARI.SpCond.2021$by15 = cut(CARI.SpCond.2021$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+SPC.summary = aggregate(SPC ~ by15, FUN = mean, data = CARI.SpCond.2021)
+SPC.summary$site.ID <- "CARI"
+SPC.summary$DateTimeAK <- ymd_hms(SPC.summary$by15)
+SPC.summary <- SPC.summary[, -1]
+
+SPC.summary <- SPC.summary[, c(2,3,1)]
+
+# Turb
+CARI.Turb.2021$by15 = cut(CARI.Turb.2021$DateTimeAK, breaks="15 min") # making a column for 15 minute intervals 
+
+turb.summary = aggregate(Turb ~ by15, FUN = mean, data = CARI.Turb.2021)
+turb.summary$site.ID <- "CARI"
+turb.summary$DateTimeAK <- ymd_hms(turb.summary$by15)
+turb.summary <- turb.summary[, -1]
+
+turb.summary <- turb.summary[, c(2,3,1)]
+
+
+# Merge together 
+df_list <- list(NO3.summary, fDOM.summary, SPC.summary, turb.summary)
+
+#merge all data frames in list
+CARI.WQ.2021 <- Reduce(function(x, y) merge(x, y, all=TRUE), df_list)
+
+
+chem.2021.long <- CARI.WQ.2021 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2021.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+# Cleaning CARI data ####
+#fDOM
+plot(as.POSIXct(CARI.WQ.2021$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2021$fDOM, pch=20, col="black", 
+     xlab = "", 
+     ylab = "fDOM",
+     ylim = c(0, 150),
+     xlim = as.POSIXct(c("2021-08-26 00:00:00", "2021-08-27 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+
+CARI.WQ.2021 <- CARI.WQ.2021 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(fDOM < 0, NA, .)))
+
+CARI.WQ.2021 <- CARI.WQ.2021 %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(DateTimeAK > "2021-08-27" & DateTimeAK <= "2021-08-29" & fDOM < 90, NA, .)))
+
+
+
+# NO3
+plot(as.POSIXct(CARI.WQ.2021$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2021$NO3, pch=20, col="black", 
+     xlab = "", 
+     ylab = "NO3",
+     #ylim = c(0, 50),
+     xlim = as.POSIXct(c("2021-05-01 00:00:00", "2021-10-30 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2021 <- CARI.WQ.2021 %>%
+  mutate(across(c(NO3), 
+                ~ifelse(NO3 < 18, NA, .)))
+
+# SPC
+plot(as.POSIXct(CARI.WQ.2021$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2021$SPC, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(35, 65),
+     xlim = as.POSIXct(c("2021-05-01 00:00:00", "2021-10-01 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2021 <- CARI.WQ.2021 %>%
+  mutate(across(c(SPC), 
+                ~ifelse(SPC < 20, NA, .)))
+
+
+# Turb
+plot(as.POSIXct(CARI.WQ.2021$DateTimeAK, tz= "America/Anchorage"), CARI.WQ.2021$Turb, pch=20, col="black", 
+     xlab = "", 
+     ylab = "SPC",
+     #ylim = c(0, 65),
+     xlim = as.POSIXct(c("2021-05-01 00:00:00", "2021-10-01 00:00:00")))
+#axis.POSIXct(1, at = ticks, format = "%Y-%m-%d %H", labels = labels)
+
+CARI.WQ.2021 <- CARI.WQ.2021 %>%
+  mutate(across(c(Turb), 
+                ~ifelse(Turb > 800, NA, .)))
+
+
+#
+
+chem.2021.long.clean <- CARI.WQ.2021 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem.2021.long.clean, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+
+write_csv(CARI.WQ.2021, 
+          "~/Documents/NEON/CARI/WaterQuality2021.csv")
+
+
+CARI.Q.WQ.2021 <- full_join(CARI_Q_2021, CARI.WQ.2021, by = "DateTimeAK")
+
+write_csv(CARI.Q.WQ.2021, 
+          "~/Documents/NEON/CARI/NEON_Q_WaterQuality2021.csv")
+
+
+### Checking to see if Datetimes are lined up ####
+# I reran all of my scripts for cleaned CARI data and found that my turbidity betas went
+  # to negative so I think that I have a mismatch in my Q and chem time making it delayed
+    # and causing the dilution behavior
+
+# When I load in the 2019 data from above my Q df starts at 5/7/19 00:00 UTC
+# When I load in the 2019 data from above my WQ df starts at 5/6/19 16:00 UTC
+
+# lets see what happens when I import it from local machine
+NEON_Q_WaterQuality2019 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2019.csv")
+
+head(NEON_Q_WaterQuality2019$DateTimeAK)
+
+# this maintains 5/7/19 00:00 UTC timestamp which is good that it is consitent.
+
+
+# let me check which years are showing us the negative BETA VALUES
+beta_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2018.csv")
+
+beta_2018 <- beta_2018 %>% 
+  filter(Parameter != "(Intercept)")
+
+beta_2018_turb <-  filter(beta_2018, response_var == "turb" & site.ID == "CARI")
+
+
+beta_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
+
+beta_2019 <- beta_2019 %>% 
+  filter(Parameter != "(Intercept)")
+
+beta_2019_turb <-  filter(beta_2019, response_var == "turb" & site.ID == "CARI")
+
+write.csv(beta_2019_turb, "~/Desktop/CARI_2019_Turb_UTC.csv")
+
+beta_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
+
+beta_2020 <- beta_2020 %>% 
+  filter(Parameter != "(Intercept)")
+
+beta_2020_turb <-  filter(beta_2020, response_var == "turb" & site.ID == "CARI")
+
+write.csv(beta_2020_turb, "~/Desktop/CARI_2020_Turb_UTC.csv")
+
+
+# 10 out of 12 storms are negative here 
+
+# let me check the physical plot of Q on top of chem and see if it is off
+CARI_2019 <- NEON_Q_WaterQuality2019
+CARI_2019_alaskaTime <- NEON_Q_WaterQuality2019
+attr(CARI_2019_alaskaTime$DateTimeAK, "tzone") <- "America/Anchorage"
+# attr(CARI_Q_2019$DateTimeAK, "tzone") <- "America/Anchorage"
+
+plot(CARI_2019$Discharge ~ CARI_2019$DateTimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"))
+
+
+CARI_storm3_07_12 = CARI_2019[CARI_2019$DateTimeAK > as.POSIXct("2019-07-12 11:15:00", tz="America/Anchorage") &
+                                CARI_2019$DateTimeAK < as.POSIXct("2019-07-13 08:15:00", tz="America/Anchorage"),]
+plot(CARI_storm3_07_12$Discharge ~ as.POSIXct(CARI_storm3_07_12$DateTimeAK, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)", col="blue", main="CARI 190712 storm 3",
+     xlim = as.POSIXct(c("2019-07-10 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"))
+
+lines(CARI_2019$NO3 * 9 ~ CARI_2019$DateTimeAK, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$fDOM * 6 ~ CARI_2019$DateTimeAK, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$SpCond * 5 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="red",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019$Turb * 1000 ~ CARI_2019$DateTimeAK, type="l", xlab="", ylab="", col="blue",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+
+plot(CARI_2019_alaskaTime$Discharge ~ CARI_2019_alaskaTime$DateTimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"))
+
+
+CARI_storm3_07_12 = CARI_2019_alaskaTime[CARI_2019_alaskaTime$DateTimeAK > as.POSIXct("2019-07-12 11:15:00", tz="America/Anchorage") &
+                                           CARI_2019_alaskaTime$DateTimeAK < as.POSIXct("2019-07-13 08:15:00", tz="America/Anchorage"),]
+plot(CARI_storm3_07_12$Discharge ~ as.POSIXct(CARI_storm3_07_12$DateTimeAK, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)", col="blue", main="CARI 190712 storm 3",
+     xlim = as.POSIXct(c("2019-07-10 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"))
+lines(CARI_2019_alaskaTime$NO3 * 9 ~ CARI_2019_alaskaTime$DateTimeAK, type="l", xlab="", ylab="", col="purple",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+lines(CARI_2019_alaskaTime$fDOM * 6 ~ CARI_2019_alaskaTime$DateTimeAK, type="l", xlab="", ylab="", col="brown",
+      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+
+
+
+
+
+#

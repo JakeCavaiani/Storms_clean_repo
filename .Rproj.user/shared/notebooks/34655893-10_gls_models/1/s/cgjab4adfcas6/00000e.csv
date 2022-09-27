@@ -1,0 +1,1 @@
+"0","plot(fDOM.mod.ar1, resid(., type = ""p"") ~ fitted(.), abline = 0)"

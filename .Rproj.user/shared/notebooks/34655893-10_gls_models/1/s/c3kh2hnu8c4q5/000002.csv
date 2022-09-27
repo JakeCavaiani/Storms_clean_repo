@@ -1,0 +1,6 @@
+"0","Ear1<-residuals(no3.mod.arma.1.2.no.2018, type=""normalized"")"
+"0","I1<-!is.na(mean_daily_no_2018$dailyNO3)"
+"0","Efulla<-vector(length = length(mean_daily_no_2018$dailyNO3))"
+"0","Efulla<-NA"
+"0","Efulla[I1]<-Ear1"
+"0","acf(Efulla, na.action=na.pass)"

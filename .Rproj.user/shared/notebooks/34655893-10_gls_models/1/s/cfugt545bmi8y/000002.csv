@@ -1,0 +1,8 @@
+"0","fDOM.mod.ar1 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2019, 
+               correlation = corAR1(form = ~ julian|site.ID))
+"
+"2","Error in ggplot(mean_daily_2019, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +  : 
+  could not find function ""+<-""
+"

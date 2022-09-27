@@ -1,7 +1,0 @@
-"0","no3.mod.arma.1.1.no.2018 <- gls(logdailyNO3 ~ site.ID*year, 
-               na.action = na.omit, 
-               data = mean_daily_no_2018, 
-               correlation = corARMA(form = ~ julian|site.ID/year, p = 1, q = 1))
-"
-"2","Error in eval(predvars, data, env) : object 'logdailyNO3' not found
-"

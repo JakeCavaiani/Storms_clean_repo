@@ -1,0 +1,6 @@
+"0","mean_daily_2020$logDailyfDOM <- log(mean_daily_2020$dailyfDOM)"
+"0",""
+"0","fDOM.mod.ar1.log <- gls(logDailyfDOM ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2020, "
+"0","               correlation = corAR1(form = ~ julian|site.ID))"

@@ -1,0 +1,19 @@
+"1","
+"
+"1","Correlation Structure: ARMA(1,1)
+"
+"1"," Formula: ~julian | site.ID 
+"
+"1"," Parameter estimate(s):
+"
+"1","     Phi1 "
+"1","   Theta1 "
+"1","
+"
+"1","0.8459489 "
+"1","0.3684211 "
+"1","
+"
+"1","
+Coefficients:
+"

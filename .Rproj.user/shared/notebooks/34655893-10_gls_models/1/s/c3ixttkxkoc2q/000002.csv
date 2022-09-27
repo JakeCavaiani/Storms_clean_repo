@@ -1,8 +1,4 @@
-"0","mean_daily_2018$logDailyTurb <- log(mean_daily_2018$dailyTurb)
-"
-"2","NaNs produced"
-"0",""
-"0","turb.mod.ar1.log <- gls(logDailyTurb ~ site.ID, "
+"0","SPC.mod.ar1 <- gls(dailySPC ~ site.ID, "
 "0","               na.action = na.omit, "
 "0","               data = mean_daily_2018, "
 "0","               correlation = corAR1(form = ~ julian|site.ID))"
