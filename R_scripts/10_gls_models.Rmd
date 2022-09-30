@@ -2809,6 +2809,30 @@ VAUL and POKE
 ### CV of daily concentrations ### 
 
 ```{r}
+mean_daily <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
+
+mean_daily$datetimeAK <- ymd(mean_daily$day)
+mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
+
+mean_daily$year <- as.character(mean_daily$year)
+
+# mean concentration across years for each site 
+mean_daily_site <- mean_daily %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanNO3 = mean(dailyNO3, na.rm = TRUE),
+                   meanfDOM = mean(dailyfDOM, na.rm = TRUE),
+                   meanSPC = mean(dailySPC, na.rm = TRUE),
+                   meanTurb = mean(dailyTurb, na.rm = TRUE))
+
+
+
+mean_daily_long <- mean_daily %>%
+  pivot_longer(
+    cols = starts_with("daily"),
+    names_to = "response_var",
+    names_prefix = "wk",
+    values_to = "concentration") # converting to a long format so each response_var is within a single column
+
 CV_mean_conc <- mean_daily_long %>% group_by(response_var,site.ID, year) %>%
   dplyr::summarise(MEANconc = mean(concentration, na.rm = TRUE),
                    SDconc = sd(concentration, na.rm = TRUE),
@@ -2840,9 +2864,9 @@ ggplot(CV_mean_conc, aes(site.ID, CVconc, color = site.ID)) +
   facet_grid(response_var ~ year, scales = "free") +
   theme_bw()
 
-ggsave("CV_all_sites.pdf",
-       path = here("plots", "Chem_variation"),
-       width = 10, height = 10)
+# ggsave("CV_all_sites.pdf",
+#        path = here("plots", "Chem_variation"),
+#        width = 10, height = 10)
 
 ```
 
@@ -2854,9 +2878,9 @@ ggplot(CV_NO3, aes(site.ID, CVconc, fill = site.ID)) +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic()
 
-ggsave("CV_NO3_sites.pdf",
-       path = here("plots", "Chem_variation"),
-       width = 10, height = 10)
+# ggsave("CV_NO3_sites.pdf",
+#        path = here("plots", "Chem_variation"),
+#        width = 10, height = 10)
 
 NO3 <- lm(CVconc ~ site.ID*year, 
            data = CV_NO3)
