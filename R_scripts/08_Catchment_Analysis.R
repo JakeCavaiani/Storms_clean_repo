@@ -18,18 +18,16 @@ library(lubridate)
 library(nlme)
 library(MuMIn)
 library(multcomp)
+library(here)
 
 ###### CATCHMENT CHARACTERISTICS ####
 # Read in polygon data 
-catchment <- read.csv("~/Documents/Storms_clean_repo/Ancillary_data/AK_polys_190903_Predictors.csv")
+catchment <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
 
-catchment <- catchment[,-c(2:12,14:17,19,21:27,29:35,37:48)] # i just want: 1) site
-  # 2) Slope, 3) area burn_recent, 4) pct_burn large 5) PF extent, 6) NDVI_p50_mean
-
-pairs(catchment[,2:6])
+catchment <- catchment[c("site","SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean")] # selecting the columns that I want
 
 ggpairs(catchment,
-        columns = 2:6,
+        columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
         title="Correlation matrix: All sites") 
 # this shows that slope and PF are highly correlated
 
@@ -46,15 +44,16 @@ catchment %>%
 
 
 # combine AMC and catchment_characteristics
-AMC <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv")
-DOD_catchment <- read.csv("Ancillary_data/DOD_Sites_AK_polys_190903_Predictors.csv")
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
 # 
 AMC <- full_join(AMC, DOD_catchment)
 # 
-write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
-
-
-AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+# write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+# 
+# 
+# AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 
 HI.median<- AMC %>% group_by(site.ID, response_var) %>%  
   summarise_at(vars(Hyst_index), list(HI = median)) # takes the median by site response and year 
@@ -103,8 +102,8 @@ ggplot(HI.median, aes(x = Pf_Prob_1m_mean_x, y = MedianHI, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/HI", 
-       filename = "HI_PF.pdf",
+ggsave("HI_PF.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 7, height = 7)
 
 # This is taking an ANOVA of the mean HI for each catchment 
@@ -122,8 +121,8 @@ ggplot(HI.median, aes(x = pctburn_lg, y = MedianHI, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/HI", 
-       filename = "HI_burn.pdf",
+ggsave("HI_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 7, height = 7)
 
 # SLOPE 
@@ -133,8 +132,8 @@ ggplot(HI.median, aes(x = Slope, y = MedianHI, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/HI", 
-       filename = "HI_slope.pdf",
+ggsave("HI_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 7, height = 7)
 
 # NDVI 
@@ -144,8 +143,8 @@ ggplot(HI.median, aes(x = NDVI, y = MedianHI, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/HI", 
-       filename = "HI_NDVI.pdf",
+ggsave("HI_NDVI.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 7, height = 7)
 
 #### BETA ###
@@ -156,8 +155,8 @@ ggplot(HI.median, aes(x = Pf_Prob_1m_mean_x, y = MedianBETA, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/BETA", 
-       filename = "BETA_PF.pdf",
+ggsave("BETA_PF.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
        width = 7, height = 7)
 
 # WF 
@@ -167,8 +166,8 @@ ggplot(HI.median, aes(x = pctburn_lg, y = MedianBETA, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/BETA", 
-       filename = "BETA_WF.pdf",
+ggsave("BETA_WF.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
        width = 7, height = 7)
 
 # Slope 
@@ -178,8 +177,8 @@ ggplot(HI.median, aes(x = Slope, y = MedianBETA, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/BETA", 
-       filename = "BETA_slope.pdf",
+ggsave("BETA_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
        width = 7, height = 7)
 
 # NDVI 
@@ -189,18 +188,23 @@ ggplot(HI.median, aes(x = NDVI, y = MedianBETA, fill = site.ID)) +
   theme_classic() +
   facet_wrap(~response_var)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics/BETA", 
-       filename = "BETA_NDVI.pdf",
-       width = 10, height = 10)
+ggsave("BETA_NDVI.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 7, height = 7)
 
 #
 
 
 ###### HI_BETA PLOTS ####
 # Load in Antecedent moisture conditions dataframe
-AMC <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv") 
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
-AMC <- AMC[,-c(1:2,14,15,17,27)] # cleaning up columns that are unnecessary 
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
 
 colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
               "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
@@ -328,10 +332,9 @@ ggarrange(a, b,
           c,d, 
           labels = c("A", "B",
                      "C", "D"))
-ggsave(path = "~/Documents/Storms_clean_repo/plots/HI_BETA", 
-       filename = "HI_BETA.pdf",
-       width = 10, height = 10)
-
+ggsave("HI_BETA.pdf",
+       path = here("plots", "HI_BETA"),
+       width = 7, height = 7)
 
 
 
@@ -1119,8 +1122,8 @@ which(HI_FI_turb_VAUL_2021$HI_ymin < 0 & HI_FI_turb_VAUL_2021$HI_ymax > 0 & HI_F
 
 # Figuring out how many days are missing from the record  ####
 # 2018 ####
-MOOS_2018 <- read.csv("~/Documents/DOD_2018_repo/EXO_data/from_internal_harddrive/processed/EXO_MOOS_final_formatted.csv")
-FRCH_2018 <- read.csv("~/Documents/DOD_2018_repo/EXO_data/from_internal_harddrive/processed/EXO_FRCH_final_formatted.csv")
+MOOS_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_MOOS_final_formatted.csv"))
+FRCH_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_FRCH_final_formatted.csv"))
 
 # converting to datetime 
 MOOS_2018$datetimeAK <- ymd_hms(MOOS_2018$datetimeAK)
@@ -1130,16 +1133,25 @@ FRCH_2018$datetimeAK <- ymd_hms(FRCH_2018$datetimeAK)
 ggplot(FRCH_2018, aes(x = datetimeAK, y = fDOM.QSU.mn.adj)) +
   geom_point()
 
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
+
+
 #  MOOS
-MOOS_fDOM <- MOOS_2018[,-c(1:14, 16,17) ]
-MOOS_SPC <- MOOS_2018[,-c(1:14, 17,18) ]
-MOOS_turb <- MOOS_2018[,-c(1:14, 16,18) ]
+MOOS_2018$DOY <- yday(FRCH_2018$datetimeAK)
+MOOS_fDOM <- MOOS_2018[c("datetimeAK", "fDOM.QSU.mn.adj")]
+MOOS_SPC <- MOOS_2018[c("datetimeAK", "SpCond.uScm.mn.adj")]
+MOOS_turb <- MOOS_2018[c("datetimeAK", "Turbidity.FNU.mn.adj")]
 
 #  FRCH
 FRCH_2018$DOY <- yday(FRCH_2018$datetimeAK)
-FRCH_fDOM <- FRCH_2018[,-c(1:14, 16,17) ]
-FRCH_SPC <- FRCH_2018[,-c(1:14, 17,18) ]
-FRCH_turb <- FRCH_2018[,-c(1:14, 16,18) ]
+FRCH_fDOM <- FRCH_2018[c("datetimeAK", "fDOM.QSU.mn.adj")]
+FRCH_SPC <- FRCH_2018[c("datetimeAK", "SpCond.uScm.mn.adj")]
+FRCH_turb <- FRCH_2018[c("datetimeAK", "Turbidity.FNU.mn.adj")]
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(FRCH_turb$datetimeAK))
@@ -1152,8 +1164,8 @@ my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
 # nitrate #
-FRCH_SUNA <- read.csv("~/Documents/DOD_2018_repo/SUNA_data/from_internal_harddrive/processed/FRCH_SUNA_means_detailed_clean.csv")
-MOOS_SUNA <- read.csv("~/Documents/DOD_2018_repo/SUNA_data/from_internal_harddrive/processed/MOOS_SUNA_means_detailed_clean.csv")
+FRCH_SUNA <- read.csv(here("processed_sensor_data", "2018", "FRCH_SUNA_means_detailed_clean.csv"))
+MOOS_SUNA <- read.csv(here("processed_sensor_data", "2018", "MOOS_SUNA_means_detailed_clean.csv"))
 
 # converting to datetime 
 FRCH_SUNA$datetimeAK <- ymd_hms(FRCH_SUNA$datetimeAK)
@@ -1161,11 +1173,11 @@ MOOS_SUNA$datetimeAK <- ymd_hms(MOOS_SUNA$datetimeAK)
 
 #  FRCH
 FRCH_SUNA$DOY <- yday(FRCH_SUNA$datetimeAK)
-FRCH_NO3 <- FRCH_SUNA[,-c(3:25) ]
+FRCH_NO3 <- FRCH_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 #  MOOS
 MOOS_SUNA$DOY <- yday(MOOS_SUNA$datetimeAK)
-MOOS_NO3 <- MOOS_SUNA[,-c(3:25) ]
+MOOS_NO3 <- MOOS_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(MOOS_NO3$datetimeAK))
@@ -1179,11 +1191,11 @@ my_dat[my_dat$over_thresh==T,]
 
 
 # 2019 ####
-POKE_2019 <- read.csv("~/Documents/DoD_2019/EXO_processed/POKE_EXO_stitched_formatted.csv")
-STRT_2019 <- read.csv("~/Documents/DoD_2019/EXO_processed/STRT_EXO_stitched_formatted.csv")
-VAUL_2019 <- read.csv("~/Documents/DoD_2019/EXO_processed/VAUL_EXO_stitched_formatted.csv")
-MOOS_2019 <- read.csv("~/Documents/DoD_2019/EXO_processed/MOOS_EXO_stitched_formatted.csv")
-FRCH_2019 <- read.csv("~/Documents/DoD_2019/EXO_processed/FRCH_EXO_stitched_formatted.csv")
+POKE_2019 <- read.csv(here("processed_sensor_data", "2019", "POKE_EXO_stitched_formatted.csv"))
+STRT_2019 <- read.csv(here("processed_sensor_data", "2019", "STRT_EXO_stitched_formatted.csv"))
+VAUL_2019 <- read.csv(here("processed_sensor_data", "2019", "VAUL_EXO_stitched_formatted.csv"))
+MOOS_2019 <- read.csv(here("processed_sensor_data", "2019", "MOOS_EXO_stitched_formatted.csv"))
+FRCH_2019 <- read.csv(here("processed_sensor_data", "2019", "FRCH_EXO_stitched_formatted.csv"))
 
 # converting to datetime 
 POKE_2019$datetimeAK <- ymd_hms(POKE_2019$datetimeAK)
@@ -1198,33 +1210,33 @@ ggplot(FRCH_2019, aes(x = datetimeAK, y = FRCH_2019$fDOM.QSU)) +
 
 # POKE
 POKE_2019$DOY <- yday(POKE_2019$datetimeAK)
-POKE_fDOM <- POKE_2019[,-c(1:6,8:20) ]
-POKE_SPC <- POKE_2019[,-c(1:12, 14:20) ]
-POKE_turb <- POKE_2019[,-c(1:15, 17:20) ]
+POKE_fDOM <- POKE_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
+POKE_SPC <- POKE_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
+POKE_turb <- POKE_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
 
 # STRT
 STRT_2019$DOY <- yday(STRT_2019$datetimeAK)
-STRT_fDOM <- STRT_2019[,-c(1:6,8:20) ]
-STRT_SPC <- STRT_2019[,-c(1:12, 14:20) ]
-STRT_turb <- STRT_2019[,-c(1:15, 17:20) ]
+STRT_fDOM <- STRT_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
+STRT_SPC <- STRT_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
+STRT_turb <- STRT_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
 
 # VAUL
 VAUL_2019$DOY <- yday(VAUL_2019$datetimeAK)
-VAUL_fDOM <- VAUL_2019[,-c(1:6,8:20) ]
-VAUL_SPC <- VAUL_2019[,-c(1:12, 14:20) ]
-VAUL_turb <- VAUL_2019[,-c(1:15, 17:20) ]
+VAUL_fDOM <- VAUL_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
+VAUL_SPC <- VAUL_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
+VAUL_turb <- VAUL_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
 
 #  MOOS
 MOOS_2019$DOY <- yday(MOOS_2019$datetimeAK)
-MOOS_fDOM <- MOOS_2019[,-c(1:6,8:20) ]
-MOOS_SPC <- MOOS_2019[,-c(1:12, 14:20) ]
-MOOS_turb <- MOOS_2019[,-c(1:15, 17:20) ]
+MOOS_fDOM <- MOOS_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
+MOOS_SPC <- MOOS_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
+MOOS_turb <- MOOS_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
 
 #  FRCH
 FRCH_2019$DOY <- yday(FRCH_2019$datetimeAK)
-FRCH_fDOM <- FRCH_2019[,-c(1:6,8:20) ]
-FRCH_SPC <- FRCH_2019[,-c(1:12, 14:20) ]
-FRCH_turb <- FRCH_2019[,-c(1:15, 17:20) ]
+FRCH_fDOM <- FRCH_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
+FRCH_SPC <- FRCH_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
+FRCH_turb <- FRCH_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(FRCH_turb$datetimeAK))
@@ -1237,11 +1249,11 @@ my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
 # nitrate
-POKE_SUNA <- read.csv("~/Documents/DoD_2019/SUNA_processed/POKE_SUNA_burst_detailed_clean.csv")
-STRT_SUNA <- read.csv("~/Documents/DoD_2019/SUNA_processed/STRT_SUNA_burst_detailed_clean.csv")
-VAUL_SUNA <- read.csv("~/Documents/DoD_2019/SUNA_processed/VAUL_SUNA_burst_detailed_clean.csv")
-MOOS_SUNA <- read.csv("~/Documents/DoD_2019/SUNA_processed/MOOS_SUNA_burst_detailed_clean.csv")
-FRCH_SUNA <- read.csv("~/Documents/DoD_2019/SUNA_processed/FRCH_SUNA_burst_detailed_clean.csv")
+POKE_SUNA <- read.csv(here("processed_sensor_data", "2019", "POKE_SUNA_burst_detailed_clean.csv"))
+STRT_SUNA <- read.csv(here("processed_sensor_data", "2019", "STRT_SUNA_burst_detailed_clean.csv"))
+VAUL_SUNA <- read.csv(here("processed_sensor_data", "2019", "VAUL_SUNA_burst_detailed_clean.csv"))
+MOOS_SUNA <- read.csv(here("processed_sensor_data", "2019", "MOOS_SUNA_burst_detailed_clean.csv"))
+FRCH_SUNA <- read.csv(here("processed_sensor_data", "2019", "FRCH_SUNA_burst_detailed_clean.csv"))
 
 # converting to datetime 
 POKE_SUNA$datetimeAK <- ymd_hms(POKE_SUNA$datetimeAK)
@@ -1257,23 +1269,23 @@ ggplot(POKE_NO3, aes(x = datetimeAK, y = POKE_NO3$nitrateuM)) +
 
 # POKE
 POKE_SUNA$DOY <- yday(POKE_SUNA$datetimeAK)
-POKE_NO3 <- POKE_SUNA[,-c(1:3,5:29, 31:33) ]
+POKE_NO3 <- POKE_SUNA[c("nitrateuM", "datetimeAK", "DOY")]
 
 # STRT
 STRT_SUNA$DOY <- yday(STRT_SUNA$datetimeAK)
-STRT_NO3 <- STRT_SUNA[,-c(1:3,5:29, 31:33) ]
+STRT_NO3 <- STRT_SUNA[c("nitrateuM", "datetimeAK", "DOY")]
 
 # VAUL
 VAUL_SUNA$DOY <- yday(VAUL_SUNA$datetimeAK)
-VAUL_NO3 <- VAUL_SUNA[,-c(1:3,5:29, 31:33) ]
+VAUL_NO3 <- VAUL_SUNA[c("nitrateuM", "datetimeAK", "DOY")]
 
 # MOOS
 MOOS_SUNA$DOY <- yday(MOOS_SUNA$datetimeAK)
-MOOS_NO3 <- MOOS_SUNA[,-c(1:3,5:29, 31:33) ]
+MOOS_NO3 <- MOOS_SUNA[c("nitrateuM", "datetimeAK", "DOY")]
 
 # FRCH
 FRCH_SUNA$DOY <- yday(FRCH_SUNA$datetimeAK)
-FRCH_NO3 <- FRCH_SUNA[,-c(1:3,5:29, 31:33) ]
+FRCH_NO3 <- FRCH_SUNA[c("nitrateuM", "datetimeAK", "DOY")]
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(FRCH_NO3$datetimeAK))
@@ -1287,11 +1299,11 @@ my_dat[my_dat$over_thresh==T,]
 
 
 # 2020 ####
-POKE_2020 <- read.csv("~/Documents/DoD_2020_Alex/EXO_processed/POKE.EXO.cl.csv")
-STRT_2020 <- read.csv("~/Documents/DoD_2020_Alex/EXO_processed/STRT.EXO.cl.csv")
-VAUL_2020 <- read.csv("~/Documents/DoD_2020_Alex/EXO_processed/VAUL.EXO.cl.csv")
-MOOS_2020 <- read.csv("~/Documents/DoD_2020_Alex/EXO_processed/MOOS.EXO.cl.csv")
-FRCH_2020 <- read.csv("~/Documents/DoD_2020_Alex/EXO_processed/FRCH.EXO.cl.csv")
+POKE_2020 <- read.csv(here("processed_sensor_data", "2020", "POKE.EXO.cl.csv"))
+STRT_2020 <- read.csv(here("processed_sensor_data", "2020", "STRT.EXO.cl.csv"))
+VAUL_2020 <- read.csv(here("processed_sensor_data", "2020", "VAUL.EXO.cl.csv"))
+MOOS_2020 <- read.csv(here("processed_sensor_data", "2020", "MOOS.EXO.cl.csv"))
+FRCH_2020 <- read.csv(here("processed_sensor_data", "2020", "FRCH.EXO.cl.csv"))
 
 # converting to datetime 
 POKE_2020$datetimeAK <- ymd_hms(POKE_2020$datetimeAK)
@@ -1300,42 +1312,39 @@ VAUL_2020$datetimeAK <- ymd_hms(VAUL_2020$datetimeAK)
 MOOS_2020$datetimeAK <- ymd_hms(MOOS_2020$datetimeAK)
 FRCH_2020$datetimeAK <- ymd_hms(FRCH_2020$datetimeAK)
 
-
-
 #plot
 ggplot(FRCH_2020, aes(x = datetimeAK, y = FRCH_2020$fDOM.QSU.mn)) +
   geom_point()
 
-
 # POKE
 POKE_2020$DOY <- yday(POKE_2020$datetimeAK)
-POKE_fDOM <- POKE_2020[,-c(1:3,5:21,23:28) ]
-POKE_SPC <- POKE_2020[,-c(1:11,13:21,23:38) ]
-POKE_turb <- POKE_2020[,-c(1:13, 15:21,23:28) ]
+POKE_fDOM <- POKE_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
+POKE_SPC <- POKE_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
+POKE_turb <- POKE_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
 
 # STRT
 STRT_2020$DOY <- yday(STRT_2020$datetimeAK)
-STRT_fDOM <- STRT_2020[,-c(1:3,5:21,23:28) ]
-STRT_SPC <- STRT_2020[,-c(1:11,13:21,23:38) ]
-STRT_turb <- STRT_2020[,-c(1:13, 15:21,23:28) ]
+STRT_fDOM <- STRT_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
+STRT_SPC <- STRT_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
+STRT_turb <- STRT_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
 
 # VAUL
 VAUL_2020$DOY <- yday(VAUL_2020$datetimeAK)
-VAUL_fDOM <- VAUL_2020[,-c(1:3,5:21,23:28) ]
-VAUL_SPC <- VAUL_2020[,-c(1:11,13:21,23:38) ]
-VAUL_turb <- VAUL_2020[,-c(1:13, 15:21,23:28) ]
+VAUL_fDOM <- VAUL_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
+VAUL_SPC <- VAUL_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
+VAUL_turb <- VAUL_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
 
 #  MOOS
 MOOS_2020$DOY <- yday(MOOS_2020$datetimeAK)
-MOOS_fDOM <- MOOS_2020[,-c(1:3,5:21,23:28) ]
-MOOS_SPC <- MOOS_2020[,-c(1:11,13:21,23:38) ]
-MOOS_turb <- MOOS_2020[,-c(1:13, 15:21,23:28) ]
+MOOS_fDOM <- MOOS_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
+MOOS_SPC <- MOOS_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
+MOOS_turb <- MOOS_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
 
 #  FRCH
 FRCH_2020$DOY <- yday(FRCH_2020$datetimeAK)
-FRCH_fDOM <- FRCH_2020[,-c(1:3,5:21,23:28) ]
-FRCH_SPC <- FRCH_2020[,-c(1:11,13:21,23:38) ]
-FRCH_turb <- FRCH_2020[,-c(1:13, 15:21,23:28) ]
+FRCH_fDOM <- FRCH_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
+FRCH_SPC <- FRCH_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
+FRCH_turb <- FRCH_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
 
 
 # identifying gaps 
@@ -1349,11 +1358,11 @@ my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
 # nitrate 
-POKE_SUNA <- read_csv("~/Documents/DoD_2020_Alex/SUNA_processed/POKE_SUNA_means_detailed_clean.csv")
-STRT_SUNA <- read_csv("~/Documents/DoD_2020_Alex/SUNA_processed/STRT_SUNA_means_detailed_clean.csv")
-VAUL_SUNA <- read_csv("~/Documents/DoD_2020_Alex/SUNA_processed/VAUL_SUNA_means_detailed_clean.csv")
-MOOS_SUNA <- read_csv("~/Documents/DoD_2020_Alex/SUNA_processed/MOOS_SUNA_means_detailed_clean.csv")
-FRCH_SUNA <- read_csv("~/Documents/DoD_2020_Alex/SUNA_processed/FRCH_SUNA_means_detailed_clean.csv")
+POKE_SUNA <- read.csv(here("processed_sensor_data", "2020", "POKE_SUNA_means_detailed_clean.csv"))
+STRT_SUNA <- read.csv(here("processed_sensor_data", "2020", "STRT_SUNA_means_detailed_clean.csv"))
+VAUL_SUNA <- read.csv(here("processed_sensor_data", "2020", "VAUL_SUNA_means_detailed_clean.csv"))
+MOOS_SUNA <- read.csv(here("processed_sensor_data", "2020", "MOOS_SUNA_means_detailed_clean.csv"))
+FRCH_SUNA <- read.csv(here("processed_sensor_data", "2020", "FRCH_SUNA_means_detailed_clean.csv"))
 
 # converting to datetime 
 POKE_SUNA$datetimeAK <- ymd_hms(POKE_SUNA$datetimeAK)
@@ -1369,23 +1378,23 @@ ggplot(POKE_SUNA, aes(x = datetimeAK, y = POKE_SUNA$nitrateuM.adj.mn)) +
 
 # POKE
 POKE_SUNA$DOY <- yday(POKE_SUNA$datetimeAK)
-POKE_NO3 <- POKE_SUNA[,-c(3:27) ]
+POKE_NO3 <- POKE_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 # STRT
 STRT_SUNA$DOY <- yday(STRT_SUNA$datetimeAK)
-STRT_NO3 <- STRT_SUNA[,-c(3:27) ]
+STRT_NO3 <- STRT_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 # VAUL
 VAUL_SUNA$DOY <- yday(VAUL_SUNA$datetimeAK)
-VAUL_NO3 <- VAUL_SUNA[,-c(3:27) ]
+VAUL_NO3 <- VAUL_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 # MOOS
 MOOS_SUNA$DOY <- yday(MOOS_SUNA$datetimeAK)
-MOOS_NO3 <- MOOS_SUNA[,-c(3:27) ]
+MOOS_NO3 <- MOOS_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 # FRCH
 FRCH_SUNA$DOY <- yday(FRCH_SUNA$datetimeAK)
-FRCH_NO3 <- FRCH_SUNA[,-c(3:27) ]
+FRCH_NO3 <- FRCH_SUNA[c("datetimeAK", "nitrateuM.mn", "DOY")]
 
 
 # identifying gaps 
@@ -1489,8 +1498,7 @@ my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
 # Duration 
-AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
-View(Antecedent_HI_BETA_Catchment)
+AMC <- read.csv("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv")
 
 mean_duration <-  AMC %>% 
   group_by(storm.ID, site.ID, year) %>% 
@@ -1515,52 +1523,43 @@ mean_duration_site <- AMC %>%
 
 
 #### MEAN SOLUTE CONCENTRATIONS ####
-DOD_2018 <- read.csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2018.csv")
-DOD_2019 <- read.csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2019.csv")
-DOD_2019 <- DOD_2019[,-1]
-DOD_2020 <- read.csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2020.csv")
-DOD_2020 <- DOD_2020[,-1]
+DOD_2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
+DOD_2019 <- read.csv(here("Q", "Q_chem", "DOD.2019.csv"))
+DOD_2019 <-  subset(DOD_2019, select=-c(X))
+DOD_2020 <- read.csv(here("Q", "Q_chem", "DOD.2020.csv"))
+DOD_2020 <-  subset(DOD_2020, select=-c(X))
+
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
 names(DOD_2020)<- colNames # renaming columns 
-DOD_2021 <- read.csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2021.csv")
-DOD_2021 <- DOD_2021[,-1]
+DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
+DOD_2021 <-  subset(DOD_2021, select=-c(X))
 
 DOD_2018$year <- "2018"
 DOD_2019$year <- "2019"
 DOD_2020$year <- "2020"
 DOD_2021$year <- "2021"
 
-DOD_2021$datetimeAK <- mdy_hm(DOD_2021$datetimeAK)
-DOD_2021$datetimeAK <- as.character(DOD_2021$datetimeAK)
 
 DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021)
 
 # read in Caribou data 
-CARI_2018 <- read_csv("~/Documents/NEON/CARI/WaterQuality2018.csv", 
-                      col_types = cols(NO3 = col_double()))
-CARI_2018$Discharge <- NA
-CARI_2018 <- CARI_2018[, c(1,2,8,3,4,5,6,7)] # reorganizing column headers
+CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
+CARI_2018 <-  subset(CARI_2018, select=-c(site.ID.y))
+names(CARI_2018)[names(CARI_2018) == 'site.ID.x'] <- 'site.ID'
+CARI_2018$site.ID <- "CARI"
 
-CARI_2019 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2019.csv", 
-                                    col_types = cols(fDOM = col_double(), 
-                                                     SPC = col_double(), Turb = col_double()))
-CARI_2019 <- CARI_2019[,-c(4)]
+CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
+CARI_2019 <-  subset(CARI_2019, select=-c(site.ID.y))
 names(CARI_2019)[names(CARI_2019) == 'site.ID.x'] <- 'site.ID'
 CARI_2019$site.ID <- "CARI"
 
-CARI_2020 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2020.csv", 
-                                    col_types = cols(site.ID.y = col_double(), 
-                                                     NO3 = col_double(), fDOM = col_double(), 
-                                                     SPC = col_double(), Turb = col_double()))
-CARI_2020 <- CARI_2020[,-c(4)]
+CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
+CARI_2020 <-  subset(CARI_2020, select=-c(site.ID.y))
 names(CARI_2020)[names(CARI_2020) == 'site.ID.x'] <- 'site.ID'
 CARI_2020$site.ID <- "CARI"
 
-CARI_2021 <- read_csv("~/Documents/NEON/CARI/NEON_Q_WaterQuality2021.csv", 
-                                     col_types = cols(NO3 = col_double(), 
-                                                      fDOM = col_double(), SPC = col_double(), 
-                                                      Turb = col_double()))
-CARI_2021 <- CARI_2021[,-c(4)]
+CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
+CARI_2021 <-  subset(CARI_2021, select=-c(site.ID.y))
 names(CARI_2021)[names(CARI_2021) == 'site.ID.x'] <- 'site.ID'
 CARI_2021$site.ID <- "CARI"
 
@@ -1578,23 +1577,20 @@ CARI_chem <- CARI_chem[, c(2,1,5,6,7,4,3,9,8)] # reorganizing column headers
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
 names(CARI_chem)<- colNames # renaming columns 
 
-# # plotting to see if they came out correctly
-# # CARI 
-# chem.2021.long <- CARI_2021 %>%
-#   pivot_longer(
-#     cols = NO3:Turb,
-#     names_to = "response_var",
-#     values_to = "concentration",
-#     values_drop_na = TRUE
-#   ) # converting to a long format so each response_var is within a single column
+# # plotting
+# CARI_2018_pl <- CARI_2018
+# CARI_2018_pl$DateTimeAK <- ymd_hms(CARI_2018_pl$DateTimeAK)
+# ggplot(CARI_2018_pl, aes(DateTimeAK, Turb)) +
+#   geom_point()
 # 
+# CARI_2018_pl$day <- yday(CARI_2018_pl$DateTimeAK)
 # 
-# 
-# ggplot(chem.2021.long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
-#   geom_point(size = 0.5) +
-#   scale_color_manual(values=c("#3288BD")) +
-#   facet_wrap(~response_var, scales = "free") +
-#   theme_classic()
+# mean_cari <- CARI_2018_pl %>% 
+#   group_by(day) %>% 
+#   summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
+#             dailyNO3 = mean(NO3, na.rm = TRUE),
+#             dailySPC = mean(SPC, na.rm = TRUE),
+#             dailyTurb = mean(Turb, na.rm = TRUE))
 
 
 # merge CARI and DOD sites 
@@ -1606,8 +1602,30 @@ DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
 DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 
 # check for outliers
-which(DOD_chem$Turb > 1500)
-DOD_chem <- DOD_chem[-c(94689, 207878, 213192, 213198, 213474, 213480, 268683), ]
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(Turb), 
+                ~ifelse(Turb > 1250, NA, .)))
+
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(NO3), 
+                ~ifelse(site.ID == "STRT" & year == 2019 & NO3 > 40, NA, .)))
+
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(NO3), 
+                ~ifelse(site.ID == "VAUL" & year == 2019 & NO3 < 2, NA, .)))
+
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(NO3), 
+                ~ifelse(site.ID == "MOOS" & year == 2020 & NO3 > 40, NA, .)))
+
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(NO3), 
+                ~ifelse(site.ID == "STRT" & year == 2020 & NO3 < 10, NA, .)))
+
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(fDOM), 
+                ~ifelse(year == 2021 & fDOM < 1, NA, .)))
+
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
@@ -1620,7 +1638,8 @@ chem.long <- DOD_chem %>%
 ggplot(chem.long, aes(x = julian, y = concentration, color = site.ID)) +
   geom_point(size = 0.5) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  facet_grid(response_var~year, scales = "free")
+  facet_grid(response_var~year, scales = "free") +
+  theme_classic()
 
 # Filtering by year to compare concentrations across years 
 
@@ -1644,49 +1663,79 @@ chem_2021 <- subset(chem_2021, datetimeAK > "2021-06-12" & datetimeAK < "2021-09
 # make a julian day columnn:
 chem_2018$julian <- yday(chem_2018$datetimeAK)
 chem_2018$TSC <- chem_2018$julian-143 # TSC column
+chem_2018$day <- as.Date(chem_2018$datetimeAK)
 
 chem_2019$julian <- yday(chem_2019$datetimeAK)
 chem_2019$TSC <- chem_2019$julian-132 # TSC column
+chem_2019$day <- as.Date(chem_2019$datetimeAK)
 
 chem_2020$julian <- yday(chem_2020$datetimeAK)
 chem_2020$TSC <- chem_2020$julian-134 # TSC column
+chem_2020$day <- as.Date(chem_2020$datetimeAK)
 
 chem_2021$julian <- yday(chem_2021$datetimeAK)
 chem_2021$TSC <- chem_2021$julian-128 # TSC column
+chem_2021$day <- as.Date(chem_2021$datetimeAK)
 
 # combine them to be able to plot it 
 similar_chem_year <- rbind(chem_2018, chem_2019, chem_2020, chem_2021)
 
-CARI_year <- subset(similar_chem_year, site.ID == "CARI")
-FRCH_year <- subset(similar_chem_year, site.ID == "FRCH")
-MOOS_year <- subset(similar_chem_year, site.ID == "MOOS")
-POKE_year <- subset(similar_chem_year, site.ID == "POKE")
-STRT_year <- subset(similar_chem_year, site.ID == "STRT")
-VAUL_year <- subset(similar_chem_year, site.ID == "VAUL")
-
-similar_chem_year$day <- as.Date(similar_chem_year$datetimeAK)
-
-similar_chem_year[, 6][similar_chem_year[, 6] < 10] <- NA # there are values of 0 for nitrate
-  # in VAUL data starting in August that are not accurate so I am setting them to NA
-# Mean daily concentration 
 mean_daily <- similar_chem_year %>% 
   group_by(day, site.ID, year) %>% 
   summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
             dailyNO3 = mean(NO3, na.rm = TRUE),
             dailySPC = mean(SPC, na.rm = TRUE),
-            dailyTurb = mean(Turb, na.rm = TRUE))
+            dailyTurb = mean(Turb, na.rm = TRUE),
+            julian = as.numeric(julian))
 
-mean_daily$julian <- yday(mean_daily$day)
-mean_daily$TSC <- NA
-mean_daily[c(1:290), 9] <- mean_daily[c(1:290), 8] - 143 # 2018 
-mean_daily[c(291:928), 9] <- mean_daily[c(291:928), 8] - 132 # 2019
-mean_daily[c(929:1541), 9] <- mean_daily[c(929:1541), 8] - 134 # 2020
-mean_daily[c(1542:2074), 9] <- mean_daily[c(1542:2074), 8] - 128 # 2021
+mean_daily <- mean_daily %>%
+  group_by(day, site.ID) %>%
+  slice(which.min(day)) # making sure I just take the first value for the daily mean since it gives the same mean value for each 15minute interval so I just want one
 
-mean_daily <- mean_daily[-2130, ] # last row
+mean_daily_long <- mean_daily %>%
+  pivot_longer(
+    cols = starts_with("daily"),
+    names_to = "response_var",
+    values_to = "concentration"
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
+  geom_point(size = 0.35) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_grid(response_var~year, scales = "free")
+
+
+
+# CARI_year <- subset(similar_chem_year, site.ID == "CARI")
+# FRCH_year <- subset(similar_chem_year, site.ID == "FRCH")
+# MOOS_year <- subset(similar_chem_year, site.ID == "MOOS")
+# POKE_year <- subset(similar_chem_year, site.ID == "POKE")
+# STRT_year <- subset(similar_chem_year, site.ID == "STRT")
+# VAUL_year <- subset(similar_chem_year, site.ID == "VAUL")
+# 
+# similar_chem_year$day <- as.Date(similar_chem_year$datetimeAK)
+# 
+# similar_chem_year[, 6][similar_chem_year[, 6] < 10] <- NA # there are values of 0 for nitrate
+#   # in VAUL data starting in August that are not accurate so I am setting them to NA
+# # Mean daily concentration 
+# mean_daily <- similar_chem_year %>% 
+#   group_by(day, site.ID, year) %>% 
+#   summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
+#             dailyNO3 = mean(NO3, na.rm = TRUE),
+#             dailySPC = mean(SPC, na.rm = TRUE),
+#             dailyTurb = mean(Turb, na.rm = TRUE))
+# 
+# mean_daily$julian <- yday(mean_daily$day)
+# mean_daily$TSC <- NA
+# mean_daily[c(1:290), 9] <- mean_daily[c(1:290), 8] - 143 # 2018 
+# mean_daily[c(291:928), 9] <- mean_daily[c(291:928), 8] - 132 # 2019
+# mean_daily[c(929:1541), 9] <- mean_daily[c(929:1541), 8] - 134 # 2020
+# mean_daily[c(1542:2074), 9] <- mean_daily[c(1542:2074), 8] - 128 # 2021
+
+# mean_daily <- mean_daily[-2130, ] # last row
 write.csv(mean_daily, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
 # plot
-# across all years 
+# across all years ####
 # NO3
 ggplot(mean_daily, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   geom_boxplot() +

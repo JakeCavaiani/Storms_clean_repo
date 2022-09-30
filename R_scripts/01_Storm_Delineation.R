@@ -35,9 +35,6 @@ library(here)
 # Load from local machine #
 #### Load field dates and times ####
 #These are stored in field_datetime.csv on Drive (DoD project/2020 AK sensors)
-
-setwd(here("Storms_clean_repo"))
-
 # Make sub-directories where data will be stored
 dir.create(file.path("R_scripts"))
 dir.create(file.path("processed_sensor_data"))
@@ -48,25 +45,25 @@ dir.create(file.path("Q", "2018", "FRCH"))
 dir.create(file.path("Q", "2018", "MOOS"))
 dir.create(file.path("Q", "Q_chem"))
 
-setwd(here("Q", "2018"))
-Q.daily.2018 <- read.csv("Q.daily.2018.csv") # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
-Q.2018 <- read.csv("Q_2018.csv")
+
+Q.daily.2018 <- read.csv(here("Q", "2018", "Q.daily.2018.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+Q.2018 <- read.csv(here("Q", "2018", "Q_2018.csv")) 
+
 names(Q.2018) <- c("datetimeAK", "site.ID", "Q", "day") # renaming the column headers to match that of the chem file 
 
 Q.2018$datetimeAK <- ymd_hms(Q.2018$datetimeAK) # converting character to datetime
 
 
-setwd(here("processed_sensor_data", "2018"))
-chem.2018 <- read.csv("SUNA.EXO.int.corr.csv")
+chem.2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.csv")) # this is from the DOD_2018 github repository that has cleaned QA/QCd all of this data 
 
-chem.2018 <- chem.2018[, -c(2:15,19:24,26:52,54:56)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
-# I just want the constituents and datetimeAk
-
-chem.2018 <- chem.2018[, c(1,6,4,2,3,5)] # reorganizing column headers
+chem.2018 <- chem.2018[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
+                         "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
+                         "nitrateuM.mn")] # reading in the only columns I want
 
 chem.2018$datetimeAK <- ymd_hms(chem.2018$datetimeAK) # converting character to datetime
 
 names(chem.2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
+
 
 
 ### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
@@ -100,15 +97,20 @@ chem.2018 <- rbind(FRCH.2018, MOOS.2018)
 
 DOD.2018 <- full_join(chem.2018, Q.2018) # merging chem and discharge data 
 
-#write_csv(DOD.2018, "~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2018.csv")
+write_csv(DOD.2018, here("Q", "Q_chem", "DOD.2018.csv"))
+
 ### READ in CARI Data ###
 # this is data directly from the NEON data base website that I downloaded 
+CARI.2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv")) # this is from my NEON repository that reads in NEON data using their NEONutilities package and then manually cleaning points 
 
-CARI.2018 <- read_csv("NEON_Q_WaterQuality2018.csv",
-                      col_types = cols(Discharge = col_double(), 
-                                       fDOM = col_double(), NO3 = col_double(), 
-                                       SPC = col_double(), Turb = col_double()))
-CARI.2018 <- CARI.2018[,-4]
+CARI.2018$DateTimeAK <- ymd_hms(CARI.2018$DateTimeAK)
+# CARI.2018 <- read_csv("NEON_Q_WaterQuality2018.csv",
+#                       col_types = cols(Discharge = col_double(),
+#                                        fDOM = col_double(), NO3 = col_double(),
+#                                        SPC = col_double(), Turb = col_double()))
+
+CARI.2018 <- CARI.2018[ , -which(names(CARI.2018) %in% c("site.ID.y"))] # dropping column header that I dont want
+
 names(CARI.2018)[names(CARI.2018) == 'DateTimeAK'] <- 'datetimeAK'
 names(CARI.2018)[names(CARI.2018) == 'site.ID.x'] <- 'site.ID'
 
@@ -119,7 +121,7 @@ CARI.2018$day <-  format(as.POSIXct(CARI.2018$datetimeAK,format="%Y-%m-%d %H:%M:
 CARI.2018$day <-  as.POSIXct(CARI.2018$day, "%Y-%m-%d", tz="America/Anchorage")
 
 # make a daily Q record for CARI
-cari.final.discharge.2018 <- CARI.2018[,-c(4:7)]
+cari.final.discharge.2018 <- CARI.2018[ , -which(names(CARI.2018) %in% c("NO3", "fDOM", "SPC", "Turb"))] # dropping column header that I dont want
 CARI.daily.2018 <-  with(CARI.2018, tapply(Discharge, list(day, site.ID), mean))
 CARI.daily.2018 <-  as.data.frame(CARI.daily.2018)
 
@@ -136,7 +138,7 @@ cari_2018_long <- CARI.2018 %>%
     names_to = "response_var",
     values_to = "concentration",
     values_drop_na = TRUE
-  ) # converting to a long format so each response_var is within a single column
+  ) 
 
 ggplot(cari_2018_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
   geom_point(size = 0.5) +
@@ -154,7 +156,6 @@ ggplot(chem_total, aes(x = datetimeAK, y = concentration, color = site.ID)) +
 
 
 # subset data by site #
-setwd("~/Documents/Storms_clean_repo")
 FRCH.2018 <-  subset(DOD.2018, site.ID == "FRCH")
 
 MOOS.2018 = subset(DOD.2018, site.ID == "MOOS")
@@ -327,8 +328,8 @@ CARI_bfQ_mn
 CARI_bfQ_mn*2
 
 # Merge Discharge and Precip #
-
-POKE.st <- read_csv("~/Documents/DoD_2018_Jake/RainGauge/POKE.RainGauge.2018.csv")
+POKE.st <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2018.csv"))
+POKE.st$DateTime <- ymd_hms(POKE.st$DateTime)
 attributes(POKE.st$DateTime)$tzone <- "America/Anchorage"
 ### Sum daily discharge ###
 POKE.st$twentyfour <- rollapplyr(POKE.st$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -1142,112 +1143,219 @@ dir.create(file.path("Storm_Events"))
 dir.create(file.path("Storm_Events", "2018"))
 dir.create(file.path("Storm_Events", "2018", "FRCH"))
 dir.create(file.path("Storm_Events", "2018", "MOOS"))
-setwd(here("Storm_Events", "2018", "FRCH"))
 
-write.csv(FRCH_storm1_06_21, "FRCH_storm1_06_21.csv")
-write.csv(FRCH_storm1_06_21_Q, "FRCH_storm1_06_21_Q.csv")
-write.csv(FRCH_storm1_06_21_NO3, "FRCH_storm1_06_21_NO3.csv")
-write.csv(FRCH_storm1_06_21_fDOM, "FRCH_storm1_06_21_fDOM.csv")
-write.csv(FRCH_storm1_06_21_SPC, "FRCH_storm1_06_21_SPC.csv")
-write.csv(FRCH_storm1_06_21_turb, "FRCH_storm1_06_21_Turb.csv")
 
-write.csv(FRCH_storm2a_06_29, "FRCH_storm2a_06_29.csv")
-write.csv(FRCH_storm2a_06_29_Q, "FRCH_storm2a_06_29_Q.csv")
-write.csv(FRCH_storm2a_06_29_NO3, "FRCH_storm2a_06_29_NO3.csv")
-write.csv(FRCH_storm2a_06_29_fDOM, "FRCH_storm2a_06_29_fDOM.csv")
-write.csv(FRCH_storm2a_06_29_SPC, "FRCH_storm2a_06_29_SPC.csv")
-write.csv(FRCH_storm2a_06_29_turb, "FRCH_storm2a_06_29_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Turb.csv"))
 
-write.csv(FRCH_storm2b_07_04, "FRCH_storm2b_07_04.csv")
-write.csv(FRCH_storm2b_07_04_Q, "FRCH_storm2b_07_04_Q.csv")
-write.csv(FRCH_storm2b_07_04_NO3, "FRCH_storm2b_07_04_NO3.csv")
-write.csv(FRCH_storm2b_07_04_fDOM, "FRCH_storm2b_07_04_fDOM.csv")
-write.csv(FRCH_storm2b_07_04_SPC, "FRCH_storm2b_07_04_SPC.csv")
-write.csv(FRCH_storm2b_07_04_turb, "FRCH_storm2b_07_04_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_29_Turb.csv"))
 
-write.csv(FRCH_storm3_07_10, "FRCH_storm3_07_10.csv")
-write.csv(FRCH_storm3_07_10_Q, "FRCH_storm3_07_10_Q.csv")
-write.csv(FRCH_storm3_07_10_NO3, "FRCH_storm3_07_10_NO3.csv")
-write.csv(FRCH_storm3_07_10_fDOM, "FRCH_storm3_07_10_fDOM.csv")
-write.csv(FRCH_storm3_07_10_SPC, "FRCH_storm3_07_10_SPC.csv")
-write.csv(FRCH_storm3_07_10_turb, "FRCH_storm3_07_10_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_04_Turb.csv"))
 
-write.csv(FRCH_storm4a_07_15, "FRCH_storm4a_07_15.csv")
-write.csv(FRCH_storm4a_07_15_Q, "FRCH_storm4a_07_15_Q.csv")
-write.csv(FRCH_storm4a_07_15_NO3, "FRCH_storm4a_07_15_NO3.csv")
-write.csv(FRCH_storm4a_07_15_fDOM, "FRCH_storm4a_07_15_fDOM.csv")
-write.csv(FRCH_storm4a_07_15_SPC, "FRCH_storm4a_07_15_SPC.csv")
-write.csv(FRCH_storm4a_07_15_turb, "FRCH_storm4a_07_15_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_10_Turb.csv"))
 
-write.csv(FRCH_storm4b_07_16, "FRCH_storm4b_07_16.csv")
-write.csv(FRCH_storm4b_07_16_Q, "FRCH_storm4b_07_16_Q.csv")
-write.csv(FRCH_storm4b_07_16_NO3, "FRCH_storm4b_07_16_NO3.csv")
-write.csv(FRCH_storm4b_07_16_fDOM, "FRCH_storm4b_07_16_fDOM.csv")
-write.csv(FRCH_storm4b_07_16_SPC, "FRCH_storm4b_07_16_SPC.csv")
-write.csv(FRCH_storm4b_07_16_turb, "FRCH_storm4b_07_16_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Turb.csv"))
 
-write.csv(FRCH_storm5_08_04, "FRCH_storm5_08_04.csv")
-write.csv(FRCH_storm5_08_04_Q, "FRCH_storm5_08_04_Q.csv")
-write.csv(FRCH_storm5_08_04_NO3, "FRCH_storm5_08_04_NO3.csv")
-write.csv(FRCH_storm5_08_04_fDOM, "FRCH_storm5_08_04_fDOM.csv")
-write.csv(FRCH_storm5_08_04_SPC, "FRCH_storm5_08_04_SPC.csv")
-write.csv(FRCH_storm5_08_04_turb, "FRCH_storm5_08_04_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_16_Turb.csv"))
 
-write.csv(FRCH_storm6_08_13, "FRCH_storm6_08_13.csv")
-write.csv(FRCH_storm6_08_13_Q, "FRCH_storm6_08_13_Q.csv")
-write.csv(FRCH_storm6_08_13_NO3, "FRCH_storm6_08_13_NO3.csv")
-write.csv(FRCH_storm6_08_13_fDOM, "FRCH_storm6_08_13_fDOM.csv")
-write.csv(FRCH_storm6_08_13_SPC, "FRCH_storm6_08_13_SPC.csv")
-write.csv(FRCH_storm6_08_13_turb, "FRCH_storm6_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_04_Turb.csv"))
 
-write.csv(FRCH_storm7_08_23, "FRCH_storm7_08_23.csv")
-write.csv(FRCH_storm7_08_23_Q, "FRCH_storm7_08_23_Q.csv")
-write.csv(FRCH_storm7_08_23_NO3, "FRCH_storm7_08_23_NO3.csv")
-write.csv(FRCH_storm7_08_23_fDOM, "FRCH_storm7_08_23_fDOM.csv")
-write.csv(FRCH_storm7_08_23_SPC, "FRCH_storm7_08_23_SPC.csv")
-write.csv(FRCH_storm7_08_23_turb, "FRCH_storm7_08_23_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Turb.csv"))
 
-write.csv(FRCH_storm8a_08_26, "FRCH_storm8a_08_26.csv")
-write.csv(FRCH_storm8a_08_26_Q, "FRCH_storm8a_08_26_Q.csv")
-write.csv(FRCH_storm8a_08_26_NO3, "FRCH_storm8a_08_26_NO3.csv")
-write.csv(FRCH_storm8a_08_26_fDOM, "FRCH_storm8a_08_26_fDOM.csv")
-write.csv(FRCH_storm8a_08_26_SPC, "FRCH_storm8a_08_26_SPC.csv")
-write.csv(FRCH_storm8a_08_26_turb, "FRCH_storm8a_08_26_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_23_Turb.csv"))
 
-write.csv(FRCH_storm8b_08_28, "FRCH_storm8b_08_28.csv")
-write.csv(FRCH_storm8b_08_28_Q, "FRCH_storm8b_08_28_Q.csv")
-write.csv(FRCH_storm8b_08_28_NO3, "FRCH_storm8b_08_28_NO3.csv")
-write.csv(FRCH_storm8b_08_28_fDOM, "FRCH_storm8b_08_28_fDOM.csv")
-write.csv(FRCH_storm8b_08_28_SPC, "FRCH_storm8b_08_28_SPC.csv")
-write.csv(FRCH_storm8b_08_28_turb, "FRCH_storm8b_08_28_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Turb.csv"))
 
-write.csv(FRCH_storm9_08_30, "FRCH_storm9_08_30.csv")
-write.csv(FRCH_storm9_08_30_Q, "FRCH_storm9_08_30_Q.csv")
-write.csv(FRCH_storm9_08_30_NO3, "FRCH_storm9_08_30_NO3.csv")
-write.csv(FRCH_storm9_08_30_fDOM, "FRCH_storm9_08_30_fDOM.csv")
-write.csv(FRCH_storm9_08_30_SPC, "FRCH_storm9_08_30_SPC.csv")
-write.csv(FRCH_storm9_08_30_turb, "FRCH_storm9_08_30_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_Turb.csv"))
 
-write.csv(FRCH_storm10_09_01, "FRCH_storm10_09_01.csv")
-write.csv(FRCH_storm10_09_01_Q, "FRCH_storm10_09_01_Q.csv")
-write.csv(FRCH_storm10_09_01_NO3, "FRCH_storm10_09_01_NO3.csv")
-write.csv(FRCH_storm10_09_01_fDOM, "FRCH_storm10_09_01_fDOM.csv")
-write.csv(FRCH_storm10_09_01_SPC, "FRCH_storm10_09_01_SPC.csv")
-write.csv(FRCH_storm10_09_01_turb, "FRCH_storm10_09_01_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Turb.csv"))
 
-write.csv(FRCH_storm11a_09_22, "FRCH_storm11a_09_22.csv")
-write.csv(FRCH_storm11a_09_22_Q, "FRCH_storm11a_09_22_Q.csv")
-write.csv(FRCH_storm11a_09_22_NO3, "FRCH_storm11a_09_22_NO3.csv")
-write.csv(FRCH_storm11a_09_22_fDOM, "FRCH_storm11a_09_22_fDOM.csv")
-write.csv(FRCH_storm11a_09_22_SPC, "FRCH_storm11a_09_22_SPC.csv")
-write.csv(FRCH_storm11a_09_22_turb, "FRCH_storm11a_09_22_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Turb.csv"))
 
-write.csv(FRCH_storm11b_09_24, "FRCH_storm11b_09_24.csv")
-write.csv(FRCH_storm11b_09_24_Q, "FRCH_storm11b_09_24_Q.csv")
-write.csv(FRCH_storm11b_09_24_NO3, "FRCH_storm11b_09_24_NO3.csv")
-write.csv(FRCH_storm11b_09_24_fDOM, "FRCH_storm11b_09_24_fDOM.csv")
-write.csv(FRCH_storm11b_09_24_SPC, "FRCH_storm11b_09_24_SPC.csv")
-write.csv(FRCH_storm11b_09_24_turb, "FRCH_storm11b_09_24_Turb.csv")
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Turb.csv"))
+
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_Q.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_Turb.csv"))
+
+
+
+# write.csv(FRCH_storm1_06_21, "FRCH_storm1_06_21.csv")
+# write.csv(FRCH_storm1_06_21_Q, "FRCH_storm1_06_21_Q.csv")
+# write.csv(FRCH_storm1_06_21_NO3, "FRCH_storm1_06_21_NO3.csv")
+# write.csv(FRCH_storm1_06_21_fDOM, "FRCH_storm1_06_21_fDOM.csv")
+# write.csv(FRCH_storm1_06_21_SPC, "FRCH_storm1_06_21_SPC.csv")
+# write.csv(FRCH_storm1_06_21_turb, "FRCH_storm1_06_21_Turb.csv")
+# 
+# write.csv(FRCH_storm2a_06_29, "FRCH_storm2a_06_29.csv")
+# write.csv(FRCH_storm2a_06_29_Q, "FRCH_storm2a_06_29_Q.csv")
+# write.csv(FRCH_storm2a_06_29_NO3, "FRCH_storm2a_06_29_NO3.csv")
+# write.csv(FRCH_storm2a_06_29_fDOM, "FRCH_storm2a_06_29_fDOM.csv")
+# write.csv(FRCH_storm2a_06_29_SPC, "FRCH_storm2a_06_29_SPC.csv")
+# write.csv(FRCH_storm2a_06_29_turb, "FRCH_storm2a_06_29_Turb.csv")
+# 
+# write.csv(FRCH_storm2b_07_04, "FRCH_storm2b_07_04.csv")
+# write.csv(FRCH_storm2b_07_04_Q, "FRCH_storm2b_07_04_Q.csv")
+# write.csv(FRCH_storm2b_07_04_NO3, "FRCH_storm2b_07_04_NO3.csv")
+# write.csv(FRCH_storm2b_07_04_fDOM, "FRCH_storm2b_07_04_fDOM.csv")
+# write.csv(FRCH_storm2b_07_04_SPC, "FRCH_storm2b_07_04_SPC.csv")
+# write.csv(FRCH_storm2b_07_04_turb, "FRCH_storm2b_07_04_Turb.csv")
+# 
+# write.csv(FRCH_storm3_07_10, "FRCH_storm3_07_10.csv")
+# write.csv(FRCH_storm3_07_10_Q, "FRCH_storm3_07_10_Q.csv")
+# write.csv(FRCH_storm3_07_10_NO3, "FRCH_storm3_07_10_NO3.csv")
+# write.csv(FRCH_storm3_07_10_fDOM, "FRCH_storm3_07_10_fDOM.csv")
+# write.csv(FRCH_storm3_07_10_SPC, "FRCH_storm3_07_10_SPC.csv")
+# write.csv(FRCH_storm3_07_10_turb, "FRCH_storm3_07_10_Turb.csv")
+# 
+# write.csv(FRCH_storm4a_07_15, "FRCH_storm4a_07_15.csv")
+# write.csv(FRCH_storm4a_07_15_Q, "FRCH_storm4a_07_15_Q.csv")
+# write.csv(FRCH_storm4a_07_15_NO3, "FRCH_storm4a_07_15_NO3.csv")
+# write.csv(FRCH_storm4a_07_15_fDOM, "FRCH_storm4a_07_15_fDOM.csv")
+# write.csv(FRCH_storm4a_07_15_SPC, "FRCH_storm4a_07_15_SPC.csv")
+# write.csv(FRCH_storm4a_07_15_turb, "FRCH_storm4a_07_15_Turb.csv")
+# 
+# write.csv(FRCH_storm4b_07_16, "FRCH_storm4b_07_16.csv")
+# write.csv(FRCH_storm4b_07_16_Q, "FRCH_storm4b_07_16_Q.csv")
+# write.csv(FRCH_storm4b_07_16_NO3, "FRCH_storm4b_07_16_NO3.csv")
+# write.csv(FRCH_storm4b_07_16_fDOM, "FRCH_storm4b_07_16_fDOM.csv")
+# write.csv(FRCH_storm4b_07_16_SPC, "FRCH_storm4b_07_16_SPC.csv")
+# write.csv(FRCH_storm4b_07_16_turb, "FRCH_storm4b_07_16_Turb.csv")
+# 
+# write.csv(FRCH_storm5_08_04, "FRCH_storm5_08_04.csv")
+# write.csv(FRCH_storm5_08_04_Q, "FRCH_storm5_08_04_Q.csv")
+# write.csv(FRCH_storm5_08_04_NO3, "FRCH_storm5_08_04_NO3.csv")
+# write.csv(FRCH_storm5_08_04_fDOM, "FRCH_storm5_08_04_fDOM.csv")
+# write.csv(FRCH_storm5_08_04_SPC, "FRCH_storm5_08_04_SPC.csv")
+# write.csv(FRCH_storm5_08_04_turb, "FRCH_storm5_08_04_Turb.csv")
+# 
+# write.csv(FRCH_storm6_08_13, "FRCH_storm6_08_13.csv")
+# write.csv(FRCH_storm6_08_13_Q, "FRCH_storm6_08_13_Q.csv")
+# write.csv(FRCH_storm6_08_13_NO3, "FRCH_storm6_08_13_NO3.csv")
+# write.csv(FRCH_storm6_08_13_fDOM, "FRCH_storm6_08_13_fDOM.csv")
+# write.csv(FRCH_storm6_08_13_SPC, "FRCH_storm6_08_13_SPC.csv")
+# write.csv(FRCH_storm6_08_13_turb, "FRCH_storm6_08_13_Turb.csv")
+# 
+# write.csv(FRCH_storm7_08_23, "FRCH_storm7_08_23.csv")
+# write.csv(FRCH_storm7_08_23_Q, "FRCH_storm7_08_23_Q.csv")
+# write.csv(FRCH_storm7_08_23_NO3, "FRCH_storm7_08_23_NO3.csv")
+# write.csv(FRCH_storm7_08_23_fDOM, "FRCH_storm7_08_23_fDOM.csv")
+# write.csv(FRCH_storm7_08_23_SPC, "FRCH_storm7_08_23_SPC.csv")
+# write.csv(FRCH_storm7_08_23_turb, "FRCH_storm7_08_23_Turb.csv")
+# 
+# write.csv(FRCH_storm8a_08_26, "FRCH_storm8a_08_26.csv")
+# write.csv(FRCH_storm8a_08_26_Q, "FRCH_storm8a_08_26_Q.csv")
+# write.csv(FRCH_storm8a_08_26_NO3, "FRCH_storm8a_08_26_NO3.csv")
+# write.csv(FRCH_storm8a_08_26_fDOM, "FRCH_storm8a_08_26_fDOM.csv")
+# write.csv(FRCH_storm8a_08_26_SPC, "FRCH_storm8a_08_26_SPC.csv")
+# write.csv(FRCH_storm8a_08_26_turb, "FRCH_storm8a_08_26_Turb.csv")
+# 
+# write.csv(FRCH_storm8b_08_28, "FRCH_storm8b_08_28.csv")
+# write.csv(FRCH_storm8b_08_28_Q, "FRCH_storm8b_08_28_Q.csv")
+# write.csv(FRCH_storm8b_08_28_NO3, "FRCH_storm8b_08_28_NO3.csv")
+# write.csv(FRCH_storm8b_08_28_fDOM, "FRCH_storm8b_08_28_fDOM.csv")
+# write.csv(FRCH_storm8b_08_28_SPC, "FRCH_storm8b_08_28_SPC.csv")
+# write.csv(FRCH_storm8b_08_28_turb, "FRCH_storm8b_08_28_Turb.csv")
+# 
+# write.csv(FRCH_storm9_08_30, "FRCH_storm9_08_30.csv")
+# write.csv(FRCH_storm9_08_30_Q, "FRCH_storm9_08_30_Q.csv")
+# write.csv(FRCH_storm9_08_30_NO3, "FRCH_storm9_08_30_NO3.csv")
+# write.csv(FRCH_storm9_08_30_fDOM, "FRCH_storm9_08_30_fDOM.csv")
+# write.csv(FRCH_storm9_08_30_SPC, "FRCH_storm9_08_30_SPC.csv")
+# write.csv(FRCH_storm9_08_30_turb, "FRCH_storm9_08_30_Turb.csv")
+# 
+# write.csv(FRCH_storm10_09_01, "FRCH_storm10_09_01.csv")
+# write.csv(FRCH_storm10_09_01_Q, "FRCH_storm10_09_01_Q.csv")
+# write.csv(FRCH_storm10_09_01_NO3, "FRCH_storm10_09_01_NO3.csv")
+# write.csv(FRCH_storm10_09_01_fDOM, "FRCH_storm10_09_01_fDOM.csv")
+# write.csv(FRCH_storm10_09_01_SPC, "FRCH_storm10_09_01_SPC.csv")
+# write.csv(FRCH_storm10_09_01_turb, "FRCH_storm10_09_01_Turb.csv")
+# 
+# write.csv(FRCH_storm11a_09_22, "FRCH_storm11a_09_22.csv")
+# write.csv(FRCH_storm11a_09_22_Q, "FRCH_storm11a_09_22_Q.csv")
+# write.csv(FRCH_storm11a_09_22_NO3, "FRCH_storm11a_09_22_NO3.csv")
+# write.csv(FRCH_storm11a_09_22_fDOM, "FRCH_storm11a_09_22_fDOM.csv")
+# write.csv(FRCH_storm11a_09_22_SPC, "FRCH_storm11a_09_22_SPC.csv")
+# write.csv(FRCH_storm11a_09_22_turb, "FRCH_storm11a_09_22_Turb.csv")
+# 
+# write.csv(FRCH_storm11b_09_24, "FRCH_storm11b_09_24.csv")
+# write.csv(FRCH_storm11b_09_24_Q, "FRCH_storm11b_09_24_Q.csv")
+# write.csv(FRCH_storm11b_09_24_NO3, "FRCH_storm11b_09_24_NO3.csv")
+# write.csv(FRCH_storm11b_09_24_fDOM, "FRCH_storm11b_09_24_fDOM.csv")
+# write.csv(FRCH_storm11b_09_24_SPC, "FRCH_storm11b_09_24_SPC.csv")
+# write.csv(FRCH_storm11b_09_24_turb, "FRCH_storm11b_09_24_Turb.csv")
 
 
 ### Precip Discharge Chem ###
@@ -2078,123 +2186,234 @@ MOOS_storm12_09_24_turb = subset(MOOS_storm12_09_24, select = c("DateTime","Turb
 names(MOOS_storm12_09_24_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-setwd(here("Storm_Events", "2018", "MOOS"))
-write.csv(MOOS_storm1_06_21, "MOOS_storm1_06_21.csv")
-write.csv(MOOS_storm1_06_21_Q, "MOOS_storm1_06_21_Q.csv")
-write.csv(MOOS_storm1_06_21_NO3, "MOOS_storm1_06_21_NO3.csv")
-write.csv(MOOS_storm1_06_21_fDOM, "MOOS_storm1_06_21_fDOM.csv")
-write.csv(MOOS_storm1_06_21_SPC, "MOOS_storm1_06_21_SPC.csv")
-write.csv(MOOS_storm1_06_21_turb, "MOOS_storm1_06_21_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm1_06_21_Turb.csv"))
 
-write.csv(MOOS_storm2a_06_30, "MOOS_storm2a_06_30.csv")
-write.csv(MOOS_storm2a_06_30_Q, "MOOS_storm2a_06_30_Q.csv")
-write.csv(MOOS_storm2a_06_30_NO3, "MOOS_storm2a_06_30_NO3.csv")
-write.csv(MOOS_storm2a_06_30_fDOM, "MOOS_storm2a_06_30_fDOM.csv")
-write.csv(MOOS_storm2a_06_30_SPC, "MOOS_storm2a_06_30_SPC.csv")
-write.csv(MOOS_storm2a_06_30_turb, "MOOS_storm2a_06_30_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2a_06_30_Turb.csv"))
 
-write.csv(MOOS_storm2b_07_01, "MOOS_storm2b_07_01.csv")
-write.csv(MOOS_storm2b_07_01_Q, "MOOS_storm2b_07_01_Q.csv")
-write.csv(MOOS_storm2b_07_01_NO3, "MOOS_storm2b_07_01_NO3.csv")
-write.csv(MOOS_storm2b_07_01_fDOM, "MOOS_storm2b_07_01_fDOM.csv")
-write.csv(MOOS_storm2b_07_01_SPC, "MOOS_storm2b_07_01_SPC.csv")
-write.csv(MOOS_storm2b_07_01_turb, "MOOS_storm2b_07_01_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2b_07_01_Turb.csv"))
 
-write.csv(MOOS_storm2c_07_04, "MOOS_storm2c_07_04.csv")
-write.csv(MOOS_storm2c_07_04_Q, "MOOS_storm2c_07_04_Q.csv")
-write.csv(MOOS_storm2c_07_04_NO3, "MOOS_storm2c_07_04_NO3.csv")
-write.csv(MOOS_storm2c_07_04_fDOM, "MOOS_storm2c_07_04_fDOM.csv")
-write.csv(MOOS_storm2c_07_04_SPC, "MOOS_storm2c_07_04_SPC.csv")
-write.csv(MOOS_storm2c_07_04_turb, "MOOS_storm2c_07_04_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm2c_07_04_Turb.csv"))
 
-write.csv(MOOS_storm3_07_09, "MOOS_storm3_07_09.csv")
-write.csv(MOOS_storm3_07_09_Q, "MOOS_storm3_07_09_Q.csv")
-write.csv(MOOS_storm3_07_09_NO3, "MOOS_storm3_07_09_NO3.csv")
-write.csv(MOOS_storm3_07_09_fDOM, "MOOS_storm3_07_09_fDOM.csv")
-write.csv(MOOS_storm3_07_09_SPC, "MOOS_storm3_07_09_SPC.csv")
-write.csv(MOOS_storm3_07_09_turb, "MOOS_storm3_07_09_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_09_Turb.csv"))
 
-write.csv(MOOS_storm4_07_15, "MOOS_storm4_07_15.csv")
-write.csv(MOOS_storm4_07_15_Q, "MOOS_storm4_07_15_Q.csv")
-write.csv(MOOS_storm4_07_15_NO3, "MOOS_storm4_07_15_NO3.csv")
-write.csv(MOOS_storm4_07_15_fDOM, "MOOS_storm4_07_15_fDOM.csv")
-write.csv(MOOS_storm4_07_15_SPC, "MOOS_storm4_07_15_SPC.csv")
-write.csv(MOOS_storm4_07_15_turb, "MOOS_storm4_07_15_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm4_07_15_Turb.csv"))
 
-write.csv(MOOS_storm5_08_04, "MOOS_storm5_08_04.csv")
-write.csv(MOOS_storm5_08_04_Q, "MOOS_storm5_08_04_Q.csv")
-write.csv(MOOS_storm5_08_04_NO3, "MOOS_storm5_08_04_NO3.csv")
-write.csv(MOOS_storm5_08_04_fDOM, "MOOS_storm5_08_04_fDOM.csv")
-write.csv(MOOS_storm5_08_04_SPC, "MOOS_storm5_08_04_SPC.csv")
-write.csv(MOOS_storm5_08_04_turb, "MOOS_storm5_08_04_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_04_Turb.csv"))
 
-write.csv(MOOS_storm6_08_13, "MOOS_storm6_08_13.csv")
-write.csv(MOOS_storm6_08_13_Q, "MOOS_storm6_08_13_Q.csv")
-write.csv(MOOS_storm6_08_13_NO3, "MOOS_storm6_08_13_NO3.csv")
-write.csv(MOOS_storm6_08_13_fDOM, "MOOS_storm6_08_13_fDOM.csv")
-write.csv(MOOS_storm6_08_13_SPC, "MOOS_storm6_08_13_SPC.csv")
-write.csv(MOOS_storm6_08_13_turb, "MOOS_storm6_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm6_08_13_Turb.csv"))
 
-write.csv(MOOS_storm7_08_23, "MOOS_storm7_08_23.csv")
-write.csv(MOOS_storm7_08_23_Q, "MOOS_storm7_08_23_Q.csv")
-write.csv(MOOS_storm7_08_23_NO3, "MOOS_storm7_08_23_NO3.csv")
-write.csv(MOOS_storm7_08_23_fDOM, "MOOS_storm7_08_23_fDOM.csv")
-write.csv(MOOS_storm7_08_23_SPC, "MOOS_storm7_08_23_SPC.csv")
-write.csv(MOOS_storm7_08_23_turb, "MOOS_storm7_08_23_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm7_08_23_Turb.csv"))
 
-write.csv(MOOS_storm8a_08_26, "MOOS_storm8a_08_26.csv")
-write.csv(MOOS_storm8a_08_26_Q, "MOOS_storm8a_08_26_Q.csv")
-write.csv(MOOS_storm8a_08_26_NO3, "MOOS_storm8a_08_26_NO3.csv")
-write.csv(MOOS_storm8a_08_26_fDOM, "MOOS_storm8a_08_26_fDOM.csv")
-write.csv(MOOS_storm8a_08_26_SPC, "MOOS_storm8a_08_26_SPC.csv")
-write.csv(MOOS_storm8a_08_26_turb, "MOOS_storm8a_08_26_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8a_08_26_Turb.csv"))
 
-write.csv(MOOS_storm8b_08_28, "MOOS_storm8b_08_28.csv")
-write.csv(MOOS_storm8b_08_28_Q, "MOOS_storm8b_08_28_Q.csv")
-write.csv(MOOS_storm8b_08_28_NO3, "MOOS_storm8b_08_28_NO3.csv")
-write.csv(MOOS_storm8b_08_28_fDOM, "MOOS_storm8b_08_28_fDOM.csv")
-write.csv(MOOS_storm8b_08_28_SPC, "MOOS_storm8b_08_28_SPC.csv")
-write.csv(MOOS_storm8b_08_28_turb, "MOOS_storm8b_08_28_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm8b_08_28_Turb.csv"))
 
-write.csv(MOOS_storm9_08_30, "MOOS_storm9_08_30.csv")
-write.csv(MOOS_storm9_08_30_Q, "MOOS_storm9_08_30_Q.csv")
-write.csv(MOOS_storm9_08_30_NO3, "MOOS_storm9_08_30_NO3.csv")
-write.csv(MOOS_storm9_08_30_fDOM, "MOOS_storm9_08_30_fDOM.csv")
-write.csv(MOOS_storm9_08_30_SPC, "MOOS_storm9_08_30_SPC.csv")
-write.csv(MOOS_storm9_08_30_turb, "MOOS_storm9_08_30_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm9_08_30_Turb.csv"))
 
-write.csv(MOOS_storm10_09_01, "MOOS_storm10_09_01.csv")
-write.csv(MOOS_storm10_09_01_Q, "MOOS_storm10_09_01_Q.csv")
-write.csv(MOOS_storm10_09_01_NO3, "MOOS_storm10_09_01_NO3.csv")
-write.csv(MOOS_storm10_09_01_fDOM, "MOOS_storm10_09_01_fDOM.csv")
-write.csv(MOOS_storm10_09_01_SPC, "MOOS_storm10_09_01_SPC.csv")
-write.csv(MOOS_storm10_09_01_turb, "MOOS_storm10_09_01_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm10_09_01_Turb.csv"))
 
-write.csv(MOOS_storm11a_09_22, "MOOS_storm11a_09_22.csv")
-write.csv(MOOS_storm11a_09_22_Q, "MOOS_storm11a_09_22_Q.csv")
-write.csv(MOOS_storm11a_09_22_NO3, "MOOS_storm11a_09_22_NO3.csv")
-write.csv(MOOS_storm11a_09_22_fDOM, "MOOS_storm11a_09_22_fDOM.csv")
-write.csv(MOOS_storm11a_09_22_SPC, "MOOS_storm11a_09_22_SPC.csv")
-write.csv(MOOS_storm11a_09_22_turb, "MOOS_storm11a_09_22_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11a_09_22_Turb.csv"))
 
-write.csv(MOOS_storm11b_09_24, "MOOS_storm11b_09_24.csv")
-write.csv(MOOS_storm11b_09_24_Q, "MOOS_storm11b_09_24_Q.csv")
-write.csv(MOOS_storm11b_09_24_NO3, "MOOS_storm11b_09_24_NO3.csv")
-write.csv(MOOS_storm11b_09_24_fDOM, "MOOS_storm11b_09_24_fDOM.csv")
-write.csv(MOOS_storm11b_09_24_SPC, "MOOS_storm11b_09_24_SPC.csv")
-write.csv(MOOS_storm11b_09_24_turb, "MOOS_storm11b_09_24_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm11b_09_24_Turb.csv"))
 
-write.csv(MOOS_storm12_09_24, "MOOS_storm12_09_24.csv")
-write.csv(MOOS_storm12_09_24_Q, "MOOS_storm12_09_24_Q.csv")
-write.csv(MOOS_storm12_09_24_NO3, "MOOS_storm12_09_24_NO3.csv")
-write.csv(MOOS_storm12_09_24_fDOM, "MOOS_storm12_09_24_fDOM.csv")
-write.csv(MOOS_storm12_09_24_SPC, "MOOS_storm12_09_24_SPC.csv")
-write.csv(MOOS_storm12_09_24_turb, "MOOS_storm12_09_24_Turb.csv")
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24_Q.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_24_Turb.csv"))
+
+
+# write.csv(MOOS_storm1_06_21, "MOOS_storm1_06_21.csv")
+# write.csv(MOOS_storm1_06_21_Q, "MOOS_storm1_06_21_Q.csv")
+# write.csv(MOOS_storm1_06_21_NO3, "MOOS_storm1_06_21_NO3.csv")
+# write.csv(MOOS_storm1_06_21_fDOM, "MOOS_storm1_06_21_fDOM.csv")
+# write.csv(MOOS_storm1_06_21_SPC, "MOOS_storm1_06_21_SPC.csv")
+# write.csv(MOOS_storm1_06_21_turb, "MOOS_storm1_06_21_Turb.csv")
+# 
+# write.csv(MOOS_storm2a_06_30, "MOOS_storm2a_06_30.csv")
+# write.csv(MOOS_storm2a_06_30_Q, "MOOS_storm2a_06_30_Q.csv")
+# write.csv(MOOS_storm2a_06_30_NO3, "MOOS_storm2a_06_30_NO3.csv")
+# write.csv(MOOS_storm2a_06_30_fDOM, "MOOS_storm2a_06_30_fDOM.csv")
+# write.csv(MOOS_storm2a_06_30_SPC, "MOOS_storm2a_06_30_SPC.csv")
+# write.csv(MOOS_storm2a_06_30_turb, "MOOS_storm2a_06_30_Turb.csv")
+# 
+# write.csv(MOOS_storm2b_07_01, "MOOS_storm2b_07_01.csv")
+# write.csv(MOOS_storm2b_07_01_Q, "MOOS_storm2b_07_01_Q.csv")
+# write.csv(MOOS_storm2b_07_01_NO3, "MOOS_storm2b_07_01_NO3.csv")
+# write.csv(MOOS_storm2b_07_01_fDOM, "MOOS_storm2b_07_01_fDOM.csv")
+# write.csv(MOOS_storm2b_07_01_SPC, "MOOS_storm2b_07_01_SPC.csv")
+# write.csv(MOOS_storm2b_07_01_turb, "MOOS_storm2b_07_01_Turb.csv")
+# 
+# write.csv(MOOS_storm2c_07_04, "MOOS_storm2c_07_04.csv")
+# write.csv(MOOS_storm2c_07_04_Q, "MOOS_storm2c_07_04_Q.csv")
+# write.csv(MOOS_storm2c_07_04_NO3, "MOOS_storm2c_07_04_NO3.csv")
+# write.csv(MOOS_storm2c_07_04_fDOM, "MOOS_storm2c_07_04_fDOM.csv")
+# write.csv(MOOS_storm2c_07_04_SPC, "MOOS_storm2c_07_04_SPC.csv")
+# write.csv(MOOS_storm2c_07_04_turb, "MOOS_storm2c_07_04_Turb.csv")
+# 
+# write.csv(MOOS_storm3_07_09, "MOOS_storm3_07_09.csv")
+# write.csv(MOOS_storm3_07_09_Q, "MOOS_storm3_07_09_Q.csv")
+# write.csv(MOOS_storm3_07_09_NO3, "MOOS_storm3_07_09_NO3.csv")
+# write.csv(MOOS_storm3_07_09_fDOM, "MOOS_storm3_07_09_fDOM.csv")
+# write.csv(MOOS_storm3_07_09_SPC, "MOOS_storm3_07_09_SPC.csv")
+# write.csv(MOOS_storm3_07_09_turb, "MOOS_storm3_07_09_Turb.csv")
+# 
+# write.csv(MOOS_storm4_07_15, "MOOS_storm4_07_15.csv")
+# write.csv(MOOS_storm4_07_15_Q, "MOOS_storm4_07_15_Q.csv")
+# write.csv(MOOS_storm4_07_15_NO3, "MOOS_storm4_07_15_NO3.csv")
+# write.csv(MOOS_storm4_07_15_fDOM, "MOOS_storm4_07_15_fDOM.csv")
+# write.csv(MOOS_storm4_07_15_SPC, "MOOS_storm4_07_15_SPC.csv")
+# write.csv(MOOS_storm4_07_15_turb, "MOOS_storm4_07_15_Turb.csv")
+# 
+# write.csv(MOOS_storm5_08_04, "MOOS_storm5_08_04.csv")
+# write.csv(MOOS_storm5_08_04_Q, "MOOS_storm5_08_04_Q.csv")
+# write.csv(MOOS_storm5_08_04_NO3, "MOOS_storm5_08_04_NO3.csv")
+# write.csv(MOOS_storm5_08_04_fDOM, "MOOS_storm5_08_04_fDOM.csv")
+# write.csv(MOOS_storm5_08_04_SPC, "MOOS_storm5_08_04_SPC.csv")
+# write.csv(MOOS_storm5_08_04_turb, "MOOS_storm5_08_04_Turb.csv")
+# 
+# write.csv(MOOS_storm6_08_13, "MOOS_storm6_08_13.csv")
+# write.csv(MOOS_storm6_08_13_Q, "MOOS_storm6_08_13_Q.csv")
+# write.csv(MOOS_storm6_08_13_NO3, "MOOS_storm6_08_13_NO3.csv")
+# write.csv(MOOS_storm6_08_13_fDOM, "MOOS_storm6_08_13_fDOM.csv")
+# write.csv(MOOS_storm6_08_13_SPC, "MOOS_storm6_08_13_SPC.csv")
+# write.csv(MOOS_storm6_08_13_turb, "MOOS_storm6_08_13_Turb.csv")
+# 
+# write.csv(MOOS_storm7_08_23, "MOOS_storm7_08_23.csv")
+# write.csv(MOOS_storm7_08_23_Q, "MOOS_storm7_08_23_Q.csv")
+# write.csv(MOOS_storm7_08_23_NO3, "MOOS_storm7_08_23_NO3.csv")
+# write.csv(MOOS_storm7_08_23_fDOM, "MOOS_storm7_08_23_fDOM.csv")
+# write.csv(MOOS_storm7_08_23_SPC, "MOOS_storm7_08_23_SPC.csv")
+# write.csv(MOOS_storm7_08_23_turb, "MOOS_storm7_08_23_Turb.csv")
+# 
+# write.csv(MOOS_storm8a_08_26, "MOOS_storm8a_08_26.csv")
+# write.csv(MOOS_storm8a_08_26_Q, "MOOS_storm8a_08_26_Q.csv")
+# write.csv(MOOS_storm8a_08_26_NO3, "MOOS_storm8a_08_26_NO3.csv")
+# write.csv(MOOS_storm8a_08_26_fDOM, "MOOS_storm8a_08_26_fDOM.csv")
+# write.csv(MOOS_storm8a_08_26_SPC, "MOOS_storm8a_08_26_SPC.csv")
+# write.csv(MOOS_storm8a_08_26_turb, "MOOS_storm8a_08_26_Turb.csv")
+# 
+# write.csv(MOOS_storm8b_08_28, "MOOS_storm8b_08_28.csv")
+# write.csv(MOOS_storm8b_08_28_Q, "MOOS_storm8b_08_28_Q.csv")
+# write.csv(MOOS_storm8b_08_28_NO3, "MOOS_storm8b_08_28_NO3.csv")
+# write.csv(MOOS_storm8b_08_28_fDOM, "MOOS_storm8b_08_28_fDOM.csv")
+# write.csv(MOOS_storm8b_08_28_SPC, "MOOS_storm8b_08_28_SPC.csv")
+# write.csv(MOOS_storm8b_08_28_turb, "MOOS_storm8b_08_28_Turb.csv")
+# 
+# write.csv(MOOS_storm9_08_30, "MOOS_storm9_08_30.csv")
+# write.csv(MOOS_storm9_08_30_Q, "MOOS_storm9_08_30_Q.csv")
+# write.csv(MOOS_storm9_08_30_NO3, "MOOS_storm9_08_30_NO3.csv")
+# write.csv(MOOS_storm9_08_30_fDOM, "MOOS_storm9_08_30_fDOM.csv")
+# write.csv(MOOS_storm9_08_30_SPC, "MOOS_storm9_08_30_SPC.csv")
+# write.csv(MOOS_storm9_08_30_turb, "MOOS_storm9_08_30_Turb.csv")
+# 
+# write.csv(MOOS_storm10_09_01, "MOOS_storm10_09_01.csv")
+# write.csv(MOOS_storm10_09_01_Q, "MOOS_storm10_09_01_Q.csv")
+# write.csv(MOOS_storm10_09_01_NO3, "MOOS_storm10_09_01_NO3.csv")
+# write.csv(MOOS_storm10_09_01_fDOM, "MOOS_storm10_09_01_fDOM.csv")
+# write.csv(MOOS_storm10_09_01_SPC, "MOOS_storm10_09_01_SPC.csv")
+# write.csv(MOOS_storm10_09_01_turb, "MOOS_storm10_09_01_Turb.csv")
+# 
+# write.csv(MOOS_storm11a_09_22, "MOOS_storm11a_09_22.csv")
+# write.csv(MOOS_storm11a_09_22_Q, "MOOS_storm11a_09_22_Q.csv")
+# write.csv(MOOS_storm11a_09_22_NO3, "MOOS_storm11a_09_22_NO3.csv")
+# write.csv(MOOS_storm11a_09_22_fDOM, "MOOS_storm11a_09_22_fDOM.csv")
+# write.csv(MOOS_storm11a_09_22_SPC, "MOOS_storm11a_09_22_SPC.csv")
+# write.csv(MOOS_storm11a_09_22_turb, "MOOS_storm11a_09_22_Turb.csv")
+# 
+# write.csv(MOOS_storm11b_09_24, "MOOS_storm11b_09_24.csv")
+# write.csv(MOOS_storm11b_09_24_Q, "MOOS_storm11b_09_24_Q.csv")
+# write.csv(MOOS_storm11b_09_24_NO3, "MOOS_storm11b_09_24_NO3.csv")
+# write.csv(MOOS_storm11b_09_24_fDOM, "MOOS_storm11b_09_24_fDOM.csv")
+# write.csv(MOOS_storm11b_09_24_SPC, "MOOS_storm11b_09_24_SPC.csv")
+# write.csv(MOOS_storm11b_09_24_turb, "MOOS_storm11b_09_24_Turb.csv")
+# 
+# write.csv(MOOS_storm12_09_24, "MOOS_storm12_09_24.csv")
+# write.csv(MOOS_storm12_09_24_Q, "MOOS_storm12_09_24_Q.csv")
+# write.csv(MOOS_storm12_09_24_NO3, "MOOS_storm12_09_24_NO3.csv")
+# write.csv(MOOS_storm12_09_24_fDOM, "MOOS_storm12_09_24_fDOM.csv")
+# write.csv(MOOS_storm12_09_24_SPC, "MOOS_storm12_09_24_SPC.csv")
+# write.csv(MOOS_storm12_09_24_turb, "MOOS_storm12_09_24_Turb.csv")
 
 
 ### Precip Discharge Chem ###
 #CARI#
-setwd("~/Documents/Storms_clean_repo")
 CARI_2018 <- CARI.2018 # renaming this to save me lots of time from old script
 names(CARI_2018) <- c("Site","DateTime", "Discharge", "NO3",
                       "fDOM", "SpCond", "Turb", "day")
@@ -3047,136 +3266,253 @@ CARI_storm12b_09_25_turb = subset(CARI_storm12b_09_25, select = c("DateTime","Tu
 names(CARI_storm12b_09_25_turb) = c("valuedatetime","datavalue")
 
 #Write csv #
-dir.create(file.path("Storm_Events", "2018", "CARI"))
-setwd(here("Storm_Events", "2018", "CARI"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm1_06_10_Turb.csv"))
 
-write.csv(CARI_storm1_06_10, "CARI_storm1_06_10.csv")
-write.csv(CARI_storm1_06_10_Q, "CARI_storm1_06_10_Q.csv")
-write.csv(CARI_storm1_06_10_NO3, "CARI_storm1_06_10_NO3.csv")
-write.csv(CARI_storm1_06_10_fDOM, "CARI_storm1_06_10_fDOM.csv")
-write.csv(CARI_storm1_06_10_SPC, "CARI_storm1_06_10_SPC.csv")
-write.csv(CARI_storm1_06_10_turb, "CARI_storm1_06_10_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm2_06_21_Turb.csv"))
 
-write.csv(CARI_storm2_06_21, "CARI_storm2_06_21.csv")
-write.csv(CARI_storm2_06_21_Q, "CARI_storm2_06_21_Q.csv")
-write.csv(CARI_storm2_06_21_NO3, "CARI_storm2_06_21_NO3.csv")
-write.csv(CARI_storm2_06_21_fDOM, "CARI_storm2_06_21_fDOM.csv")
-write.csv(CARI_storm2_06_21_SPC, "CARI_storm2_06_21_SPC.csv")
-write.csv(CARI_storm2_06_21_turb, "CARI_storm2_06_21_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm3_06_29_Turb.csv"))
 
-write.csv(CARI_storm3_06_29, "CARI_storm3_06_29.csv")
-write.csv(CARI_storm3_06_29_Q, "CARI_storm3_06_29_Q.csv")
-write.csv(CARI_storm3_06_29_NO3, "CARI_storm3_06_29_NO3.csv")
-write.csv(CARI_storm3_06_29_fDOM, "CARI_storm3_06_29_fDOM.csv")
-write.csv(CARI_storm3_06_29_SPC, "CARI_storm3_06_29_SPC.csv")
-write.csv(CARI_storm3_06_29_turb, "CARI_storm3_06_29_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4a_06_30_Turb.csv"))
 
-write.csv(CARI_storm4a_06_30, "CARI_storm4a_06_30.csv")
-write.csv(CARI_storm4a_06_30_Q, "CARI_storm4a_06_30_Q.csv")
-write.csv(CARI_storm4a_06_30_NO3, "CARI_storm4a_06_30_NO3.csv")
-write.csv(CARI_storm4a_06_30_fDOM, "CARI_storm4a_06_30_fDOM.csv")
-write.csv(CARI_storm4a_06_30_SPC, "CARI_storm4a_06_30_SPC.csv")
-write.csv(CARI_storm4a_06_30_turb, "CARI_storm4a_06_30_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm4b_07_01_Turb.csv"))
 
-write.csv(CARI_storm4b_07_01, "CARI_storm4b_07_01.csv")
-write.csv(CARI_storm4b_07_01_Q, "CARI_storm4b_07_01_Q.csv")
-write.csv(CARI_storm4b_07_01_NO3, "CARI_storm4b_07_01_NO3.csv")
-write.csv(CARI_storm4b_07_01_fDOM, "CARI_storm4b_07_01_fDOM.csv")
-write.csv(CARI_storm4b_07_01_SPC, "CARI_storm4b_07_01_SPC.csv")
-write.csv(CARI_storm4b_07_01_turb, "CARI_storm4b_07_01_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_Turb.csv"))
 
-write.csv(CARI_storm5a_08_04, "CARI_storm5a_08_04.csv")
-write.csv(CARI_storm5a_08_04_Q, "CARI_storm5a_08_04_Q.csv")
-write.csv(CARI_storm5a_08_04_NO3, "CARI_storm5a_08_04_NO3.csv")
-write.csv(CARI_storm5a_08_04_fDOM, "CARI_storm5a_08_04_fDOM.csv")
-write.csv(CARI_storm5a_08_04_SPC, "CARI_storm5a_08_04_SPC.csv")
-write.csv(CARI_storm5a_08_04_turb, "CARI_storm5a_08_04_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_Turb.csv"))
 
-write.csv(CARI_storm5b_08_05, "CARI_storm5b_08_05.csv")
-write.csv(CARI_storm5b_08_05_Q, "CARI_storm5b_08_05_Q.csv")
-write.csv(CARI_storm5b_08_05_NO3, "CARI_storm5b_08_05_NO3.csv")
-write.csv(CARI_storm5b_08_05_fDOM, "CARI_storm5b_08_05_fDOM.csv")
-write.csv(CARI_storm5b_08_05_SPC, "CARI_storm5b_08_05_SPC.csv")
-write.csv(CARI_storm5b_08_05_turb, "CARI_storm5b_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_Turb.csv"))
 
-write.csv(CARI_storm5c_08_06, "CARI_storm5c_08_06.csv")
-write.csv(CARI_storm5c_08_06_Q, "CARI_storm5c_08_06_Q.csv")
-write.csv(CARI_storm5c_08_06_NO3, "CARI_storm5c_08_06_NO3.csv")
-write.csv(CARI_storm5c_08_06_fDOM, "CARI_storm5c_08_06_fDOM.csv")
-write.csv(CARI_storm5c_08_06_SPC, "CARI_storm5c_08_06_SPC.csv")
-write.csv(CARI_storm5c_08_06_turb, "CARI_storm5c_08_06_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_Turb.csv"))
 
-write.csv(CARI_storm6_08_13, "CARI_storm6_08_13.csv")
-write.csv(CARI_storm6_08_13_Q, "CARI_storm6_08_13_Q.csv")
-write.csv(CARI_storm6_08_13_NO3, "CARI_storm6_08_13_NO3.csv")
-write.csv(CARI_storm6_08_13_fDOM, "CARI_storm6_08_13_fDOM.csv")
-write.csv(CARI_storm6_08_13_SPC, "CARI_storm6_08_13_SPC.csv")
-write.csv(CARI_storm6_08_13_turb, "CARI_storm6_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm7_08_21_Turb.csv"))
 
-write.csv(CARI_storm7_08_21, "CARI_storm7_08_21.csv")
-write.csv(CARI_storm7_08_21_Q, "CARI_storm7_08_21_Q.csv")
-write.csv(CARI_storm7_08_21_NO3, "CARI_storm7_08_21_NO3.csv")
-write.csv(CARI_storm7_08_21_fDOM, "CARI_storm7_08_21_fDOM.csv")
-write.csv(CARI_storm7_08_21_SPC, "CARI_storm7_08_21_SPC.csv")
-write.csv(CARI_storm7_08_21_turb, "CARI_storm7_08_21_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm8_08_24_Turb.csv"))
 
-write.csv(CARI_storm8_08_24, "CARI_storm8_08_24.csv")
-write.csv(CARI_storm8_08_24_Q, "CARI_storm8_08_24_Q.csv")
-write.csv(CARI_storm8_08_24_NO3, "CARI_storm8_08_24_NO3.csv")
-write.csv(CARI_storm8_08_24_fDOM, "CARI_storm8_08_24_fDOM.csv")
-write.csv(CARI_storm8_08_24_SPC, "CARI_storm8_08_24_SPC.csv")
-write.csv(CARI_storm8_08_24_turb, "CARI_storm8_08_24_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm9_08_26_Turb.csv"))
 
-write.csv(CARI_storm9_08_26, "CARI_storm9_08_26.csv")
-write.csv(CARI_storm9_08_26_Q, "CARI_storm9_08_26_Q.csv")
-write.csv(CARI_storm9_08_26_NO3, "CARI_storm9_08_26_NO3.csv")
-write.csv(CARI_storm9_08_26_fDOM, "CARI_storm9_08_26_fDOM.csv")
-write.csv(CARI_storm9_08_26_SPC, "CARI_storm9_08_26_SPC.csv")
-write.csv(CARI_storm9_08_26_turb, "CARI_storm9_08_26_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm10_08_30_Turb.csv"))
 
-write.csv(CARI_storm10_08_30, "CARI_storm10_08_30.csv")
-write.csv(CARI_storm10_08_30_Q, "CARI_storm10_08_30_Q.csv")
-write.csv(CARI_storm10_08_30_NO3, "CARI_storm10_08_30_NO3.csv")
-write.csv(CARI_storm10_08_30_fDOM, "CARI_storm10_08_30_fDOM.csv")
-write.csv(CARI_storm10_08_30_SPC, "CARI_storm10_08_30_SPC.csv")
-write.csv(CARI_storm10_08_30_turb, "CARI_storm10_08_30_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm11_09_01_Turb.csv"))
 
-write.csv(CARI_storm11_09_01, "CARI_storm11_09_01.csv")
-write.csv(CARI_storm11_09_01_Q, "CARI_storm11_09_01_Q.csv")
-write.csv(CARI_storm11_09_01_NO3, "CARI_storm11_09_01_NO3.csv")
-write.csv(CARI_storm11_09_01_fDOM, "CARI_storm11_09_01_fDOM.csv")
-write.csv(CARI_storm11_09_01_SPC, "CARI_storm11_09_01_SPC.csv")
-write.csv(CARI_storm11_09_01_turb, "CARI_storm11_09_01_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12a_09_20_Turb.csv"))
 
-write.csv(CARI_storm12a_09_20, "CARI_storm12a_09_20.csv")
-write.csv(CARI_storm12a_09_20_Q, "CARI_storm12a_09_20_Q.csv")
-write.csv(CARI_storm12a_09_20_NO3, "CARI_storm12a_09_20_NO3.csv")
-write.csv(CARI_storm12a_09_20_fDOM, "CARI_storm12a_09_20_fDOM.csv")
-write.csv(CARI_storm12a_09_20_SPC, "CARI_storm12a_09_20_SPC.csv")
-write.csv(CARI_storm12a_09_20_turb, "CARI_storm12a_09_20_Turb.csv")
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25_Q.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25_NO3.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25_fDOM.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25_SPC.csv"))
+write.csv(here("Storm_Events", "2018", "CARI", "CARI_storm12b_09_25_Turb.csv"))
 
-write.csv(CARI_storm12b_09_25, "CARI_storm12b_09_25.csv")
-write.csv(CARI_storm12b_09_25_Q, "CARI_storm12b_09_25_Q.csv")
-write.csv(CARI_storm12b_09_25_NO3, "CARI_storm12b_09_25_NO3.csv")
-write.csv(CARI_storm12b_09_25_fDOM, "CARI_storm12b_09_25_fDOM.csv")
-write.csv(CARI_storm12b_09_25_SPC, "CARI_storm12b_09_25_SPC.csv")
-write.csv(CARI_storm12b_09_25_turb, "CARI_storm12b_09_25_Turb.csv")
+# write.csv(CARI_storm1_06_10, "CARI_storm1_06_10.csv")
+# write.csv(CARI_storm1_06_10_Q, "CARI_storm1_06_10_Q.csv")
+# write.csv(CARI_storm1_06_10_NO3, "CARI_storm1_06_10_NO3.csv")
+# write.csv(CARI_storm1_06_10_fDOM, "CARI_storm1_06_10_fDOM.csv")
+# write.csv(CARI_storm1_06_10_SPC, "CARI_storm1_06_10_SPC.csv")
+# write.csv(CARI_storm1_06_10_turb, "CARI_storm1_06_10_Turb.csv")
+# 
+# write.csv(CARI_storm2_06_21, "CARI_storm2_06_21.csv")
+# write.csv(CARI_storm2_06_21_Q, "CARI_storm2_06_21_Q.csv")
+# write.csv(CARI_storm2_06_21_NO3, "CARI_storm2_06_21_NO3.csv")
+# write.csv(CARI_storm2_06_21_fDOM, "CARI_storm2_06_21_fDOM.csv")
+# write.csv(CARI_storm2_06_21_SPC, "CARI_storm2_06_21_SPC.csv")
+# write.csv(CARI_storm2_06_21_turb, "CARI_storm2_06_21_Turb.csv")
+# 
+# write.csv(CARI_storm3_06_29, "CARI_storm3_06_29.csv")
+# write.csv(CARI_storm3_06_29_Q, "CARI_storm3_06_29_Q.csv")
+# write.csv(CARI_storm3_06_29_NO3, "CARI_storm3_06_29_NO3.csv")
+# write.csv(CARI_storm3_06_29_fDOM, "CARI_storm3_06_29_fDOM.csv")
+# write.csv(CARI_storm3_06_29_SPC, "CARI_storm3_06_29_SPC.csv")
+# write.csv(CARI_storm3_06_29_turb, "CARI_storm3_06_29_Turb.csv")
+# 
+# write.csv(CARI_storm4a_06_30, "CARI_storm4a_06_30.csv")
+# write.csv(CARI_storm4a_06_30_Q, "CARI_storm4a_06_30_Q.csv")
+# write.csv(CARI_storm4a_06_30_NO3, "CARI_storm4a_06_30_NO3.csv")
+# write.csv(CARI_storm4a_06_30_fDOM, "CARI_storm4a_06_30_fDOM.csv")
+# write.csv(CARI_storm4a_06_30_SPC, "CARI_storm4a_06_30_SPC.csv")
+# write.csv(CARI_storm4a_06_30_turb, "CARI_storm4a_06_30_Turb.csv")
+# 
+# write.csv(CARI_storm4b_07_01, "CARI_storm4b_07_01.csv")
+# write.csv(CARI_storm4b_07_01_Q, "CARI_storm4b_07_01_Q.csv")
+# write.csv(CARI_storm4b_07_01_NO3, "CARI_storm4b_07_01_NO3.csv")
+# write.csv(CARI_storm4b_07_01_fDOM, "CARI_storm4b_07_01_fDOM.csv")
+# write.csv(CARI_storm4b_07_01_SPC, "CARI_storm4b_07_01_SPC.csv")
+# write.csv(CARI_storm4b_07_01_turb, "CARI_storm4b_07_01_Turb.csv")
+# 
+# write.csv(CARI_storm5a_08_04, "CARI_storm5a_08_04.csv")
+# write.csv(CARI_storm5a_08_04_Q, "CARI_storm5a_08_04_Q.csv")
+# write.csv(CARI_storm5a_08_04_NO3, "CARI_storm5a_08_04_NO3.csv")
+# write.csv(CARI_storm5a_08_04_fDOM, "CARI_storm5a_08_04_fDOM.csv")
+# write.csv(CARI_storm5a_08_04_SPC, "CARI_storm5a_08_04_SPC.csv")
+# write.csv(CARI_storm5a_08_04_turb, "CARI_storm5a_08_04_Turb.csv")
+# 
+# write.csv(CARI_storm5b_08_05, "CARI_storm5b_08_05.csv")
+# write.csv(CARI_storm5b_08_05_Q, "CARI_storm5b_08_05_Q.csv")
+# write.csv(CARI_storm5b_08_05_NO3, "CARI_storm5b_08_05_NO3.csv")
+# write.csv(CARI_storm5b_08_05_fDOM, "CARI_storm5b_08_05_fDOM.csv")
+# write.csv(CARI_storm5b_08_05_SPC, "CARI_storm5b_08_05_SPC.csv")
+# write.csv(CARI_storm5b_08_05_turb, "CARI_storm5b_08_05_Turb.csv")
+# 
+# write.csv(CARI_storm5c_08_06, "CARI_storm5c_08_06.csv")
+# write.csv(CARI_storm5c_08_06_Q, "CARI_storm5c_08_06_Q.csv")
+# write.csv(CARI_storm5c_08_06_NO3, "CARI_storm5c_08_06_NO3.csv")
+# write.csv(CARI_storm5c_08_06_fDOM, "CARI_storm5c_08_06_fDOM.csv")
+# write.csv(CARI_storm5c_08_06_SPC, "CARI_storm5c_08_06_SPC.csv")
+# write.csv(CARI_storm5c_08_06_turb, "CARI_storm5c_08_06_Turb.csv")
+# 
+# write.csv(CARI_storm6_08_13, "CARI_storm6_08_13.csv")
+# write.csv(CARI_storm6_08_13_Q, "CARI_storm6_08_13_Q.csv")
+# write.csv(CARI_storm6_08_13_NO3, "CARI_storm6_08_13_NO3.csv")
+# write.csv(CARI_storm6_08_13_fDOM, "CARI_storm6_08_13_fDOM.csv")
+# write.csv(CARI_storm6_08_13_SPC, "CARI_storm6_08_13_SPC.csv")
+# write.csv(CARI_storm6_08_13_turb, "CARI_storm6_08_13_Turb.csv")
+# 
+# write.csv(CARI_storm7_08_21, "CARI_storm7_08_21.csv")
+# write.csv(CARI_storm7_08_21_Q, "CARI_storm7_08_21_Q.csv")
+# write.csv(CARI_storm7_08_21_NO3, "CARI_storm7_08_21_NO3.csv")
+# write.csv(CARI_storm7_08_21_fDOM, "CARI_storm7_08_21_fDOM.csv")
+# write.csv(CARI_storm7_08_21_SPC, "CARI_storm7_08_21_SPC.csv")
+# write.csv(CARI_storm7_08_21_turb, "CARI_storm7_08_21_Turb.csv")
+# 
+# write.csv(CARI_storm8_08_24, "CARI_storm8_08_24.csv")
+# write.csv(CARI_storm8_08_24_Q, "CARI_storm8_08_24_Q.csv")
+# write.csv(CARI_storm8_08_24_NO3, "CARI_storm8_08_24_NO3.csv")
+# write.csv(CARI_storm8_08_24_fDOM, "CARI_storm8_08_24_fDOM.csv")
+# write.csv(CARI_storm8_08_24_SPC, "CARI_storm8_08_24_SPC.csv")
+# write.csv(CARI_storm8_08_24_turb, "CARI_storm8_08_24_Turb.csv")
+# 
+# write.csv(CARI_storm9_08_26, "CARI_storm9_08_26.csv")
+# write.csv(CARI_storm9_08_26_Q, "CARI_storm9_08_26_Q.csv")
+# write.csv(CARI_storm9_08_26_NO3, "CARI_storm9_08_26_NO3.csv")
+# write.csv(CARI_storm9_08_26_fDOM, "CARI_storm9_08_26_fDOM.csv")
+# write.csv(CARI_storm9_08_26_SPC, "CARI_storm9_08_26_SPC.csv")
+# write.csv(CARI_storm9_08_26_turb, "CARI_storm9_08_26_Turb.csv")
+# 
+# write.csv(CARI_storm10_08_30, "CARI_storm10_08_30.csv")
+# write.csv(CARI_storm10_08_30_Q, "CARI_storm10_08_30_Q.csv")
+# write.csv(CARI_storm10_08_30_NO3, "CARI_storm10_08_30_NO3.csv")
+# write.csv(CARI_storm10_08_30_fDOM, "CARI_storm10_08_30_fDOM.csv")
+# write.csv(CARI_storm10_08_30_SPC, "CARI_storm10_08_30_SPC.csv")
+# write.csv(CARI_storm10_08_30_turb, "CARI_storm10_08_30_Turb.csv")
+# 
+# write.csv(CARI_storm11_09_01, "CARI_storm11_09_01.csv")
+# write.csv(CARI_storm11_09_01_Q, "CARI_storm11_09_01_Q.csv")
+# write.csv(CARI_storm11_09_01_NO3, "CARI_storm11_09_01_NO3.csv")
+# write.csv(CARI_storm11_09_01_fDOM, "CARI_storm11_09_01_fDOM.csv")
+# write.csv(CARI_storm11_09_01_SPC, "CARI_storm11_09_01_SPC.csv")
+# write.csv(CARI_storm11_09_01_turb, "CARI_storm11_09_01_Turb.csv")
+# 
+# write.csv(CARI_storm12a_09_20, "CARI_storm12a_09_20.csv")
+# write.csv(CARI_storm12a_09_20_Q, "CARI_storm12a_09_20_Q.csv")
+# write.csv(CARI_storm12a_09_20_NO3, "CARI_storm12a_09_20_NO3.csv")
+# write.csv(CARI_storm12a_09_20_fDOM, "CARI_storm12a_09_20_fDOM.csv")
+# write.csv(CARI_storm12a_09_20_SPC, "CARI_storm12a_09_20_SPC.csv")
+# write.csv(CARI_storm12a_09_20_turb, "CARI_storm12a_09_20_Turb.csv")
+# 
+# write.csv(CARI_storm12b_09_25, "CARI_storm12b_09_25.csv")
+# write.csv(CARI_storm12b_09_25_Q, "CARI_storm12b_09_25_Q.csv")
+# write.csv(CARI_storm12b_09_25_NO3, "CARI_storm12b_09_25_NO3.csv")
+# write.csv(CARI_storm12b_09_25_fDOM, "CARI_storm12b_09_25_fDOM.csv")
+# write.csv(CARI_storm12b_09_25_SPC, "CARI_storm12b_09_25_SPC.csv")
+# write.csv(CARI_storm12b_09_25_turb, "CARI_storm12b_09_25_Turb.csv")
 
 # add burst data to storm data #
 
 # load storm data #
-setwd("~/Documents/Storms_clean_repo")
-storm_file_list <- list.files(path="Storm_Events/2018/FRCH_MOOS_CARI/", 
+
+storm_file_list <- list.files(path = here("Storm_Events", "2018", "FRCH_MOOS_CARI/", 
                               recursive=F, 
                               pattern=".csv", 
-                              full.names=TRUE)
+                              full.names=TRUE))
+
+
+# storm_file_list <- list.files(path = "Storm_Events/2018/FRCH_MOOS_CARI/", 
+#                               recursive=F, 
+#                               pattern=".csv", 
+#                               full.names=TRUE)
 
 storm_list<-do.call("list", lapply(storm_file_list, 
                                    read.csv, 
                                    stringsAsFactors=FALSE, 
                                    header=T, row.names=1))
 
-storm_file_list = sub("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI//", storm_file_list, replacement = "")
+storm_file_list = sub(here("Storm_Events", "2018", "FRCH_MOOS_CARI//") , storm_file_list, replacement = "")
+
+# storm_file_list = sub("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI//", storm_file_list, replacement = "")
 storm_file_list = sub(".csv", storm_file_list, replacement = "")
 names(storm_list) = storm_file_list
 
@@ -3206,7 +3542,6 @@ MOOS_SpCond_storm_list = MOOS_storm_list[c(grep("SPC", names(MOOS_storm_list)))]
 MOOS_turb_storm_list = MOOS_storm_list[c(grep("Turb", names(MOOS_storm_list)))]
 
 # load burst SUNA data #
-
 FRCHfile_list <- list.files(path="~/Documents/DoD_2018_Jake/SUNA_data/from_internal_harddrive/raw/FRCH/", 
                             recursive=F, 
                             pattern=".CSV", 
@@ -3557,29 +3892,45 @@ saveRDS(MOOS_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2
 ############################## 2019 ######################################################
 ##########################################################################################
 
-setwd("~/Documents/Storms_clean_repo")
 # Load from local machine #
-Q.daily.2019 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/Q.daily.2019.csv")
-Q.2019 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/Q_2019.csv")
+# Q.daily.2019 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/Q.daily.2019.csv")
+# Q.2019 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/Q_2019.csv")
+# 
+# names(Q.2019) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column headers to match that of the chem file 
+# 
+# Q.2019$datetimeAK <- ymd_hms(Q.2019$datetimeAK) # converting character to datetime
+# 
+# 
+# chem.2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv",
+#                       na.strings = "NA")
+# 
+# chem.2019 <- chem.2019[, -c(1, 3:20, 24:83, 84,85)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
+# # I just want the constituents and datetimeAk
+# 
+# chem.2019 <- chem.2019[, c(6,1,4,2,3,5)] # reorganizing column headers
+# 
+# chem.2019$datetimeAK <- ymd_hms(chem.2019$datetimeAK) # converting character to datetime
+# 
+# names(chem.2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
+
+# here # 
+Q.daily.2019 <- read.csv(here("processed_sensor_data", "2019", "Q.daily.2019.csv"))
+Q.2019 <- read.csv(here("processed_sensor_data", "2019", "Q_2019.csv"))
 
 names(Q.2019) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column headers to match that of the chem file 
 
 Q.2019$datetimeAK <- ymd_hms(Q.2019$datetimeAK) # converting character to datetime
 
 
-chem.2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv",
-                      na.strings = "NA")
+chem.2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"), na.strings = "NA")
 
-chem.2019 <- chem.2019[, -c(1, 3:20, 24:83, 84,85)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
-# I just want the constituents and datetimeAk
-
-chem.2019 <- chem.2019[, c(6,1,4,2,3,5)] # reorganizing column headers
-
-
+chem.2019 <- chem.2019[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab")]
 
 chem.2019$datetimeAK <- ymd_hms(chem.2019$datetimeAK) # converting character to datetime
 
 names(chem.2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
+
 
 ### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
 # pivot long to get all the response variables in one column
@@ -3601,19 +3952,20 @@ ggplot(chem_2019_long, aes(x = datetimeAK, y = concentration, color = site.ID)) 
 
 
 # Load in CARI data 
-CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
+CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
+# CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
 
 # time zones are the bane of my existence
 # when I import the file that had AKDT time from the last repo it loads in as UTC 
 # but when I try and change it all over it gets all wonky so here is my horrible 
 # way to solve the issue
 # 
-CARI_Q <- CARI_2019[,-c(4:8)] # clipping out just Q 
+CARI_Q <- CARI_2019[c("site.ID.x", "DateTimeAK", "Discharge")] # clipping out just Q  
 CARI_Q$DateTimeAK <- ymd_hms(CARI_Q$DateTimeAK) # changing to posixct format
 attributes(CARI_Q$DateTimeAK)$tzone <- 'America/Anchorage' # changing to AK time
 CARI_Q <- CARI_Q[order(CARI_Q$DateTimeAK),] # there were weird NAs on the bottom that were causing the dates to not be merged properly
 
-CARI_chem <- CARI_2019[,-c(3,4)] # clipping out just chem 
+CARI_chem <- CARI_2019[c("site.ID.x", "DateTimeAK", "NO3", "fDOM", "SPC", "Turb")] # clipping out just chem 
 CARI_chem$DateTimeAK <- ymd_hms(CARI_chem$DateTimeAK) # changing to posixct format
 CARI_chem$DateTimeAK <- force_tz(CARI_chem$DateTimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
 CARI_chem <- CARI_chem[order(CARI_chem$DateTimeAK),] # reordering it as before 
@@ -3955,12 +4307,17 @@ CARI_bfQ_mn*2
 
 # Merge Discharge and Precip #
 
-FRCH.st <- read_csv("~/Documents/DoD_2019/RainGauge/FRCH.RainGauge.2019.csv")
+FRCH.st <- read_csv(here("Climate", "Precip","FRCH.RainGauge.2019.csv"))
+# FRCH.st <- read_csv("~/Documents/DoD_2019/RainGauge/FRCH.RainGauge.2019.csv")
 attributes(FRCH.st$Datetime)$tzone <- 'America/Anchorage'
 FRCH.st$DateTime <- FRCH.st$Datetime
-VAUL.st <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
+
+VAUL.st <- read_csv(here("Climate", "Precip","VAUL.RainGauge.2019.csv"))
+# VAUL.st <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
 attributes(VAUL.st$DateTime)$tzone <- 'America/Anchorage'
-POKE.st <- read_csv("~/Documents/DoD_2019/RainGauge/POKE.RainGauge.2019.csv")
+
+POKE.st <- read_csv(here("Climate", "Precip","POKE.RainGauge.2019.csv"))
+# POKE.st <- read_csv("~/Documents/DoD_2019/RainGauge/POKE.RainGauge.2019.csv")
 attributes(POKE.st$DateTime)$tzone <- 'America/Anchorage'
 
 frch.final.discharge.2019$DateTime <- frch.final.discharge.2019$datetimeAK
@@ -5027,152 +5384,292 @@ names(FRCH_storm14_10_01_turb) = c("valuedatetime","datavalue")
 
 
 ### Write csv ###
-write.csv(FRCH_storm1_05_31, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31.csv")
-write.csv(FRCH_storm1_05_31_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_Q.csv")
-write.csv(FRCH_storm1_05_31_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_NO3.csv")
-write.csv(FRCH_storm1_05_31_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_fDOM.csv")
-write.csv(FRCH_storm1_05_31_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_SPC.csv")
-write.csv(FRCH_storm1_05_31_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm1_05_31_Turb.csv"))
 
-write.csv(FRCH_storm2_06_15, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15.csv")
-write.csv(FRCH_storm2_06_15_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_Q.csv")
-write.csv(FRCH_storm2_06_15_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_NO3.csv")
-write.csv(FRCH_storm2_06_15_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_fDOM.csv")
-write.csv(FRCH_storm2_06_15_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_SPC.csv")
-write.csv(FRCH_storm2_06_15_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm2_06_15_Turb.csv"))
 
-write.csv(FRCH_storm3_06_18, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18.csv")
-write.csv(FRCH_storm3_06_18_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_Q.csv")
-write.csv(FRCH_storm3_06_18_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_NO3.csv")
-write.csv(FRCH_storm3_06_18_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_fDOM.csv")
-write.csv(FRCH_storm3_06_18_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_SPC.csv")
-write.csv(FRCH_storm3_06_18_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm3_06_18_Turb.csv"))
 
-write.csv(FRCH_storm4_06_20, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20.csv")
-write.csv(FRCH_storm4_06_20_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_Q.csv")
-write.csv(FRCH_storm4_06_20_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_NO3.csv")
-write.csv(FRCH_storm4_06_20_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_fDOM.csv")
-write.csv(FRCH_storm4_06_20_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_SPC.csv")
-write.csv(FRCH_storm4_06_20_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm4_06_20_Turb.csv"))
 
-write.csv(FRCH_storm5_06_22, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22.csv")
-write.csv(FRCH_storm5_06_22_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_Q.csv")
-write.csv(FRCH_storm5_06_22_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_NO3.csv")
-write.csv(FRCH_storm5_06_22_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_fDOM.csv")
-write.csv(FRCH_storm5_06_22_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_SPC.csv")
-write.csv(FRCH_storm5_06_22_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm5_06_22_Turb.csv"))
 
-write.csv(FRCH_storm6_07_12, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12.csv")
-write.csv(FRCH_storm6_07_12_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_Q.csv")
-write.csv(FRCH_storm6_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_NO3.csv")
-write.csv(FRCH_storm6_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_fDOM.csv")
-write.csv(FRCH_storm6_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_SPC.csv")
-write.csv(FRCH_storm6_07_12_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_Turb.csv"))
 
-write.csv(FRCH_storm7_07_25, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25.csv")
-write.csv(FRCH_storm7_07_25_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_Q.csv")
-write.csv(FRCH_storm7_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_NO3.csv")
-write.csv(FRCH_storm7_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_fDOM.csv")
-write.csv(FRCH_storm7_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_SPC.csv")
-write.csv(FRCH_storm7_07_25_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_Turb.csv"))
 
-write.csv(FRCH_storm8_07_28, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28.csv")
-write.csv(FRCH_storm8_07_28_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_Q.csv")
-write.csv(FRCH_storm8_07_28_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_NO3.csv")
-write.csv(FRCH_storm8_07_28_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_fDOM.csv")
-write.csv(FRCH_storm8_07_28_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_SPC.csv")
-write.csv(FRCH_storm8_07_28_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_Turb.csv"))
 
-write.csv(FRCH_storm9a_07_29, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29.csv")
-write.csv(FRCH_storm9a_07_29_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_Q.csv")
-write.csv(FRCH_storm9a_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_NO3.csv")
-write.csv(FRCH_storm9a_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_fDOM.csv")
-write.csv(FRCH_storm9a_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_SPC.csv")
-write.csv(FRCH_storm9a_07_29_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_Turb.csv"))
 
-write.csv(FRCH_storm9b_07_30, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30.csv")
-write.csv(FRCH_storm9b_07_30_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_Q.csv")
-write.csv(FRCH_storm9b_07_30_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_NO3.csv")
-write.csv(FRCH_storm9b_07_30_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_fDOM.csv")
-write.csv(FRCH_storm9b_07_30_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_SPC.csv")
-write.csv(FRCH_storm9b_07_30_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_Turb.csv"))
 
-write.csv(FRCH_storm10a_08_01, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01.csv")
-write.csv(FRCH_storm10a_08_01_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_Q.csv")
-write.csv(FRCH_storm10a_08_01_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_NO3.csv")
-write.csv(FRCH_storm10a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_fDOM.csv")
-write.csv(FRCH_storm10a_08_01_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_SPC.csv")
-write.csv(FRCH_storm10a_08_01_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_Turb.csv"))
 
-write.csv(FRCH_storm10b_08_02, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02.csv")
-write.csv(FRCH_storm10b_08_02_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_Q.csv")
-write.csv(FRCH_storm10b_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_NO3.csv")
-write.csv(FRCH_storm10b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_fDOM.csv")
-write.csv(FRCH_storm10b_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_SPC.csv")
-write.csv(FRCH_storm10b_08_02_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_Turb.csv"))
 
-write.csv(FRCH_storm10c_08_03, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03.csv")
-write.csv(FRCH_storm10c_08_03_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_Q.csv")
-write.csv(FRCH_storm10c_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_NO3.csv")
-write.csv(FRCH_storm10c_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_fDOM.csv")
-write.csv(FRCH_storm10c_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_SPC.csv")
-write.csv(FRCH_storm10c_08_03_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_Turb.csv"))
 
-write.csv(FRCH_storm11_08_05, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05.csv")
-write.csv(FRCH_storm11_08_05_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_Q.csv")
-write.csv(FRCH_storm11_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_NO3.csv")
-write.csv(FRCH_storm11_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_fDOM.csv")
-write.csv(FRCH_storm11_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_SPC.csv")
-write.csv(FRCH_storm11_08_05_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_Turb.csv"))
 
-write.csv(FRCH_storm12a_08_12, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12.csv")
-write.csv(FRCH_storm12a_08_12_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_Q.csv")
-write.csv(FRCH_storm12a_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_NO3.csv")
-write.csv(FRCH_storm12a_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_fDOM.csv")
-write.csv(FRCH_storm12a_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_SPC.csv")
-write.csv(FRCH_storm12a_08_12_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_Turb.csv"))
 
-write.csv(FRCH_storm12b_08_14, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14.csv")
-write.csv(FRCH_storm12b_08_14_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_Q.csv")
-write.csv(FRCH_storm12b_08_14_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_NO3.csv")
-write.csv(FRCH_storm12b_08_14_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_fDOM.csv")
-write.csv(FRCH_storm12b_08_14_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_SPC.csv")
-write.csv(FRCH_storm12b_08_14_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_Turb.csv"))
 
-write.csv(FRCH_storm12c_08_15, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15.csv")
-write.csv(FRCH_storm12c_08_15_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_Q.csv")
-write.csv(FRCH_storm12c_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_NO3.csv")
-write.csv(FRCH_storm12c_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_fDOM.csv")
-write.csv(FRCH_storm12c_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_SPC.csv")
-write.csv(FRCH_storm12c_08_15_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_Turb.csv"))
 
-write.csv(FRCH_storm12d_08_21, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21.csv")
-write.csv(FRCH_storm12d_08_21_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_Q.csv")
-write.csv(FRCH_storm12d_08_21_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_NO3.csv")
-write.csv(FRCH_storm12d_08_21_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_fDOM.csv")
-write.csv(FRCH_storm12d_08_21_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_SPC.csv")
-write.csv(FRCH_storm12d_08_21_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_Turb.csv"))
 
-write.csv(FRCH_storm12e_08_23, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23.csv")
-write.csv(FRCH_storm12e_08_23_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_Q.csv")
-write.csv(FRCH_storm12e_08_23_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_NO3.csv")
-write.csv(FRCH_storm12e_08_23_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_fDOM.csv")
-write.csv(FRCH_storm12e_08_23_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_SPC.csv")
-write.csv(FRCH_storm12e_08_23_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_Turb.csv"))
 
-write.csv(FRCH_storm13_09_20, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20.csv")
-write.csv(FRCH_storm13_09_20_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_Q.csv")
-write.csv(FRCH_storm13_09_20_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_NO3.csv")
-write.csv(FRCH_storm13_09_20_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_fDOM.csv")
-write.csv(FRCH_storm13_09_20_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_SPC.csv")
-write.csv(FRCH_storm13_09_20_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_Turb.csv")
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm14_10_01_Turb.csv"))
 
-write.csv(FRCH_storm14_10_01, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01.csv")
-write.csv(FRCH_storm14_10_01_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_Q.csv")
-write.csv(FRCH_storm14_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_NO3.csv")
-write.csv(FRCH_storm14_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_fDOM.csv")
-write.csv(FRCH_storm14_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_SPC.csv")
-write.csv(FRCH_storm14_10_01_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_Turb.csv")
+# write.csv(FRCH_storm1_05_31, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31.csv")
+# write.csv(FRCH_storm1_05_31_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_Q.csv")
+# write.csv(FRCH_storm1_05_31_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_NO3.csv")
+# write.csv(FRCH_storm1_05_31_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_fDOM.csv")
+# write.csv(FRCH_storm1_05_31_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_SPC.csv")
+# write.csv(FRCH_storm1_05_31_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm1_05_31_Turb.csv")
+# 
+# write.csv(FRCH_storm2_06_15, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15.csv")
+# write.csv(FRCH_storm2_06_15_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_Q.csv")
+# write.csv(FRCH_storm2_06_15_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_NO3.csv")
+# write.csv(FRCH_storm2_06_15_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_fDOM.csv")
+# write.csv(FRCH_storm2_06_15_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_SPC.csv")
+# write.csv(FRCH_storm2_06_15_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm2_06_15_Turb.csv")
+# 
+# write.csv(FRCH_storm3_06_18, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18.csv")
+# write.csv(FRCH_storm3_06_18_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_Q.csv")
+# write.csv(FRCH_storm3_06_18_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_NO3.csv")
+# write.csv(FRCH_storm3_06_18_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_fDOM.csv")
+# write.csv(FRCH_storm3_06_18_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_SPC.csv")
+# write.csv(FRCH_storm3_06_18_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm3_06_18_Turb.csv")
+# 
+# write.csv(FRCH_storm4_06_20, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20.csv")
+# write.csv(FRCH_storm4_06_20_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_Q.csv")
+# write.csv(FRCH_storm4_06_20_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_NO3.csv")
+# write.csv(FRCH_storm4_06_20_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_fDOM.csv")
+# write.csv(FRCH_storm4_06_20_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_SPC.csv")
+# write.csv(FRCH_storm4_06_20_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm4_06_20_Turb.csv")
+# 
+# write.csv(FRCH_storm5_06_22, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22.csv")
+# write.csv(FRCH_storm5_06_22_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_Q.csv")
+# write.csv(FRCH_storm5_06_22_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_NO3.csv")
+# write.csv(FRCH_storm5_06_22_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_fDOM.csv")
+# write.csv(FRCH_storm5_06_22_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_SPC.csv")
+# write.csv(FRCH_storm5_06_22_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm5_06_22_Turb.csv")
+# 
+# write.csv(FRCH_storm6_07_12, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12.csv")
+# write.csv(FRCH_storm6_07_12_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_Q.csv")
+# write.csv(FRCH_storm6_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_NO3.csv")
+# write.csv(FRCH_storm6_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_fDOM.csv")
+# write.csv(FRCH_storm6_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_SPC.csv")
+# write.csv(FRCH_storm6_07_12_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm6_07_12_Turb.csv")
+# 
+# write.csv(FRCH_storm7_07_25, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25.csv")
+# write.csv(FRCH_storm7_07_25_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_Q.csv")
+# write.csv(FRCH_storm7_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_NO3.csv")
+# write.csv(FRCH_storm7_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_fDOM.csv")
+# write.csv(FRCH_storm7_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_SPC.csv")
+# write.csv(FRCH_storm7_07_25_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm7_07_25_Turb.csv")
+# 
+# write.csv(FRCH_storm8_07_28, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28.csv")
+# write.csv(FRCH_storm8_07_28_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_Q.csv")
+# write.csv(FRCH_storm8_07_28_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_NO3.csv")
+# write.csv(FRCH_storm8_07_28_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_fDOM.csv")
+# write.csv(FRCH_storm8_07_28_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_SPC.csv")
+# write.csv(FRCH_storm8_07_28_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm8_07_28_Turb.csv")
+# 
+# write.csv(FRCH_storm9a_07_29, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29.csv")
+# write.csv(FRCH_storm9a_07_29_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_Q.csv")
+# write.csv(FRCH_storm9a_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_NO3.csv")
+# write.csv(FRCH_storm9a_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_fDOM.csv")
+# write.csv(FRCH_storm9a_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_SPC.csv")
+# write.csv(FRCH_storm9a_07_29_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9a_07_29_Turb.csv")
+# 
+# write.csv(FRCH_storm9b_07_30, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30.csv")
+# write.csv(FRCH_storm9b_07_30_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_Q.csv")
+# write.csv(FRCH_storm9b_07_30_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_NO3.csv")
+# write.csv(FRCH_storm9b_07_30_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_fDOM.csv")
+# write.csv(FRCH_storm9b_07_30_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_SPC.csv")
+# write.csv(FRCH_storm9b_07_30_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm9b_07_30_Turb.csv")
+# 
+# write.csv(FRCH_storm10a_08_01, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01.csv")
+# write.csv(FRCH_storm10a_08_01_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_Q.csv")
+# write.csv(FRCH_storm10a_08_01_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_NO3.csv")
+# write.csv(FRCH_storm10a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_fDOM.csv")
+# write.csv(FRCH_storm10a_08_01_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_SPC.csv")
+# write.csv(FRCH_storm10a_08_01_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10a_08_01_Turb.csv")
+# 
+# write.csv(FRCH_storm10b_08_02, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02.csv")
+# write.csv(FRCH_storm10b_08_02_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_Q.csv")
+# write.csv(FRCH_storm10b_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_NO3.csv")
+# write.csv(FRCH_storm10b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_fDOM.csv")
+# write.csv(FRCH_storm10b_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_SPC.csv")
+# write.csv(FRCH_storm10b_08_02_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10b_08_02_Turb.csv")
+# 
+# write.csv(FRCH_storm10c_08_03, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03.csv")
+# write.csv(FRCH_storm10c_08_03_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_Q.csv")
+# write.csv(FRCH_storm10c_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_NO3.csv")
+# write.csv(FRCH_storm10c_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_fDOM.csv")
+# write.csv(FRCH_storm10c_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_SPC.csv")
+# write.csv(FRCH_storm10c_08_03_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm10c_08_03_Turb.csv")
+# 
+# write.csv(FRCH_storm11_08_05, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05.csv")
+# write.csv(FRCH_storm11_08_05_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_Q.csv")
+# write.csv(FRCH_storm11_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_NO3.csv")
+# write.csv(FRCH_storm11_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_fDOM.csv")
+# write.csv(FRCH_storm11_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_SPC.csv")
+# write.csv(FRCH_storm11_08_05_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm11_08_05_Turb.csv")
+# 
+# write.csv(FRCH_storm12a_08_12, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12.csv")
+# write.csv(FRCH_storm12a_08_12_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_Q.csv")
+# write.csv(FRCH_storm12a_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_NO3.csv")
+# write.csv(FRCH_storm12a_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_fDOM.csv")
+# write.csv(FRCH_storm12a_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_SPC.csv")
+# write.csv(FRCH_storm12a_08_12_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12a_08_12_Turb.csv")
+# 
+# write.csv(FRCH_storm12b_08_14, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14.csv")
+# write.csv(FRCH_storm12b_08_14_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_Q.csv")
+# write.csv(FRCH_storm12b_08_14_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_NO3.csv")
+# write.csv(FRCH_storm12b_08_14_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_fDOM.csv")
+# write.csv(FRCH_storm12b_08_14_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_SPC.csv")
+# write.csv(FRCH_storm12b_08_14_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12b_08_14_Turb.csv")
+# 
+# write.csv(FRCH_storm12c_08_15, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15.csv")
+# write.csv(FRCH_storm12c_08_15_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_Q.csv")
+# write.csv(FRCH_storm12c_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_NO3.csv")
+# write.csv(FRCH_storm12c_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_fDOM.csv")
+# write.csv(FRCH_storm12c_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_SPC.csv")
+# write.csv(FRCH_storm12c_08_15_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12c_08_15_Turb.csv")
+# 
+# write.csv(FRCH_storm12d_08_21, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21.csv")
+# write.csv(FRCH_storm12d_08_21_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_Q.csv")
+# write.csv(FRCH_storm12d_08_21_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_NO3.csv")
+# write.csv(FRCH_storm12d_08_21_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_fDOM.csv")
+# write.csv(FRCH_storm12d_08_21_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_SPC.csv")
+# write.csv(FRCH_storm12d_08_21_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12d_08_21_Turb.csv")
+# 
+# write.csv(FRCH_storm12e_08_23, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23.csv")
+# write.csv(FRCH_storm12e_08_23_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_Q.csv")
+# write.csv(FRCH_storm12e_08_23_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_NO3.csv")
+# write.csv(FRCH_storm12e_08_23_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_fDOM.csv")
+# write.csv(FRCH_storm12e_08_23_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_SPC.csv")
+# write.csv(FRCH_storm12e_08_23_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm12e_08_23_Turb.csv")
+# 
+# write.csv(FRCH_storm13_09_20, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20.csv")
+# write.csv(FRCH_storm13_09_20_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_Q.csv")
+# write.csv(FRCH_storm13_09_20_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_NO3.csv")
+# write.csv(FRCH_storm13_09_20_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_fDOM.csv")
+# write.csv(FRCH_storm13_09_20_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_SPC.csv")
+# write.csv(FRCH_storm13_09_20_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm13_09_20_Turb.csv")
+# 
+# write.csv(FRCH_storm14_10_01, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01.csv")
+# write.csv(FRCH_storm14_10_01_Q, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_Q.csv")
+# write.csv(FRCH_storm14_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_NO3.csv")
+# write.csv(FRCH_storm14_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_fDOM.csv")
+# write.csv(FRCH_storm14_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_SPC.csv")
+# write.csv(FRCH_storm14_10_01_turb, "~/Documents/Storms/Storm_Events/2019/FRCH/FRCH_storm14_10_01_Turb.csv")
 
 FRCH.st$datetimeAK <- FRCH.st$DateTime
 frch.five.fourty.eight$datetimeAK <- frch.five.fourty.eight$DateTime
@@ -5882,82 +6379,160 @@ STRT_storm7c_10_09_turb = subset(STRT_storm7c_10_09, select = c("DateTime","Turb
 names(STRT_storm7c_10_09_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(STRT_storm1_05_31, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31.csv")
-write.csv(STRT_storm1_05_31_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_Q.csv")
-write.csv(STRT_storm1_05_31_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_NO3.csv")
-write.csv(STRT_storm1_05_31_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_fDOM.csv")
-write.csv(STRT_storm1_05_31_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_SPC.csv")
-write.csv(STRT_storm1_05_31_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Turb.csv"))
 
-write.csv(STRT_storm2_07_12, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12.csv")
-write.csv(STRT_storm2_07_12_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_Q.csv")
-write.csv(STRT_storm2_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_NO3.csv")
-write.csv(STRT_storm2_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_fDOM.csv")
-write.csv(STRT_storm2_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_SPC.csv")
-write.csv(STRT_storm2_07_12_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Turb.csv"))
 
-write.csv(STRT_storm3a_07_25, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25.csv")
-write.csv(STRT_storm3a_07_25_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_Q.csv")
-write.csv(STRT_storm3a_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_NO3.csv")
-write.csv(STRT_storm3a_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_fDOM.csv")
-write.csv(STRT_storm3a_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_SPC.csv")
-write.csv(STRT_storm3a_07_25_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Turb.csv"))
 
-write.csv(STRT_storm3b_08_05, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05.csv")
-write.csv(STRT_storm3b_08_05_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_Q.csv")
-write.csv(STRT_storm3b_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_NO3.csv")
-write.csv(STRT_storm3b_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_fDOM.csv")
-write.csv(STRT_storm3b_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_SPC.csv")
-write.csv(STRT_storm3b_08_05_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Turb.csv"))
 
-write.csv(STRT_storm3c_08_12, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12.csv")
-write.csv(STRT_storm3c_08_12_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_Q.csv")
-write.csv(STRT_storm3c_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_NO3.csv")
-write.csv(STRT_storm3c_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_fDOM.csv")
-write.csv(STRT_storm3c_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_SPC.csv")
-write.csv(STRT_storm3c_08_12_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Turb.csv"))
 
-write.csv(STRT_storm4_08_15, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15.csv")
-write.csv(STRT_storm4_08_15_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_Q.csv")
-write.csv(STRT_storm4_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_NO3.csv")
-write.csv(STRT_storm4_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_fDOM.csv")
-write.csv(STRT_storm4_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_SPC.csv")
-write.csv(STRT_storm4_08_15_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Turb.csv"))
 
-write.csv(STRT_storm5_08_20, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20.csv")
-write.csv(STRT_storm5_08_20_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_Q.csv")
-write.csv(STRT_storm5_08_20_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_NO3.csv")
-write.csv(STRT_storm5_08_20_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_fDOM.csv")
-write.csv(STRT_storm5_08_20_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_SPC.csv")
-write.csv(STRT_storm5_08_20_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Turb.csv"))
 
-write.csv(STRT_storm6_09_20, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20.csv")
-write.csv(STRT_storm6_09_20_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_Q.csv")
-write.csv(STRT_storm6_09_20_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_NO3.csv")
-write.csv(STRT_storm6_09_20_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_fDOM.csv")
-write.csv(STRT_storm6_09_20_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_SPC.csv")
-write.csv(STRT_storm6_09_20_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Turb.csv"))
 
-write.csv(STRT_storm7a_10_01, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01.csv")
-write.csv(STRT_storm7a_10_01_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_Q.csv")
-write.csv(STRT_storm7a_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_NO3.csv")
-write.csv(STRT_storm7a_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_fDOM.csv")
-write.csv(STRT_storm7a_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_SPC.csv")
-write.csv(STRT_storm7a_10_01_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Turb.csv"))
 
-write.csv(STRT_storm7b_10_04, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04.csv")
-write.csv(STRT_storm7b_10_04_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_Q.csv")
-write.csv(STRT_storm7b_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_NO3.csv")
-write.csv(STRT_storm7b_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_fDOM.csv")
-write.csv(STRT_storm7b_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_SPC.csv")
-write.csv(STRT_storm7b_10_04_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Turb.csv"))
 
-write.csv(STRT_storm7c_10_09, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09.csv")
-write.csv(STRT_storm7c_10_09_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_Q.csv")
-write.csv(STRT_storm7c_10_09_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_NO3.csv")
-write.csv(STRT_storm7c_10_09_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_fDOM.csv")
-write.csv(STRT_storm7c_10_09_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_SPC.csv")
-write.csv(STRT_storm7c_10_09_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_Turb.csv")
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Q.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Turb.csv"))
+
+
+# write.csv(STRT_storm1_05_31, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31.csv")
+# write.csv(STRT_storm1_05_31_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_Q.csv")
+# write.csv(STRT_storm1_05_31_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_NO3.csv")
+# write.csv(STRT_storm1_05_31_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_fDOM.csv")
+# write.csv(STRT_storm1_05_31_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_SPC.csv")
+# write.csv(STRT_storm1_05_31_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm1_05_31_Turb.csv")
+# 
+# write.csv(STRT_storm2_07_12, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12.csv")
+# write.csv(STRT_storm2_07_12_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_Q.csv")
+# write.csv(STRT_storm2_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_NO3.csv")
+# write.csv(STRT_storm2_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_fDOM.csv")
+# write.csv(STRT_storm2_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_SPC.csv")
+# write.csv(STRT_storm2_07_12_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm2_07_12_Turb.csv")
+# 
+# write.csv(STRT_storm3a_07_25, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25.csv")
+# write.csv(STRT_storm3a_07_25_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_Q.csv")
+# write.csv(STRT_storm3a_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_NO3.csv")
+# write.csv(STRT_storm3a_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_fDOM.csv")
+# write.csv(STRT_storm3a_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_SPC.csv")
+# write.csv(STRT_storm3a_07_25_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3a_07_25_Turb.csv")
+# 
+# write.csv(STRT_storm3b_08_05, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05.csv")
+# write.csv(STRT_storm3b_08_05_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_Q.csv")
+# write.csv(STRT_storm3b_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_NO3.csv")
+# write.csv(STRT_storm3b_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_fDOM.csv")
+# write.csv(STRT_storm3b_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_SPC.csv")
+# write.csv(STRT_storm3b_08_05_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3b_08_05_Turb.csv")
+# 
+# write.csv(STRT_storm3c_08_12, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12.csv")
+# write.csv(STRT_storm3c_08_12_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_Q.csv")
+# write.csv(STRT_storm3c_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_NO3.csv")
+# write.csv(STRT_storm3c_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_fDOM.csv")
+# write.csv(STRT_storm3c_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_SPC.csv")
+# write.csv(STRT_storm3c_08_12_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm3c_08_12_Turb.csv")
+# 
+# write.csv(STRT_storm4_08_15, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15.csv")
+# write.csv(STRT_storm4_08_15_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_Q.csv")
+# write.csv(STRT_storm4_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_NO3.csv")
+# write.csv(STRT_storm4_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_fDOM.csv")
+# write.csv(STRT_storm4_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_SPC.csv")
+# write.csv(STRT_storm4_08_15_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm4_08_15_Turb.csv")
+# 
+# write.csv(STRT_storm5_08_20, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20.csv")
+# write.csv(STRT_storm5_08_20_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_Q.csv")
+# write.csv(STRT_storm5_08_20_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_NO3.csv")
+# write.csv(STRT_storm5_08_20_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_fDOM.csv")
+# write.csv(STRT_storm5_08_20_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_SPC.csv")
+# write.csv(STRT_storm5_08_20_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm5_08_20_Turb.csv")
+# 
+# write.csv(STRT_storm6_09_20, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20.csv")
+# write.csv(STRT_storm6_09_20_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_Q.csv")
+# write.csv(STRT_storm6_09_20_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_NO3.csv")
+# write.csv(STRT_storm6_09_20_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_fDOM.csv")
+# write.csv(STRT_storm6_09_20_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_SPC.csv")
+# write.csv(STRT_storm6_09_20_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm6_09_20_Turb.csv")
+# 
+# write.csv(STRT_storm7a_10_01, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01.csv")
+# write.csv(STRT_storm7a_10_01_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_Q.csv")
+# write.csv(STRT_storm7a_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_NO3.csv")
+# write.csv(STRT_storm7a_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_fDOM.csv")
+# write.csv(STRT_storm7a_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_SPC.csv")
+# write.csv(STRT_storm7a_10_01_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7_10_01_Turb.csv")
+# 
+# write.csv(STRT_storm7b_10_04, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04.csv")
+# write.csv(STRT_storm7b_10_04_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_Q.csv")
+# write.csv(STRT_storm7b_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_NO3.csv")
+# write.csv(STRT_storm7b_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_fDOM.csv")
+# write.csv(STRT_storm7b_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_SPC.csv")
+# write.csv(STRT_storm7b_10_04_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7b_10_04_Turb.csv")
+# 
+# write.csv(STRT_storm7c_10_09, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09.csv")
+# write.csv(STRT_storm7c_10_09_Q, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_Q.csv")
+# write.csv(STRT_storm7c_10_09_NO3, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_NO3.csv")
+# write.csv(STRT_storm7c_10_09_fDOM, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_fDOM.csv")
+# write.csv(STRT_storm7c_10_09_SPC, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_SPC.csv")
+# write.csv(STRT_storm7c_10_09_turb, "~/Documents/Storms/Storm_Events/2019/STRT/STRT_storm7c_10_09_Turb.csv")
 
 
 vaul.five.fourty.eight$datetimeAK <- vaul.five.fourty.eight$DateTime
@@ -6635,89 +7210,173 @@ VAUL_storm8c_10_04_turb = subset(VAUL_storm8c_10_04, select = c("DateTime","Turb
 names(VAUL_storm8c_10_04_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(VAUL_storm1_07_13, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13.csv")
-write.csv(VAUL_storm1_07_13_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_Q.csv")
-write.csv(VAUL_storm1_07_13_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_NO3.csv")
-write.csv(VAUL_storm1_07_13_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_fDOM.csv")
-write.csv(VAUL_storm1_07_13_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_SPC.csv")
-write.csv(VAUL_storm1_07_13_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm1_07_13_turb.csv"))
 
-write.csv(VAUL_storm2_07_26, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26.csv")
-write.csv(VAUL_storm2_07_26_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_Q.csv")
-write.csv(VAUL_storm2_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_NO3.csv")
-write.csv(VAUL_storm2_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_fDOM.csv")
-write.csv(VAUL_storm2_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_SPC.csv")
-write.csv(VAUL_storm2_07_26_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm2_07_26_turb.csv"))
 
-write.csv(VAUL_storm3_07_29, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29.csv")
-write.csv(VAUL_storm3_07_29_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_Q.csv")
-write.csv(VAUL_storm3_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_NO3.csv")
-write.csv(VAUL_storm3_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_fDOM.csv")
-write.csv(VAUL_storm3_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_SPC.csv")
-write.csv(VAUL_storm3_07_29_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm3_07_29_turb.csv"))
 
-write.csv(VAUL_storm4a_08_02, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02.csv")
-write.csv(VAUL_storm4a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_Q.csv")
-write.csv(VAUL_storm4a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_NO3.csv")
-write.csv(VAUL_storm4a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_fDOM.csv")
-write.csv(VAUL_storm4a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_SPC.csv")
-write.csv(VAUL_storm4a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_turb.csv"))
 
-write.csv(VAUL_storm4b_08_03, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03.csv")
-write.csv(VAUL_storm4b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_Q.csv")
-write.csv(VAUL_storm4b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_NO3.csv")
-write.csv(VAUL_storm4b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_fDOM.csv")
-write.csv(VAUL_storm4b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_SPC.csv")
-write.csv(VAUL_storm4b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_turb.csv"))
 
-write.csv(VAUL_storm4c_08_05, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05.csv")
-write.csv(VAUL_storm4c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_Q.csv")
-write.csv(VAUL_storm4c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_NO3.csv")
-write.csv(VAUL_storm4c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_fDOM.csv")
-write.csv(VAUL_storm4c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_SPC.csv")
-write.csv(VAUL_storm4c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_turb.csv"))
 
-write.csv(VAUL_storm5_08_12, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12.csv")
-write.csv(VAUL_storm5_08_12_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_Q.csv")
-write.csv(VAUL_storm5_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_NO3.csv")
-write.csv(VAUL_storm5_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_fDOM.csv")
-write.csv(VAUL_storm5_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_SPC.csv")
-write.csv(VAUL_storm5_08_12_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm5_08_12_turb.csv"))
 
-write.csv(VAUL_storm6_08_15, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15.csv")
-write.csv(VAUL_storm6_08_15_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_Q.csv")
-write.csv(VAUL_storm6_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_NO3.csv")
-write.csv(VAUL_storm6_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_fDOM.csv")
-write.csv(VAUL_storm6_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_SPC.csv")
-write.csv(VAUL_storm6_08_15_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm6_08_15_turb.csv"))
 
-write.csv(VAUL_storm7_09_19, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19.csv")
-write.csv(VAUL_storm7_09_19_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_Q.csv")
-write.csv(VAUL_storm7_09_19_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_NO3.csv")
-write.csv(VAUL_storm7_09_19_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_fDOM.csv")
-write.csv(VAUL_storm7_09_19_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_SPC.csv")
-write.csv(VAUL_storm7_09_19_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm7_09_19_turb.csv"))
 
-write.csv(VAUL_storm8a_09_29, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29.csv")
-write.csv(VAUL_storm8a_09_29_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_Q.csv")
-write.csv(VAUL_storm8a_09_29_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_NO3.csv")
-write.csv(VAUL_storm8a_09_29_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_fDOM.csv")
-write.csv(VAUL_storm8a_09_29_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_SPC.csv")
-write.csv(VAUL_storm8a_09_29_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_turb.csv"))
 
-write.csv(VAUL_storm8b_10_01, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01.csv")
-write.csv(VAUL_storm8b_10_01_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_Q.csv")
-write.csv(VAUL_storm8b_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_NO3.csv")
-write.csv(VAUL_storm8b_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_fDOM.csv")
-write.csv(VAUL_storm8b_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_SPC.csv")
-write.csv(VAUL_storm8b_10_01_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_turb.csv"))
 
-write.csv(VAUL_storm8c_10_04, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04.csv")
-write.csv(VAUL_storm8c_10_04_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_Q.csv")
-write.csv(VAUL_storm8c_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_NO3.csv")
-write.csv(VAUL_storm8c_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_fDOM.csv")
-write.csv(VAUL_storm8c_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_SPC.csv")
-write.csv(VAUL_storm8c_10_04_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_turb.csv")
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_Q.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_turb.csv"))
+
+# write.csv(VAUL_storm1_07_13, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13.csv")
+# write.csv(VAUL_storm1_07_13_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_Q.csv")
+# write.csv(VAUL_storm1_07_13_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_NO3.csv")
+# write.csv(VAUL_storm1_07_13_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_fDOM.csv")
+# write.csv(VAUL_storm1_07_13_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_SPC.csv")
+# write.csv(VAUL_storm1_07_13_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm1_07_13_turb.csv")
+# 
+# write.csv(VAUL_storm2_07_26, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26.csv")
+# write.csv(VAUL_storm2_07_26_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_Q.csv")
+# write.csv(VAUL_storm2_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_NO3.csv")
+# write.csv(VAUL_storm2_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_fDOM.csv")
+# write.csv(VAUL_storm2_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_SPC.csv")
+# write.csv(VAUL_storm2_07_26_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm2_07_26_turb.csv")
+# 
+# write.csv(VAUL_storm3_07_29, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29.csv")
+# write.csv(VAUL_storm3_07_29_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_Q.csv")
+# write.csv(VAUL_storm3_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_NO3.csv")
+# write.csv(VAUL_storm3_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_fDOM.csv")
+# write.csv(VAUL_storm3_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_SPC.csv")
+# write.csv(VAUL_storm3_07_29_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm3_07_29_turb.csv")
+# 
+# write.csv(VAUL_storm4a_08_02, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02.csv")
+# write.csv(VAUL_storm4a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_Q.csv")
+# write.csv(VAUL_storm4a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_NO3.csv")
+# write.csv(VAUL_storm4a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_fDOM.csv")
+# write.csv(VAUL_storm4a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_SPC.csv")
+# write.csv(VAUL_storm4a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_turb.csv")
+# 
+# write.csv(VAUL_storm4b_08_03, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03.csv")
+# write.csv(VAUL_storm4b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_Q.csv")
+# write.csv(VAUL_storm4b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_NO3.csv")
+# write.csv(VAUL_storm4b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_fDOM.csv")
+# write.csv(VAUL_storm4b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_SPC.csv")
+# write.csv(VAUL_storm4b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_turb.csv")
+# 
+# write.csv(VAUL_storm4c_08_05, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05.csv")
+# write.csv(VAUL_storm4c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_Q.csv")
+# write.csv(VAUL_storm4c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_NO3.csv")
+# write.csv(VAUL_storm4c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_fDOM.csv")
+# write.csv(VAUL_storm4c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_SPC.csv")
+# write.csv(VAUL_storm4c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_turb.csv")
+# 
+# write.csv(VAUL_storm5_08_12, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12.csv")
+# write.csv(VAUL_storm5_08_12_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_Q.csv")
+# write.csv(VAUL_storm5_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_NO3.csv")
+# write.csv(VAUL_storm5_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_fDOM.csv")
+# write.csv(VAUL_storm5_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_SPC.csv")
+# write.csv(VAUL_storm5_08_12_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm5_08_12_turb.csv")
+# 
+# write.csv(VAUL_storm6_08_15, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15.csv")
+# write.csv(VAUL_storm6_08_15_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_Q.csv")
+# write.csv(VAUL_storm6_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_NO3.csv")
+# write.csv(VAUL_storm6_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_fDOM.csv")
+# write.csv(VAUL_storm6_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_SPC.csv")
+# write.csv(VAUL_storm6_08_15_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm6_08_15_turb.csv")
+# 
+# write.csv(VAUL_storm7_09_19, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19.csv")
+# write.csv(VAUL_storm7_09_19_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_Q.csv")
+# write.csv(VAUL_storm7_09_19_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_NO3.csv")
+# write.csv(VAUL_storm7_09_19_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_fDOM.csv")
+# write.csv(VAUL_storm7_09_19_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_SPC.csv")
+# write.csv(VAUL_storm7_09_19_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm7_09_19_turb.csv")
+# 
+# write.csv(VAUL_storm8a_09_29, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29.csv")
+# write.csv(VAUL_storm8a_09_29_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_Q.csv")
+# write.csv(VAUL_storm8a_09_29_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_NO3.csv")
+# write.csv(VAUL_storm8a_09_29_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_fDOM.csv")
+# write.csv(VAUL_storm8a_09_29_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_SPC.csv")
+# write.csv(VAUL_storm8a_09_29_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_turb.csv")
+# 
+# write.csv(VAUL_storm8b_10_01, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01.csv")
+# write.csv(VAUL_storm8b_10_01_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_Q.csv")
+# write.csv(VAUL_storm8b_10_01_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_NO3.csv")
+# write.csv(VAUL_storm8b_10_01_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_fDOM.csv")
+# write.csv(VAUL_storm8b_10_01_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_SPC.csv")
+# write.csv(VAUL_storm8b_10_01_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_turb.csv")
+# 
+# write.csv(VAUL_storm8c_10_04, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04.csv")
+# write.csv(VAUL_storm8c_10_04_Q, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_Q.csv")
+# write.csv(VAUL_storm8c_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_NO3.csv")
+# write.csv(VAUL_storm8c_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_fDOM.csv")
+# write.csv(VAUL_storm8c_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_SPC.csv")
+# write.csv(VAUL_storm8c_10_04_turb, "~/Documents/Storms/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_turb.csv")
 
 poke.five.fourty.eight$datetimeAK <- poke.five.fourty.eight$DateTime
 poke.five.twenty.four$datetimeAK <- poke.five.twenty.four$DateTime
@@ -7454,96 +8113,187 @@ POKE_storm9_10_04_turb = subset(POKE_storm9_10_04, select = c("DateTime","Turbid
 names(POKE_storm9_10_04_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(POKE_storm1_06_30, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30.csv")
-write.csv(POKE_storm1_06_30_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_Q.csv")
-write.csv(POKE_storm1_06_30_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_NO3.csv")
-write.csv(POKE_storm1_06_30_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_fDOM.csv")
-write.csv(POKE_storm1_06_30_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_SPC.csv")
-write.csv(POKE_storm1_06_30_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm1_06_30_Turb.csv"))
 
-write.csv(POKE_storm2_07_12, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12.csv")
-write.csv(POKE_storm2_07_12_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_Q.csv")
-write.csv(POKE_storm2_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_NO3.csv")
-write.csv(POKE_storm2_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_fDOM.csv")
-write.csv(POKE_storm2_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_SPC.csv")
-write.csv(POKE_storm2_07_12_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm2_07_12_Turb.csv"))
 
-write.csv(POKE_storm3_07_26, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26.csv")
-write.csv(POKE_storm3_07_26_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_Q.csv")
-write.csv(POKE_storm3_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_NO3.csv")
-write.csv(POKE_storm3_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_fDOM.csv")
-write.csv(POKE_storm3_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_SPC.csv")
-write.csv(POKE_storm3_07_26_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm3_07_26_Turb.csv"))
 
-write.csv(POKE_storm4_07_31, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31.csv")
-write.csv(POKE_storm4_07_31_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_Q.csv")
-write.csv(POKE_storm4_07_31_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_NO3.csv")
-write.csv(POKE_storm4_07_31_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_fDOM.csv")
-write.csv(POKE_storm4_07_31_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_SPC.csv")
-write.csv(POKE_storm4_07_31_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm4_07_31_Turb.csv"))
 
-write.csv(POKE_storm5a_08_02, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02.csv")
-write.csv(POKE_storm5a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_Q.csv")
-write.csv(POKE_storm5a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_NO3.csv")
-write.csv(POKE_storm5a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_fDOM.csv")
-write.csv(POKE_storm5a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_SPC.csv")
-write.csv(POKE_storm5a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_Turb.csv"))
 
-write.csv(POKE_storm5b_08_03, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03.csv")
-write.csv(POKE_storm5b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_Q.csv")
-write.csv(POKE_storm5b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_NO3.csv")
-write.csv(POKE_storm5b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_fDOM.csv")
-write.csv(POKE_storm5b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_SPC.csv")
-write.csv(POKE_storm5b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_Turb.csv"))
 
-write.csv(POKE_storm5c_08_05, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05.csv")
-write.csv(POKE_storm5c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_Q.csv")
-write.csv(POKE_storm5c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_NO3.csv")
-write.csv(POKE_storm5c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_fDOM.csv")
-write.csv(POKE_storm5c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_SPC.csv")
-write.csv(POKE_storm5c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_Turb.csv"))
 
-write.csv(POKE_storm5d_08_10, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10.csv")
-write.csv(POKE_storm5d_08_10_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_Q.csv")
-write.csv(POKE_storm5d_08_10_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_NO3.csv")
-write.csv(POKE_storm5d_08_10_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_fDOM.csv")
-write.csv(POKE_storm5d_08_10_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_SPC.csv")
-write.csv(POKE_storm5d_08_10_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm5d_08_10_Turb.csv"))
 
-write.csv(POKE_storm6a_08_12, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12.csv")
-write.csv(POKE_storm6a_08_12_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_Q.csv")
-write.csv(POKE_storm6a_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_NO3.csv")
-write.csv(POKE_storm6a_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_fDOM.csv")
-write.csv(POKE_storm6a_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_SPC.csv")
-write.csv(POKE_storm6a_08_12_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_Turb.csv"))
 
-write.csv(POKE_storm6b_08_13, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13.csv")
-write.csv(POKE_storm6b_08_13_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_Q.csv")
-write.csv(POKE_storm6b_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_NO3.csv")
-write.csv(POKE_storm6b_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_fDOM.csv")
-write.csv(POKE_storm6b_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_SPC.csv")
-write.csv(POKE_storm6b_08_13_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_Turb.csv"))
 
-write.csv(POKE_storm7_08_15, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15.csv")
-write.csv(POKE_storm7_08_15_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_Q.csv")
-write.csv(POKE_storm7_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_NO3.csv")
-write.csv(POKE_storm7_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_fDOM.csv")
-write.csv(POKE_storm7_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_SPC.csv")
-write.csv(POKE_storm7_08_15_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_Turb.csv"))
 
-write.csv(POKE_storm8_09_29, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29.csv")
-write.csv(POKE_storm8_09_29_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_Q.csv")
-write.csv(POKE_storm8_09_29_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_NO3.csv")
-write.csv(POKE_storm8_09_29_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_fDOM.csv")
-write.csv(POKE_storm8_09_29_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_SPC.csv")
-write.csv(POKE_storm8_09_29_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm8_09_29_Turb.csv"))
 
-write.csv(POKE_storm9_10_04, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04.csv")
-write.csv(POKE_storm9_10_04_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_Q.csv")
-write.csv(POKE_storm9_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_NO3.csv")
-write.csv(POKE_storm9_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_fDOM.csv")
-write.csv(POKE_storm9_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_SPC.csv")
-write.csv(POKE_storm9_10_04_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_Turb.csv")
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04_Q.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "POKE", "POKE_storm9_10_04_Turb.csv"))
+
+# write.csv(POKE_storm1_06_30, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30.csv")
+# write.csv(POKE_storm1_06_30_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_Q.csv")
+# write.csv(POKE_storm1_06_30_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_NO3.csv")
+# write.csv(POKE_storm1_06_30_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_fDOM.csv")
+# write.csv(POKE_storm1_06_30_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_SPC.csv")
+# write.csv(POKE_storm1_06_30_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm1_06_30_Turb.csv")
+# 
+# write.csv(POKE_storm2_07_12, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12.csv")
+# write.csv(POKE_storm2_07_12_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_Q.csv")
+# write.csv(POKE_storm2_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_NO3.csv")
+# write.csv(POKE_storm2_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_fDOM.csv")
+# write.csv(POKE_storm2_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_SPC.csv")
+# write.csv(POKE_storm2_07_12_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm2_07_12_Turb.csv")
+# 
+# write.csv(POKE_storm3_07_26, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26.csv")
+# write.csv(POKE_storm3_07_26_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_Q.csv")
+# write.csv(POKE_storm3_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_NO3.csv")
+# write.csv(POKE_storm3_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_fDOM.csv")
+# write.csv(POKE_storm3_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_SPC.csv")
+# write.csv(POKE_storm3_07_26_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm3_07_26_Turb.csv")
+# 
+# write.csv(POKE_storm4_07_31, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31.csv")
+# write.csv(POKE_storm4_07_31_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_Q.csv")
+# write.csv(POKE_storm4_07_31_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_NO3.csv")
+# write.csv(POKE_storm4_07_31_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_fDOM.csv")
+# write.csv(POKE_storm4_07_31_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_SPC.csv")
+# write.csv(POKE_storm4_07_31_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm4_07_31_Turb.csv")
+# 
+# write.csv(POKE_storm5a_08_02, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02.csv")
+# write.csv(POKE_storm5a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_Q.csv")
+# write.csv(POKE_storm5a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_NO3.csv")
+# write.csv(POKE_storm5a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_fDOM.csv")
+# write.csv(POKE_storm5a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_SPC.csv")
+# write.csv(POKE_storm5a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5a_08_02_Turb.csv")
+# 
+# write.csv(POKE_storm5b_08_03, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03.csv")
+# write.csv(POKE_storm5b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_Q.csv")
+# write.csv(POKE_storm5b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_NO3.csv")
+# write.csv(POKE_storm5b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_fDOM.csv")
+# write.csv(POKE_storm5b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_SPC.csv")
+# write.csv(POKE_storm5b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5b_08_03_Turb.csv")
+# 
+# write.csv(POKE_storm5c_08_05, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05.csv")
+# write.csv(POKE_storm5c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_Q.csv")
+# write.csv(POKE_storm5c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_NO3.csv")
+# write.csv(POKE_storm5c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_fDOM.csv")
+# write.csv(POKE_storm5c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_SPC.csv")
+# write.csv(POKE_storm5c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5c_08_05_Turb.csv")
+# 
+# write.csv(POKE_storm5d_08_10, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10.csv")
+# write.csv(POKE_storm5d_08_10_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_Q.csv")
+# write.csv(POKE_storm5d_08_10_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_NO3.csv")
+# write.csv(POKE_storm5d_08_10_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_fDOM.csv")
+# write.csv(POKE_storm5d_08_10_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_SPC.csv")
+# write.csv(POKE_storm5d_08_10_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm5d_08_10_Turb.csv")
+# 
+# write.csv(POKE_storm6a_08_12, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12.csv")
+# write.csv(POKE_storm6a_08_12_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_Q.csv")
+# write.csv(POKE_storm6a_08_12_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_NO3.csv")
+# write.csv(POKE_storm6a_08_12_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_fDOM.csv")
+# write.csv(POKE_storm6a_08_12_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_SPC.csv")
+# write.csv(POKE_storm6a_08_12_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6a_08_12_Turb.csv")
+# 
+# write.csv(POKE_storm6b_08_13, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13.csv")
+# write.csv(POKE_storm6b_08_13_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_Q.csv")
+# write.csv(POKE_storm6b_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_NO3.csv")
+# write.csv(POKE_storm6b_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_fDOM.csv")
+# write.csv(POKE_storm6b_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_SPC.csv")
+# write.csv(POKE_storm6b_08_13_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm6b_08_13_Turb.csv")
+# 
+# write.csv(POKE_storm7_08_15, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15.csv")
+# write.csv(POKE_storm7_08_15_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_Q.csv")
+# write.csv(POKE_storm7_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_NO3.csv")
+# write.csv(POKE_storm7_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_fDOM.csv")
+# write.csv(POKE_storm7_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_SPC.csv")
+# write.csv(POKE_storm7_08_15_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm7_08_15_Turb.csv")
+# 
+# write.csv(POKE_storm8_09_29, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29.csv")
+# write.csv(POKE_storm8_09_29_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_Q.csv")
+# write.csv(POKE_storm8_09_29_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_NO3.csv")
+# write.csv(POKE_storm8_09_29_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_fDOM.csv")
+# write.csv(POKE_storm8_09_29_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_SPC.csv")
+# write.csv(POKE_storm8_09_29_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm8_09_29_Turb.csv")
+# 
+# write.csv(POKE_storm9_10_04, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04.csv")
+# write.csv(POKE_storm9_10_04_Q, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_Q.csv")
+# write.csv(POKE_storm9_10_04_NO3, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_NO3.csv")
+# write.csv(POKE_storm9_10_04_fDOM, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_fDOM.csv")
+# write.csv(POKE_storm9_10_04_SPC, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_SPC.csv")
+# write.csv(POKE_storm9_10_04_turb, "~/Documents/Storms/Storm_Events/2019/POKE/POKE_storm9_10_04_Turb.csv")
 
 #MOOS#
 MOOS$MeanDischarge <- MOOS$Q
@@ -8346,96 +9096,187 @@ MOOS_storm9_10_02_turb = subset(MOOS_storm9_10_02, select = c("DateTime","Turbid
 names(MOOS_storm9_10_02_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(MOOS_storm1_06_01, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01.csv")
-write.csv(MOOS_storm1_06_01_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Q.csv")
-write.csv(MOOS_storm1_06_01_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_NO3.csv")
-write.csv(MOOS_storm1_06_01_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_fDOM.csv")
-write.csv(MOOS_storm1_06_01_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_SPC.csv")
-write.csv(MOOS_storm1_06_01_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Turb.csv"))
 
-write.csv(MOOS_storm3_07_12, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12.csv")
-write.csv(MOOS_storm3_07_12_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Q.csv")
-write.csv(MOOS_storm3_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_NO3.csv")
-write.csv(MOOS_storm3_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_fDOM.csv")
-write.csv(MOOS_storm3_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_SPC.csv")
-write.csv(MOOS_storm3_07_12_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Turb.csv"))
 
-write.csv(MOOS_storm4_07_25, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25.csv")
-write.csv(MOOS_storm4_07_25_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Q.csv")
-write.csv(MOOS_storm4_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_NO3.csv")
-write.csv(MOOS_storm4_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_fDOM.csv")
-write.csv(MOOS_storm4_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_SPC.csv")
-write.csv(MOOS_storm4_07_25_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Turb.csv"))
 
-write.csv(MOOS_storm5_07_29, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29.csv")
-write.csv(MOOS_storm5_07_29_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Q.csv")
-write.csv(MOOS_storm5_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_NO3.csv")
-write.csv(MOOS_storm5_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_fDOM.csv")
-write.csv(MOOS_storm5_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_SPC.csv")
-write.csv(MOOS_storm5_07_29_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Turb.csv"))
 
-write.csv(MOOS_storm6a_08_01, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01.csv")
-write.csv(MOOS_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Q.csv")
-write.csv(MOOS_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_NO3.csv")
-write.csv(MOOS_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_fDOM.csv")
-write.csv(MOOS_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_SPC.csv")
-write.csv(MOOS_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Turb.csv"))
 
-write.csv(MOOS_storm6b_08_02, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02.csv")
-write.csv(MOOS_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Q.csv")
-write.csv(MOOS_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_NO3.csv")
-write.csv(MOOS_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_fDOM.csv")
-write.csv(MOOS_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_SPC.csv")
-write.csv(MOOS_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Turb.csv"))
 
-write.csv(MOOS_storm6c_08_03, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03.csv")
-write.csv(MOOS_storm6c_08_03_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Q.csv")
-write.csv(MOOS_storm6c_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_NO3.csv")
-write.csv(MOOS_storm6c_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_fDOM.csv")
-write.csv(MOOS_storm6c_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_SPC.csv")
-write.csv(MOOS_storm6c_08_03_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Turb.csv"))
 
-write.csv(MOOS_storm6d_08_05, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05.csv")
-write.csv(MOOS_storm6d_08_05_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Q.csv")
-write.csv(MOOS_storm6d_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_NO3.csv")
-write.csv(MOOS_storm6d_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_fDOM.csv")
-write.csv(MOOS_storm6d_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_SPC.csv")
-write.csv(MOOS_storm6d_08_05_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Turb.csv"))
 
-write.csv(MOOS_storm7a_08_13, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13.csv")
-write.csv(MOOS_storm7a_08_13_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Q.csv")
-write.csv(MOOS_storm7a_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_NO3.csv")
-write.csv(MOOS_storm7a_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_fDOM.csv")
-write.csv(MOOS_storm7a_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_SPC.csv")
-write.csv(MOOS_storm7a_08_13_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Turb.csv"))
 
-write.csv(MOOS_storm7b_08_14, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14.csv")
-write.csv(MOOS_storm7b_08_14_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Q.csv")
-write.csv(MOOS_storm7b_08_14_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_NO3.csv")
-write.csv(MOOS_storm7b_08_14_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_fDOM.csv")
-write.csv(MOOS_storm7b_08_14_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_SPC.csv")
-write.csv(MOOS_storm7b_08_14_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Turb.csv"))
 
-write.csv(MOOS_storm7c_08_15, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15.csv")
-write.csv(MOOS_storm7c_08_15_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Q.csv")
-write.csv(MOOS_storm7c_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_NO3.csv")
-write.csv(MOOS_storm7c_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_fDOM.csv")
-write.csv(MOOS_storm7c_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_SPC.csv")
-write.csv(MOOS_storm7c_08_15_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Turb.csv"))
 
-write.csv(MOOS_storm8_09_21, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21.csv")
-write.csv(MOOS_storm8_09_21_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Q.csv")
-write.csv(MOOS_storm8_09_21_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_NO3.csv")
-write.csv(MOOS_storm8_09_21_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_fDOM.csv")
-write.csv(MOOS_storm8_09_21_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_SPC.csv")
-write.csv(MOOS_storm8_09_21_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Turb.csv"))
 
-write.csv(MOOS_storm9_10_02, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02.csv")
-write.csv(MOOS_storm9_10_02_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Q.csv")
-write.csv(MOOS_storm9_10_02_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_NO3.csv")
-write.csv(MOOS_storm9_10_02_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_fDOM.csv")
-write.csv(MOOS_storm9_10_02_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_SPC.csv")
-write.csv(MOOS_storm9_10_02_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Turb.csv")
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Turb.csv"))
+
+# write.csv(MOOS_storm1_06_01, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01.csv")
+# write.csv(MOOS_storm1_06_01_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Q.csv")
+# write.csv(MOOS_storm1_06_01_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_NO3.csv")
+# write.csv(MOOS_storm1_06_01_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_fDOM.csv")
+# write.csv(MOOS_storm1_06_01_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_SPC.csv")
+# write.csv(MOOS_storm1_06_01_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Turb.csv")
+# 
+# write.csv(MOOS_storm3_07_12, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12.csv")
+# write.csv(MOOS_storm3_07_12_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Q.csv")
+# write.csv(MOOS_storm3_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_NO3.csv")
+# write.csv(MOOS_storm3_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_fDOM.csv")
+# write.csv(MOOS_storm3_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_SPC.csv")
+# write.csv(MOOS_storm3_07_12_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Turb.csv")
+# 
+# write.csv(MOOS_storm4_07_25, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25.csv")
+# write.csv(MOOS_storm4_07_25_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Q.csv")
+# write.csv(MOOS_storm4_07_25_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_NO3.csv")
+# write.csv(MOOS_storm4_07_25_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_fDOM.csv")
+# write.csv(MOOS_storm4_07_25_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_SPC.csv")
+# write.csv(MOOS_storm4_07_25_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Turb.csv")
+# 
+# write.csv(MOOS_storm5_07_29, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29.csv")
+# write.csv(MOOS_storm5_07_29_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Q.csv")
+# write.csv(MOOS_storm5_07_29_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_NO3.csv")
+# write.csv(MOOS_storm5_07_29_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_fDOM.csv")
+# write.csv(MOOS_storm5_07_29_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_SPC.csv")
+# write.csv(MOOS_storm5_07_29_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Turb.csv")
+# 
+# write.csv(MOOS_storm6a_08_01, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01.csv")
+# write.csv(MOOS_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Q.csv")
+# write.csv(MOOS_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_NO3.csv")
+# write.csv(MOOS_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_fDOM.csv")
+# write.csv(MOOS_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_SPC.csv")
+# write.csv(MOOS_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Turb.csv")
+# 
+# write.csv(MOOS_storm6b_08_02, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02.csv")
+# write.csv(MOOS_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Q.csv")
+# write.csv(MOOS_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_NO3.csv")
+# write.csv(MOOS_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_fDOM.csv")
+# write.csv(MOOS_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_SPC.csv")
+# write.csv(MOOS_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Turb.csv")
+# 
+# write.csv(MOOS_storm6c_08_03, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03.csv")
+# write.csv(MOOS_storm6c_08_03_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Q.csv")
+# write.csv(MOOS_storm6c_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_NO3.csv")
+# write.csv(MOOS_storm6c_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_fDOM.csv")
+# write.csv(MOOS_storm6c_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_SPC.csv")
+# write.csv(MOOS_storm6c_08_03_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Turb.csv")
+# 
+# write.csv(MOOS_storm6d_08_05, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05.csv")
+# write.csv(MOOS_storm6d_08_05_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Q.csv")
+# write.csv(MOOS_storm6d_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_NO3.csv")
+# write.csv(MOOS_storm6d_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_fDOM.csv")
+# write.csv(MOOS_storm6d_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_SPC.csv")
+# write.csv(MOOS_storm6d_08_05_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Turb.csv")
+# 
+# write.csv(MOOS_storm7a_08_13, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13.csv")
+# write.csv(MOOS_storm7a_08_13_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Q.csv")
+# write.csv(MOOS_storm7a_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_NO3.csv")
+# write.csv(MOOS_storm7a_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_fDOM.csv")
+# write.csv(MOOS_storm7a_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_SPC.csv")
+# write.csv(MOOS_storm7a_08_13_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Turb.csv")
+# 
+# write.csv(MOOS_storm7b_08_14, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14.csv")
+# write.csv(MOOS_storm7b_08_14_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Q.csv")
+# write.csv(MOOS_storm7b_08_14_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_NO3.csv")
+# write.csv(MOOS_storm7b_08_14_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_fDOM.csv")
+# write.csv(MOOS_storm7b_08_14_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_SPC.csv")
+# write.csv(MOOS_storm7b_08_14_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Turb.csv")
+# 
+# write.csv(MOOS_storm7c_08_15, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15.csv")
+# write.csv(MOOS_storm7c_08_15_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Q.csv")
+# write.csv(MOOS_storm7c_08_15_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_NO3.csv")
+# write.csv(MOOS_storm7c_08_15_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_fDOM.csv")
+# write.csv(MOOS_storm7c_08_15_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_SPC.csv")
+# write.csv(MOOS_storm7c_08_15_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Turb.csv")
+# 
+# write.csv(MOOS_storm8_09_21, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21.csv")
+# write.csv(MOOS_storm8_09_21_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Q.csv")
+# write.csv(MOOS_storm8_09_21_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_NO3.csv")
+# write.csv(MOOS_storm8_09_21_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_fDOM.csv")
+# write.csv(MOOS_storm8_09_21_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_SPC.csv")
+# write.csv(MOOS_storm8_09_21_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Turb.csv")
+# 
+# write.csv(MOOS_storm9_10_02, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02.csv")
+# write.csv(MOOS_storm9_10_02_Q, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Q.csv")
+# write.csv(MOOS_storm9_10_02_NO3, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_NO3.csv")
+# write.csv(MOOS_storm9_10_02_fDOM, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_fDOM.csv")
+# write.csv(MOOS_storm9_10_02_SPC, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_SPC.csv")
+# write.csv(MOOS_storm9_10_02_turb, "~/Documents/Storms/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Turb.csv")
 
 #CARI#
 CARI_2019$DateTime <- CARI_2019$datetimeAK
@@ -9011,711 +9852,796 @@ CARI_storm8_08_16_turb = subset(CARI_storm8_08_16, select = c("DateTime","Turb")
 names(CARI_storm8_08_16_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(CARI_storm1_05_08, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_06_01.csv")
-write.csv(CARI_storm1_05_08_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Q.csv")
-write.csv(CARI_storm1_05_08_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_NO3.csv")
-write.csv(CARI_storm1_05_08_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_fDOM.csv")
-write.csv(CARI_storm1_05_08_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_SPC.csv")
-write.csv(CARI_storm1_05_08_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_06_01_Turb.csv"))
 
-write.csv(CARI_storm2_06_30, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30.csv")
-write.csv(CARI_storm2_06_30_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Q.csv")
-write.csv(CARI_storm2_06_30_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_NO3.csv")
-write.csv(CARI_storm2_06_30_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_fDOM.csv")
-write.csv(CARI_storm2_06_30_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_SPC.csv")
-write.csv(CARI_storm2_06_30_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Turb.csv"))
 
-write.csv(CARI_storm3_07_12, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12.csv")
-write.csv(CARI_storm3_07_12_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Q.csv")
-write.csv(CARI_storm3_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_NO3.csv")
-write.csv(CARI_storm3_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_fDOM.csv")
-write.csv(CARI_storm3_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_SPC.csv")
-write.csv(CARI_storm3_07_12_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Turb.csv"))
 
-write.csv(CARI_storm4_07_26, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26.csv")
-write.csv(CARI_storm4_07_26_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Q.csv")
-write.csv(CARI_storm4_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_NO3.csv")
-write.csv(CARI_storm4_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_fDOM.csv")
-write.csv(CARI_storm4_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_SPC.csv")
-write.csv(CARI_storm4_07_26_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Turb.csv"))
 
-write.csv(CARI_storm5_07_31, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31.csv")
-write.csv(CARI_storm5_07_31_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Q.csv")
-write.csv(CARI_storm5_07_31_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_NO3.csv")
-write.csv(CARI_storm5_07_31_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_fDOM.csv")
-write.csv(CARI_storm5_07_31_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_SPC.csv")
-write.csv(CARI_storm5_07_31_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Turb.csv"))
 
-write.csv(CARI_storm6a_08_02, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02.csv")
-write.csv(CARI_storm6a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Q.csv")
-write.csv(CARI_storm6a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_NO3.csv")
-write.csv(CARI_storm6a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_fDOM.csv")
-write.csv(CARI_storm6a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_SPC.csv")
-write.csv(CARI_storm6a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Turb.csv"))
 
-write.csv(CARI_storm6b_08_03, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03.csv")
-write.csv(CARI_storm6b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Q.csv")
-write.csv(CARI_storm6b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_NO3.csv")
-write.csv(CARI_storm6b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_fDOM.csv")
-write.csv(CARI_storm6b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_SPC.csv")
-write.csv(CARI_storm6b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_Turb.csv"))
 
-write.csv(CARI_storm6c_08_05, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05.csv")
-write.csv(CARI_storm6c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Q.csv")
-write.csv(CARI_storm6c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_NO3.csv")
-write.csv(CARI_storm6c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_fDOM.csv")
-write.csv(CARI_storm6c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_SPC.csv")
-write.csv(CARI_storm6c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Turb.csv"))
 
-write.csv(CARI_storm6d_08_10, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10.csv")
-write.csv(CARI_storm6d_08_10_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Q.csv")
-write.csv(CARI_storm6d_08_10_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_NO3.csv")
-write.csv(CARI_storm6d_08_10_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_fDOM.csv")
-write.csv(CARI_storm6d_08_10_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_SPC.csv")
-write.csv(CARI_storm6d_08_10_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Turb.csv"))
 
-write.csv(CARI_storm7a_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13.csv")
-write.csv(CARI_storm7a_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Q.csv")
-write.csv(CARI_storm7a_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_NO3.csv")
-write.csv(CARI_storm7a_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_fDOM.csv")
-write.csv(CARI_storm7a_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_SPC.csv")
-write.csv(CARI_storm7a_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Turb.csv"))
 
-write.csv(CARI_storm7b_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13.csv")
-write.csv(CARI_storm7b_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Q.csv")
-write.csv(CARI_storm7b_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_NO3.csv")
-write.csv(CARI_storm7b_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_fDOM.csv")
-write.csv(CARI_storm7b_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_SPC.csv")
-write.csv(CARI_storm7b_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_Turb.csv"))
 
-write.csv(CARI_storm8_08_16, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16.csv")
-write.csv(CARI_storm8_08_16_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Q.csv")
-write.csv(CARI_storm8_08_16_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_NO3.csv")
-write.csv(CARI_storm8_08_16_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_fDOM.csv")
-write.csv(CARI_storm8_08_16_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_SPC.csv")
-write.csv(CARI_storm8_08_16_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Turb.csv")
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Q.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_NO3.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_fDOM.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_SPC.csv"))
+write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Turb.csv"))
+
+
+# write.csv(CARI_storm1_05_08, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_06_01.csv")
+# write.csv(CARI_storm1_05_08_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Q.csv")
+# write.csv(CARI_storm1_05_08_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_NO3.csv")
+# write.csv(CARI_storm1_05_08_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_fDOM.csv")
+# write.csv(CARI_storm1_05_08_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_SPC.csv")
+# write.csv(CARI_storm1_05_08_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Turb.csv")
+# 
+# write.csv(CARI_storm2_06_30, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30.csv")
+# write.csv(CARI_storm2_06_30_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Q.csv")
+# write.csv(CARI_storm2_06_30_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_NO3.csv")
+# write.csv(CARI_storm2_06_30_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_fDOM.csv")
+# write.csv(CARI_storm2_06_30_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_SPC.csv")
+# write.csv(CARI_storm2_06_30_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Turb.csv")
+# 
+# write.csv(CARI_storm3_07_12, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12.csv")
+# write.csv(CARI_storm3_07_12_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Q.csv")
+# write.csv(CARI_storm3_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_NO3.csv")
+# write.csv(CARI_storm3_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_fDOM.csv")
+# write.csv(CARI_storm3_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_SPC.csv")
+# write.csv(CARI_storm3_07_12_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Turb.csv")
+# 
+# write.csv(CARI_storm4_07_26, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26.csv")
+# write.csv(CARI_storm4_07_26_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Q.csv")
+# write.csv(CARI_storm4_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_NO3.csv")
+# write.csv(CARI_storm4_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_fDOM.csv")
+# write.csv(CARI_storm4_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_SPC.csv")
+# write.csv(CARI_storm4_07_26_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Turb.csv")
+# 
+# write.csv(CARI_storm5_07_31, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31.csv")
+# write.csv(CARI_storm5_07_31_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Q.csv")
+# write.csv(CARI_storm5_07_31_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_NO3.csv")
+# write.csv(CARI_storm5_07_31_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_fDOM.csv")
+# write.csv(CARI_storm5_07_31_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_SPC.csv")
+# write.csv(CARI_storm5_07_31_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Turb.csv")
+# 
+# write.csv(CARI_storm6a_08_02, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02.csv")
+# write.csv(CARI_storm6a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Q.csv")
+# write.csv(CARI_storm6a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_NO3.csv")
+# write.csv(CARI_storm6a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_fDOM.csv")
+# write.csv(CARI_storm6a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_SPC.csv")
+# write.csv(CARI_storm6a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Turb.csv")
+# 
+# write.csv(CARI_storm6b_08_03, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03.csv")
+# write.csv(CARI_storm6b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Q.csv")
+# write.csv(CARI_storm6b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_NO3.csv")
+# write.csv(CARI_storm6b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_fDOM.csv")
+# write.csv(CARI_storm6b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_SPC.csv")
+# write.csv(CARI_storm6b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Turb.csv")
+# 
+# write.csv(CARI_storm6c_08_05, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05.csv")
+# write.csv(CARI_storm6c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Q.csv")
+# write.csv(CARI_storm6c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_NO3.csv")
+# write.csv(CARI_storm6c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_fDOM.csv")
+# write.csv(CARI_storm6c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_SPC.csv")
+# write.csv(CARI_storm6c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Turb.csv")
+# 
+# write.csv(CARI_storm6d_08_10, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10.csv")
+# write.csv(CARI_storm6d_08_10_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Q.csv")
+# write.csv(CARI_storm6d_08_10_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_NO3.csv")
+# write.csv(CARI_storm6d_08_10_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_fDOM.csv")
+# write.csv(CARI_storm6d_08_10_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_SPC.csv")
+# write.csv(CARI_storm6d_08_10_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Turb.csv")
+# 
+# write.csv(CARI_storm7a_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13.csv")
+# write.csv(CARI_storm7a_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Q.csv")
+# write.csv(CARI_storm7a_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_NO3.csv")
+# write.csv(CARI_storm7a_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_fDOM.csv")
+# write.csv(CARI_storm7a_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_SPC.csv")
+# write.csv(CARI_storm7a_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Turb.csv")
+# 
+# write.csv(CARI_storm7b_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13.csv")
+# write.csv(CARI_storm7b_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Q.csv")
+# write.csv(CARI_storm7b_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_NO3.csv")
+# write.csv(CARI_storm7b_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_fDOM.csv")
+# write.csv(CARI_storm7b_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_SPC.csv")
+# write.csv(CARI_storm7b_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Turb.csv")
+# 
+# write.csv(CARI_storm8_08_16, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16.csv")
+# write.csv(CARI_storm8_08_16_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Q.csv")
+# write.csv(CARI_storm8_08_16_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_NO3.csv")
+# write.csv(CARI_storm8_08_16_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_fDOM.csv")
+# write.csv(CARI_storm8_08_16_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_SPC.csv")
+# write.csv(CARI_storm8_08_16_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Turb.csv")
 
 #### load storm data #
-
+# THIS is all for flushing index which are striping from the thesis 
 # load storm data #
 
-storm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
-                              recursive=F, 
-                              pattern=".csv", 
-                              full.names=TRUE)
-
-storm_list<-do.call("list", lapply(storm_file_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   header=T, row.names=1))
-
-storm_file_list = sub("~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list, replacement = "")
-storm_file_list = sub(".csv", storm_file_list, replacement = "")
-names(storm_list) = storm_file_list
-
-for(i in 1:length(storm_list)){
-  storm_list[[i]][["valuedatetime"]] = as.POSIXct(storm_list[[i]][["valuedatetime"]],
-                                                  "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-} # changing character format into datetime 
-
-#  organize storm data by site and solute # 5 for each storm 
-CARI_storm_list = storm_list[c(1:60)] #60
-FRCH_storm_list = storm_list[c(61:165)] #105
-MOOS_storm_list = storm_list[c(166:230)] #60
-POKE_storm_list = storm_list[c(231:295)]# 65
-STRT_storm_list = storm_list[c(296:350)] #55
-VAUL_storm_list = storm_list[c(351:410)] #65
-
-CARI_NO3_storm_list = CARI_storm_list[c(grep("NO3", names(CARI_storm_list)))]
-CARI_fDOM_storm_list = CARI_storm_list[c(grep("fDOM", names(CARI_storm_list)))]
-CARI_SpCond_storm_list = CARI_storm_list[c(grep("SPC", names(CARI_storm_list)))]
-CARI_turb_storm_list = CARI_storm_list[c(grep("Turb", names(CARI_storm_list)))]
-
-FRCH_NO3_storm_list = FRCH_storm_list[c(grep("NO3", names(FRCH_storm_list)))]
-FRCH_fDOM_storm_list = FRCH_storm_list[c(grep("fDOM", names(FRCH_storm_list)))]
-FRCH_SpCond_storm_list = FRCH_storm_list[c(grep("SPC", names(FRCH_storm_list)))]
-FRCH_turb_storm_list = FRCH_storm_list[c(grep("Turb", names(FRCH_storm_list)))]
-
-MOOS_NO3_storm_list = MOOS_storm_list[c(grep("NO3", names(MOOS_storm_list)))]
-MOOS_fDOM_storm_list = MOOS_storm_list[c(grep("fDOM", names(MOOS_storm_list)))]
-MOOS_SpCond_storm_list = MOOS_storm_list[c(grep("SPC", names(MOOS_storm_list)))]
-MOOS_turb_storm_list = MOOS_storm_list[c(grep("Turb", names(MOOS_storm_list)))]
-
-POKE_NO3_storm_list = POKE_storm_list[c(grep("NO3", names(POKE_storm_list)))]
-POKE_fDOM_storm_list = POKE_storm_list[c(grep("fDOM", names(POKE_storm_list)))]
-POKE_SpCond_storm_list = POKE_storm_list[c(grep("SPC", names(POKE_storm_list)))]
-POKE_turb_storm_list = POKE_storm_list[c(grep("Turb", names(POKE_storm_list)))]
-
-STRT_NO3_storm_list = STRT_storm_list[c(grep("NO3", names(STRT_storm_list)))]
-STRT_fDOM_storm_list = STRT_storm_list[c(grep("fDOM", names(STRT_storm_list)))]
-STRT_SpCond_storm_list = STRT_storm_list[c(grep("SPC", names(STRT_storm_list)))]
-STRT_turb_storm_list = STRT_storm_list[c(grep("Turb", names(STRT_storm_list)))]
-
-VAUL_NO3_storm_list = VAUL_storm_list[c(grep("NO3", names(VAUL_storm_list)))]
-VAUL_fDOM_storm_list = VAUL_storm_list[c(grep("fDOM", names(VAUL_storm_list)))]
-VAUL_SpCond_storm_list = VAUL_storm_list[c(grep("SPC", names(VAUL_storm_list)))]
-VAUL_turb_storm_list = VAUL_storm_list[c(grep("turb", names(VAUL_storm_list)))]
-
-#### load burst SUNA data #
-
-FRCHfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/FRCH/", 
-                            recursive=F, 
-                            pattern=".CSV", 
-                            full.names=TRUE)
-
-MOOSfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/MOOS/", 
-                            recursive=F, 
-                            pattern=".CSV", 
-                            full.names=TRUE)
-
-POKEfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/POKE/", 
-                            recursive=F, 
-                            pattern=".CSV", 
-                            full.names=TRUE)
-
-STRTfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/STRT/", 
-                            recursive=F, 
-                            pattern=".CSV", 
-                            full.names=TRUE)
-
-VAULfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/VAUL/", 
-                            recursive=F, 
-                            pattern=".CSV", 
-                            full.names=TRUE)
-
-### Merge all data files for sensor ###
-#correct header=14
-
-SUNA.FRCH<-do.call("rbind", lapply(FRCHfile_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   skip=14, header=FALSE))
-
-SUNA.MOOS<-do.call("rbind", lapply(MOOSfile_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   skip=14, header=FALSE))
-
-SUNA.POKE<-do.call("rbind", lapply(POKEfile_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   skip=14, header=FALSE))
-
-SUNA.STRT<-do.call("rbind", lapply(STRTfile_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   skip=14, header=FALSE))
-
-SUNA.VAUL<-do.call("rbind", lapply(VAULfile_list, 
-                                   read.csv, 
-                                   stringsAsFactors=FALSE, 
-                                   skip=14, header=FALSE))
-
-### Variable names for SUNA output file ###
-pre<-"ch"
-suff<-seq(12:267)
-ch<-paste(pre, suff)
-SUNAnames<-c("ID", "date_yearday", "time_fhoursUTC", "nitrateuM", "nitratemgL", "abs254", 
-             "abs350", "brtrace", "specave", "darkvaluefit", "inttimefac", ch, "int_TC", 
-             "spec_TC", "lamp_TC", "lamptimecum", "relhum", "mainV", "lampV", "intV", 
-             "mainmA", "fit1", "fit2", "fitbase1", "fitbase2", "fitRMSE", "CTDtime", 
-             "CTDsal", "CTDT", "CTDdBar", "checksum")
-names(SUNA.FRCH)<-SUNAnames
-names(SUNA.MOOS)<-SUNAnames
-names(SUNA.POKE)<-SUNAnames
-names(SUNA.STRT)<-SUNAnames
-names(SUNA.VAUL)<-SUNAnames
-### Remove unneeded columns ###
-
-#remove raw channel data
-SUNA.FRCHr<-SUNA.FRCH[,c(1:11,268:286)]
-SUNA.MOOSr<-SUNA.MOOS[,c(1:11,268:286)]
-SUNA.POKEr<-SUNA.POKE[,c(1:11,268:286)]
-SUNA.STRTr<-SUNA.STRT[,c(1:11,268:286)]
-SUNA.VAULr<-SUNA.VAUL[,c(1:11,268:286)]
-
-#remove dark frames. 
-### <<Note: Change date below>> ###
-sum(SUNA.FRCHr$ID == 'DF')
-SUNA.FRCHr %>% group_by(ID) %>% tally()
-SUNA.FRCHrlf<-SUNA.FRCHr[!grepl("DF", SUNA.FRCHr$ID),]
-
-SUNA.MOOSr %>% group_by(ID) %>% tally()
-SUNA.MOOSrlf<-SUNA.MOOSr[!grepl("DF", SUNA.MOOSr$ID),]
-
-SUNA.POKEr %>% group_by(ID) %>% tally()
-SUNA.POKErlf<-SUNA.POKEr[!grepl("DF", SUNA.POKEr$ID),]
-
-SUNA.STRTr %>% group_by(ID) %>% tally()
-SUNA.STRTrlf<-SUNA.STRTr[!grepl("DF", SUNA.STRTr$ID),]
-
-SUNA.VAULr %>% group_by(ID) %>% tally()
-SUNA.VAULrlf<-SUNA.VAULr[!grepl("DF", SUNA.VAULr$ID),]
-
-### Date and time reformatting ###
-## FRCH ##
-# create separate year and day columns
-year_day <- t(sapply(SUNA.FRCHrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
-year_day<-as.data.frame(year_day)
-names(year_day)<-c("year", "day")
-year_day$year <- as.numeric(year_day$year)
-year_day$day<-as.numeric(year_day$day)
-SUNA.FRCHrlf<-cbind(SUNA.FRCHrlf, year_day)
-# combine hours and julian day into fractional days
-SUNA.FRCHrlf$day_timeUTC<-SUNA.FRCHrlf$day+(SUNA.FRCHrlf$time_fhoursUTC/24)
-# assign year to 2019 data
-origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
-SUNA.FRCHrlf$date_timeUTC<-origin17 + SUNA.FRCHrlf$day_timeUTC * 3600 * 24
-# convert from UTC to AKDT
-SUNA.FRCHrlf$date_timeAK<-as.POSIXct(format(SUNA.FRCHrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
-summary(SUNA.FRCHrlf$date_timeAK)
-class(SUNA.FRCHrlf$date_timeAK)
-tz(SUNA.FRCHrlf$date_timeAK) = "America/Anchorage"
-
-## MOOS ##
-# create separate year and day columns
-year_day <- t(sapply(SUNA.MOOSrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
-year_day<-as.data.frame(year_day)
-names(year_day)<-c("year", "day")
-year_day$year <- as.numeric(year_day$year)
-year_day$day<-as.numeric(year_day$day)
-SUNA.MOOSrlf<-cbind(SUNA.MOOSrlf, year_day)
-# combine hours and julian day into fractional days
-SUNA.MOOSrlf$day_timeUTC<-SUNA.MOOSrlf$day+(SUNA.MOOSrlf$time_fhoursUTC/24)
-# assign year to 2019 data
-origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
-SUNA.MOOSrlf$date_timeUTC<-origin17 + SUNA.MOOSrlf$day_timeUTC * 3600 * 24
-# convert from UTC to AKDT
-SUNA.MOOSrlf$date_timeAK<-as.POSIXct(format(SUNA.MOOSrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
-summary(SUNA.MOOSrlf$date_timeAK)
-class(SUNA.MOOSrlf$date_timeAK)
-tz(SUNA.MOOSrlf$date_timeAK) = "America/Anchorage"
-head(SUNA.MOOSrlf$date_timeAK)
-
-## POKE ##
-# create separate year and day columns
-year_day <- t(sapply(SUNA.POKErlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
-year_day<-as.data.frame(year_day)
-names(year_day)<-c("year", "day")
-year_day$year <- as.numeric(year_day$year)
-year_day$day<-as.numeric(year_day$day)
-SUNA.POKErlf<-cbind(SUNA.POKErlf, year_day)
-# combine hours and julian day into fractional days
-SUNA.POKErlf$day_timeUTC<-SUNA.POKErlf$day+(SUNA.POKErlf$time_fhoursUTC/24)
-# assign year to 2019 data
-origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
-SUNA.POKErlf$date_timeUTC<-origin17 + SUNA.POKErlf$day_timeUTC * 3600 * 24
-# convert from UTC to AKDT
-SUNA.POKErlf$date_timeAK<-as.POSIXct(format(SUNA.POKErlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
-summary(SUNA.POKErlf$date_timeAK)
-class(SUNA.POKErlf$date_timeAK)
-tz(SUNA.POKErlf$date_timeAK) = "America/Anchorage"
-head(SUNA.POKErlf$date_timeAK)
-
-## STRT ##
-# create separate year and day columns
-year_day <- t(sapply(SUNA.STRTrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
-year_day<-as.data.frame(year_day)
-names(year_day)<-c("year", "day")
-year_day$year <- as.numeric(year_day$year)
-year_day$day<-as.numeric(year_day$day)
-SUNA.STRTrlf<-cbind(SUNA.STRTrlf, year_day)
-# combine hours and julian day into fractional days
-SUNA.STRTrlf$day_timeUTC<-SUNA.STRTrlf$day+(SUNA.STRTrlf$time_fhoursUTC/24)
-# assign year to 2019 data
-origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
-SUNA.STRTrlf$date_timeUTC<-origin17 + SUNA.STRTrlf$day_timeUTC * 3600 * 24
-# convert from UTC to AKDT
-SUNA.STRTrlf$date_timeAK<-as.POSIXct(format(SUNA.STRTrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
-summary(SUNA.STRTrlf$date_timeAK)
-class(SUNA.STRTrlf$date_timeAK)
-tz(SUNA.STRTrlf$date_timeAK) = "America/Anchorage"
-head(SUNA.STRTrlf$date_timeAK)
-
-## VAUL ##
-# create separate year and day columns
-year_day <- t(sapply(SUNA.VAULrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
-year_day<-as.data.frame(year_day)
-names(year_day)<-c("year", "day")
-year_day$year <- as.numeric(year_day$year)
-year_day$day<-as.numeric(year_day$day)
-SUNA.VAULrlf<-cbind(SUNA.VAULrlf, year_day)
-# combine hours and julian day into fractional days
-SUNA.VAULrlf$day_timeUTC<-SUNA.VAULrlf$day+(SUNA.VAULrlf$time_fhoursUTC/24)
-# assign year to 2019 data
-origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
-SUNA.VAULrlf$date_timeUTC<-origin17 + SUNA.VAULrlf$day_timeUTC * 3600 * 24
-# convert from UTC to AKDT
-SUNA.VAULrlf$date_timeAK<-as.POSIXct(format(SUNA.VAULrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
-summary(SUNA.VAULrlf$date_timeAK)
-class(SUNA.VAULrlf$date_timeAK)
-tz(SUNA.VAULrlf$date_timeAK) = "America/Anchorage"
-head(SUNA.VAULrlf$date_timeAK)
-
-### reduce columns ###
-
-SUNA.FRCH.burst = subset(SUNA.FRCHrlf, select = c("date_timeAK", "nitrateuM"))
-SUNA.MOOS.burst = subset(SUNA.MOOSrlf, select = c("date_timeAK", "nitrateuM"))
-SUNA.POKE.burst = subset(SUNA.POKErlf, select = c("date_timeAK", "nitrateuM"))
-SUNA.STRT.burst = subset(SUNA.STRTrlf, select = c("date_timeAK", "nitrateuM"))
-SUNA.VAUL.burst = subset(SUNA.VAULrlf, select = c("date_timeAK", "nitrateuM"))
-
-### rename columns ###
-names(SUNA.FRCH.burst) <- c("DateTime", "nitrateuM")
-names(SUNA.MOOS.burst) <- c("DateTime", "nitrateuM")
-names(SUNA.POKE.burst) <- c("DateTime", "nitrateuM")
-names(SUNA.STRT.burst) <- c("DateTime", "nitrateuM")
-names(SUNA.VAUL.burst) <- c("DateTime", "nitrateuM")
-
-### round to nearest 15 min ###
-
-SUNA.FRCH.burst$DateTime = lubridate::round_date(SUNA.FRCH.burst$DateTime, "15 minutes") 
-SUNA.MOOS.burst$DateTime = lubridate::round_date(SUNA.MOOS.burst$DateTime, "15 minutes") 
-SUNA.POKE.burst$DateTime = lubridate::round_date(SUNA.POKE.burst$DateTime, "15 minutes") 
-SUNA.STRT.burst$DateTime = lubridate::round_date(SUNA.STRT.burst$DateTime, "15 minutes") 
-SUNA.VAUL.burst$DateTime = lubridate::round_date(SUNA.VAUL.burst$DateTime, "15 minutes") 
-
-#### load burst EXO data #
-
-### load and stitch EXO data ###
-
-# FRCH #
-FRCHfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/FRCH/", 
-                            recursive=F, 
-                            pattern=".csv", 
-                            full.names=TRUE)
-
-EXO.FRCH<-do.call("rbind", lapply(FRCHfile_list, 
-                                  read.csv, 
-                                  stringsAsFactors=FALSE, 
-                                  skip = 9,
-                                  header=F))
-colNames <- c("Date..MM.DD.YYYY.", "Time..HH.mm.ss.", "Time..Fract..Sec.", "Site.Name" , "Cond.µS.cm" ,
-              "fDOM.QSU","nLF.Cond.µS.cm", "ODO...sat", "ODO...local",
-              "ODO.mg.L", "Sal.psu","SpCond.µS.cm",  "TDS.mg.L", "Turbidity.FNU" ,
-              "TSS.mg.L", "Wiper.Position.volt", "Temp..C", "Battery.V", "Cable.Pwr.V")
-
-names(EXO.FRCH)<-colNames
-
-# MOOS #
-MOOSfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/MOOS/", 
-                            recursive=F, 
-                            pattern=".csv", 
-                            full.names=TRUE)
-
-EXO.MOOS<-do.call("rbind", lapply(MOOSfile_list, 
-                                  read.csv, 
-                                  stringsAsFactors=FALSE, 
-                                  skip = 9,
-                                  header=F))
-names(EXO.MOOS)<-colNames
-# POKE #
-POKEfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/POKE/", 
-                            recursive=F, 
-                            pattern=".csv", 
-                            full.names=TRUE)
-
-EXO.POKE<-do.call("rbind", lapply(POKEfile_list, 
-                                  read.csv, 
-                                  stringsAsFactors=FALSE,
-                                  skip = 9,
-                                  header=F))
-names(EXO.POKE)<-colNames
-# STRT #
-STRTfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/STRT/", 
-                            recursive=F, 
-                            pattern=".csv", 
-                            full.names=TRUE)
-
-EXO.STRT<-do.call("rbind", lapply(STRTfile_list, 
-                                  read.csv, 
-                                  stringsAsFactors=FALSE,
-                                  skip = 9,
-                                  header=F))
-names(EXO.STRT)<-colNames
-# VAUL #
-VAULfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/VAUL/", 
-                            recursive=F, 
-                            pattern=".csv", 
-                            full.names=TRUE)
-
-EXO.VAUL<-do.call("rbind", lapply(VAULfile_list, 
-                                  read.csv, 
-                                  stringsAsFactors=FALSE,
-                                  skip = 9,
-                                  header=F))
-names(EXO.VAUL)<-colNames
-
-## FRCH ##
-# put date and time in same column
-EXO.FRCH$date_time = paste(EXO.FRCH$Date..MM.DD.YYYY., EXO.FRCH$Time..HH.mm.ss., sep = " ")
-# convert to POIXct and set timezone
-EXO.FRCH$date_timeET<-as.POSIXct(EXO.FRCH$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
-# convert to Alaska Time
-EXO.FRCH$date_timeAK<-with_tz(EXO.FRCH$date_timeET, tz="America/Anchorage")
-head(EXO.FRCH)
-class(EXO.FRCH$date_timeAK)
-tz(EXO.FRCH$date_timeAK)
-
-## MOOS ##
-# put date and time in same column
-EXO.MOOS$date_time = paste(EXO.MOOS$Date..MM.DD.YYYY., EXO.MOOS$Time..HH.mm.ss., sep = " ")
-# convert to POIXct and set timezone
-EXO.MOOS$date_timeET<-as.POSIXct(EXO.MOOS$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
-# convert to Alaska Time
-EXO.MOOS$date_timeAK<-with_tz(EXO.MOOS$date_timeET, tz="America/Anchorage")
-head(EXO.MOOS)
-class(EXO.MOOS$date_timeAK)
-tz(EXO.MOOS$date_timeAK)
-
-## POKE ##
-# put date and time in same column
-EXO.POKE$date_time = paste(EXO.POKE$Date..MM.DD.YYYY., EXO.POKE$Time..HH.mm.ss., sep = " ")
-# convert to POIXct and set timezone
-EXO.POKE$date_timeET<-as.POSIXct(EXO.POKE$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
-# convert to Alaska Time
-EXO.POKE$date_timeAK<-with_tz(EXO.POKE$date_timeET, tz="America/Anchorage")
-head(EXO.POKE)
-class(EXO.POKE$date_timeAK)
-tz(EXO.POKE$date_timeAK)
-
-## STRT ##
-# put date and time in same column
-EXO.STRT$date_time = paste(EXO.STRT$Date..MM.DD.YYYY., EXO.STRT$Time..HH.mm.ss., sep = " ")
-# convert to POIXct and set timezone
-EXO.STRT$date_timeET<-as.POSIXct(EXO.STRT$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
-# convert to Alaska Time
-EXO.STRT$date_timeAK<-with_tz(EXO.STRT$date_timeET, tz="America/Anchorage")
-head(EXO.STRT)
-class(EXO.STRT$date_timeAK)
-tz(EXO.STRT$date_timeAK)
-
-## VAUL ##
-# put date and time in same column
-EXO.VAUL$date_time = paste(EXO.VAUL$Date..MM.DD.YYYY., EXO.VAUL$Time..HH.mm.ss., sep = " ")
-# convert to POIXct and set timezone
-EXO.VAUL$date_timeET<-as.POSIXct(EXO.VAUL$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
-# convert to Alaska Time
-EXO.VAUL$date_timeAK<-with_tz(EXO.VAUL$date_timeET, tz="America/Anchorage")
-head(EXO.VAUL)
-class(EXO.VAUL$date_timeAK)
-tz(EXO.VAUL$date_timeAK)
-
-### reduce columns ###
-
-EXO.FRCH.burst = subset(EXO.FRCH, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
-EXO.MOOS.burst = subset(EXO.MOOS, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
-EXO.POKE.burst = subset(EXO.POKE, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
-EXO.STRT.burst = subset(EXO.STRT, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
-EXO.VAUL.burst = subset(EXO.VAUL, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
-
-###  rename columns ###
-names(EXO.FRCH.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
-names(EXO.MOOS.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
-names(EXO.POKE.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
-names(EXO.STRT.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
-names(EXO.VAUL.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
-
-### round to nearest 15 min ###
-
-EXO.FRCH.burst$DateTime = lubridate::round_date(EXO.FRCH.burst$DateTime, "15 minutes") 
-EXO.MOOS.burst$DateTime = lubridate::round_date(EXO.MOOS.burst$DateTime, "15 minutes") 
-EXO.POKE.burst$DateTime = lubridate::round_date(EXO.POKE.burst$DateTime, "15 minutes") 
-EXO.STRT.burst$DateTime = lubridate::round_date(EXO.STRT.burst$DateTime, "15 minutes") 
-EXO.VAUL.burst$DateTime = lubridate::round_date(EXO.VAUL.burst$DateTime, "15 minutes") 
-
-#### match NAs in DOD 2019 to bursts ####
-
-## NO3 ##
-#temp= inner_join(SUNA.FRCH.burst, subset(FRCH, select=c("DateTime", "nitrateuM")), by= "DateTime")
-#temp$nitrateuM = ifelse(is.na(temp$nitrateuM), NA, temp$nitrateuM)
-#SUNA.FRCH.burst$nitrateuM = temp$nitrateuM # not the same amount of rows 
-
-#temp= inner_join(SUNA.C3.burst, subset(C3, select=c("date_timeAK", "nitrate_uM")), by= "date_timeAK")
-#temp$nitrateuM = ifelse(is.na(temp$nitrate_uM), NA, temp$nitrateuM)
-#SUNA.C3.burst$nitrateuM = temp$nitrateuM
-
-
-#### save clean-ish burst data ####
-
-write_csv(SUNA.FRCH.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.FRCH.burst.csv")
-write_csv(SUNA.MOOS.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.MOOS.burst.csv")
-write_csv(SUNA.POKE.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.POKE.burst.csv")
-write_csv(SUNA.STRT.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.STRT.burst.csv")
-write_csv(SUNA.VAUL.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.VAUL.burst.csv")
-
-write_csv(EXO.FRCH.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.FRCH.burst.csv")
-write_csv(EXO.MOOS.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.MOOS.burst.csv")
-write_csv(EXO.POKE.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.POKE.burst.csv")
-write_csv(EXO.STRT.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.STRT.burst.csv")
-write_csv(EXO.VAUL.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.VAUL.burst.csv")
-
-
-#### join burst and storm data ####
-
-### NO3 ### working on this as of 211007
-
-for(i in 1:length(FRCH_NO3_storm_list)){
-  FRCH_NO3_storm_list[[i]] = inner_join(FRCH_NO3_storm_list[[i]], SUNA.FRCH.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(MOOS_NO3_storm_list)){
-  MOOS_NO3_storm_list[[i]] = inner_join(MOOS_NO3_storm_list[[i]], SUNA.MOOS.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm7_08_15_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm7_08_15_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm8_09_29_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm8_09_29_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm9_10_04_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm9_10_04_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-
-for(i in 1:length(POKE_NO3_storm_list)){
-  POKE_NO3_storm_list[[i]] = inner_join(POKE_NO3_storm_list[[i]], SUNA.POKE.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(STRT_NO3_storm_list)){
-  STRT_NO3_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_NO3_storm_list[[i]][["valuedatetime"]],
-                                                           "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-
-for(i in 1:length(STRT_NO3_storm_list)){
-  STRT_NO3_storm_list[[i]] = inner_join(STRT_NO3_storm_list[[i]], SUNA.STRT.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(VAUL_NO3_storm_list)){
-  VAUL_NO3_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_NO3_storm_list[[i]][["valuedatetime"]],
-                                                           "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(VAUL_NO3_storm_list)){
-  VAUL_NO3_storm_list[[i]] = inner_join(VAUL_NO3_storm_list[[i]], SUNA.VAUL.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-#fDOM
-for(i in 1:length(FRCH_fDOM_storm_list)){
-  FRCH_fDOM_storm_list[[i]] = inner_join(FRCH_fDOM_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(MOOS_fDOM_storm_list)){
-  MOOS_fDOM_storm_list[[i]] = inner_join(MOOS_fDOM_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(POKE_fDOM_storm_list)){
-  POKE_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_fDOM_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(POKE_fDOM_storm_list)){
-  POKE_fDOM_storm_list[[i]] = inner_join(POKE_fDOM_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(STRT_fDOM_storm_list)){
-  STRT_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_fDOM_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(STRT_fDOM_storm_list)){
-  STRT_fDOM_storm_list[[i]] = inner_join(STRT_fDOM_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(VAUL_fDOM_storm_list)){
-  VAUL_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_fDOM_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-
-for(i in 1:length(VAUL_fDOM_storm_list)){
-  VAUL_fDOM_storm_list[[i]] = inner_join(VAUL_fDOM_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-#SPC
-for(i in 1:length(FRCH_SpCond_storm_list)){
-  FRCH_SpCond_storm_list[[i]] = inner_join(FRCH_SpCond_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(MOOS_SpCond_storm_list)){
-  MOOS_SpCond_storm_list[[i]] = inner_join(MOOS_SpCond_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(POKE_SpCond_storm_list)){
-  POKE_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_SpCond_storm_list[[i]][["valuedatetime"]],
-                                                              "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(POKE_SpCond_storm_list)){
-  POKE_SpCond_storm_list[[i]] = inner_join(POKE_SpCond_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(STRT_SpCond_storm_list)){
-  STRT_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_SpCond_storm_list[[i]][["valuedatetime"]],
-                                                              "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(STRT_SpCond_storm_list)){
-  STRT_SpCond_storm_list[[i]] = inner_join(STRT_SpCond_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(VAUL_SpCond_storm_list)){
-  VAUL_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_SpCond_storm_list[[i]][["valuedatetime"]],
-                                                              "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-
-for(i in 1:length(VAUL_SpCond_storm_list)){
-  VAUL_SpCond_storm_list[[i]] = inner_join(VAUL_SpCond_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-#Turb
-for(i in 1:length(FRCH_turb_storm_list)){
-  FRCH_turb_storm_list[[i]] = inner_join(FRCH_turb_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(MOOS_turb_storm_list)){
-  MOOS_turb_storm_list[[i]] = inner_join(MOOS_turb_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(POKE_turb_storm_list)){
-  POKE_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_turb_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(POKE_turb_storm_list)){
-  POKE_turb_storm_list[[i]] = inner_join(POKE_turb_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(STRT_turb_storm_list)){
-  STRT_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_turb_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-for(i in 1:length(STRT_turb_storm_list)){
-  STRT_turb_storm_list[[i]] = inner_join(STRT_turb_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-for(i in 1:length(VAUL_turb_storm_list)){
-  VAUL_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_turb_storm_list[[i]][["valuedatetime"]],
-                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-}
-
-for(i in 1:length(VAUL_turb_storm_list)){
-  VAUL_turb_storm_list[[i]] = inner_join(VAUL_turb_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
-}
-
-# save storm with burst data #
-
-saveRDS(FRCH_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_NO3_storm_list.RData")
-saveRDS(MOOS_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_NO3_storm_list.RData")
-saveRDS(POKE_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_NO3_storm_list.RData")
-saveRDS(STRT_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_NO3_storm_list.RData")
-saveRDS(VAUL_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_NO3_storm_list.RData")
-
-saveRDS(FRCH_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_fDOM_storm_list.RData")
-saveRDS(MOOS_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_fDOM_storm_list.RData")
-saveRDS(POKE_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_fDOM_storm_list.RData")
-saveRDS(STRT_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_fDOM_storm_list.RData")
-saveRDS(VAUL_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_fDOM_storm_list.RData")
-
-saveRDS(FRCH_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_SPC_storm_list.RData")
-saveRDS(MOOS_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_SPC_storm_list.RData")
-saveRDS(POKE_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_SPC_storm_list.RData")
-saveRDS(STRT_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_SPC_storm_list.RData")
-saveRDS(VAUL_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_SPC_storm_list.RData")
-
-saveRDS(FRCH_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_turb_storm_list.RData")
-saveRDS(MOOS_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_turb_storm_list.RData")
-saveRDS(POKE_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_turb_storm_list.RData")
-saveRDS(STRT_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_turb_storm_list.RData")
-saveRDS(VAUL_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_turb_storm_list.RData")
-
+# storm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+#                               recursive=F, 
+#                               pattern=".csv", 
+#                               full.names=TRUE)
+# 
+# storm_list<-do.call("list", lapply(storm_file_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    header=T, row.names=1))
+# 
+# storm_file_list = sub("~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list, replacement = "")
+# storm_file_list = sub(".csv", storm_file_list, replacement = "")
+# names(storm_list) = storm_file_list
+# 
+# for(i in 1:length(storm_list)){
+#   storm_list[[i]][["valuedatetime"]] = as.POSIXct(storm_list[[i]][["valuedatetime"]],
+#                                                   "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# } # changing character format into datetime 
+# 
+# #  organize storm data by site and solute # 5 for each storm 
+# CARI_storm_list = storm_list[c(1:60)] #60
+# FRCH_storm_list = storm_list[c(61:165)] #105
+# MOOS_storm_list = storm_list[c(166:230)] #60
+# POKE_storm_list = storm_list[c(231:295)]# 65
+# STRT_storm_list = storm_list[c(296:350)] #55
+# VAUL_storm_list = storm_list[c(351:410)] #65
+# 
+# CARI_NO3_storm_list = CARI_storm_list[c(grep("NO3", names(CARI_storm_list)))]
+# CARI_fDOM_storm_list = CARI_storm_list[c(grep("fDOM", names(CARI_storm_list)))]
+# CARI_SpCond_storm_list = CARI_storm_list[c(grep("SPC", names(CARI_storm_list)))]
+# CARI_turb_storm_list = CARI_storm_list[c(grep("Turb", names(CARI_storm_list)))]
+# 
+# FRCH_NO3_storm_list = FRCH_storm_list[c(grep("NO3", names(FRCH_storm_list)))]
+# FRCH_fDOM_storm_list = FRCH_storm_list[c(grep("fDOM", names(FRCH_storm_list)))]
+# FRCH_SpCond_storm_list = FRCH_storm_list[c(grep("SPC", names(FRCH_storm_list)))]
+# FRCH_turb_storm_list = FRCH_storm_list[c(grep("Turb", names(FRCH_storm_list)))]
+# 
+# MOOS_NO3_storm_list = MOOS_storm_list[c(grep("NO3", names(MOOS_storm_list)))]
+# MOOS_fDOM_storm_list = MOOS_storm_list[c(grep("fDOM", names(MOOS_storm_list)))]
+# MOOS_SpCond_storm_list = MOOS_storm_list[c(grep("SPC", names(MOOS_storm_list)))]
+# MOOS_turb_storm_list = MOOS_storm_list[c(grep("Turb", names(MOOS_storm_list)))]
+# 
+# POKE_NO3_storm_list = POKE_storm_list[c(grep("NO3", names(POKE_storm_list)))]
+# POKE_fDOM_storm_list = POKE_storm_list[c(grep("fDOM", names(POKE_storm_list)))]
+# POKE_SpCond_storm_list = POKE_storm_list[c(grep("SPC", names(POKE_storm_list)))]
+# POKE_turb_storm_list = POKE_storm_list[c(grep("Turb", names(POKE_storm_list)))]
+# 
+# STRT_NO3_storm_list = STRT_storm_list[c(grep("NO3", names(STRT_storm_list)))]
+# STRT_fDOM_storm_list = STRT_storm_list[c(grep("fDOM", names(STRT_storm_list)))]
+# STRT_SpCond_storm_list = STRT_storm_list[c(grep("SPC", names(STRT_storm_list)))]
+# STRT_turb_storm_list = STRT_storm_list[c(grep("Turb", names(STRT_storm_list)))]
+# 
+# VAUL_NO3_storm_list = VAUL_storm_list[c(grep("NO3", names(VAUL_storm_list)))]
+# VAUL_fDOM_storm_list = VAUL_storm_list[c(grep("fDOM", names(VAUL_storm_list)))]
+# VAUL_SpCond_storm_list = VAUL_storm_list[c(grep("SPC", names(VAUL_storm_list)))]
+# VAUL_turb_storm_list = VAUL_storm_list[c(grep("turb", names(VAUL_storm_list)))]
+# 
+# #### load burst SUNA data #
+# 
+# FRCHfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/FRCH/", 
+#                             recursive=F, 
+#                             pattern=".CSV", 
+#                             full.names=TRUE)
+# 
+# MOOSfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/MOOS/", 
+#                             recursive=F, 
+#                             pattern=".CSV", 
+#                             full.names=TRUE)
+# 
+# POKEfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/POKE/", 
+#                             recursive=F, 
+#                             pattern=".CSV", 
+#                             full.names=TRUE)
+# 
+# STRTfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/STRT/", 
+#                             recursive=F, 
+#                             pattern=".CSV", 
+#                             full.names=TRUE)
+# 
+# VAULfile_list <- list.files(path="~/Documents/DoD_2019/SUNA_raw/VAUL/", 
+#                             recursive=F, 
+#                             pattern=".CSV", 
+#                             full.names=TRUE)
+# 
+# ### Merge all data files for sensor ###
+# #correct header=14
+# 
+# SUNA.FRCH<-do.call("rbind", lapply(FRCHfile_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    skip=14, header=FALSE))
+# 
+# SUNA.MOOS<-do.call("rbind", lapply(MOOSfile_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    skip=14, header=FALSE))
+# 
+# SUNA.POKE<-do.call("rbind", lapply(POKEfile_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    skip=14, header=FALSE))
+# 
+# SUNA.STRT<-do.call("rbind", lapply(STRTfile_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    skip=14, header=FALSE))
+# 
+# SUNA.VAUL<-do.call("rbind", lapply(VAULfile_list, 
+#                                    read.csv, 
+#                                    stringsAsFactors=FALSE, 
+#                                    skip=14, header=FALSE))
+# 
+# ### Variable names for SUNA output file ###
+# pre<-"ch"
+# suff<-seq(12:267)
+# ch<-paste(pre, suff)
+# SUNAnames<-c("ID", "date_yearday", "time_fhoursUTC", "nitrateuM", "nitratemgL", "abs254", 
+#              "abs350", "brtrace", "specave", "darkvaluefit", "inttimefac", ch, "int_TC", 
+#              "spec_TC", "lamp_TC", "lamptimecum", "relhum", "mainV", "lampV", "intV", 
+#              "mainmA", "fit1", "fit2", "fitbase1", "fitbase2", "fitRMSE", "CTDtime", 
+#              "CTDsal", "CTDT", "CTDdBar", "checksum")
+# names(SUNA.FRCH)<-SUNAnames
+# names(SUNA.MOOS)<-SUNAnames
+# names(SUNA.POKE)<-SUNAnames
+# names(SUNA.STRT)<-SUNAnames
+# names(SUNA.VAUL)<-SUNAnames
+# ### Remove unneeded columns ###
+# 
+# #remove raw channel data
+# SUNA.FRCHr<-SUNA.FRCH[,c(1:11,268:286)]
+# SUNA.MOOSr<-SUNA.MOOS[,c(1:11,268:286)]
+# SUNA.POKEr<-SUNA.POKE[,c(1:11,268:286)]
+# SUNA.STRTr<-SUNA.STRT[,c(1:11,268:286)]
+# SUNA.VAULr<-SUNA.VAUL[,c(1:11,268:286)]
+# 
+# #remove dark frames. 
+# ### <<Note: Change date below>> ###
+# sum(SUNA.FRCHr$ID == 'DF')
+# SUNA.FRCHr %>% group_by(ID) %>% tally()
+# SUNA.FRCHrlf<-SUNA.FRCHr[!grepl("DF", SUNA.FRCHr$ID),]
+# 
+# SUNA.MOOSr %>% group_by(ID) %>% tally()
+# SUNA.MOOSrlf<-SUNA.MOOSr[!grepl("DF", SUNA.MOOSr$ID),]
+# 
+# SUNA.POKEr %>% group_by(ID) %>% tally()
+# SUNA.POKErlf<-SUNA.POKEr[!grepl("DF", SUNA.POKEr$ID),]
+# 
+# SUNA.STRTr %>% group_by(ID) %>% tally()
+# SUNA.STRTrlf<-SUNA.STRTr[!grepl("DF", SUNA.STRTr$ID),]
+# 
+# SUNA.VAULr %>% group_by(ID) %>% tally()
+# SUNA.VAULrlf<-SUNA.VAULr[!grepl("DF", SUNA.VAULr$ID),]
+# 
+# ### Date and time reformatting ###
+# ## FRCH ##
+# # create separate year and day columns
+# year_day <- t(sapply(SUNA.FRCHrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
+# year_day<-as.data.frame(year_day)
+# names(year_day)<-c("year", "day")
+# year_day$year <- as.numeric(year_day$year)
+# year_day$day<-as.numeric(year_day$day)
+# SUNA.FRCHrlf<-cbind(SUNA.FRCHrlf, year_day)
+# # combine hours and julian day into fractional days
+# SUNA.FRCHrlf$day_timeUTC<-SUNA.FRCHrlf$day+(SUNA.FRCHrlf$time_fhoursUTC/24)
+# # assign year to 2019 data
+# origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
+# SUNA.FRCHrlf$date_timeUTC<-origin17 + SUNA.FRCHrlf$day_timeUTC * 3600 * 24
+# # convert from UTC to AKDT
+# SUNA.FRCHrlf$date_timeAK<-as.POSIXct(format(SUNA.FRCHrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
+# summary(SUNA.FRCHrlf$date_timeAK)
+# class(SUNA.FRCHrlf$date_timeAK)
+# tz(SUNA.FRCHrlf$date_timeAK) = "America/Anchorage"
+# 
+# ## MOOS ##
+# # create separate year and day columns
+# year_day <- t(sapply(SUNA.MOOSrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
+# year_day<-as.data.frame(year_day)
+# names(year_day)<-c("year", "day")
+# year_day$year <- as.numeric(year_day$year)
+# year_day$day<-as.numeric(year_day$day)
+# SUNA.MOOSrlf<-cbind(SUNA.MOOSrlf, year_day)
+# # combine hours and julian day into fractional days
+# SUNA.MOOSrlf$day_timeUTC<-SUNA.MOOSrlf$day+(SUNA.MOOSrlf$time_fhoursUTC/24)
+# # assign year to 2019 data
+# origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
+# SUNA.MOOSrlf$date_timeUTC<-origin17 + SUNA.MOOSrlf$day_timeUTC * 3600 * 24
+# # convert from UTC to AKDT
+# SUNA.MOOSrlf$date_timeAK<-as.POSIXct(format(SUNA.MOOSrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
+# summary(SUNA.MOOSrlf$date_timeAK)
+# class(SUNA.MOOSrlf$date_timeAK)
+# tz(SUNA.MOOSrlf$date_timeAK) = "America/Anchorage"
+# head(SUNA.MOOSrlf$date_timeAK)
+# 
+# ## POKE ##
+# # create separate year and day columns
+# year_day <- t(sapply(SUNA.POKErlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
+# year_day<-as.data.frame(year_day)
+# names(year_day)<-c("year", "day")
+# year_day$year <- as.numeric(year_day$year)
+# year_day$day<-as.numeric(year_day$day)
+# SUNA.POKErlf<-cbind(SUNA.POKErlf, year_day)
+# # combine hours and julian day into fractional days
+# SUNA.POKErlf$day_timeUTC<-SUNA.POKErlf$day+(SUNA.POKErlf$time_fhoursUTC/24)
+# # assign year to 2019 data
+# origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
+# SUNA.POKErlf$date_timeUTC<-origin17 + SUNA.POKErlf$day_timeUTC * 3600 * 24
+# # convert from UTC to AKDT
+# SUNA.POKErlf$date_timeAK<-as.POSIXct(format(SUNA.POKErlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
+# summary(SUNA.POKErlf$date_timeAK)
+# class(SUNA.POKErlf$date_timeAK)
+# tz(SUNA.POKErlf$date_timeAK) = "America/Anchorage"
+# head(SUNA.POKErlf$date_timeAK)
+# 
+# ## STRT ##
+# # create separate year and day columns
+# year_day <- t(sapply(SUNA.STRTrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
+# year_day<-as.data.frame(year_day)
+# names(year_day)<-c("year", "day")
+# year_day$year <- as.numeric(year_day$year)
+# year_day$day<-as.numeric(year_day$day)
+# SUNA.STRTrlf<-cbind(SUNA.STRTrlf, year_day)
+# # combine hours and julian day into fractional days
+# SUNA.STRTrlf$day_timeUTC<-SUNA.STRTrlf$day+(SUNA.STRTrlf$time_fhoursUTC/24)
+# # assign year to 2019 data
+# origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
+# SUNA.STRTrlf$date_timeUTC<-origin17 + SUNA.STRTrlf$day_timeUTC * 3600 * 24
+# # convert from UTC to AKDT
+# SUNA.STRTrlf$date_timeAK<-as.POSIXct(format(SUNA.STRTrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
+# summary(SUNA.STRTrlf$date_timeAK)
+# class(SUNA.STRTrlf$date_timeAK)
+# tz(SUNA.STRTrlf$date_timeAK) = "America/Anchorage"
+# head(SUNA.STRTrlf$date_timeAK)
+# 
+# ## VAUL ##
+# # create separate year and day columns
+# year_day <- t(sapply(SUNA.VAULrlf$date_yearday, function(x) substring(x, first=c(1,5), last=c(4,7))))
+# year_day<-as.data.frame(year_day)
+# names(year_day)<-c("year", "day")
+# year_day$year <- as.numeric(year_day$year)
+# year_day$day<-as.numeric(year_day$day)
+# SUNA.VAULrlf<-cbind(SUNA.VAULrlf, year_day)
+# # combine hours and julian day into fractional days
+# SUNA.VAULrlf$day_timeUTC<-SUNA.VAULrlf$day+(SUNA.VAULrlf$time_fhoursUTC/24)
+# # assign year to 2019 data
+# origin17 <- as.POSIXct("2018-12-31 00:00:00", tz="GMT")
+# SUNA.VAULrlf$date_timeUTC<-origin17 + SUNA.VAULrlf$day_timeUTC * 3600 * 24
+# # convert from UTC to AKDT
+# SUNA.VAULrlf$date_timeAK<-as.POSIXct(format(SUNA.VAULrlf$date_timeUTC, tz="America/Anchorage", usetz=TRUE))
+# summary(SUNA.VAULrlf$date_timeAK)
+# class(SUNA.VAULrlf$date_timeAK)
+# tz(SUNA.VAULrlf$date_timeAK) = "America/Anchorage"
+# head(SUNA.VAULrlf$date_timeAK)
+# 
+# ### reduce columns ###
+# 
+# SUNA.FRCH.burst = subset(SUNA.FRCHrlf, select = c("date_timeAK", "nitrateuM"))
+# SUNA.MOOS.burst = subset(SUNA.MOOSrlf, select = c("date_timeAK", "nitrateuM"))
+# SUNA.POKE.burst = subset(SUNA.POKErlf, select = c("date_timeAK", "nitrateuM"))
+# SUNA.STRT.burst = subset(SUNA.STRTrlf, select = c("date_timeAK", "nitrateuM"))
+# SUNA.VAUL.burst = subset(SUNA.VAULrlf, select = c("date_timeAK", "nitrateuM"))
+# 
+# ### rename columns ###
+# names(SUNA.FRCH.burst) <- c("DateTime", "nitrateuM")
+# names(SUNA.MOOS.burst) <- c("DateTime", "nitrateuM")
+# names(SUNA.POKE.burst) <- c("DateTime", "nitrateuM")
+# names(SUNA.STRT.burst) <- c("DateTime", "nitrateuM")
+# names(SUNA.VAUL.burst) <- c("DateTime", "nitrateuM")
+# 
+# ### round to nearest 15 min ###
+# 
+# SUNA.FRCH.burst$DateTime = lubridate::round_date(SUNA.FRCH.burst$DateTime, "15 minutes") 
+# SUNA.MOOS.burst$DateTime = lubridate::round_date(SUNA.MOOS.burst$DateTime, "15 minutes") 
+# SUNA.POKE.burst$DateTime = lubridate::round_date(SUNA.POKE.burst$DateTime, "15 minutes") 
+# SUNA.STRT.burst$DateTime = lubridate::round_date(SUNA.STRT.burst$DateTime, "15 minutes") 
+# SUNA.VAUL.burst$DateTime = lubridate::round_date(SUNA.VAUL.burst$DateTime, "15 minutes") 
+# 
+# #### load burst EXO data #
+# 
+# ### load and stitch EXO data ###
+# 
+# # FRCH #
+# FRCHfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/FRCH/", 
+#                             recursive=F, 
+#                             pattern=".csv", 
+#                             full.names=TRUE)
+# 
+# EXO.FRCH<-do.call("rbind", lapply(FRCHfile_list, 
+#                                   read.csv, 
+#                                   stringsAsFactors=FALSE, 
+#                                   skip = 9,
+#                                   header=F))
+# colNames <- c("Date..MM.DD.YYYY.", "Time..HH.mm.ss.", "Time..Fract..Sec.", "Site.Name" , "Cond.µS.cm" ,
+#               "fDOM.QSU","nLF.Cond.µS.cm", "ODO...sat", "ODO...local",
+#               "ODO.mg.L", "Sal.psu","SpCond.µS.cm",  "TDS.mg.L", "Turbidity.FNU" ,
+#               "TSS.mg.L", "Wiper.Position.volt", "Temp..C", "Battery.V", "Cable.Pwr.V")
+# 
+# names(EXO.FRCH)<-colNames
+# 
+# # MOOS #
+# MOOSfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/MOOS/", 
+#                             recursive=F, 
+#                             pattern=".csv", 
+#                             full.names=TRUE)
+# 
+# EXO.MOOS<-do.call("rbind", lapply(MOOSfile_list, 
+#                                   read.csv, 
+#                                   stringsAsFactors=FALSE, 
+#                                   skip = 9,
+#                                   header=F))
+# names(EXO.MOOS)<-colNames
+# # POKE #
+# POKEfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/POKE/", 
+#                             recursive=F, 
+#                             pattern=".csv", 
+#                             full.names=TRUE)
+# 
+# EXO.POKE<-do.call("rbind", lapply(POKEfile_list, 
+#                                   read.csv, 
+#                                   stringsAsFactors=FALSE,
+#                                   skip = 9,
+#                                   header=F))
+# names(EXO.POKE)<-colNames
+# # STRT #
+# STRTfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/STRT/", 
+#                             recursive=F, 
+#                             pattern=".csv", 
+#                             full.names=TRUE)
+# 
+# EXO.STRT<-do.call("rbind", lapply(STRTfile_list, 
+#                                   read.csv, 
+#                                   stringsAsFactors=FALSE,
+#                                   skip = 9,
+#                                   header=F))
+# names(EXO.STRT)<-colNames
+# # VAUL #
+# VAULfile_list <- list.files(path="~/Documents/DoD_2019/EXO_raw/VAUL/", 
+#                             recursive=F, 
+#                             pattern=".csv", 
+#                             full.names=TRUE)
+# 
+# EXO.VAUL<-do.call("rbind", lapply(VAULfile_list, 
+#                                   read.csv, 
+#                                   stringsAsFactors=FALSE,
+#                                   skip = 9,
+#                                   header=F))
+# names(EXO.VAUL)<-colNames
+# 
+# ## FRCH ##
+# # put date and time in same column
+# EXO.FRCH$date_time = paste(EXO.FRCH$Date..MM.DD.YYYY., EXO.FRCH$Time..HH.mm.ss., sep = " ")
+# # convert to POIXct and set timezone
+# EXO.FRCH$date_timeET<-as.POSIXct(EXO.FRCH$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
+# # convert to Alaska Time
+# EXO.FRCH$date_timeAK<-with_tz(EXO.FRCH$date_timeET, tz="America/Anchorage")
+# head(EXO.FRCH)
+# class(EXO.FRCH$date_timeAK)
+# tz(EXO.FRCH$date_timeAK)
+# 
+# ## MOOS ##
+# # put date and time in same column
+# EXO.MOOS$date_time = paste(EXO.MOOS$Date..MM.DD.YYYY., EXO.MOOS$Time..HH.mm.ss., sep = " ")
+# # convert to POIXct and set timezone
+# EXO.MOOS$date_timeET<-as.POSIXct(EXO.MOOS$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
+# # convert to Alaska Time
+# EXO.MOOS$date_timeAK<-with_tz(EXO.MOOS$date_timeET, tz="America/Anchorage")
+# head(EXO.MOOS)
+# class(EXO.MOOS$date_timeAK)
+# tz(EXO.MOOS$date_timeAK)
+# 
+# ## POKE ##
+# # put date and time in same column
+# EXO.POKE$date_time = paste(EXO.POKE$Date..MM.DD.YYYY., EXO.POKE$Time..HH.mm.ss., sep = " ")
+# # convert to POIXct and set timezone
+# EXO.POKE$date_timeET<-as.POSIXct(EXO.POKE$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
+# # convert to Alaska Time
+# EXO.POKE$date_timeAK<-with_tz(EXO.POKE$date_timeET, tz="America/Anchorage")
+# head(EXO.POKE)
+# class(EXO.POKE$date_timeAK)
+# tz(EXO.POKE$date_timeAK)
+# 
+# ## STRT ##
+# # put date and time in same column
+# EXO.STRT$date_time = paste(EXO.STRT$Date..MM.DD.YYYY., EXO.STRT$Time..HH.mm.ss., sep = " ")
+# # convert to POIXct and set timezone
+# EXO.STRT$date_timeET<-as.POSIXct(EXO.STRT$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
+# # convert to Alaska Time
+# EXO.STRT$date_timeAK<-with_tz(EXO.STRT$date_timeET, tz="America/Anchorage")
+# head(EXO.STRT)
+# class(EXO.STRT$date_timeAK)
+# tz(EXO.STRT$date_timeAK)
+# 
+# ## VAUL ##
+# # put date and time in same column
+# EXO.VAUL$date_time = paste(EXO.VAUL$Date..MM.DD.YYYY., EXO.VAUL$Time..HH.mm.ss., sep = " ")
+# # convert to POIXct and set timezone
+# EXO.VAUL$date_timeET<-as.POSIXct(EXO.VAUL$date_time, "%m/%d/%y %H:%M:%S", tz="America/New_York")
+# # convert to Alaska Time
+# EXO.VAUL$date_timeAK<-with_tz(EXO.VAUL$date_timeET, tz="America/Anchorage")
+# head(EXO.VAUL)
+# class(EXO.VAUL$date_timeAK)
+# tz(EXO.VAUL$date_timeAK)
+# 
+# ### reduce columns ###
+# 
+# EXO.FRCH.burst = subset(EXO.FRCH, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
+# EXO.MOOS.burst = subset(EXO.MOOS, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
+# EXO.POKE.burst = subset(EXO.POKE, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
+# EXO.STRT.burst = subset(EXO.STRT, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
+# EXO.VAUL.burst = subset(EXO.VAUL, select=c("date_timeAK", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU"))
+# 
+# ###  rename columns ###
+# names(EXO.FRCH.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
+# names(EXO.MOOS.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
+# names(EXO.POKE.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
+# names(EXO.STRT.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
+# names(EXO.VAUL.burst) <- c("DateTime", "fDOM.QSU.mn", "SpCond.µS.cm", "Turbidity.FNU")
+# 
+# ### round to nearest 15 min ###
+# 
+# EXO.FRCH.burst$DateTime = lubridate::round_date(EXO.FRCH.burst$DateTime, "15 minutes") 
+# EXO.MOOS.burst$DateTime = lubridate::round_date(EXO.MOOS.burst$DateTime, "15 minutes") 
+# EXO.POKE.burst$DateTime = lubridate::round_date(EXO.POKE.burst$DateTime, "15 minutes") 
+# EXO.STRT.burst$DateTime = lubridate::round_date(EXO.STRT.burst$DateTime, "15 minutes") 
+# EXO.VAUL.burst$DateTime = lubridate::round_date(EXO.VAUL.burst$DateTime, "15 minutes") 
+# 
+# #### match NAs in DOD 2019 to bursts ####
+# 
+# ## NO3 ##
+# #temp= inner_join(SUNA.FRCH.burst, subset(FRCH, select=c("DateTime", "nitrateuM")), by= "DateTime")
+# #temp$nitrateuM = ifelse(is.na(temp$nitrateuM), NA, temp$nitrateuM)
+# #SUNA.FRCH.burst$nitrateuM = temp$nitrateuM # not the same amount of rows 
+# 
+# #temp= inner_join(SUNA.C3.burst, subset(C3, select=c("date_timeAK", "nitrate_uM")), by= "date_timeAK")
+# #temp$nitrateuM = ifelse(is.na(temp$nitrate_uM), NA, temp$nitrateuM)
+# #SUNA.C3.burst$nitrateuM = temp$nitrateuM
+# 
+# 
+# #### save clean-ish burst data ####
+# 
+# write_csv(SUNA.FRCH.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.FRCH.burst.csv")
+# write_csv(SUNA.MOOS.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.MOOS.burst.csv")
+# write_csv(SUNA.POKE.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.POKE.burst.csv")
+# write_csv(SUNA.STRT.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.STRT.burst.csv")
+# write_csv(SUNA.VAUL.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/SUNA.VAUL.burst.csv")
+# 
+# write_csv(EXO.FRCH.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.FRCH.burst.csv")
+# write_csv(EXO.MOOS.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.MOOS.burst.csv")
+# write_csv(EXO.POKE.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.POKE.burst.csv")
+# write_csv(EXO.STRT.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.STRT.burst.csv")
+# write_csv(EXO.VAUL.burst, "~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/EXO.VAUL.burst.csv")
+# 
+# 
+# #### join burst and storm data ####
+# 
+# ### NO3 ### working on this as of 211007
+# 
+# for(i in 1:length(FRCH_NO3_storm_list)){
+#   FRCH_NO3_storm_list[[i]] = inner_join(FRCH_NO3_storm_list[[i]], SUNA.FRCH.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(MOOS_NO3_storm_list)){
+#   MOOS_NO3_storm_list[[i]] = inner_join(MOOS_NO3_storm_list[[i]], SUNA.MOOS.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm7_08_15_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm7_08_15_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm8_09_29_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm8_09_29_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm9_10_04_NO3`$valuedatetime <- as.POSIXct(POKE_NO3_storm_list$`/Users/jakecavaiani/Documents/Storms/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//POKE_storm9_10_04_NO3`$valuedatetime, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# 
+# for(i in 1:length(POKE_NO3_storm_list)){
+#   POKE_NO3_storm_list[[i]] = inner_join(POKE_NO3_storm_list[[i]], SUNA.POKE.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(STRT_NO3_storm_list)){
+#   STRT_NO3_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_NO3_storm_list[[i]][["valuedatetime"]],
+#                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# 
+# for(i in 1:length(STRT_NO3_storm_list)){
+#   STRT_NO3_storm_list[[i]] = inner_join(STRT_NO3_storm_list[[i]], SUNA.STRT.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(VAUL_NO3_storm_list)){
+#   VAUL_NO3_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_NO3_storm_list[[i]][["valuedatetime"]],
+#                                                            "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(VAUL_NO3_storm_list)){
+#   VAUL_NO3_storm_list[[i]] = inner_join(VAUL_NO3_storm_list[[i]], SUNA.VAUL.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# #fDOM
+# for(i in 1:length(FRCH_fDOM_storm_list)){
+#   FRCH_fDOM_storm_list[[i]] = inner_join(FRCH_fDOM_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(MOOS_fDOM_storm_list)){
+#   MOOS_fDOM_storm_list[[i]] = inner_join(MOOS_fDOM_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(POKE_fDOM_storm_list)){
+#   POKE_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_fDOM_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(POKE_fDOM_storm_list)){
+#   POKE_fDOM_storm_list[[i]] = inner_join(POKE_fDOM_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(STRT_fDOM_storm_list)){
+#   STRT_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_fDOM_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(STRT_fDOM_storm_list)){
+#   STRT_fDOM_storm_list[[i]] = inner_join(STRT_fDOM_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(VAUL_fDOM_storm_list)){
+#   VAUL_fDOM_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_fDOM_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# 
+# for(i in 1:length(VAUL_fDOM_storm_list)){
+#   VAUL_fDOM_storm_list[[i]] = inner_join(VAUL_fDOM_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# #SPC
+# for(i in 1:length(FRCH_SpCond_storm_list)){
+#   FRCH_SpCond_storm_list[[i]] = inner_join(FRCH_SpCond_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(MOOS_SpCond_storm_list)){
+#   MOOS_SpCond_storm_list[[i]] = inner_join(MOOS_SpCond_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(POKE_SpCond_storm_list)){
+#   POKE_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_SpCond_storm_list[[i]][["valuedatetime"]],
+#                                                               "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(POKE_SpCond_storm_list)){
+#   POKE_SpCond_storm_list[[i]] = inner_join(POKE_SpCond_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(STRT_SpCond_storm_list)){
+#   STRT_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_SpCond_storm_list[[i]][["valuedatetime"]],
+#                                                               "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(STRT_SpCond_storm_list)){
+#   STRT_SpCond_storm_list[[i]] = inner_join(STRT_SpCond_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(VAUL_SpCond_storm_list)){
+#   VAUL_SpCond_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_SpCond_storm_list[[i]][["valuedatetime"]],
+#                                                               "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# 
+# for(i in 1:length(VAUL_SpCond_storm_list)){
+#   VAUL_SpCond_storm_list[[i]] = inner_join(VAUL_SpCond_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# #Turb
+# for(i in 1:length(FRCH_turb_storm_list)){
+#   FRCH_turb_storm_list[[i]] = inner_join(FRCH_turb_storm_list[[i]], EXO.FRCH.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(MOOS_turb_storm_list)){
+#   MOOS_turb_storm_list[[i]] = inner_join(MOOS_turb_storm_list[[i]], EXO.MOOS.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(POKE_turb_storm_list)){
+#   POKE_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(POKE_turb_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(POKE_turb_storm_list)){
+#   POKE_turb_storm_list[[i]] = inner_join(POKE_turb_storm_list[[i]], EXO.POKE.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(STRT_turb_storm_list)){
+#   STRT_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(STRT_turb_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# for(i in 1:length(STRT_turb_storm_list)){
+#   STRT_turb_storm_list[[i]] = inner_join(STRT_turb_storm_list[[i]], EXO.STRT.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# for(i in 1:length(VAUL_turb_storm_list)){
+#   VAUL_turb_storm_list[[i]][["valuedatetime"]] = as.POSIXct(VAUL_turb_storm_list[[i]][["valuedatetime"]],
+#                                                             "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+# }
+# 
+# for(i in 1:length(VAUL_turb_storm_list)){
+#   VAUL_turb_storm_list[[i]] = inner_join(VAUL_turb_storm_list[[i]], EXO.VAUL.burst, by=c("valuedatetime" = "DateTime"))
+# }
+# 
+# # save storm with burst data #
+# 
+# saveRDS(FRCH_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_NO3_storm_list.RData")
+# saveRDS(MOOS_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_NO3_storm_list.RData")
+# saveRDS(POKE_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_NO3_storm_list.RData")
+# saveRDS(STRT_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_NO3_storm_list.RData")
+# saveRDS(VAUL_NO3_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_NO3_storm_list.RData")
+# 
+# saveRDS(FRCH_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_fDOM_storm_list.RData")
+# saveRDS(MOOS_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_fDOM_storm_list.RData")
+# saveRDS(POKE_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_fDOM_storm_list.RData")
+# saveRDS(STRT_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_fDOM_storm_list.RData")
+# saveRDS(VAUL_fDOM_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_fDOM_storm_list.RData")
+# 
+# saveRDS(FRCH_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_SPC_storm_list.RData")
+# saveRDS(MOOS_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_SPC_storm_list.RData")
+# saveRDS(POKE_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_SPC_storm_list.RData")
+# saveRDS(STRT_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_SPC_storm_list.RData")
+# saveRDS(VAUL_SpCond_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_SPC_storm_list.RData")
+# 
+# saveRDS(FRCH_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/FRCH_turb_storm_list.RData")
+# saveRDS(MOOS_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/MOOS_turb_storm_list.RData")
+# saveRDS(POKE_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/POKE_turb_storm_list.RData")
+# saveRDS(STRT_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/STRT_turb_storm_list.RData")
+# saveRDS(VAUL_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2019/Bursts/VAUL_turb_storm_list.RData")
+# 
 
 
 
@@ -9723,34 +10649,52 @@ saveRDS(VAUL_turb_storm_list, file="~/Documents/Storms_clean_repo/Storm_Events/2
 ############################## 2020 ######################################################
 ##########################################################################################
 
-setwd("~/Documents/Storms_clean_repo")
+
 # Load from local machine #
-Q.daily.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q.daily.2020.csv")
-Q.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q_2020.csv")
+Q.daily.2020 <- read.csv(here("processed_sensor_data", "2020", "Q.daily.2020.csv"))
+Q.2020 <- read.csv(here("processed_sensor_data", "2020", "Q_2020.csv"))
 
 names(Q.2020) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column headers to match that of the chem file 
 
 Q.2020$datetimeAK <- ymd_hms(Q.2020$datetimeAK) # converting character to datetime
 
+chem.2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
 
-chem.2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
-
-chem.2020 <- chem.2020[, -c(1, 3:20, 24:88)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
-# I just want the constituents and datetimeAk
-
-chem.2020 <- chem.2020[, c(6,1,4,2,3,5)] # reorganizing column headers
-
-
+chem.2020 <- chem.2020[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab")]
 
 chem.2020$datetimeAK <- ymd_hms(chem.2020$datetimeAK) # converting character to datetime
 
 names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU", "nitrateuM")
 
 
+# Q.daily.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q.daily.2020.csv")
+# Q.2020 <- read_csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/Q_2020.csv")
+# 
+# names(Q.2020) <- c("site.ID", "datetimeAK", "Q", "day") # renaming the column headers to match that of the chem file 
+# 
+# Q.2020$datetimeAK <- ymd_hms(Q.2020$datetimeAK) # converting character to datetime
+
+
+# chem.2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+# 
+# chem.2020 <- chem.2020[, -c(1, 3:20, 24:88)] # removing unnecessary columns which consists of a lot of the SUNA diagnostic columns and channels that are needed
+# # I just want the constituents and datetimeAk
+# 
+# chem.2020 <- chem.2020[, c(6,1,4,2,3,5)] # reorganizing column headers
+# 
+# 
+# 
+# chem.2020$datetimeAK <- ymd_hms(chem.2020$datetimeAK) # converting character to datetime
+# 
+# names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU", "nitrateuM")
+
+
 
 # Load in CARI data 
 
-CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
+CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
+# CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
 
 # time zones are the bane of my existence
 # when I import the file that had AKDT time from the last repo it loads in as UTC 
@@ -10093,14 +11037,26 @@ CARI_bfQ_mn
 CARI_bfQ_mn*2
 
 ### Merge Discharge and Precip ###
-FRCH.st <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
+FRCH.st <- read_csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
 attributes(FRCH.st$DateTime)$tzone <- 'America/Anchorage'
-STRT.st <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
+
+STRT.st <- read_csv(here("Climate", "Precip", "STRT.RainGauge.2020.csv"))
 attributes(STRT.st$DateTime)$tzone <- 'America/Anchorage'
-VAUL.st <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
+
+VAUL.st <- read_csv(here("Climate", "Precip", "VAUL.RainGauge.2020.csv"))
 attributes(VAUL.st$DateTime)$tzone <- 'America/Anchorage'
-POKE.st <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
+
+POKE.st <- read_csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
 attributes(POKE.st$DateTime)$tzone <- 'America/Anchorage'
+
+# FRCH.st <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
+# attributes(FRCH.st$DateTime)$tzone <- 'America/Anchorage'
+# STRT.st <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
+# attributes(STRT.st$DateTime)$tzone <- 'America/Anchorage'
+# VAUL.st <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
+# attributes(VAUL.st$DateTime)$tzone <- 'America/Anchorage'
+# POKE.st <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
+# attributes(POKE.st$DateTime)$tzone <- 'America/Anchorage'
 
 frch.precip.discharge <- full_join(frch.final.discharge.2020, FRCH.st) # merging precip data and discharge
 strt.precip.discharge <- full_join(strt.final.discharge.2020, STRT.st) # merging precip data and discharge
@@ -11133,131 +12089,258 @@ FRCH_storm13_09_09_turb = subset(FRCH_storm13_09_09, select = c("DateTime","Turb
 names(FRCH_storm13_09_09_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(FRCH_storm1_06_13, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13.csv")
-write.csv(FRCH_storm1_06_13_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Q.csv")
-write.csv(FRCH_storm1_06_13_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_NO3.csv")
-write.csv(FRCH_storm1_06_13_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_fDOM.csv")
-write.csv(FRCH_storm1_06_13_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_SPC.csv")
-write.csv(FRCH_storm1_06_13_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm1_06_13_Turb.csv"))
 
-write.csv(FRCH_storm2_06_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18.csv")
-write.csv(FRCH_storm2_06_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Q.csv")
-write.csv(FRCH_storm2_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_NO3.csv")
-write.csv(FRCH_storm2_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_fDOM.csv")
-write.csv(FRCH_storm2_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_SPC.csv")
-write.csv(FRCH_storm2_06_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm2_06_18_Turb.csv"))
 
-write.csv(FRCH_storm3a_06_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20.csv")
-write.csv(FRCH_storm3a_06_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Q.csv")
-write.csv(FRCH_storm3a_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_NO3.csv")
-write.csv(FRCH_storm3a_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_fDOM.csv")
-write.csv(FRCH_storm3a_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_SPC.csv")
-write.csv(FRCH_storm3a_06_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3a_06_20_Turb.csv"))
 
-write.csv(FRCH_storm3b_06_21, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21.csv")
-write.csv(FRCH_storm3b_06_21_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Q.csv")
-write.csv(FRCH_storm3b_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_NO3.csv")
-write.csv(FRCH_storm3b_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_fDOM.csv")
-write.csv(FRCH_storm3b_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_SPC.csv")
-write.csv(FRCH_storm3b_06_21_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3b_06_21_Turb.csv"))
 
-write.csv(FRCH_storm3c_06_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26.csv")
-write.csv(FRCH_storm3c_06_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Q.csv")
-write.csv(FRCH_storm3c_06_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_NO3.csv")
-write.csv(FRCH_storm3c_06_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_fDOM.csv")
-write.csv(FRCH_storm3c_06_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_SPC.csv")
-write.csv(FRCH_storm3c_06_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm3c_06_26_Turb.csv"))
 
-write.csv(FRCH_storm4a_07_07, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07.csv")
-write.csv(FRCH_storm4a_07_07_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Q.csv")
-write.csv(FRCH_storm4a_07_07_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_NO3.csv")
-write.csv(FRCH_storm4a_07_07_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_fDOM.csv")
-write.csv(FRCH_storm4a_07_07_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_SPC.csv")
-write.csv(FRCH_storm4a_07_07_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4a_07_07_Turb.csv"))
 
-write.csv(FRCH_storm4b_07_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09.csv")
-write.csv(FRCH_storm4b_07_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Q.csv")
-write.csv(FRCH_storm4b_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_NO3.csv")
-write.csv(FRCH_storm4b_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_fDOM.csv")
-write.csv(FRCH_storm4b_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_SPC.csv")
-write.csv(FRCH_storm4b_07_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm4b_07_09_Turb.csv"))
 
-write.csv(FRCH_storm5_07_15, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15.csv")
-write.csv(FRCH_storm5_07_15_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Q.csv")
-write.csv(FRCH_storm5_07_15_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_NO3.csv")
-write.csv(FRCH_storm5_07_15_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_fDOM.csv")
-write.csv(FRCH_storm5_07_15_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_SPC.csv")
-write.csv(FRCH_storm5_07_15_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm5_07_15_Turb.csv"))
 
-write.csv(FRCH_storm6_07_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18.csv")
-write.csv(FRCH_storm6_07_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Q.csv")
-write.csv(FRCH_storm6_07_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_NO3.csv")
-write.csv(FRCH_storm6_07_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_fDOM.csv")
-write.csv(FRCH_storm6_07_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_SPC.csv")
-write.csv(FRCH_storm6_07_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm6_07_18_Turb.csv"))
 
-write.csv(FRCH_storm7_07_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20.csv")
-write.csv(FRCH_storm7_07_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Q.csv")
-write.csv(FRCH_storm7_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_NO3.csv")
-write.csv(FRCH_storm7_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_fDOM.csv")
-write.csv(FRCH_storm7_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_SPC.csv")
-write.csv(FRCH_storm7_07_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm7_07_20_Turb.csv"))
 
-write.csv(FRCH_storm8_07_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26.csv")
-write.csv(FRCH_storm8_07_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Q.csv")
-write.csv(FRCH_storm8_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_NO3.csv")
-write.csv(FRCH_storm8_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_fDOM.csv")
-write.csv(FRCH_storm8_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_SPC.csv")
-write.csv(FRCH_storm8_07_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm8_07_26_Turb.csv"))
 
-write.csv(FRCH_storm9a_08_01, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01.csv")
-write.csv(FRCH_storm9a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Q.csv")
-write.csv(FRCH_storm9a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_NO3.csv")
-write.csv(FRCH_storm9a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_fDOM.csv")
-write.csv(FRCH_storm9a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_SPC.csv")
-write.csv(FRCH_storm9a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9a_08_01_Turb.csv"))
 
-write.csv(FRCH_storm9b_08_02, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02.csv")
-write.csv(FRCH_storm9b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Q.csv")
-write.csv(FRCH_storm9b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_NO3.csv")
-write.csv(FRCH_storm9b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_fDOM.csv")
-write.csv(FRCH_storm9b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_SPC.csv")
-write.csv(FRCH_storm9b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm9b_08_02_Turb.csv"))
 
-write.csv(FRCH_storm10a_08_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09.csv")
-write.csv(FRCH_storm10a_08_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Q.csv")
-write.csv(FRCH_storm10a_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_NO3.csv")
-write.csv(FRCH_storm10a_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_fDOM.csv")
-write.csv(FRCH_storm10a_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_SPC.csv")
-write.csv(FRCH_storm10a_08_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10a_08_09_Turb.csv"))
 
-write.csv(FRCH_storm10b_08_12, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12.csv")
-write.csv(FRCH_storm10b_08_12_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Q.csv")
-write.csv(FRCH_storm10b_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_NO3.csv")
-write.csv(FRCH_storm10b_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_fDOM.csv")
-write.csv(FRCH_storm10b_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_SPC.csv")
-write.csv(FRCH_storm10b_08_12_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm10b_08_12_Turb.csv"))
 
-write.csv(FRCH_storm11_08_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20.csv")
-write.csv(FRCH_storm11_08_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Q.csv")
-write.csv(FRCH_storm11_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_NO3.csv")
-write.csv(FRCH_storm11_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_fDOM.csv")
-write.csv(FRCH_storm11_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_SPC.csv")
-write.csv(FRCH_storm11_08_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm11_08_20_Turb.csv"))
 
-write.csv(FRCH_storm12_09_06, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06.csv")
-write.csv(FRCH_storm12_09_06_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Q.csv")
-write.csv(FRCH_storm12_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_NO3.csv")
-write.csv(FRCH_storm12_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_fDOM.csv")
-write.csv(FRCH_storm12_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_SPC.csv")
-write.csv(FRCH_storm12_09_06_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm12_09_06_Turb.csv"))
 
-write.csv(FRCH_storm13_09_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09.csv")
-write.csv(FRCH_storm13_09_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Q.csv")
-write.csv(FRCH_storm13_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_NO3.csv")
-write.csv(FRCH_storm13_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_fDOM.csv")
-write.csv(FRCH_storm13_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_SPC.csv")
-write.csv(FRCH_storm13_09_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "FRCH", "FRCH_storm13_09_09_Turb.csv"))
+
+
+# write.csv(FRCH_storm1_06_13, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13.csv")
+# write.csv(FRCH_storm1_06_13_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Q.csv")
+# write.csv(FRCH_storm1_06_13_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_NO3.csv")
+# write.csv(FRCH_storm1_06_13_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_fDOM.csv")
+# write.csv(FRCH_storm1_06_13_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_SPC.csv")
+# write.csv(FRCH_storm1_06_13_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm1_06_13_Turb.csv")
+# 
+# write.csv(FRCH_storm2_06_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18.csv")
+# write.csv(FRCH_storm2_06_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Q.csv")
+# write.csv(FRCH_storm2_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_NO3.csv")
+# write.csv(FRCH_storm2_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_fDOM.csv")
+# write.csv(FRCH_storm2_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_SPC.csv")
+# write.csv(FRCH_storm2_06_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm2_06_18_Turb.csv")
+# 
+# write.csv(FRCH_storm3a_06_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20.csv")
+# write.csv(FRCH_storm3a_06_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Q.csv")
+# write.csv(FRCH_storm3a_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_NO3.csv")
+# write.csv(FRCH_storm3a_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_fDOM.csv")
+# write.csv(FRCH_storm3a_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_SPC.csv")
+# write.csv(FRCH_storm3a_06_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3a_06_20_Turb.csv")
+# 
+# write.csv(FRCH_storm3b_06_21, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21.csv")
+# write.csv(FRCH_storm3b_06_21_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Q.csv")
+# write.csv(FRCH_storm3b_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_NO3.csv")
+# write.csv(FRCH_storm3b_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_fDOM.csv")
+# write.csv(FRCH_storm3b_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_SPC.csv")
+# write.csv(FRCH_storm3b_06_21_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3b_06_21_Turb.csv")
+# 
+# write.csv(FRCH_storm3c_06_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26.csv")
+# write.csv(FRCH_storm3c_06_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Q.csv")
+# write.csv(FRCH_storm3c_06_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_NO3.csv")
+# write.csv(FRCH_storm3c_06_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_fDOM.csv")
+# write.csv(FRCH_storm3c_06_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_SPC.csv")
+# write.csv(FRCH_storm3c_06_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm3c_06_26_Turb.csv")
+# 
+# write.csv(FRCH_storm4a_07_07, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07.csv")
+# write.csv(FRCH_storm4a_07_07_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Q.csv")
+# write.csv(FRCH_storm4a_07_07_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_NO3.csv")
+# write.csv(FRCH_storm4a_07_07_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_fDOM.csv")
+# write.csv(FRCH_storm4a_07_07_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_SPC.csv")
+# write.csv(FRCH_storm4a_07_07_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4a_07_07_Turb.csv")
+# 
+# write.csv(FRCH_storm4b_07_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09.csv")
+# write.csv(FRCH_storm4b_07_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Q.csv")
+# write.csv(FRCH_storm4b_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_NO3.csv")
+# write.csv(FRCH_storm4b_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_fDOM.csv")
+# write.csv(FRCH_storm4b_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_SPC.csv")
+# write.csv(FRCH_storm4b_07_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm4b_07_09_Turb.csv")
+# 
+# write.csv(FRCH_storm5_07_15, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15.csv")
+# write.csv(FRCH_storm5_07_15_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Q.csv")
+# write.csv(FRCH_storm5_07_15_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_NO3.csv")
+# write.csv(FRCH_storm5_07_15_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_fDOM.csv")
+# write.csv(FRCH_storm5_07_15_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_SPC.csv")
+# write.csv(FRCH_storm5_07_15_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm5_07_15_Turb.csv")
+# 
+# write.csv(FRCH_storm6_07_18, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18.csv")
+# write.csv(FRCH_storm6_07_18_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Q.csv")
+# write.csv(FRCH_storm6_07_18_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_NO3.csv")
+# write.csv(FRCH_storm6_07_18_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_fDOM.csv")
+# write.csv(FRCH_storm6_07_18_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_SPC.csv")
+# write.csv(FRCH_storm6_07_18_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm6_07_18_Turb.csv")
+# 
+# write.csv(FRCH_storm7_07_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20.csv")
+# write.csv(FRCH_storm7_07_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Q.csv")
+# write.csv(FRCH_storm7_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_NO3.csv")
+# write.csv(FRCH_storm7_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_fDOM.csv")
+# write.csv(FRCH_storm7_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_SPC.csv")
+# write.csv(FRCH_storm7_07_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm7_07_20_Turb.csv")
+# 
+# write.csv(FRCH_storm8_07_26, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26.csv")
+# write.csv(FRCH_storm8_07_26_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Q.csv")
+# write.csv(FRCH_storm8_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_NO3.csv")
+# write.csv(FRCH_storm8_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_fDOM.csv")
+# write.csv(FRCH_storm8_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_SPC.csv")
+# write.csv(FRCH_storm8_07_26_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm8_07_26_Turb.csv")
+# 
+# write.csv(FRCH_storm9a_08_01, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01.csv")
+# write.csv(FRCH_storm9a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Q.csv")
+# write.csv(FRCH_storm9a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_NO3.csv")
+# write.csv(FRCH_storm9a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_fDOM.csv")
+# write.csv(FRCH_storm9a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_SPC.csv")
+# write.csv(FRCH_storm9a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9a_08_01_Turb.csv")
+# 
+# write.csv(FRCH_storm9b_08_02, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02.csv")
+# write.csv(FRCH_storm9b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Q.csv")
+# write.csv(FRCH_storm9b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_NO3.csv")
+# write.csv(FRCH_storm9b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_fDOM.csv")
+# write.csv(FRCH_storm9b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_SPC.csv")
+# write.csv(FRCH_storm9b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm9b_08_02_Turb.csv")
+# 
+# write.csv(FRCH_storm10a_08_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09.csv")
+# write.csv(FRCH_storm10a_08_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Q.csv")
+# write.csv(FRCH_storm10a_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_NO3.csv")
+# write.csv(FRCH_storm10a_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_fDOM.csv")
+# write.csv(FRCH_storm10a_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_SPC.csv")
+# write.csv(FRCH_storm10a_08_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10a_08_09_Turb.csv")
+# 
+# write.csv(FRCH_storm10b_08_12, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12.csv")
+# write.csv(FRCH_storm10b_08_12_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Q.csv")
+# write.csv(FRCH_storm10b_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_NO3.csv")
+# write.csv(FRCH_storm10b_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_fDOM.csv")
+# write.csv(FRCH_storm10b_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_SPC.csv")
+# write.csv(FRCH_storm10b_08_12_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm10b_08_12_Turb.csv")
+# 
+# write.csv(FRCH_storm11_08_20, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20.csv")
+# write.csv(FRCH_storm11_08_20_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Q.csv")
+# write.csv(FRCH_storm11_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_NO3.csv")
+# write.csv(FRCH_storm11_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_fDOM.csv")
+# write.csv(FRCH_storm11_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_SPC.csv")
+# write.csv(FRCH_storm11_08_20_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm11_08_20_Turb.csv")
+# 
+# write.csv(FRCH_storm12_09_06, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06.csv")
+# write.csv(FRCH_storm12_09_06_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Q.csv")
+# write.csv(FRCH_storm12_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_NO3.csv")
+# write.csv(FRCH_storm12_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_fDOM.csv")
+# write.csv(FRCH_storm12_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_SPC.csv")
+# write.csv(FRCH_storm12_09_06_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm12_09_06_Turb.csv")
+# 
+# write.csv(FRCH_storm13_09_09, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09.csv")
+# write.csv(FRCH_storm13_09_09_Q, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Q.csv")
+# write.csv(FRCH_storm13_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_NO3.csv")
+# write.csv(FRCH_storm13_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_fDOM.csv")
+# write.csv(FRCH_storm13_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_SPC.csv")
+# write.csv(FRCH_storm13_09_09_turb, "~/Documents/Storms/Storm_Events/2020/FRCH/FRCH_storm13_09_09_Turb.csv")
 
 # STRT #
 STRT <- STRT.2020.chem
@@ -12258,131 +13341,258 @@ STRT_storm10_09_23_turb = subset(STRT_storm10_09_23, select = c("DateTime", "Tur
 names(STRT_storm10_09_23_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(STRT_storm1a_06_18, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18.csv")
-write.csv(STRT_storm1a_06_18_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Q.csv")
-write.csv(STRT_storm1a_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_NO3.csv")
-write.csv(STRT_storm1a_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_fDOM.csv")
-write.csv(STRT_storm1a_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_SPC.csv")
-write.csv(STRT_storm1a_06_18_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_Turb.csv"))
 
-write.csv(STRT_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20.csv")
-write.csv(STRT_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Q.csv")
-write.csv(STRT_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_NO3.csv")
-write.csv(STRT_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_fDOM.csv")
-write.csv(STRT_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_SPC.csv")
-write.csv(STRT_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_Turb.csv"))
 
-write.csv(STRT_storm1c_06_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21.csv")
-write.csv(STRT_storm1c_06_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Q.csv")
-write.csv(STRT_storm1c_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_NO3.csv")
-write.csv(STRT_storm1c_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_fDOM.csv")
-write.csv(STRT_storm1c_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_SPC.csv")
-write.csv(STRT_storm1c_06_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_Turb.csv"))
 
-write.csv(STRT_storm1d_06_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23.csv")
-write.csv(STRT_storm1d_06_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Q.csv")
-write.csv(STRT_storm1d_06_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_NO3.csv")
-write.csv(STRT_storm1d_06_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_fDOM.csv")
-write.csv(STRT_storm1d_06_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_SPC.csv")
-write.csv(STRT_storm1d_06_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_Turb.csv"))
 
-write.csv(STRT_storm1e_06_24, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24.csv")
-write.csv(STRT_storm1e_06_24_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Q.csv")
-write.csv(STRT_storm1e_06_24_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_NO3.csv")
-write.csv(STRT_storm1e_06_24_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_fDOM.csv")
-write.csv(STRT_storm1e_06_24_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_SPC.csv")
-write.csv(STRT_storm1e_06_24_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_Turb.csv"))
 
-write.csv(STRT_storm2_07_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09.csv")
-write.csv(STRT_storm2_07_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Q.csv")
-write.csv(STRT_storm2_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_NO3.csv")
-write.csv(STRT_storm2_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_fDOM.csv")
-write.csv(STRT_storm2_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_SPC.csv")
-write.csv(STRT_storm2_07_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_Turb.csv"))
 
-write.csv(STRT_storm3_07_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20.csv")
-write.csv(STRT_storm3_07_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Q.csv")
-write.csv(STRT_storm3_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_NO3.csv")
-write.csv(STRT_storm3_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_fDOM.csv")
-write.csv(STRT_storm3_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_SPC.csv")
-write.csv(STRT_storm3_07_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm3_07_20_Turb.csv"))
 
-write.csv(STRT_storm4a_08_01, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01.csv")
-write.csv(STRT_storm4a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Q.csv")
-write.csv(STRT_storm4a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_NO3.csv")
-write.csv(STRT_storm4a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_fDOM.csv")
-write.csv(STRT_storm4a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_SPC.csv")
-write.csv(STRT_storm4a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4a_08_01_Turb.csv"))
 
-write.csv(STRT_storm4b_08_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03.csv")
-write.csv(STRT_storm4b_08_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Q.csv")
-write.csv(STRT_storm4b_08_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_NO3.csv")
-write.csv(STRT_storm4b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_fDOM.csv")
-write.csv(STRT_storm4b_08_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_SPC.csv")
-write.csv(STRT_storm4b_08_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm4b_08_03_Turb.csv"))
 
-write.csv(STRT_storm5_08_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09.csv")
-write.csv(STRT_storm5_08_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Q.csv")
-write.csv(STRT_storm5_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_NO3.csv")
-write.csv(STRT_storm5_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_fDOM.csv")
-write.csv(STRT_storm5_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_SPC.csv")
-write.csv(STRT_storm5_08_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm5_08_09_Turb.csv"))
 
-write.csv(STRT_storm6_08_12, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12.csv")
-write.csv(STRT_storm6_08_12_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Q.csv")
-write.csv(STRT_storm6_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_NO3.csv")
-write.csv(STRT_storm6_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_fDOM.csv")
-write.csv(STRT_storm6_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_SPC.csv")
-write.csv(STRT_storm6_08_12_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm6_08_12_Turb.csv"))
 
-write.csv(STRT_storm7a_08_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20.csv")
-write.csv(STRT_storm7a_08_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Q.csv")
-write.csv(STRT_storm7a_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_NO3.csv")
-write.csv(STRT_storm7a_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_fDOM.csv")
-write.csv(STRT_storm7a_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_SPC.csv")
-write.csv(STRT_storm7a_08_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7a_08_20_Turb.csv"))
 
-write.csv(STRT_storm7b_08_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21.csv")
-write.csv(STRT_storm7b_08_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Q.csv")
-write.csv(STRT_storm7b_08_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_NO3.csv")
-write.csv(STRT_storm7b_08_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_fDOM.csv")
-write.csv(STRT_storm7b_08_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_SPC.csv")
-write.csv(STRT_storm7b_08_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm7b_08_21_Turb.csv"))
 
-write.csv(STRT_storm8_08_28, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28.csv")
-write.csv(STRT_storm8_08_28_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Q.csv")
-write.csv(STRT_storm8_08_28_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_NO3.csv")
-write.csv(STRT_storm8_08_28_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_fDOM.csv")
-write.csv(STRT_storm8_08_28_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_SPC.csv")
-write.csv(STRT_storm8_08_28_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm8_08_28_Turb.csv"))
 
-write.csv(STRT_storm9a_09_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03.csv")
-write.csv(STRT_storm9a_09_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Q.csv")
-write.csv(STRT_storm9a_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_NO3.csv")
-write.csv(STRT_storm9a_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_fDOM.csv")
-write.csv(STRT_storm9a_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_SPC.csv")
-write.csv(STRT_storm9a_09_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9a_09_03_Turb.csv"))
 
-write.csv(STRT_storm9b_09_06, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06.csv")
-write.csv(STRT_storm9b_09_06_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Q.csv")
-write.csv(STRT_storm9b_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_NO3.csv")
-write.csv(STRT_storm9b_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_fDOM.csv")
-write.csv(STRT_storm9b_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_SPC.csv")
-write.csv(STRT_storm9b_09_06_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_Turb.csv"))
 
-write.csv(STRT_storm9c_09_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09.csv")
-write.csv(STRT_storm9c_09_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Q.csv")
-write.csv(STRT_storm9c_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_NO3.csv")
-write.csv(STRT_storm9c_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_fDOM.csv")
-write.csv(STRT_storm9c_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_SPC.csv")
-write.csv(STRT_storm9c_09_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Turb.csv"))
 
-write.csv(STRT_storm10_09_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23.csv")
-write.csv(STRT_storm10_09_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Q.csv")
-write.csv(STRT_storm10_09_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_NO3.csv")
-write.csv(STRT_storm10_09_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_fDOM.csv")
-write.csv(STRT_storm10_09_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_SPC.csv")
-write.csv(STRT_storm10_09_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Turb.csv")
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_Q.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_Turb.csv"))
+
+
+# write.csv(STRT_storm1a_06_18, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18.csv")
+# write.csv(STRT_storm1a_06_18_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Q.csv")
+# write.csv(STRT_storm1a_06_18_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_NO3.csv")
+# write.csv(STRT_storm1a_06_18_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_fDOM.csv")
+# write.csv(STRT_storm1a_06_18_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_SPC.csv")
+# write.csv(STRT_storm1a_06_18_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1a_06_18_Turb.csv")
+# 
+# write.csv(STRT_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20.csv")
+# write.csv(STRT_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Q.csv")
+# write.csv(STRT_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_NO3.csv")
+# write.csv(STRT_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_fDOM.csv")
+# write.csv(STRT_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_SPC.csv")
+# write.csv(STRT_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1b_06_20_Turb.csv")
+# 
+# write.csv(STRT_storm1c_06_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21.csv")
+# write.csv(STRT_storm1c_06_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Q.csv")
+# write.csv(STRT_storm1c_06_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_NO3.csv")
+# write.csv(STRT_storm1c_06_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_fDOM.csv")
+# write.csv(STRT_storm1c_06_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_SPC.csv")
+# write.csv(STRT_storm1c_06_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1c_06_21_Turb.csv")
+# 
+# write.csv(STRT_storm1d_06_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23.csv")
+# write.csv(STRT_storm1d_06_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Q.csv")
+# write.csv(STRT_storm1d_06_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_NO3.csv")
+# write.csv(STRT_storm1d_06_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_fDOM.csv")
+# write.csv(STRT_storm1d_06_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_SPC.csv")
+# write.csv(STRT_storm1d_06_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1d_06_23_Turb.csv")
+# 
+# write.csv(STRT_storm1e_06_24, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24.csv")
+# write.csv(STRT_storm1e_06_24_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Q.csv")
+# write.csv(STRT_storm1e_06_24_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_NO3.csv")
+# write.csv(STRT_storm1e_06_24_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_fDOM.csv")
+# write.csv(STRT_storm1e_06_24_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_SPC.csv")
+# write.csv(STRT_storm1e_06_24_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm1e_06_24_Turb.csv")
+# 
+# write.csv(STRT_storm2_07_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09.csv")
+# write.csv(STRT_storm2_07_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Q.csv")
+# write.csv(STRT_storm2_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_NO3.csv")
+# write.csv(STRT_storm2_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_fDOM.csv")
+# write.csv(STRT_storm2_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_SPC.csv")
+# write.csv(STRT_storm2_07_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm2_07_09_Turb.csv")
+# 
+# write.csv(STRT_storm3_07_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20.csv")
+# write.csv(STRT_storm3_07_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Q.csv")
+# write.csv(STRT_storm3_07_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_NO3.csv")
+# write.csv(STRT_storm3_07_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_fDOM.csv")
+# write.csv(STRT_storm3_07_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_SPC.csv")
+# write.csv(STRT_storm3_07_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm3_07_20_Turb.csv")
+# 
+# write.csv(STRT_storm4a_08_01, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01.csv")
+# write.csv(STRT_storm4a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Q.csv")
+# write.csv(STRT_storm4a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_NO3.csv")
+# write.csv(STRT_storm4a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_fDOM.csv")
+# write.csv(STRT_storm4a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_SPC.csv")
+# write.csv(STRT_storm4a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4a_08_01_Turb.csv")
+# 
+# write.csv(STRT_storm4b_08_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03.csv")
+# write.csv(STRT_storm4b_08_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Q.csv")
+# write.csv(STRT_storm4b_08_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_NO3.csv")
+# write.csv(STRT_storm4b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_fDOM.csv")
+# write.csv(STRT_storm4b_08_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_SPC.csv")
+# write.csv(STRT_storm4b_08_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm4b_08_03_Turb.csv")
+# 
+# write.csv(STRT_storm5_08_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09.csv")
+# write.csv(STRT_storm5_08_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Q.csv")
+# write.csv(STRT_storm5_08_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_NO3.csv")
+# write.csv(STRT_storm5_08_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_fDOM.csv")
+# write.csv(STRT_storm5_08_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_SPC.csv")
+# write.csv(STRT_storm5_08_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm5_08_09_Turb.csv")
+# 
+# write.csv(STRT_storm6_08_12, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12.csv")
+# write.csv(STRT_storm6_08_12_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Q.csv")
+# write.csv(STRT_storm6_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_NO3.csv")
+# write.csv(STRT_storm6_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_fDOM.csv")
+# write.csv(STRT_storm6_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_SPC.csv")
+# write.csv(STRT_storm6_08_12_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm6_08_12_Turb.csv")
+# 
+# write.csv(STRT_storm7a_08_20, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20.csv")
+# write.csv(STRT_storm7a_08_20_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Q.csv")
+# write.csv(STRT_storm7a_08_20_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_NO3.csv")
+# write.csv(STRT_storm7a_08_20_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_fDOM.csv")
+# write.csv(STRT_storm7a_08_20_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_SPC.csv")
+# write.csv(STRT_storm7a_08_20_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7a_08_20_Turb.csv")
+# 
+# write.csv(STRT_storm7b_08_21, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21.csv")
+# write.csv(STRT_storm7b_08_21_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Q.csv")
+# write.csv(STRT_storm7b_08_21_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_NO3.csv")
+# write.csv(STRT_storm7b_08_21_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_fDOM.csv")
+# write.csv(STRT_storm7b_08_21_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_SPC.csv")
+# write.csv(STRT_storm7b_08_21_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm7b_08_21_Turb.csv")
+# 
+# write.csv(STRT_storm8_08_28, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28.csv")
+# write.csv(STRT_storm8_08_28_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Q.csv")
+# write.csv(STRT_storm8_08_28_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_NO3.csv")
+# write.csv(STRT_storm8_08_28_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_fDOM.csv")
+# write.csv(STRT_storm8_08_28_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_SPC.csv")
+# write.csv(STRT_storm8_08_28_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm8_08_28_Turb.csv")
+# 
+# write.csv(STRT_storm9a_09_03, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03.csv")
+# write.csv(STRT_storm9a_09_03_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Q.csv")
+# write.csv(STRT_storm9a_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_NO3.csv")
+# write.csv(STRT_storm9a_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_fDOM.csv")
+# write.csv(STRT_storm9a_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_SPC.csv")
+# write.csv(STRT_storm9a_09_03_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9a_09_03_Turb.csv")
+# 
+# write.csv(STRT_storm9b_09_06, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06.csv")
+# write.csv(STRT_storm9b_09_06_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Q.csv")
+# write.csv(STRT_storm9b_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_NO3.csv")
+# write.csv(STRT_storm9b_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_fDOM.csv")
+# write.csv(STRT_storm9b_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_SPC.csv")
+# write.csv(STRT_storm9b_09_06_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9b_09_06_Turb.csv")
+# 
+# write.csv(STRT_storm9c_09_09, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09.csv")
+# write.csv(STRT_storm9c_09_09_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Q.csv")
+# write.csv(STRT_storm9c_09_09_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_NO3.csv")
+# write.csv(STRT_storm9c_09_09_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_fDOM.csv")
+# write.csv(STRT_storm9c_09_09_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_SPC.csv")
+# write.csv(STRT_storm9c_09_09_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm9c_09_09_Turb.csv")
+# 
+# write.csv(STRT_storm10_09_23, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23.csv")
+# write.csv(STRT_storm10_09_23_Q, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Q.csv")
+# write.csv(STRT_storm10_09_23_NO3, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_NO3.csv")
+# write.csv(STRT_storm10_09_23_fDOM, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_fDOM.csv")
+# write.csv(STRT_storm10_09_23_SPC, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_SPC.csv")
+# write.csv(STRT_storm10_09_23_turb, "~/Documents/Storms/Storm_Events/2020/STRT/STRT_storm10_09_23_Turb.csv")
 
 # VAUL #
 VAUL <- VAUL.2020.chem
@@ -13392,124 +14602,243 @@ VAUL_storm14_09_06_turb = subset(VAUL_storm14_09_06, select = c("DateTime","Turb
 names(VAUL_storm14_09_06_turb) = c("valuedatetime","datavalue")
 
 # write csv # 
-write.csv(VAUL_storm1a_06_19, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19.csv")
-write.csv(VAUL_storm1a_06_19_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Q.csv")
-write.csv(VAUL_storm1a_06_19_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_NO3.csv")
-write.csv(VAUL_storm1a_06_19_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_fDOM.csv")
-write.csv(VAUL_storm1a_06_19_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_SPC.csv")
-write.csv(VAUL_storm1a_06_19_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Turb.csv"))
 
-write.csv(VAUL_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20.csv")
-write.csv(VAUL_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Q.csv")
-write.csv(VAUL_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_NO3.csv")
-write.csv(VAUL_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_fDOM.csv")
-write.csv(VAUL_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_SPC.csv")
-write.csv(VAUL_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Turb.csv"))
 
-write.csv(VAUL_storm1c_06_22, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22.csv")
-write.csv(VAUL_storm1c_06_22_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Q.csv")
-write.csv(VAUL_storm1c_06_22_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_NO3.csv")
-write.csv(VAUL_storm1c_06_22_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_fDOM.csv")
-write.csv(VAUL_storm1c_06_22_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_SPC.csv")
-write.csv(VAUL_storm1c_06_22_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Turb.csv"))
 
-write.csv(VAUL_storm2_06_28, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28.csv")
-write.csv(VAUL_storm2_06_28_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Q.csv")
-write.csv(VAUL_storm2_06_28_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_NO3.csv")
-write.csv(VAUL_storm2_06_28_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_fDOM.csv")
-write.csv(VAUL_storm2_06_28_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_SPC.csv")
-write.csv(VAUL_storm2_06_28_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_Turb.csv"))
 
-write.csv(VAUL_storm3_07_09, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09.csv")
-write.csv(VAUL_storm3_07_09_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Q.csv")
-write.csv(VAUL_storm3_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_NO3.csv")
-write.csv(VAUL_storm3_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_fDOM.csv")
-write.csv(VAUL_storm3_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_SPC.csv")
-write.csv(VAUL_storm3_07_09_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Turb.csv"))
 
-write.csv(VAUL_storm4_07_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12.csv")
-write.csv(VAUL_storm4_07_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Q.csv")
-write.csv(VAUL_storm4_07_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_NO3.csv")
-write.csv(VAUL_storm4_07_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_fDOM.csv")
-write.csv(VAUL_storm4_07_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_SPC.csv")
-write.csv(VAUL_storm4_07_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Turb.csv"))
 
-write.csv(VAUL_storm5_07_26, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26.csv")
-write.csv(VAUL_storm5_07_26_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Q.csv")
-write.csv(VAUL_storm5_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_NO3.csv")
-write.csv(VAUL_storm5_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_fDOM.csv")
-write.csv(VAUL_storm5_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_SPC.csv")
-write.csv(VAUL_storm5_07_26_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_Turb.csv"))
 
-write.csv(VAUL_storm6a_08_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01.csv")
-write.csv(VAUL_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Q.csv")
-write.csv(VAUL_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_NO3.csv")
-write.csv(VAUL_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_fDOM.csv")
-write.csv(VAUL_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_SPC.csv")
-write.csv(VAUL_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Turb.csv"))
 
-write.csv(VAUL_storm6b_08_02, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02.csv")
-write.csv(VAUL_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Q.csv")
-write.csv(VAUL_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_NO3.csv")
-write.csv(VAUL_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_fDOM.csv")
-write.csv(VAUL_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_SPC.csv")
-write.csv(VAUL_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Turb.csv"))
 
-write.csv(VAUL_storm7_08_08, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08.csv")
-write.csv(VAUL_storm7_08_08_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Q.csv")
-write.csv(VAUL_storm7_08_08_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_NO3.csv")
-write.csv(VAUL_storm7_08_08_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_fDOM.csv")
-write.csv(VAUL_storm7_08_08_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_SPC.csv")
-write.csv(VAUL_storm7_08_08_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_Turb.csv"))
 
-write.csv(VAUL_storm8_08_11, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11.csv")
-write.csv(VAUL_storm8_08_11_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Q.csv")
-write.csv(VAUL_storm8_08_11_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_NO3.csv")
-write.csv(VAUL_storm8_08_11_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_fDOM.csv")
-write.csv(VAUL_storm8_08_11_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_SPC.csv")
-write.csv(VAUL_storm8_08_11_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Turb.csv"))
 
-write.csv(VAUL_storm9_08_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12.csv")
-write.csv(VAUL_storm9_08_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Q.csv")
-write.csv(VAUL_storm9_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_NO3.csv")
-write.csv(VAUL_storm9_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_fDOM.csv")
-write.csv(VAUL_storm9_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_SPC.csv")
-write.csv(VAUL_storm9_08_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_Turb.csv"))
 
-write.csv(VAUL_storm10_08_25, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25.csv")
-write.csv(VAUL_storm10_08_25_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Q.csv")
-write.csv(VAUL_storm10_08_25_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_NO3.csv")
-write.csv(VAUL_storm10_08_25_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_fDOM.csv")
-write.csv(VAUL_storm10_08_25_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_SPC.csv")
-write.csv(VAUL_storm10_08_25_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Turb.csv"))
 
-write.csv(VAUL_storm11_08_27, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27.csv")
-write.csv(VAUL_storm11_08_27_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Q.csv")
-write.csv(VAUL_storm11_08_27_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_NO3.csv")
-write.csv(VAUL_storm11_08_27_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_fDOM.csv")
-write.csv(VAUL_storm11_08_27_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_SPC.csv")
-write.csv(VAUL_storm11_08_27_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Turb.csv"))
 
-write.csv(VAUL_storm12_09_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01.csv")
-write.csv(VAUL_storm12_09_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Q.csv")
-write.csv(VAUL_storm12_09_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_NO3.csv")
-write.csv(VAUL_storm12_09_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_fDOM.csv")
-write.csv(VAUL_storm12_09_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_SPC.csv")
-write.csv(VAUL_storm12_09_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Turb.csv"))
 
-write.csv(VAUL_storm13_09_03, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03.csv")
-write.csv(VAUL_storm13_09_03_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Q.csv")
-write.csv(VAUL_storm13_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_NO3.csv")
-write.csv(VAUL_storm13_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_fDOM.csv")
-write.csv(VAUL_storm13_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_SPC.csv")
-write.csv(VAUL_storm13_09_03_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Turb.csv"))
 
-write.csv(VAUL_storm14_09_06, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06.csv")
-write.csv(VAUL_storm14_09_06_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Q.csv")
-write.csv(VAUL_storm14_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_NO3.csv")
-write.csv(VAUL_storm14_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_fDOM.csv")
-write.csv(VAUL_storm14_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_SPC.csv")
-write.csv(VAUL_storm14_09_06_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Turb.csv")
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Q.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_NO3.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_fDOM.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_SPC.csv"))
+write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Turb.csv"))
+
+# write.csv(VAUL_storm1a_06_19, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19.csv")
+# write.csv(VAUL_storm1a_06_19_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Q.csv")
+# write.csv(VAUL_storm1a_06_19_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_NO3.csv")
+# write.csv(VAUL_storm1a_06_19_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_fDOM.csv")
+# write.csv(VAUL_storm1a_06_19_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_SPC.csv")
+# write.csv(VAUL_storm1a_06_19_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Turb.csv")
+# 
+# write.csv(VAUL_storm1b_06_20, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20.csv")
+# write.csv(VAUL_storm1b_06_20_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Q.csv")
+# write.csv(VAUL_storm1b_06_20_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_NO3.csv")
+# write.csv(VAUL_storm1b_06_20_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_fDOM.csv")
+# write.csv(VAUL_storm1b_06_20_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_SPC.csv")
+# write.csv(VAUL_storm1b_06_20_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Turb.csv")
+# 
+# write.csv(VAUL_storm1c_06_22, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22.csv")
+# write.csv(VAUL_storm1c_06_22_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Q.csv")
+# write.csv(VAUL_storm1c_06_22_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_NO3.csv")
+# write.csv(VAUL_storm1c_06_22_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_fDOM.csv")
+# write.csv(VAUL_storm1c_06_22_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_SPC.csv")
+# write.csv(VAUL_storm1c_06_22_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Turb.csv")
+# 
+# write.csv(VAUL_storm2_06_28, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28.csv")
+# write.csv(VAUL_storm2_06_28_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Q.csv")
+# write.csv(VAUL_storm2_06_28_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_NO3.csv")
+# write.csv(VAUL_storm2_06_28_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_fDOM.csv")
+# write.csv(VAUL_storm2_06_28_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_SPC.csv")
+# write.csv(VAUL_storm2_06_28_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Turb.csv")
+# 
+# write.csv(VAUL_storm3_07_09, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09.csv")
+# write.csv(VAUL_storm3_07_09_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Q.csv")
+# write.csv(VAUL_storm3_07_09_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_NO3.csv")
+# write.csv(VAUL_storm3_07_09_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_fDOM.csv")
+# write.csv(VAUL_storm3_07_09_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_SPC.csv")
+# write.csv(VAUL_storm3_07_09_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Turb.csv")
+# 
+# write.csv(VAUL_storm4_07_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12.csv")
+# write.csv(VAUL_storm4_07_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Q.csv")
+# write.csv(VAUL_storm4_07_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_NO3.csv")
+# write.csv(VAUL_storm4_07_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_fDOM.csv")
+# write.csv(VAUL_storm4_07_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_SPC.csv")
+# write.csv(VAUL_storm4_07_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Turb.csv")
+# 
+# write.csv(VAUL_storm5_07_26, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26.csv")
+# write.csv(VAUL_storm5_07_26_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Q.csv")
+# write.csv(VAUL_storm5_07_26_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_NO3.csv")
+# write.csv(VAUL_storm5_07_26_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_fDOM.csv")
+# write.csv(VAUL_storm5_07_26_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_SPC.csv")
+# write.csv(VAUL_storm5_07_26_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Turb.csv")
+# 
+# write.csv(VAUL_storm6a_08_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01.csv")
+# write.csv(VAUL_storm6a_08_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Q.csv")
+# write.csv(VAUL_storm6a_08_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_NO3.csv")
+# write.csv(VAUL_storm6a_08_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_fDOM.csv")
+# write.csv(VAUL_storm6a_08_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_SPC.csv")
+# write.csv(VAUL_storm6a_08_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Turb.csv")
+# 
+# write.csv(VAUL_storm6b_08_02, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02.csv")
+# write.csv(VAUL_storm6b_08_02_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Q.csv")
+# write.csv(VAUL_storm6b_08_02_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_NO3.csv")
+# write.csv(VAUL_storm6b_08_02_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_fDOM.csv")
+# write.csv(VAUL_storm6b_08_02_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_SPC.csv")
+# write.csv(VAUL_storm6b_08_02_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Turb.csv")
+# 
+# write.csv(VAUL_storm7_08_08, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08.csv")
+# write.csv(VAUL_storm7_08_08_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Q.csv")
+# write.csv(VAUL_storm7_08_08_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_NO3.csv")
+# write.csv(VAUL_storm7_08_08_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_fDOM.csv")
+# write.csv(VAUL_storm7_08_08_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_SPC.csv")
+# write.csv(VAUL_storm7_08_08_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Turb.csv")
+# 
+# write.csv(VAUL_storm8_08_11, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11.csv")
+# write.csv(VAUL_storm8_08_11_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Q.csv")
+# write.csv(VAUL_storm8_08_11_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_NO3.csv")
+# write.csv(VAUL_storm8_08_11_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_fDOM.csv")
+# write.csv(VAUL_storm8_08_11_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_SPC.csv")
+# write.csv(VAUL_storm8_08_11_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Turb.csv")
+# 
+# write.csv(VAUL_storm9_08_12, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12.csv")
+# write.csv(VAUL_storm9_08_12_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Q.csv")
+# write.csv(VAUL_storm9_08_12_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_NO3.csv")
+# write.csv(VAUL_storm9_08_12_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_fDOM.csv")
+# write.csv(VAUL_storm9_08_12_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_SPC.csv")
+# write.csv(VAUL_storm9_08_12_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Turb.csv")
+# 
+# write.csv(VAUL_storm10_08_25, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25.csv")
+# write.csv(VAUL_storm10_08_25_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Q.csv")
+# write.csv(VAUL_storm10_08_25_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_NO3.csv")
+# write.csv(VAUL_storm10_08_25_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_fDOM.csv")
+# write.csv(VAUL_storm10_08_25_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_SPC.csv")
+# write.csv(VAUL_storm10_08_25_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Turb.csv")
+# 
+# write.csv(VAUL_storm11_08_27, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27.csv")
+# write.csv(VAUL_storm11_08_27_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Q.csv")
+# write.csv(VAUL_storm11_08_27_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_NO3.csv")
+# write.csv(VAUL_storm11_08_27_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_fDOM.csv")
+# write.csv(VAUL_storm11_08_27_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_SPC.csv")
+# write.csv(VAUL_storm11_08_27_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Turb.csv")
+# 
+# write.csv(VAUL_storm12_09_01, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01.csv")
+# write.csv(VAUL_storm12_09_01_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Q.csv")
+# write.csv(VAUL_storm12_09_01_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_NO3.csv")
+# write.csv(VAUL_storm12_09_01_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_fDOM.csv")
+# write.csv(VAUL_storm12_09_01_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_SPC.csv")
+# write.csv(VAUL_storm12_09_01_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Turb.csv")
+# 
+# write.csv(VAUL_storm13_09_03, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03.csv")
+# write.csv(VAUL_storm13_09_03_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Q.csv")
+# write.csv(VAUL_storm13_09_03_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_NO3.csv")
+# write.csv(VAUL_storm13_09_03_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_fDOM.csv")
+# write.csv(VAUL_storm13_09_03_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_SPC.csv")
+# write.csv(VAUL_storm13_09_03_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Turb.csv")
+# 
+# write.csv(VAUL_storm14_09_06, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06.csv")
+# write.csv(VAUL_storm14_09_06_Q, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Q.csv")
+# write.csv(VAUL_storm14_09_06_NO3, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_NO3.csv")
+# write.csv(VAUL_storm14_09_06_fDOM, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_fDOM.csv")
+# write.csv(VAUL_storm14_09_06_SPC, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_SPC.csv")
+# write.csv(VAUL_storm14_09_06_turb, "~/Documents/Storms/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Turb.csv")
 
 
 ## POKE ##

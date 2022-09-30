@@ -29,9 +29,9 @@ library(multcomp)
 
 # load in the data 
 ```{r}
-AMC <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv") 
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
-AMC <- AMC[,-c(1:2,4,5,8,9,12,13,17,18,20:35,40)] # cleaning up columns that are unnecessary 
+AMC <- AMC[c("Hyst_index","site.ID", "storm.ID", "response_var", "Flush_index", "month.y", "day.y", "year", "Beta_index", "doy", "burn", "pf", "date")] # selecting the columns that I want
 
 colNames <- c("Hyst_index", "site.ID", "storm.ID", "response_var", "Flush_index", "month", "day", "year", "Beta_index", "doy", "burn", "pf", "date")
 
@@ -76,20 +76,26 @@ ggplot(AMC, aes(site.ID, meanHI, fill = site.ID)) +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic()
 
-
-
-
+ggsave("HI_all_solutes.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
 ```
 
 
 ### HI ###
 ```{r}
 #NO3
+ggplot(HI_FI_NO3, aes(site.ID, meanHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("HI_NO3.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 NO3 <- aov(meanHI ~ site.ID*year, 
            data = HI_FI_NO3)
-summary(NO3) # nothing is significant 
-summary.lm(NO3)  # residuals look meh
-
 plot(NO3)
 
 ```
@@ -103,41 +109,66 @@ HI_FI_NO3$logmeanHI <- log(abs(HI_FI_NO3$meanHI))
 NO3.log <- aov(logmeanHI ~ site.ID*year, 
            data = HI_FI_NO3)
 
-summary(NO3.log) # nothing is significant 
-summary.lm(NO3.log)  # residuals look meh
-
 plot(NO3.log)
-
 
 ```
 normality looks a little better 
+
+```{r}
+summary(NO3.log) # nothing is showing significance
+```
 
 
 #fDOM 
 
 ```{r}
 #fDOM
-HI_FI_fDOM$site.ID <- as.factor(HI_FI_fDOM$site.ID)
+ggplot(HI_FI_fDOM, aes(site.ID, meanHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("HI_fDOM.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
 
 fDOM <- aov(meanHI ~ site.ID*year, 
            data = HI_FI_fDOM)
 
-summary(fDOM) # this shows that site.ID is significantly different 
-summary.lm(fDOM)
 plot(fDOM)
 
 ```
 normality looks good 
 
+# log transform 
+```{r}
+# log transform 
+HI_FI_fDOM$logmeanHI <- log(abs(HI_FI_fDOM$meanHI))
+
+fDOM.log <- aov(logmeanHI ~ site.ID*year, 
+           data = HI_FI_fDOM)
+
+plot(fDOM.log)
+
+```
+This looks worse, lets work with the non-transformed model
+
 ```{r} 
+
+summary(fDOM) # this shows that site.ID is significantly different 
+summary.lm(fDOM)
+
 TukeyHSD(fDOM, which = "site.ID")
 
-#VAUL/CARI
-#VAUL/FRCH
-#VAUL/POKE
-#VAUL/STRT
+#CARI/MOOS
+#CARI/VAUL
+#FRCH/MOOS
+#FRCH/VAUL
 #MOOS/POKE
 #MOOS/STRT
+#MOOS/VAUL
+#VAUL/POKE
+#VAUL/STRT
 # all of these sites are significantly different from each other 
 
 ```
@@ -146,11 +177,17 @@ TukeyHSD(fDOM, which = "site.ID")
 
 ```{r}
 #SPC
+ggplot(HI_FI_SPC, aes(site.ID, meanHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("HI_SPC.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 SPC <- aov(meanHI ~ site.ID*year, 
            data = HI_FI_SPC)
-
-summary(SPC) # nothing significant
-summary.lm(SPC)
 
 plot(SPC)
 
@@ -163,29 +200,49 @@ HI_FI_SPC$logmeanHI <- log(abs(HI_FI_SPC$meanHI))
 
 SPC.log <- aov(logmeanHI ~ site.ID*year, 
            data = HI_FI_SPC)
-
-summary(SPC.log) # nothing significant
-summary.lm(SPC.log)
-
 plot(SPC.log)
 
 ```
 
+```{r}
+summary(SPC.log) # nothing significant
+summary.lm(SPC.log)
+
+```
 
 ```{r}
 #turb
+ggplot(HI_FI_turb, aes(site.ID, meanHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("HI_turb.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 turb <- aov(meanHI ~ site.ID*year, 
            data = HI_FI_turb)
-
-summary(turb) # nothing is significantly different 
-summary.lm(turb)
-
-
 plot(turb)
 
 
 ```
 
+```{r}
+# log transform
+HI_FI_turb$logmeanHI <- log(abs(HI_FI_turb$meanHI))
+
+turb.log <- aov(logmeanHI ~ site.ID*year, 
+           data = HI_FI_turb)
+plot(turb.log)
+
+```
+May need further transformation 
+
+```{r}
+summary(turb.log) # this shows that year is significant
+
+```
 
 ### BETA ###
 
@@ -196,105 +253,146 @@ ggplot(AMC, aes(site.ID, meanBETA, fill = site.ID)) +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic()
 
+ggsave("BETA_all_solutes.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 ```
 
 ```{r}
 #NO3
+ggplot(HI_FI_NO3, aes(site.ID, meanBETA, fill = site.ID)) +
+  geom_boxplot() +
+  facet_wrap(~response_var, scales = "free") +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("BETA_NO3.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 NO3 <- aov(meanBETA ~ site.ID*year, 
            data = HI_FI_NO3)
-
-summary(NO3) # nothing is significant 
-summary.lm(NO3)
 
 plot(NO3)
 
 
 ```
 
+```{r}
+summary(NO3) # nothing is significant 
+summary.lm(NO3)
+
+```
+
 #fDOM
 ```{r}
+ggplot(HI_FI_fDOM, aes(site.ID, meanBETA, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("BETA_fDOM.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
 
 fDOM <- aov(meanBETA ~ site.ID*year, 
            data = HI_FI_fDOM)
-
-summary(fDOM) # nothing is significantly different 
-summary.lm(fDOM)
-
 plot(fDOM)
+```
 
+```{r}
+summary(fDOM)
 
 ```
 
 
 ```{r}
 #SPC
+ggplot(HI_FI_SPC, aes(site.ID, meanBETA, color = site.ID, shape = as.character(year))) +
+  geom_point() +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("BETA_SPC_year.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 SPC <- aov(meanBETA ~ site.ID*year, 
            data = HI_FI_SPC)
+plot(SPC)
+```
 
-summary(SPC) # nothing significant 
+```{r}
+summary(SPC) # year is significant
 summary.lm(SPC)
 
-plot(SPC)
-
-
 ```
-let me log transform 
-```{r}
-#log transform
-HI_FI_SPC$logmeanBETA <- log(abs(HI_FI_SPC$meanBETA))
-
-SPC.log <- aov(logmeanBETA ~ site.ID*year, 
-           data = HI_FI_SPC)
-
-summary(SPC.log) # nothing significant 
-summary.lm(SPC.log)
-
-plot(SPC.log)
-
-
-```
-normality looks worse
 
 ```{r}
 #turb
+ggplot(HI_FI_turb, aes(site.ID, meanBETA, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("BETA_turb.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
 turb <- aov(meanBETA ~ site.ID*year, 
            data = HI_FI_turb)
 
+plot(turb)
+```
+```{r}
 summary(turb) # nothing is significant 
 summary.lm(turb)
 
-plot(turb)
 ```
 
-### CVs of storm metrics ###
+
+### SDs of storm metrics ###
 
 ```{r}
 #plot 
-ggplot(AMC, aes(site.ID, CVhi, fill = site.ID)) +
+ggplot(AMC, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
   facet_wrap(~response_var, scales = "free") +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic()
 
-HI_FI_NO3$logCVhi <- log(abs(HI_FI_NO3$CVhi))
-HI_FI_fDOM$logCVhi <- log(abs(HI_FI_fDOM$CVhi))
-HI_FI_SPC$logCVhi <- log(abs(HI_FI_SPC$CVhi))
-HI_FI_turb$logCVhi <- log(abs(HI_FI_turb$CVhi))
+ggsave("sdHI_all_solutes.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
 
-HI_FI_NO3$logCVbeta <- log(abs(HI_FI_NO3$CVbeta))
-HI_FI_fDOM$logCVbeta <- log(abs(HI_FI_fDOM$CVbeta))
-HI_FI_SPC$logCVbeta <- log(abs(HI_FI_SPC$CVbeta))
-HI_FI_turb$logCVbeta <- log(abs(HI_FI_turb$CVbeta))
+
+HI_FI_NO3$logSDhi <- log(abs(HI_FI_NO3$sdHI))
+HI_FI_fDOM$logSDhi <- log(abs(HI_FI_fDOM$sdHI))
+HI_FI_SPC$logSDhi <- log(abs(HI_FI_SPC$sdHI))
+HI_FI_turb$logSDhi <- log(abs(HI_FI_turb$sdHI))
+
+HI_FI_NO3$logSDbeta <- log(abs(HI_FI_NO3$sdBETA))
+HI_FI_fDOM$logSDbeta <- log(abs(HI_FI_fDOM$sdBETA))
+HI_FI_SPC$logSDbeta <- log(abs(HI_FI_SPC$sdBETA))
+HI_FI_turb$logSDbeta <- log(abs(HI_FI_turb$sdBETA))
 
 ```
 
 # HI #
 # NO3-
 ```{r}
-no3 <- aov(CVhi ~ site.ID*year, 
+ggplot(HI_FI_NO3, aes(site.ID, sdHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("sdHI_NO3.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+no3 <- aov(sdHI ~ site.ID*year, 
            data = HI_FI_NO3)
-summary(no3)
-summary.lm(no3)
 
 plot(no3)
 
@@ -302,153 +400,190 @@ plot(no3)
 let me try log transform 
 
 ```{r}
-no3.log <- aov(logCVhi ~ site.ID*year, 
+no3.log <- aov(logSDhi ~ site.ID*year, 
            data = HI_FI_NO3)
-summary(no3.log) # nothing is signficant 
-summary.lm(no3.log)
-
 plot(no3.log)
 
 ```
-
+meh, may need further transformation
 
 ```{r}
-fDOM <- aov(CVhi ~ site.ID*year, 
-           data = HI_FI_fDOM)
-summary(fDOM)
-summary.lm(fDOM)
+summary(no3.log) # nothing is signficant 
+summary.lm(no3.log)
 
+```
+
+```{r}
+ggplot(HI_FI_fDOM, aes(site.ID, sdHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("sdHI_fDOM.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+fDOM <- aov(sdHI ~ site.ID*year, 
+           data = HI_FI_fDOM)
 plot(fDOM)
 
 ```
 Log transform 
 ```{r}
-fDOM.log <- aov(logCVhi ~ site.ID*year, 
+fDOM.log <- aov(logSDhi ~ site.ID*year, 
            data = HI_FI_fDOM)
-summary(fDOM.log) # site.ID is different 
-summary.lm(fDOM.log)
-
 plot(fDOM.log)
 
 ```
-
+this looks better
 ```{r}
+summary(fDOM.log) # site.ID is different 
+summary.lm(fDOM.log)
 TukeyHSD(fDOM.log, which = "site.ID")
 
-#POKE/MOOS
-#POKE/VAUL
+#CARI/FRCH
+#CARI/MOOS
+#CARI/STRT
+#MOOS/POKE
+
 
 ```
 
 # SPC
 ```{r}
-SPC <- aov(CVhi ~ site.ID*year, 
-           data = HI_FI_SPC)
-summary(SPC)
-summary.lm(SPC)
+ggplot(HI_FI_SPC, aes(site.ID, sdHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
 
+ggsave("sdHI_SPC.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+SPC <- aov(sdHI ~ site.ID*year, 
+           data = HI_FI_SPC)
 plot(SPC)
 
 ```
 log transform 
 
 ```{r}
-SPC.log <- aov(logCVhi ~ site.ID*year, 
+SPC.log <- aov(logSDhi ~ site.ID*year, 
            data = HI_FI_SPC)
-summary(SPC.log) # nothing is significant 
-summary.lm(SPC.log)
 
 plot(SPC.log)
 
 ```
 still meh 
 
+```{r}
+summary(SPC.log) # nothing is significant 
+summary.lm(SPC.log)
+
+```
+
 # turb
 ```{r}
-turb <- aov(CVhi ~ site.ID*year, 
-           data = HI_FI_turb)
-summary(turb)
-summary.lm(turb)
+ggplot(HI_FI_turb, aes(site.ID, sdHI, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
 
+ggsave("sdHI_Turb.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+ggplot(HI_FI_turb, aes(site.ID, sdHI, color = site.ID, shape = as.character(year))) +
+  geom_point() +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_classic()
+
+ggsave("sdHI_Turb_year.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+turb <- aov(sdHI ~ site.ID*year, 
+           data = HI_FI_turb)
 plot(turb)
 
 ```
 log transform 
 
 ```{r}
-turb.log <- aov(logCVhi ~ site.ID*year, 
+turb.log <- aov(logSDhi ~ site.ID*year, 
            data = HI_FI_turb)
-summary(turb.log) # year is significant 
-summary.lm(turb.log)
-
 plot(turb.log)
 
 ```
+May need further transformation 
 
+```{r}
+summary(turb.log) # year is significant 
+summary.lm(turb.log)
+
+```
 
 # BETA 
 ```{r}
 #plot 
-ggplot(AMC, aes(site.ID, CVbeta, fill = site.ID)) +
+ggplot(AMC, aes(site.ID, sdBETA, fill = site.ID)) +
   geom_boxplot() +
   facet_wrap(~response_var, scales = "free") +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic()
 
+ggsave("sdBETA_all_solutes.pdf",
+       path = here("plots", "Storm_metrics_sites"),
+       width = 10, height = 10)
+
+
 ```
 
 # NO3
 ```{r}
-no3 <- aov(CVbeta ~ site.ID*year, 
+no3 <- aov(sdBETA ~ site.ID*year, 
            data = HI_FI_NO3)
-summary(no3)
-summary.lm(no3)
 
 plot(no3)
 
 ```
-log transform 
+
 
 ```{r}
-no3.log <- aov(logCVbeta ~ site.ID*year, 
-           data = HI_FI_NO3)
-summary(no3.log) # nothing is significant 
-summary.lm(no3.log)
-
-plot(no3.log)
+summary(no3) # nothing is significant 
+summary.lm(no3)
 
 ```
 
 
 # fDOM
 ```{r}
-fDOM <- aov(CVbeta ~ site.ID*year, 
+fDOM <- aov(sdBETA ~ site.ID*year, 
            data = HI_FI_fDOM)
-summary(fDOM)
-summary.lm(fDOM)
-
 plot(fDOM)
 
 ```
 log transform 
 
 ```{r}
-fDOM.log <- aov(logCVbeta ~ site.ID*year, 
+fDOM.log <- aov(logSDbeta ~ site.ID*year, 
            data = HI_FI_fDOM)
+
+plot(fDOM.log)
+
+```
+may need further transformation 
+
+```{r}
 summary(fDOM.log) # nothing is significant 
 summary.lm(fDOM.log)
 
-plot(fDOM.log)
-
 ```
-
 
 # SPC
 ```{r}
-SPC <- aov(CVbeta ~ site.ID*year, 
+SPC <- aov(sdBETA ~ site.ID*year, 
            data = HI_FI_SPC)
-summary(SPC)
-summary.lm(SPC)
 
 plot(SPC)
 
@@ -456,22 +591,22 @@ plot(SPC)
 log transform 
 
 ```{r}
-SPC.log <- aov(logCVbeta ~ site.ID*year, 
+SPC.log <- aov(logSDbeta ~ site.ID*year, 
            data = HI_FI_SPC)
-summary(SPC.log) # nothing is significant 
-summary.lm(SPC.log)
-
 plot(SPC.log)
 
 ```
+Looks like we have an outlier issue here.
 
+```{r}
+summary(SPC.log) # nothing is significant 
+summary.lm(SPC.log)
+```
 
 # turb
 ```{r}
-turb <- aov(CVbeta ~ site.ID*year, 
+turb <- aov(sdBETA ~ site.ID*year, 
            data = HI_FI_turb)
-summary(turb)
-summary.lm(turb)
 
 plot(turb)
 
@@ -479,185 +614,16 @@ plot(turb)
 log transform 
 
 ```{r}
-turb.log <- aov(logCVbeta ~ site.ID*year, 
+turb.log <- aov(logSDbeta ~ site.ID*year, 
            data = HI_FI_turb)
+plot(turb.log)
+
+```
+
+```{r}
 summary(turb.log) # nothing is significant 
 summary.lm(turb.log)
-
-plot(turb.log)
-
-```
-
-### Mean daily concentrations ### 
-```{r setup, include=FALSE}
-mean_daily <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
-
-mean_daily$datetimeAK <- ymd(mean_daily$day)
-mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
-
-
-
-mean_daily_long <- mean_daily %>%
-  pivot_longer(
-    cols = starts_with("daily"),
-    names_to = "response_var",
-    names_prefix = "wk",
-    values_to = "concentration",
-    values_drop_na = TRUE
-  ) # converting to a long format so each response_var is within a single column
-
-CV_mean_conc <- mean_daily_long %>% group_by(response_var,site.ID, year) %>%
-  dplyr::summarise(MEANconc = mean(concentration, na.rm = TRUE),
-                   SDconc = sd(concentration, na.rm = TRUE),
-                   CVconc = SDconc/MEANconc)
-    
-##subsetting by solute 
-# NO3 #
-CV_NO3 = subset(CV_mean_conc, response_var == "dailyNO3")
-# fDOM #
-CV_fDOM = subset(CV_mean_conc, response_var == "dailyfDOM")
-# SPC #
-CV_SPC = subset(CV_mean_conc, response_var == "dailySPC")
-# turb #
-CV_turb = subset(CV_mean_conc, response_var == "dailyTurb")
-
-
-
-```
-
-```{r}
-ggplot(CV_mean_conc, aes(site.ID, CVconc, color = site.ID)) +
-  geom_point() +
-  facet_grid(response_var ~ year, scales = "free") +
-  theme_bw()
-
-```
-
-```{r}
-#NO3
-NO3 <- aov(CVconc ~ site.ID*year, 
-           data = CV_NO3)
-
-summary(NO3) # nothing is significant 
-summary.lm(NO3)
-
-plot(NO3)
-
-
-```
-Lets try to log transform:
-
-```{r}
-CV_NO3$logCVconc <- log(abs(CV_NO3$CVconc))
-
-NO3.log <- aov(logCVconc ~ site.ID*year, 
-           data = CV_NO3)
-
-summary(NO3.log) # nothing is significant 
-summary.lm(NO3.log)
-
-plot(NO3.log)
-
 ```
 
 
-```{r}
-#fDOM
-fDOM <- aov(CVconc ~ site.ID*year, 
-           data = CV_fDOM)
-
-summary(fDOM) # nothing is significant 
-summary.lm(fDOM)
-
-plot(fDOM)
-
-
-```
- normality doesnt look great...lets log transform 
-
-```{r}
-#log transform 
-CV_fDOM$logCVconc <- log(abs(CV_fDOM$CVconc))
-fDOM.log <- aov(logCVconc ~ site.ID*year, 
-           data = CV_fDOM)
-
-summary(fDOM.log) # site is just missing out on significance 
-summary.lm(fDOM.log)
-
-plot(fDOM.log)
-
-
-```
-
-```{r} 
-TukeyHSD(fDOM.log, which = "site.ID")
-
-#VAUL/CARI are significantly different from each other 
-
-```
-
-```{r}
-#SPC
-SPC <- aov(CVconc ~ site.ID*year, 
-           data = CV_SPC)
-
-summary(SPC) # site is significantly different 
-summary.lm(SPC)
-
-plot(SPC)
-
-
-```
-
-
-```{r} 
-TukeyHSD(SPC, which = "site.ID")
-
-#POKE/CARI
-#VAUL/CARI
-#VAUL/FRCH
-#VAUL/MOOS
-#VAUL/POKE
-#VAUL/STRT
-
-```
-
-
-```{r}
-#turb
-turb <- aov(CVconc ~ site.ID*year, 
-           data = CV_turb)
-
-summary(turb) # site and year are barely not significant 
-summary.lm(turb)
-
-plot(turb)
-
-
-```
-lets log transform for normality:
-
-
-```{r}
-#log transform 
-CV_turb$logCVconc <- log(abs(CV_turb$CVconc))
-turb.log <- aov(logCVconc ~ site.ID*year, 
-           data = CV_turb)
-
-summary(turb.log) # site and year are now significant 
-summary.lm(turb.log)
-
-plot(turb.log)
-
-
-```
-
-```{r} 
-TukeyHSD(turb.log, which = "site.ID")
-
-#CARI/FRCH
-#CARI/POKE
-#CARI/STRT
-
-```
 

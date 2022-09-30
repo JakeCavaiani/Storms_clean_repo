@@ -32,21 +32,18 @@ library(dotwhisker)
 library(broom)
 library(jtools)
 library(sjPlot)
+library(AICcmodavg)
 ```
 
 
 ``` {r}
 # reading in data 
-AMC <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
 
-# removing a bunch of the catchment characteristic columns that are unnecessary 
-AMC <- AMC[,-c(1:3,9,10,18,19,21,22,25:28,42:50,52:56,60:65,67:81,83,85,86)]
+AMC <- AMC[c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "month.y", "day.y", "year", "Beta_index", "Beta_ymin", "Beta_ymax", "precip", "temp", "precip.week", "precip.month", "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", "date", "TimeSinceChena", "SLOPE_MEAN", "fireyear_lg", "pctburn_lg", "areaburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central", "NDVI_p50__mean", "NDVI_p50__standard_deviation")] # selecting the columns that I want
+
+
 AMC <- AMC[!duplicated(AMC$Hyst_index), ] # removing duplicated rows 
-
-AMC <- AMC %>%
-  mutate(across(c(pctburn_lg), 
-                ~ifelse(site.ID == "CARI", 40, .)))
-
 
 ```
 
@@ -67,37 +64,90 @@ CV.all.year <- AMC %>% group_by(response_var,site.ID, year) %>%
                   pctburn_lg = as.numeric(pctburn_lg),
                   areaburn_lg = as.numeric(areaburn_lg),
                   PF = as.numeric(Pf_Prob_1m_mean_x),
-                  NDVI = as.numeric(NDVI_p50))
+                  NDVI_change = as.numeric(NDVI_p50__mean_abs_change),
+                  NDVI_derivative = as.numeric(NDVI_p50__mean_second_derivative_central),
+                  NDVI = as.numeric(NDVI_p50__mean),
+                  NDVIsd = as.numeric(NDVI_p50__standard_deviation))
 
 
 CV.all.year <- CV.all.year[!duplicated(CV.all.year$meanHI), ] # removing duplicated rows
-# NDVI didnt properly merge over so manually putting in the NDVI value for each year 
-CV.all.year[c(1,22,42,63),17] <- 0.192390502 # CARI 2018
-CV.all.year[c(2,23,43,64),17] <- 0.247047948 # CARI 2019
-CV.all.year[c(3,24,44,65),17] <- 0.192382581 # CARI 2020
-CV.all.year[c(4,25,45,66),17] <- NA # CARI 2021
+# NDVI didnt properly merge over so manually putting in the NDVI value 
+# I am taking the average value from 2018-2020 and applying it to all the years (it shouldnt be changing that much within a couple years of unburned areas)
 
-CV.all.year[c(5,26,46,67),17] <- 0.186534723 # FRCH 2018
-CV.all.year[c(6,27,47,68),17] <- 0.26075781 # FRCH 2019
-CV.all.year[c(7,28,48,69),17] <- 0.190424498 # FRCH 2020
-CV.all.year[c(8,29,49,70),17] <- NA  # FRCH 2021
+# CARI Average: 0.2106070103
+# FRCH Average: 0.2125723437
+# MOOS Average: 0.2294949194
+# POKE Average: 0.232423168
+# STRT Average: 0.2558581085
+# VAUL Average: 0.227537246
 
-CV.all.year[c(9,30,50,71),17] <- 0.200191538 # MOOS 2018
-CV.all.year[c(10,31,51,72),17] <- 0.258797953 # MOOS 2019
-CV.all.year[c(11,32,52,73),17] <- 0.229493425 # MOOS 2020
-CV.all.year[c(12,33,53,74),17] <- NA # MOOS 2021
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
 
-CV.all.year[c(13,34,54,75),17] <- 0.247071561 # POKE 2019
-CV.all.year[c(14,35,55,76),17] <- 0.217774775 # POKE 2020
-CV.all.year[c(15,36,56,77),17] <- NA # POKE 2021
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
 
-CV.all.year[c(16,36,57,78),17] <- 0.274414997 # STRT 2019
-CV.all.year[c(17,37,58,79),17] <- 0.23730122 # STRT 2020
-CV.all.year[c(18,38,59,80),17] <- NA # STRT 2021
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
 
-CV.all.year[c(19,39,60,81),17] <- 0.229493954 # VAUL 2019
-CV.all.year[c(20,40,61,82),17] <- 0.225580538 # VAUL 2020
-CV.all.year[c(21,41,62,83),17] <- NA # VAUL 2021
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "POKE", 0.232423168, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+
+CV.all <- AMC %>% group_by(response_var,site.ID) %>%
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI = as.numeric(NDVI_p50__mean))
+
+CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "POKE", 0.232423168, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+
+
 
 
 ```
@@ -105,7 +155,7 @@ CV.all.year[c(21,41,62,83),17] <- NA # VAUL 2021
 ```{r}
 # scaling data # 
 #scaling # 
-CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")] <- lapply(CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")], function(x) c(scale(x)))
 
 CV_all_year_NO3 = subset(CV.all.year, response_var == "NO3")
 # fDOM #
@@ -114,6 +164,19 @@ CV_all_year_fDOM = subset(CV.all.year, response_var == "fDOM")
 CV_all_year_SPC = subset(CV.all.year, response_var == "SPC")
 # turb #
 CV_all_year_turb = subset(CV.all.year, response_var == "turb")
+
+
+
+# all years in one 
+CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+
+CV_all_NO3 = subset(CV.all, response_var == "NO3")
+# fDOM #
+CV_all_fDOM = subset(CV.all, response_var == "fDOM")
+# SPC #
+CV_all_SPC = subset(CV.all, response_var == "SPC")
+# turb #
+CV_all_turb = subset(CV.all, response_var == "turb")
 
 ```
 
@@ -154,1171 +217,615 @@ CV_all_year_turb = subset(CV.all.year, response_var == "turb")
 
 ```
 
+# Catchment characteristics
+This plot will show us what characteristics are correlated with each other and what we can put in our model 
+```{r}
+Catchment_characteristics <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
+
+Catchment_characteristics <- Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
+
+# scaling data # 
+#scaling # 
+Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")] <- lapply(Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x","NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")], function(x) c(scale(x)))
+
+ggpairs(Catchment_characteristics,
+        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation"),
+        ggplot2::aes())
+
+ggsave("ALL_pairs.pdf",
+       path = here("Ancillary_data"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+DOD_characteristics <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
+
+DOD_characteristics <- DOD_characteristics[c("site.ID", "SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
+
+# scaling data # 
+#scaling # 
+DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")], function(x) c(scale(x)))
+
+ggpairs(DOD_characteristics,
+        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("DOD_pairs.pdf",
+       path = here("Ancillary_data"),
+       width = 10, height = 10)
+
+```
+
 # NO3
 ```{r}
+NO3_data_year<- CV_all_year_NO3[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd", "CatBurn", "CatPF")]
 
-CV.all <- AMC %>% group_by(response_var,site.ID) %>%
-  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
-                   meanBETA = mean(Beta_index, na.rm = TRUE),
-                   sdHI = sd(Hyst_index, na.rm = TRUE),
-                   sdBETA = sd(Beta_index, na.rm = TRUE),
-                  CVhi = sdHI/meanHI,
-                  CVbeta = sdBETA/meanBETA,
-                  CatBurn = paste(burn),
-                  CatPF = paste(pf),
-                  Slope = as.numeric(SLOPE_MEAN),
-                  fireyear_lg = as.numeric(fireyear_lg),
-                  pctburn_lg = as.numeric(pctburn_lg),
-                  areaburn_lg = as.numeric(areaburn_lg),
-                  PF = as.numeric(Pf_Prob_1m_mean_x),
-                  NDVI = as.numeric(NDVI_p50))
+NO3_data<- CV_all_NO3[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
 
-CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
-
-
-CV_all_NO3 = subset(CV.all, response_var == "NO3")
-# fDOM #
-CV_all_fDOM = subset(CV.all, response_var == "fDOM")
-# SPC #
-CV_all_SPC = subset(CV.all, response_var == "SPC")
-# turb #
-CV_all_turb = subset(CV.all, response_var == "turb")
-
-NO3_data_year<- CV_all_year_NO3[,c("site.ID", "year", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-NO3_data<- CV_all_NO3[,c("site.ID", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
+# We tried doing out models are discrete characterization about PF extent (High vs. Moderate) and it doesnt appear that this is the best way to go about it.
+# 1) maybe we will use mean NDVI as a proxy for PF...lets see if these are correlated with burn 
 
 ggpairs(NO3_data_year,
-        columns = c("meanHI","Slope", "pctburn_lg", "PF"),
-        ggplot2::aes(colour = site.ID))
+        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
-# ggsave("pairs1.pdf",
-#        width = 10, height = 10)
+ggsave("NO3_HI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_BETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_sdHI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_sdBETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
 
 ```
 
 # NO3
-# HI model - year  
+# HI 
 ```{r}
-HI.no3.year <- lmer(meanHI ~ CatPF*pctburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(HI.no3.year) # year is adding little variance 
-
-# pctburn_lg is the more significant predictor here but still relatively small with a t-value < 2
-vif(HI.no3.year)
-
-
-
-```
-# diagnostic plot 
-```{r, echo=FALSE}
-plot(HI.no3.year, type=c("p","smooth"), col.line=1)
-plot(HI.no3.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(HI.no3.year)
-
-```
-
-```{r}
-pr <- ggpredict(HI.no3.year)
-plot(pr, add.data = TRUE)
-
-tab_model(HI.no3.year)
-
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(NO3_data_year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# HI model - all years 
-```{r}
-HI.no3 <- lm(meanHI ~ CatPF*pctburn_lg, 
+HI.no3.slope <- lm(meanHI ~ Slope, 
              data = NO3_data)
-summary(HI.no3) # nothing is significant here 
 
-vif(HI.no3)
-plot(HI.no3)
-```
-
-# BETA model- year 
-```{r}
-BETA.no3.year <- lmer(meanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(BETA.no3.year) # year is adding NO variance
-# looks like PF is the winner here but not very high 
- 
-vif(BETA.no3.year)
-
-```
-
-
-```{r, echo=FALSE}
-plot(BETA.no3.year, type=c("p","smooth"), col.line=1)
-plot(BETA.no3.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.no3.year)
-```
-
-
-```{r}
-pr <- ggpredict(BETA.no3.year)
-plot(pr, add.data = TRUE)
-```
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(NO3_data_year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
-  xlab("Burn") +
-  ylab("BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# BETA model - all years 
-```{r}
-BETA.no3 <- lm(meanBETA ~ CatPF*pctburn_lg, 
+HI.no3.burn <- lm(meanHI ~ pctburn_lg, 
              data = NO3_data)
-summary(BETA.no3) # nothing is significant here 
- 
-vif(BETA.no3)
-plot(BETA.no3)
+
+models <- list(HI.no3.slope, HI.no3.burn) 
+aictab(cand.set = models) # burn is the better model 
+summary(HI.no3.burn)
 ```
 
+# R^2 plot 
 ```{r}
-pr <- ggpredict(BETA.no3)
-plot(pr, add.data = TRUE)
-
-```
-
-# CVHI model 
-```{r}
-CVhi.no3.year <- lmer(CVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(CVhi.no3.year) # year is adding variance
-#pctburn_lg narrowly edges out PF 
-
-vif(CVhi.no3.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.no3.year, type=c("p","smooth"), col.line=1)
-plot(CVhi.no3.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.no3.year)
-```
-
-# let me log transform 
-```{r}
-NO3_data_year$logCVhi <- log(abs(NO3_data_year$CVhi))
-
-CVhi.no3.year.log <- lmer(logCVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(CVhi.no3.year) # year is adding variance
-#pctburn_lg narrowly edges out PF 
-
-vif(CVhi.no3.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.no3.year.log, type=c("p","smooth"), col.line=1)
-plot(CVhi.no3.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.no3.year.log)
-```
-
-
-```{r}
-pr <- ggpredict(CVhi.no3.year)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(NO3_data_year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CVhi") +
+ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
   geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
   theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
 
+ggsave("HI_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
 ```
 
+# BETA
 ```{r}
-CVno3 <- NO3_data_year %>% 
-  group_by(CatPF) %>% 
-  dplyr::summarise(meanCVhi = mean(CVhi),
-                   meanCVbeta = mean(CVbeta))
+BETA.no3.slope <- lm(meanBETA ~ Slope, 
+             data = NO3_data)
 
+BETA.no3.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = NO3_data)
 
+models <- list(BETA.no3.slope, BETA.no3.burn)
+aictab(cand.set = models) # burn is the better model delta AIC > 2
+summary(BETA.no3.burn) # p-value: 0.2065
 ```
 
-
-# CVBETA model 
+# R^2 plot 
 ```{r}
-CVbeta.no3.year <- lmer(CVbeta ~ CatPF*areaburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(CVbeta.no3.year) # year is adding variance 
-# PF is more significant but these arent really doing anything 
-
-vif(CVbeta.no3.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVbeta.no3.year, type=c("p","smooth"), col.line=1)
-plot(CVbeta.no3.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.no3.year)
-```
-residuals dont look great. What if I log transform here
-
-# let me log transform 
-```{r}
-NO3_data_year$logCVbeta <- log(abs(NO3_data_year$CVbeta))
-
-CVbeta.no3.year.log <- lmer(logCVbeta ~ CatPF*pctburn_lg + (1|year), 
-             data = NO3_data_year)
-summary(CVbeta.no3.year.log) # year is adding variance
-#pctburn_lg narrowly edges out PF 
-
-vif(CVbeta.no3.year.log)
-
-```
-
-
-
-```{r, echo=FALSE}
-plot(CVbeta.no3.year.log, type=c("p","smooth"), col.line=1)
-plot(CVbeta.no3.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.no3.year.log)
-```
-This is better but we have two big points for CARI 2020 and POKE 2020 that could be causing this issue
-
-
-```{r}
-pr <- ggpredict(CVbeta.no3.year)
-plot(pr, add.data = TRUE)
-
-```
-
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(NO3_data_year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV BETA") +
+ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
   geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
+               label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
   theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
+
+ggsave("BETA_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+
+```
+
+# sdHI
+```{r}
+sdHI.no3.slope <- lm(sdHI ~ Slope, 
+             data = NO3_data)
+
+sdHI.no3.burn <- lm(sdHI ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(sdHI.no3.slope, sdHI.no3.burn)
+aictab(cand.set = models) # slope model is better...they are both negative? is that okay?
+summary(sdHI.no3.slope) # p-value = 0.0501
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdHI_NO3_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+```
+
+# sdBETA
+```{r}
+sdBETA.no3.slope <- lm(sdBETA ~ Slope, 
+             data = NO3_data)
+
+sdBETA.no3.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(sdBETA.no3.slope, sdBETA.no3.burn)
+aictab(cand.set = models) # burn model is better but the AIC difference isnt greater than 2 so we would say according to our text that these models perform in the same way right?
+summary(sdBETA.no3.burn) # p-value: 0.00686
+summary(sdBETA.no3.slope) # p-value: 0.09170
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
 
 ```
 
 # fDOM # 
 ```{r}
-fDOM_data_year<- CV_all_year_fDOM[,c("site.ID", "year", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+fDOM_data_year<- CV_all_year_fDOM[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
 
-fDOM_data<- CV_all_fDOM[,c("site.ID", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-ggpairs(fDOM_data_year,
-        columns = c("meanHI","Slope", "pctburn_lg", "PF"),
-        ggplot2::aes(colour = site.ID))
-
-CVfDOM <- fDOM_data_year %>% 
-  group_by(CatPF) %>% 
-  dplyr::summarise(meanCVhi = mean(abs(CVhi)),
-                   meanCVbeta = mean(abs(CVbeta)))
-
-# ggsave("pairs1.pdf",
-#        width = 10, height = 10)
-
-```
-
-
-# HI model - year 
-```{r}
-HI.fDOM.year <- lmer(meanHI ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(HI.fDOM.year) # year is adding 0 variance 
-# pct_burn is the more significant but they are both pretty big 
-
-vif(HI.fDOM.year)
-
-```
-
-```{r, echo=FALSE}
-plot(HI.fDOM.year, type=c("p","smooth"), col.line=1)
-plot(HI.fDOM.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(HI.fDOM.year)
-```
-
-
-```{r}
-pr <- ggpredict(HI.fDOM.year)
-plot(pr, add.data = TRUE)
+fDOM_data<- CV_all_fDOM[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
 
 ```
 
 ```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(fDOM_data_year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
 
-```
-
-
-# HI model - all years
-```{r}
-HI.fDOM <- lm(meanHI ~ CatPF*pctburn_lg, 
+HI.fDOM.slope <- lm(meanHI ~ Slope, 
              data = fDOM_data)
-summary(HI.fDOM) 
-# nothing is significant 
-plot(HI.fDOM)
 
-```
-
-# BETA model - year 
-```{r}
-BETA.fDOM.year <- lmer(meanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(BETA.fDOM.year) # year is adding variance 
-# pctburn is adding more individually but the interaction term in the biggest 
-
-vif(BETA.fDOM.year)
-
-```
-
-```{r, echo=FALSE}
-plot(BETA.fDOM.year, type=c("p","smooth"), col.line=1)
-plot(BETA.fDOM.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.fDOM.year)
-```
-let me log transform to see if its better:
-
-
-```{r}
-# log transform 
-fDOM_data_year$logmeanBETA <- log(abs(fDOM_data_year$meanBETA))
-
-BETA.fDOM.year.log <- lmer(logmeanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(BETA.fDOM.year.log)
-
-vif(BETA.fDOM.year.log)
-
-```
-
-
-```{r, echo=FALSE}
-plot(BETA.fDOM.year.log, type=c("p","smooth"), col.line=1)
-plot(BETA.fDOM.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.fDOM.year.log)
-```
-this looks worse TBH
-
-
-```{r}
-pr <- ggpredict(BETA.fDOM.year)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(fDOM_data_year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
-  xlab("Burn") +
-  ylab("BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# CVHI model 
-```{r}
-CVhi.fDOM.year <- lmer(CVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(CVhi.fDOM.year)
-
-vif(CVhi.fDOM.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.fDOM.year, type=c("p","smooth"), col.line=1)
-plot(CVhi.fDOM.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.fDOM.year)
-```
-Lets log transform 
-
-```{r}
-#log transform 
-fDOM_data_year$logCVhi <- log(abs(fDOM_data_year$CVhi))
-CVhi.fDOM.year.log <- lmer(logCVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(CVhi.fDOM.year.log) # year is adding NO variance 
-# pctburn_lg is more significant on its own
-# interaction has the highest t-value 
-
-vif(CVhi.fDOM.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.fDOM.year.log, type=c("p","smooth"), col.line=1)
-plot(CVhi.fDOM.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.fDOM.year.log)
-```
-this looks better, lets interpret this:
-
-```{r}
-pr <- ggpredict(CVhi.fDOM.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(fDOM_data_year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-```{r}
-CVhi.fDOM <- lm(CVhi ~ CatPF*pctburn_lg, 
+HI.fDOM.burn <- lm(meanHI ~ pctburn_lg, 
              data = fDOM_data)
-summary(CVhi.fDOM) # nothing is significant 
 
-plot(CVhi.fDOM)
-
+models <- list(HI.fDOM.slope, HI.fDOM.burn)
+aictab(cand.set = models) # slope is better model, deltaAIC > 2
+summary(HI.fDOM.slope) # p-value 0.0624
 ```
 
-
-# CVBETA model - year
+# R^2 plot 
 ```{r}
-CVbeta.fDOM.year <- lmer(CVbeta ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(CVbeta.fDOM.year)
-
-vif(CVbeta.fDOM.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVbeta.fDOM.year, type=c("p","smooth"), col.line=1)
-plot(CVbeta.fDOM.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.fDOM.year)
-```
-Let me log transform
-
-```{r}
-# log transform
-fDOM_data_year$logCVbeta <- log(abs(fDOM_data_year$CVbeta))
-
-CVbeta.fDOM.year.log <- lmer(logCVbeta ~ CatPF*pctburn_lg + (1|year), 
-             data = fDOM_data_year)
-summary(CVbeta.fDOM.year.log) # year adds 0 variance and nothing is really explaining it here 
-
-```
-
-```{r, echo=FALSE}
-plot(CVbeta.fDOM.year.log, type=c("p","smooth"), col.line=1)
-plot(CVbeta.fDOM.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.fDOM.year.log)
-```
-This still doesnt look great 
-
-```{r}
-pr <- ggpredict(CVbeta.fDOM.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(fDOM_data_year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV BETA") +
+ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
   geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
+               label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
   theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
 
-```
-
-```{r}
-CVbeta.fDOM <- lm(logCVbeta ~ CatPF*pctburn_lg, 
-             data = fDOM_data_year)
-summary(CVbeta.fDOM) # nothing is significant 
-plot(CVbeta.fDOM)
-```
-
-# SPC # 
-
-```{r}
-SPC_data_year<- CV_all_year_SPC[,c("site.ID", "year", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-SPC_data<- CV_all_SPC[,c("site.ID", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-ggpairs(SPC_data_year,
-        columns = c("meanHI","Slope", "pctburn_lg", "PF"),
-        ggplot2::aes(colour = site.ID))
-
-# ggsave("pairs1.pdf",
-#        width = 10, height = 10)
-
-```
-
-
-# HI model - year 
-```{r}
-HI.SPC.year <- lmer(meanHI ~ CatPF*pctburn_lg + (1|year), 
-             data = SPC_data_year)
-summary(HI.SPC.year) # year is adding to the variance
-# nothing is really explaining anything here 
-
-vif(HI.SPC.year)
-
-```
-
-```{r, echo=FALSE}
-plot(HI.SPC.year, type=c("p","smooth"), col.line=1)
-plot(HI.SPC.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(HI.SPC.year)
-```
-residuals arent the best....log transforming makes it worse 
-
-
-```{r}
-pr <- ggpredict(HI.SPC.year)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(SPC_data_year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# BETA model 
-```{r}
-BETA.SPC.year <- lmer(meanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = SPC_data_year)
-summary(BETA.SPC.year)
-
-```
-
-```{r, echo=FALSE}
-plot(BETA.SPC.year, type=c("p","smooth"), col.line=1)
-plot(BETA.SPC.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.SPC.year)
-```
-one point is making this meh...let me log transform 
-
-```{r}
-# log transform 
-SPC_data_year$logmeanBETA <- log(abs(SPC_data_year$meanBETA))
-
-BETA.SPC.year.log <- lmer(logmeanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = SPC_data_year)
-summary(BETA.SPC.year.log) # year is adding 0 variance 
-# nothing is really explaining this here 
-
-```
-
-```{r, echo=FALSE}
-plot(BETA.SPC.year.log, type=c("p","smooth"), col.line=1)
-plot(BETA.SPC.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.SPC.year.log)
-```
-
-```{r}
-pr <- ggpredict(BETA.SPC.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(SPC_data_year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-```{r}
-BETA.SPC <- lm(meanBETA ~ CatPF*pctburn_lg, 
-             data = SPC_data_year)
-summary(BETA.SPC) # year is adding 0 variance 
-# nothing is really explaining this here 
-plot(BETA.SPC)
-```
-
-# CVHI model 
-```{r}
-SPC_data_year$logCVhi <- log(abs(SPC_data_year$CVhi))
-
-CVhi.SPC.year.log <- lmer(CVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = SPC_data_year)
-summary(CVhi.SPC.year.log) # year is adding to variance
-# nothing is really explaining this here 
-
-vif(CVhi.SPC.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.SPC.year.log, type=c("p","smooth"), col.line=1)
-plot(CVhi.SPC.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.SPC.year.log)
-```
-One point is really out of whack 
-```{r}
-pr <- ggpredict(CVhi.SPC.year.log)
-plot(pr, add.data = TRUE)
-
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(SPC_data_year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# CVBETA model 
-```{r}
-# log transform 
-SPC_data_year$logCVbeta <- log(abs(SPC_data_year$CVbeta))
-CVbeta.SPC.year.log <- lmer(logCVbeta ~ CatPF*pctburn_lg + (1|year), 
-             data = SPC_data_year)
-summary(CVbeta.SPC.year.log) # year is adding 0 variance 
-# nothing is really explaining anything really 
-
-vif(CVbeta.SPC.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(CVbeta.SPC.year.log, type=c("p","smooth"), col.line=1)
-plot(CVbeta.SPC.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.SPC.year.log)
-```
-
-```{r}
-CVbeta.SPC <- lm(logCVbeta ~ CatPF*pctburn_lg, 
-             data = SPC_data_year)
-summary(CVbeta.SPC) # year is adding 0 variance 
-# nothing is really explaining anything really
-
-plot(CVbeta.SPC)
-
-```
-
-
-```{r}
-pr <- ggpredict(CVbeta.SPC.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(SPC_data_year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# turb # 
-```{r}
-turb_data_year<- CV_all_year_turb[,c("site.ID", "year", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-turb_data<- CV_all_turb[,c("site.ID", "meanHI", "meanBETA", "CVhi", "CVbeta", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
-
-ggpairs(turb_data_year,
-        columns = c("meanHI","Slope", "pctburn_lg", "PF"),
-        ggplot2::aes(colour = site.ID))
-
-CVturb <- turb_data_year %>% 
-  group_by(CatPF) %>% 
-  dplyr::summarise(meanCVhi = mean(abs(CVhi)),
-                   meanCVbeta = mean(abs(CVbeta)))
-# ggsave("pairs1.pdf",
-#        width = 10, height = 10)
-
-```
-
-
-# HI model 
-```{r}
-turb_data_year$logmeanHI <- log(abs(turb_data_year$meanHI))
-
-HI.turb.year.log <- lmer(logmeanHI ~ CatPF*pctburn_lg + (1|year), 
-             data = turb_data_year)
-
-summary(HI.turb.year.log) # year is adding some variance 
-# pctburn_lg is more important individually but the interaction term is most significant though it has a low t-value(1.439)
-
-vif(HI.turb.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(HI.turb.year.log, type=c("p","smooth"), col.line=1)
-plot(HI.turb.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(HI.turb.year.log)
-```
-
-```{r}
-pr <- ggpredict(HI.turb.year.log)
-plot(pr, add.data = TRUE)
-
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(turb_data_year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-
-# BETA model 
-```{r}
-BETA.turb.year <- lmer(meanBETA ~ CatPF*pctburn_lg + (1|year), 
-             data = turb_data_year)
-summary(BETA.turb.year) # year is adding variance
-# PF is the big player here
-
-vif(BETA.turb.year)
-
-```
-
-```{r, echo=FALSE}
-plot(BETA.turb.year, type=c("p","smooth"), col.line=1)
-plot(BETA.turb.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(BETA.turb.year)
-```
-
-```{r}
-pr <- ggpredict(BETA.turb.year)
-plot(pr, add.data = TRUE)
-
-```
-
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(turb_data_year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
-  xlab("Burn") +
-  ylab("BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# CVHI model 
-```{r}
-CVhi.turb.year <- lmer(CVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = turb_data_year)
-summary(CVhi.turb.year)
-
-vif(CVhi.turb.year)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.turb.year, type=c("p","smooth"), col.line=1)
-plot(CVhi.turb.year,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.turb.year)
-```
-lets log transform 
-```{r}
-# log transform 
-turb_data_year$logCVhi <- log(abs(turb_data_year$CVhi))
-
-CVhi.turb.year.log <- lmer(logCVhi ~ CatPF*pctburn_lg + (1|year), 
-             data = turb_data_year)
-summary(CVhi.turb.year.log)
-
-vif(CVhi.turb.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(CVhi.turb.year.log, type=c("p","smooth"), col.line=1)
-plot(CVhi.turb.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVhi.turb.year.log)
-```
-
-
-```{r}
-pr <- ggpredict(CVhi.turb.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(turb_data_year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-# CVBETA model 
-```{r}
-turb_data_year$logCVbeta <- log(abs(turb_data_year$CVbeta))
-
-CVbeta.turb.year.log <- lmer(logCVbeta ~ CatPF*pctburn_lg + (1|year), 
-             data = turb_data_year)
-summary(CVbeta.turb.year.log)
-
-vif(CVbeta.turb.year.log)
-
-```
-
-```{r, echo=FALSE}
-plot(CVbeta.turb.year.log, type=c("p","smooth"), col.line=1)
-plot(CVbeta.turb.year.log,
-     sqrt(abs(resid(.)))~fitted(.),
-     type=c("p","smooth"), col.line=1)
-lattice::qqmath(CVbeta.turb.year.log)
-```
-
-
-```{r}
-pr <- ggpredict(CVbeta.turb.year.log)
-plot(pr, add.data = TRUE)
-
-```
-
-```{r}
-# Trying to get a meanHI vs. pct_burn plot with two linear regression lines of best fit for categorical PF extent 
-ggplot(turb_data_year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()
-  
-# high pf : #0072B2
-# med pf: #CC79A7
-
-```
-
-```{r}
-CVbeta.turb <- lm(logCVbeta ~ CatPF*pctburn_lg, 
-             data = turb_data_year)
-summary(CVbeta.turb) # nothing is significant 
-
-plot(CVbeta.turb)
-
-```
-
-
-
-
-### PLOTTING ###
-# HI 
-```{r}
-ggplot(CV.all.year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
-  xlab("Burn") +
-  ylab("Hysteresis") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic() +
-  facet_wrap(~response_var, scales = "free")
-
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
-       filename = "HI_burn.pdf",
+ggsave("HI_fDOM_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 10, height = 10)
 
-
 ```
+
 
 # BETA
 ```{r}
-ggplot(CV.all.year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
-  xlab("Burn") +
-  ylab("BETA") +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic() +
-  facet_wrap(~response_var, scales = "free")
+BETA.fDOM.slope <- lm(meanBETA ~ Slope, 
+             data = fDOM_data)
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
-       filename = "BETA_burn.pdf",
-       width = 10, height = 10)
+BETA.fDOM.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = fDOM_data)
 
+models <- list(BETA.fDOM.slope, BETA.fDOM.burn)
+aictab(cand.set = models) # slope is the better model: deltaAIC>2
+summary(BETA.fDOM.slope) #0.037
 ```
 
-
-# CVhi
+# R^2 plot 
 ```{r}
-ggplot(CV.all.year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV Hysteresis") +
+ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
   geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
+               label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic() +
-  facet_wrap(~response_var, scales = "free")
+  theme_classic()
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
-       filename = "CVhi_burn.pdf",
+ggsave("BETA_fDOM_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
        width = 10, height = 10)
-
-
 ```
 
-# CVbeta
+# sdHI
 ```{r}
-ggplot(CV.all.year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
-  xlab("Burn") +
-  ylab("CV BETA") +
+sdHI.fDOM.slope <- lm(sdHI ~ Slope, 
+             data = fDOM_data)
+
+sdHI.fDOM.burn <- lm(sdHI ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(sdHI.fDOM.slope, sdHI.fDOM.burn)
+aictab(cand.set = models) # burn is the better model deltaAIC>2
+summary(sdHI.fDOM.burn) # p-value 0.182369
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
   geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
-  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
+               label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic() +
-  facet_wrap(~response_var, scales = "free")
+  theme_classic()
 
-ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
-       filename = "CVbeta_burn.pdf",
+ggsave("sdHI_fDOM_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
        width = 10, height = 10)
 
 
+```
+
+# sdBETA
+```{r}
+sdBETA.fDOM.slope <- lm(sdBETA ~ Slope, 
+             data = fDOM_data)
+
+sdBETA.fDOM.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(sdBETA.fDOM.slope, sdBETA.fDOM.burn)
+aictab(cand.set = models) # slope model better but the deltaAIC is not >2
+summary(sdBETA.fDOM.slope) # 0.53313 
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = Slope, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
 
 ```
+
+
+# SPC # 
+```{r}
+SPC_data_year<- CV_all_year_SPC[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+SPC_data<- CV_all_SPC[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+```
+
+```{r}
+
+HI.SPC.slope <- lm(meanHI ~ Slope, 
+             data = SPC_data)
+
+HI.SPC.burn <- lm(meanHI ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(HI.SPC.slope, HI.SPC.burn)
+aictab(cand.set = models) # slope is better model, deltaAIC > 2
+summary(HI.SPC.slope) # p-value 0.0347
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("HI_SPC_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+
+```
+
+
+# BETA
+```{r}
+BETA.SPC.slope <- lm(meanBETA ~ Slope, 
+             data = SPC_data)
+
+BETA.SPC.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(BETA.SPC.slope, BETA.SPC.burn)
+aictab(cand.set = models) # slope is the better model but deltaAIC are not greater than 2
+summary(BETA.SPC.slope) # 0.1140
+summary(BETA.SPC.burn) # 0.1140
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("BETA_SPC_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+# sdHI
+```{r}
+sdHI.SPC.slope <- lm(sdHI ~ Slope, 
+             data = SPC_data)
+
+sdHI.SPC.burn <- lm(sdHI ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(sdHI.SPC.slope, sdHI.SPC.burn)
+aictab(cand.set = models) # burn is the better model but deltaAIC is not greater than 2 
+summary(sdHI.SPC.burn) # p-value 0.388143
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = pctburn_lg, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+```
+
+# sdBETA
+```{r}
+sdBETA.SPC.slope <- lm(sdBETA ~ Slope, 
+             data = SPC_data)
+
+sdBETA.SPC.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(sdBETA.SPC.slope, sdBETA.SPC.burn)
+aictab(cand.set = models) # burn model better deltaAIC>2
+summary(sdBETA.SPC.burn) # 0.0596
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_SPC_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+
+# Turb # 
+```{r}
+turb_data_year<- CV_all_year_turb[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+turb_data<- CV_all_turb[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+```
+
+```{r}
+
+HI.turb.slope <- lm(meanHI ~ Slope, 
+             data = turb_data)
+
+HI.turb.burn <- lm(meanHI ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(HI.turb.slope, HI.turb.burn)
+aictab(cand.set = models) # burn is better model but deltaAIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(HI.turb.burn) # p-value 0.353
+```
+
+
+# BETA
+```{r}
+BETA.turb.slope <- lm(meanBETA ~ Slope, 
+             data = turb_data)
+
+BETA.turb.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(BETA.turb.slope, BETA.turb.burn)
+aictab(cand.set = models) # slope is the better model but deltaAIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = Slope, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(BETA.turb.slope) # 0.61108
+```
+
+# sdHI
+```{r}
+sdHI.turb.slope <- lm(sdHI ~ Slope, 
+             data = turb_data)
+
+sdHI.turb.burn <- lm(sdHI ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(sdHI.turb.slope, sdHI.turb.burn)
+aictab(cand.set = models) # burn is the better model but delta AIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = pctburn_lg, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(sdHI.turb.burn) # p-value 0.73519
+```
+
+# sdBETA
+```{r}
+sdBETA.turb.slope <- lm(sdBETA ~ Slope, 
+             data = turb_data)
+
+sdBETA.turb.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(sdBETA.turb.slope, sdBETA.turb.burn)
+aictab(cand.set = models) # slope model better: deltaAIC >2
+summary(sdBETA.turb.slope) # 0.06055
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_Turb_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

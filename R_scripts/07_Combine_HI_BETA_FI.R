@@ -21,7 +21,9 @@ median_cl_boot <- function(x, conf = 0.95) {
 }
 
 # FRCH #
-FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.csv")
+FRCH.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "FRCH", "FRCH.HI.df.csv"))
+
+# FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.csv")
 
 storm.list = unique(FRCH.HI.df$storm.ID)
 FRCH.HI.boot <- do.call(rbind.data.frame,
@@ -32,7 +34,9 @@ FRCH.HI.boot <- do.call(rbind.data.frame,
 FRCH.HI.boot$storm.ID = storm.list
 
 # MOOS #
-MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.csv")
+MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "MOOS.HI.df.csv"))
+
+# MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.csv")
 
 storm.list = unique(MOOS.HI.df$storm.ID)
 MOOS.HI.boot <- do.call(rbind.data.frame,
@@ -43,7 +47,9 @@ MOOS.HI.boot <- do.call(rbind.data.frame,
 MOOS.HI.boot$storm.ID = storm.list
 
 # CARI #
-CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.csv")
+CARI.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "CARI", "CARI.HI.df.csv"))
+
+# CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.csv")
 
 storm.list = unique(CARI.HI.df$storm.ID)
 CARI.HI.boot <- do.call(rbind.data.frame,
@@ -63,7 +69,9 @@ CARI.HI.boot$site.ID = "CARI"
 
 HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot)
 
-all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2018.csv", header = T, row.names = 1)
+all.FI.diff.results <- read.csv(here("Output_from_analysis", "05_FI", "all.FI.diff.results_2018.csv"), header = T, row.names = 1)
+
+# all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2018.csv", header = T, row.names = 1)
 
 FI = subset(all.FI.diff.results, select=c("Flushing_index", "percCI_2.5", "percCI_97.5", "ID"))
 FI$ID = as.character(FI$ID)
@@ -79,7 +87,8 @@ HI_FI$year <- "2018"
 write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2018.csv")
 
 ### BETA ####
-beta_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2018.csv")
+beta_2018 <- read.csv(here("Output_from_analysis","06_BETA","beta.2018.csv"))
+# beta_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2018.csv")
 beta_2018$year <- "2018"
 
 beta_2018 <- beta_2018 %>% 
@@ -91,8 +100,11 @@ names(beta_2018) = c("X1", "site.ID", "storm.ID","Parameter",
                      "year")
 
 ### Antecedent Conditions ####
-antecedent_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
-antecedent_2018 <- antecedent_2018[,-c(1)]
+antecedent_2018 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.2018.csv"))
+antecedent_2018 <-  subset(antecedent_2018, select=-c(X))
+
+# antecedent_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
+# antecedent_2018 <- antecedent_2018[,-c(1)]
 
 names(antecedent_2018)[names(antecedent_2018) == "storm.num"] <- "storm.ID"
 names(antecedent_2018)[names(antecedent_2018) == "response"] <- "response_var"
@@ -264,7 +276,9 @@ median_cl_boot <- function(x, conf = 0.95) {
 }
 
 # FRCH #
-FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.csv")
+FRCH.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "FRCH", "FRCH.HI.df.csv"))
+
+# FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.csv")
 
 storm.list = unique(FRCH.HI.df$storm.ID)
 FRCH.HI.boot <- do.call(rbind.data.frame,
@@ -275,7 +289,9 @@ FRCH.HI.boot <- do.call(rbind.data.frame,
 FRCH.HI.boot$storm.ID = storm.list
 
 # MOOS #
-MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.csv")
+MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "MOOS", "MOOS.HI.df.csv"))
+
+#MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.csv")
 
 storm.list = unique(MOOS.HI.df$storm.ID)
 MOOS.HI.boot <- do.call(rbind.data.frame,
@@ -286,7 +302,9 @@ MOOS.HI.boot <- do.call(rbind.data.frame,
 MOOS.HI.boot$storm.ID = storm.list
 
 # CARI #
-CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.csv")
+CARI.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI", "CARI.HI.df.csv"))
+
+#CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.csv")
 
 storm.list = unique(CARI.HI.df$storm.ID)
 CARI.HI.boot <- do.call(rbind.data.frame,
@@ -297,7 +315,9 @@ CARI.HI.boot <- do.call(rbind.data.frame,
 CARI.HI.boot$storm.ID = storm.list
 
 # POKE #
-POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.csv")
+POKE.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "POKE", "POKE.HI.df.csv"))
+
+#POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.csv")
 
 storm.list = unique(POKE.HI.df$storm.ID)
 POKE.HI.boot <- do.call(rbind.data.frame,
@@ -308,7 +328,9 @@ POKE.HI.boot <- do.call(rbind.data.frame,
 POKE.HI.boot$storm.ID = storm.list
 
 # VAUL #
-VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.csv")
+VAUL.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "VAUL", "VAUL.HI.df.csv"))
+
+#VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.csv")
 
 storm.list = unique(VAUL.HI.df$storm.ID)
 VAUL.HI.boot <- do.call(rbind.data.frame,
@@ -319,7 +341,9 @@ VAUL.HI.boot <- do.call(rbind.data.frame,
 VAUL.HI.boot$storm.ID = storm.list
 
 # STRT #
-STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.csv")
+STRT.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "STRT", "STRT.HI.df.csv"))
+
+#STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.csv")
 
 storm.list = unique(STRT.HI.df$storm.ID)
 STRT.HI.boot <- do.call(rbind.data.frame,
@@ -342,7 +366,9 @@ STRT.HI.boot$site.ID = "STRT"
 HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot,
            POKE.HI.boot, VAUL.HI.boot, STRT.HI.boot)
 
-all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2019.csv", header = T, row.names = 1)
+all.FI.diff.results <- read.csv(here("Output_from_analysis", "05_FI", "all.FI.diff.results_2019.csv"))
+
+# all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2019.csv", header = T, row.names = 1)
 
 FI = subset(all.FI.diff.results, select=c("Flushing_index", "percCI_2.5", "percCI_97.5", "ID"))
 FI$ID = as.character(FI$ID)
@@ -359,7 +385,8 @@ write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_
 
 
 ### BETA ####
-beta_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
+beta_2019 <- read.csv(here("Output_from_analysis", "06_BETA","beta.2019.csv"))
+# beta_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
 beta_2019$year <- "2019"
 
 beta_2019 <- beta_2019 %>% 
@@ -370,8 +397,10 @@ names(beta_2019) = c("X1", "site.ID", "storm.ID","Parameter",
                      "Beta_ymax", "t", "df", "p", "response_var",
                      "year")
 ### ANTECEDENT ####
-antecedent_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
-antecedent_2019 <- antecedent_2019[,-c(1)]
+antecedent_2019 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
+antecedent_2019 <-  subset(antecedent_2019, select=-c(X1))
+# antecedent_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
+# antecedent_2019 <- antecedent_2019[,-c(1)]
 
 names(antecedent_2019)[names(antecedent_2019) == "storm.num"] <- "storm.ID"
 names(antecedent_2019)[names(antecedent_2019) == "response"] <- "response_var"
@@ -399,7 +428,9 @@ median_cl_boot <- function(x, conf = 0.95) {
 }
 
 # FRCH #
-FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/FRCH/FRCH.HI.df.csv")
+FRCH.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "FRCH", "FRCH.HI.df.csv"))
+
+# FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/FRCH/FRCH.HI.df.csv")
 
 storm.list = unique(FRCH.HI.df$storm.ID)
 FRCH.HI.boot <- do.call(rbind.data.frame,
@@ -410,7 +441,9 @@ FRCH.HI.boot <- do.call(rbind.data.frame,
 FRCH.HI.boot$storm.ID = storm.list
 
 # MOOS #
-MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/MOOS/MOOS.HI.df.csv")
+MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "MOOS", "MOOS.HI.df.csv"))
+
+# MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/MOOS/MOOS.HI.df.csv")
 
 storm.list = unique(MOOS.HI.df$storm.ID)
 MOOS.HI.boot <- do.call(rbind.data.frame,
@@ -421,7 +454,9 @@ MOOS.HI.boot <- do.call(rbind.data.frame,
 MOOS.HI.boot$storm.ID = storm.list
 
 # CARI #
-CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/CARI/CARI.HI.df.csv")
+CARI.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "CARI", "CARI.HI.df.csv"))
+
+# CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/CARI/CARI.HI.df.csv")
 
 storm.list = unique(CARI.HI.df$storm.ID)
 CARI.HI.boot <- do.call(rbind.data.frame,
@@ -432,7 +467,9 @@ CARI.HI.boot <- do.call(rbind.data.frame,
 CARI.HI.boot$storm.ID = storm.list
 
 # POKE #
-POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.csv")
+POKE.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "POKE", "POKE.HI.df.csv"))
+
+# POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.csv")
 
 storm.list = unique(POKE.HI.df$storm.ID)
 POKE.HI.boot <- do.call(rbind.data.frame,
@@ -443,7 +480,9 @@ POKE.HI.boot <- do.call(rbind.data.frame,
 POKE.HI.boot$storm.ID = storm.list
 
 # VAUL #
-VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/VAUL/VAUL.HI.df.csv")
+VAUL.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "VAUL", "VAUL.HI.df.csv"))
+
+# VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/VAUL/VAUL.HI.df.csv")
 
 storm.list = unique(VAUL.HI.df$storm.ID)
 VAUL.HI.boot <- do.call(rbind.data.frame,
@@ -454,7 +493,9 @@ VAUL.HI.boot <- do.call(rbind.data.frame,
 VAUL.HI.boot$storm.ID = storm.list
 
 # STRT #
-STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/STRT/STRT.HI.df.csv")
+STRT.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "STRT", "STRT.HI.df.csv"))
+
+# STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/STRT/STRT.HI.df.csv")
 
 storm.list = unique(STRT.HI.df$storm.ID)
 STRT.HI.boot <- do.call(rbind.data.frame,
@@ -477,7 +518,9 @@ STRT.HI.boot$site.ID = "STRT"
 HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot,
            POKE.HI.boot, VAUL.HI.boot, STRT.HI.boot)
 
-all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2020.csv", header = T, row.names = 1)
+all.FI.diff.results <- read.csv(here("Output_from_analysis", "05_FI", "all.FI.diff.results_2020.csv"))
+
+# all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2020.csv", header = T, row.names = 1)
 
 FI = subset(all.FI.diff.results, select=c("Flushing_index", "percCI_2.5", "percCI_97.5", "ID"))
 FI$ID = as.character(FI$ID)
@@ -493,7 +536,8 @@ HI_FI$year <- "2020"
 write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2020.csv")
 
 ### BETA ####
-beta_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
+beta_2020 <- read.csv(here("Output_from_analysis", "06_BETA", "beta.2020.csv"))
+# beta_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
 beta_2020$year <- "2020"
 
 beta_2020 <- beta_2020 %>% 
@@ -506,8 +550,10 @@ names(beta_2020) = c("X1", "site.ID", "storm.ID","Parameter",
 
 
 ### ANTECEDENT ####
-antecedent_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
-antecedent_2020 <- antecedent_2020[,-c(1)]
+antecedent_2020 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.2020.csv"))
+antecedent_2020 <-  subset(antecedent_2020, select=-c(X1))
+# antecedent_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
+# antecedent_2020 <- antecedent_2020[,-c(1)]
 
 names(antecedent_2020)[names(antecedent_2020) == "storm.num"] <- "storm.ID"
 names(antecedent_2020)[names(antecedent_2020) == "response"] <- "response_var"
@@ -535,7 +581,9 @@ median_cl_boot <- function(x, conf = 0.95) {
 }
 
 # FRCH #
-FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/FRCH/FRCH.HI.df.csv")
+FRCH.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "FRCH", "FRCH.HI.df.csv"))
+
+# FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/FRCH/FRCH.HI.df.csv")
 
 storm.list = unique(FRCH.HI.df$storm.ID)
 FRCH.HI.boot <- do.call(rbind.data.frame,
@@ -546,7 +594,9 @@ FRCH.HI.boot <- do.call(rbind.data.frame,
 FRCH.HI.boot$storm.ID = storm.list
 
 # MOOS #
-MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/MOOS/MOOS.HI.df.csv")
+MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "MOOS", "MOOS.HI.df.csv"))
+
+# MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/MOOS/MOOS.HI.df.csv")
 
 storm.list = unique(MOOS.HI.df$storm.ID)
 MOOS.HI.boot <- do.call(rbind.data.frame,
@@ -557,7 +607,9 @@ MOOS.HI.boot <- do.call(rbind.data.frame,
 MOOS.HI.boot$storm.ID = storm.list
 
 # CARI #
-CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/CARI/CARI.HI.df.csv")
+CARI.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "CARI", "CARI.HI.df.csv"))
+
+# CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/CARI/CARI.HI.df.csv")
 
 storm.list = unique(CARI.HI.df$storm.ID)
 CARI.HI.boot <- do.call(rbind.data.frame,
@@ -568,7 +620,9 @@ CARI.HI.boot <- do.call(rbind.data.frame,
 CARI.HI.boot$storm.ID = storm.list
 
 # POKE #
-POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/POKE/POKE.HI.df.csv")
+POKE.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "POKE", "POKE.HI.df.csv"))
+
+# POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/POKE/POKE.HI.df.csv")
 
 storm.list = unique(POKE.HI.df$storm.ID)
 POKE.HI.boot <- do.call(rbind.data.frame,
@@ -579,7 +633,9 @@ POKE.HI.boot <- do.call(rbind.data.frame,
 POKE.HI.boot$storm.ID = storm.list
 
 # VAUL #
-VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/VAUL/VAUL.HI.df.csv")
+VAUL.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "VAUL", "VAUL.HI.df.csv"))
+
+# VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/VAUL/VAUL.HI.df.csv")
 
 storm.list = unique(VAUL.HI.df$storm.ID)
 VAUL.HI.boot <- do.call(rbind.data.frame,
@@ -590,7 +646,9 @@ VAUL.HI.boot <- do.call(rbind.data.frame,
 VAUL.HI.boot$storm.ID = storm.list
 
 # STRT #
-STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.HI.df.csv")
+STRT.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "STRT", "STRT.HI.df.csv"))
+
+# STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.HI.df.csv")
 
 storm.list = unique(STRT.HI.df$storm.ID)
 STRT.HI.boot <- do.call(rbind.data.frame,
@@ -613,7 +671,9 @@ STRT.HI.boot$site.ID = "STRT"
 HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot,
            POKE.HI.boot, VAUL.HI.boot, STRT.HI.boot)
 
-all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2021.csv", header = T, row.names = 1)
+all.FI.diff.results <- read.csv(here("Output_from_analysis", "05_FI", "all.FI.diff.results_2021.csv"))
+
+# all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2021.csv", header = T, row.names = 1)
 
 FI = subset(all.FI.diff.results, select=c("Flushing_index", "percCI_2.5", "percCI_97.5", "ID"))
 FI$ID = as.character(FI$ID)
@@ -629,7 +689,8 @@ HI_FI$year <- "2021"
 #write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2021.csv")
 
 ### BETA ####
-beta_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2021.csv")
+beta_2021 <- read.csv(here("Output_from_analysis", "06_BETA", "beta.2021.csv"))
+# beta_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2021.csv")
 beta_2021$year <- "2021"
 
 beta_2021 <- beta_2021 %>% 
@@ -642,8 +703,10 @@ names(beta_2021) = c("X1", "site.ID", "storm.ID","Parameter",
 
 
 ### ANTECEDENT ####
-antecedent_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
-antecedent_2021 <- antecedent_2021[,-c(1)]
+antecedent_2021 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
+antecedent_2021 <-  subset(antecedent_2021, select=-c(X1))
+# antecedent_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
+# antecedent_2021 <- antecedent_2021[,-c(1)]
 
 antecedent_2021$date <- as.Date(antecedent_2021$doy, origin = "2021-01-01")
 origin_date <- as.Date("2021-05-08")

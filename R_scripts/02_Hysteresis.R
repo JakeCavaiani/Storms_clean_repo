@@ -25,8 +25,6 @@ library(dplyr)
 
 # plot on normalized scale # 
 # load data #
-# any storm that is commented out is an empty dataframe due to gaps in the data
-setwd("~/Documents/Storms_clean_repo")
 #FRCH_storm1_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm1_06_21.csv") # not a storm!!!!
 # FRCH_storm1_06_21_Q <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_Q.csv")
 # FRCH_storm1_06_21_NO3 <- read_csv("Storm_Events/2018/FRCH/FRCH_storm1_06_21_NO3.csv")
@@ -668,9 +666,7 @@ hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
 
 # plot MOOS loops #
 # NO3
-
-
-MOOS_storm1_06_21_NO3.p = hyst_plot(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_NO3, "MOOS", "NO3", "0621")
+OOS_storm1_06_21_NO3.p = hyst_plot(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_NO3, "MOOS", "NO3", "0621")
 #MOOS_storm2a_06_29_NO3.p = hyst_plot(MOOS_storm2a_06_29_Q, MOOS_storm2a_06_29_NO3, "MOOS", "NO3", "0629a")
 #MOOS_storm2b_07_01_NO3.p = hyst_plot(MOOS_storm2b_07_01_Q, MOOS_storm2b_07_01_NO3, "MOOS", "NO3", "0701b")
 #MOOS_storm2c_07_04_NO3.p = hyst_plot(MOOS_storm2c_07_04_Q, MOOS_storm2c_07_04_NO3, "MOOS", "NO3", "0704c")

@@ -49,25 +49,47 @@ library(ggpubr)
 library(dataRetrieval)
 setwd("~/Documents/Storms_clean_repo")
 # Import data #
-FRCH_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv")
-MOOS_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.doy.csv")
-CARI_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.doy.csv")
-CARI_HI_doy_df_2018 <- CARI_HI_doy_df_2018[,-2]
+FRCH_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "FRCH","FRCH.HI.df.doy.csv"))
+MOOS_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "MOOS","MOOS.HI.df.doy.csv"))
+CARI_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "CARI","CARI.HI.df.doy.csv"))
+CARI_HI_doy_df_2018 <-  subset(CARI_HI_doy_df_2018, select=-c(X1_1))
 
-FRCH_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.doy.csv")
-MOOS_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.doy.csv")
-POKE_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.doy.csv")
-STRT_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.doy.csv")
-VAUL_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.doy.csv")
-CARI_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.doy.csv")
+# FRCH_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv")
+# MOOS_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.doy.csv")
+# CARI_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.doy.csv")
+# CARI_HI_doy_df_2018 <- CARI_HI_doy_df_2018[,-2]
+
+FRCH_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "FRCH","FRCH.HI.df.doy.csv"))
+MOOS_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "MOOS","MOOS.HI.df.doy.csv"))
+POKE_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "POKE","POKE.HI.df.doy.csv"))
+STRT_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "STRT","STRT.HI.df.doy.csv"))
+VAUL_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "VAUL","VAUL.HI.df.doy.csv"))
+CARI_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI","CARI.HI.df.doy.csv"))
 STRT_HI_doy_df_2019[c(1701:1900), 7] <- "storm7c"
 
-FRCH_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/FRCH/FRCH.HI.df.doy.csv")
-MOOS_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/MOOS/MOOS.HI.df.doy.csv")
-POKE_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.doy.csv")
-STRT_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/STRT/STRT.HI.df.doy.csv")
-VAUL_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/VAUL/VAUL.HI.df.doy.csv")
-CARI_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/CARI/CARI.HI.df.doy.csv")
+
+# FRCH_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.doy.csv")
+# MOOS_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.doy.csv")
+# POKE_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.doy.csv")
+# STRT_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.doy.csv")
+# VAUL_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.doy.csv")
+# CARI_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.doy.csv")
+# STRT_HI_doy_df_2019[c(1701:1900), 7] <- "storm7c"
+
+FRCH_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "FRCH","FRCH.HI.df.doy.csv"))
+MOOS_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "MOOS","MOOS.HI.df.doy.csv"))
+POKE_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "POKE","POKE.HI.df.doy.csv"))
+STRT_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "STRT","STRT.HI.df.doy.csv"))
+VAUL_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "VAUL","VAUL.HI.df.doy.csv"))
+CARI_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "CARI","CARI.HI.df.doy.csv"))
+
+
+# FRCH_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/FRCH/FRCH.HI.df.doy.csv")
+# MOOS_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/MOOS/MOOS.HI.df.doy.csv")
+# POKE_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.doy.csv")
+# STRT_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/STRT/STRT.HI.df.doy.csv")
+# VAUL_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/VAUL/VAUL.HI.df.doy.csv")
+# CARI_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/CARI/CARI.HI.df.doy.csv")
 
 
 HI.dat_2018 <- rbind(FRCH_HI_doy_df_2018, MOOS_HI_doy_df_2018, CARI_HI_doy_df_2018)
@@ -277,9 +299,11 @@ FRCH_storms$storm.num = c(
 #write_csv(FRCH_storms, "~/Desktop/FRCH_2018_test_beta.csv")
 
 # Read in precip data 
-POKE_RainGauge_2018 <- read_csv("~/Documents/DoD_2018_Jake/RainGauge/POKE.RainGauge.2018.csv") # Reading in rain gauge data in 
+POKE_RainGauge_2018 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2018.csv"))
+# POKE_RainGauge_2018 <- read_csv("~/Documents/DoD_2018_Jake/RainGauge/POKE.RainGauge.2018.csv") # Reading in rain gauge data in 
 attributes(POKE_RainGauge_2018$DateTime)$tzone <- 'America/Anchorage' # converting to AK time 
-airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
+airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
+# airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 attributes(airtempmean$date_timeAK)$tzone <- 'America/Anchorage'
 names(airtempmean)[2] <- "DateTime"
 FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") #making datetime column 
@@ -297,8 +321,10 @@ temp <- FRCH.2018.storms.1 %>% group_by(storm.num) %>%
 FRCH.2018.per.storm.1$temp <- temp$temp
 
 # Reading in chem data to join with the antecedent moisture condition data 
-chem.2018 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2018.csv", 
-                      col_types = cols(NO3 = col_double()))
+chem.2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
+
+# chem.2018 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2018.csv", 
+#                       col_types = cols(NO3 = col_double()))
 
 FRCH.2018 <-  subset(chem.2018, site.ID == "FRCH")
 
@@ -1752,10 +1778,15 @@ HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 ######################################## 2019 ############################################
 ###########################################################################################
 # import rain gauge data #
-FRCH_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/FRCH.RainGauge.2019.csv")
-POKE_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/POKE.RainGauge.2019.csv")
-VAUL_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
-airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
+FRCH_RainGauge_2019 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2019.csv"))
+POKE_RainGauge_2019 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2019.csv"))
+VAUL_RainGauge_2019 <- read.csv(here("Climate", "Precip", "VAUL.RainGauge.2019.csv"))
+airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
+
+# FRCH_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/FRCH.RainGauge.2019.csv")
+# POKE_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/POKE.RainGauge.2019.csv")
+# VAUL_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
+# airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 
 # convert to AK time 
 attributes(FRCH_RainGauge_2019$Datetime)$tzone <- 'America/Anchorage'
@@ -4624,11 +4655,18 @@ write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antece
 
 ######################################## 2020 ####
 # import rain gauge data #
-FRCH_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
-POKE_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
-VAUL_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
-STRT_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
-airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
+FRCH_RainGauge_2020 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
+POKE_RainGauge_2020 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
+VAUL_RainGauge_2020 <- read.csv(here("Climate", "Precip", "VAUL.RainGauge.2020.csv"))
+STRT_RainGauge_2020 <- read.csv(here("Climate", "Precip", "STRT.RainGauge.2020.csv"))
+
+airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
+
+# FRCH_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
+# POKE_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
+# VAUL_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
+# STRT_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
+# airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 names(airtempmean)[2] <- "DateTime"
 
 # convert to AK time 
