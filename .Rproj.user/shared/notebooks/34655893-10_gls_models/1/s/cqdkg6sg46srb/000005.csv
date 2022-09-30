@@ -1,0 +1,1 @@
+"0","plot(turb.mod.gls.log, resid(., type = ""p"") ~ fitted(.), abline = 0)"

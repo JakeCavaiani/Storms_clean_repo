@@ -1,0 +1,8 @@
+"0","Ear1<-residuals(fDOM.mod.ar1.log, type=""normalized"")
+I1<-!is.na(mean_daily_2021$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2021$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+"
+"2","number of items to replace is not a multiple of replacement length"
+"0","acf(Efulla, na.action=na.pass)"

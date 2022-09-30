@@ -1,0 +1,43 @@
+"1","
+"
+"1","Correlation Structure: ARMA(1,1)
+"
+"1"," Formula: ~julian | site.ID 
+"
+"1"," Parameter estimate(s):
+"
+"1","     Phi1 "
+"1","   Theta1 "
+"1","
+"
+"1","0.9603179 "
+"1","0.4381129 "
+"1","
+"
+"1","Variance function:
+"
+"1"," Structure: Different standard deviations per stratum
+"
+"1"," Formula: ~1 | site.ID 
+"
+"1"," Parameter estimates:
+"
+"1","     CARI "
+"1","     FRCH "
+"1","     MOOS "
+"1","     POKE "
+"1","     STRT "
+"1","     VAUL "
+"1","
+"
+"1","1.0000000 "
+"1","0.7074136 "
+"1","0.7868350 "
+"1","0.9503956 "
+"1","1.0745116 "
+"1","5.3822351 "
+"1","
+"
+"1","
+Coefficients:
+"

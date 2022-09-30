@@ -1,0 +1,5 @@
+"0","mean_daily_2018$logDailyNO3 <- log(abs(mean_daily_2018$dailyNO3))"
+"0",""
+"0","no3.mod.gls.2018.log <- gls(logDailyNO3 ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2018)"

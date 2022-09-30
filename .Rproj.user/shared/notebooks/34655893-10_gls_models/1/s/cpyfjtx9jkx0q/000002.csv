@@ -1,3 +1,0 @@
-"0","mean_daily_2020$logDailyTurb <- log(mean_daily_2020$dailyTurb)
-"
-"2","NaNs produced"

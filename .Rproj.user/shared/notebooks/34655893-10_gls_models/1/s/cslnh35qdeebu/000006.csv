@@ -1,0 +1,1 @@
+"0","plot(SPC.mod.gls, resid(., type = ""p"") ~ fitted(.), abline = 0)"

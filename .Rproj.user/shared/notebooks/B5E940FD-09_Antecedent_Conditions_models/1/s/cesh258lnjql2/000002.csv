@@ -90,20 +90,6 @@ Attaching package: ‘arm’
 
 "
 "0","library(AICcmodavg)"
-"2","
-Attaching package: ‘AICcmodavg’
-
-"
-"2","The following object is masked from ‘package:lme4’:
-
-    checkConv
-
-"
-"2","The following objects are masked from ‘package:MuMIn’:
-
-    AICc, DIC, importance
-
-"
 "0","library(gridExtra)"
 "2","
 Attaching package: ‘gridExtra’

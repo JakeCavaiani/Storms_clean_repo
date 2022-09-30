@@ -1,0 +1,6 @@
+"0","fDOM.mod.arma.2.1 <- gls(logDailyfDOM ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2019, "
+"0","                weights = varfixed,"
+"0","               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 1))"
+"0",""

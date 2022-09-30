@@ -1,0 +1,3 @@
+"0",""
+"0","qqnorm(turb.mod.log, ~ resid(., type = ""p""), abline = c(0,1))"
+"0",""

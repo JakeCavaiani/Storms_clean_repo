@@ -1,15 +1,36 @@
-"0","AMC <- AMC %>% 
-  group_by(site.ID, response_var, year) %>% 
-  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
-                   meanBETA = mean(Beta_index, na.rm = TRUE),
-                   sdHI = sd(Hyst_index, na.rm = TRUE),
-                   sdBETA = sd(Beta_index, na.rm = TRUE),
-                   CVhi = sdHI/meanHI,
-                   CVbeta = sdBETA/meanBETA,
-                   response_var = paste(response_var),
-                   Date = as.Date(date),
-                   DOY = as.numeric(doy),
-                   burn = paste(burn),
-                   PF = paste(pf))
-"
+"0","AMC <- read.csv(here(""Output_from_analysis"", ""07_Combine_HI_BETA_FI"", ""antecedent_HI_FI_AllYears.csv""))"
+"0",""
+"0","AMC <- AMC[c(""Hyst_index"",""site.ID"", ""storm.ID"", ""response_var"", ""Flush_index"", ""month.y"", ""day.y"", ""year"", ""Beta_index"", ""doy"", ""burn"", ""pf"", ""date"")] # selecting the columns that I want"
+"0",""
+"0","colNames <- c(""Hyst_index"", ""site.ID"", ""storm.ID"", ""response_var"", ""Flush_index"", ""month"", ""day"", ""year"", ""Beta_index"", ""doy"", ""burn"", ""pf"", ""date"")"
+"0",""
+"0","names(AMC)<- colNames # renaming columns "
+"0",""
+"0","AMC <- AMC %>% "
+"0","  group_by(site.ID, response_var, year) %>% "
+"0","  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),"
+"0","                   meanBETA = mean(Beta_index, na.rm = TRUE),"
+"0","                   sdHI = sd(Hyst_index, na.rm = TRUE),"
+"0","                   sdBETA = sd(Beta_index, na.rm = TRUE),"
+"0","                   CVhi = sdHI/meanHI,"
+"0","                   CVbeta = sdBETA/meanBETA,"
+"0","                   response_var = paste(response_var),"
+"0","                   Date = as.Date(date),"
+"0","                   DOY = as.numeric(doy),"
+"0","                   burn = paste(burn),"
+"0","                   PF = paste(pf))"
 "2","`summarise()` has grouped output by 'site.ID', 'response_var', 'year'. You can override using the `.groups` argument."
+"0","AMC <- AMC[!duplicated(AMC$meanHI), ] # removing duplicated rows "
+"0",""
+"0",""
+"0","##subsetting by solute "
+"0","# NO3 #"
+"0","HI_FI_NO3 = subset(AMC, response_var == ""NO3"")"
+"0","# fDOM #"
+"0","HI_FI_fDOM = subset(AMC, response_var == ""fDOM"")"
+"0","# SPC #"
+"0","HI_FI_SPC = subset(AMC, response_var == ""SPC"")"
+"0","# turb #"
+"0","HI_FI_turb = subset(AMC, response_var == ""turb"")"
+"0",""
+"0",""

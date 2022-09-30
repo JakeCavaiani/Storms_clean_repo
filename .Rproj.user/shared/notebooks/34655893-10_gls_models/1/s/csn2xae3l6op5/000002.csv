@@ -1,7 +1,0 @@
-"0","fDOM.mod.arma.1.1 <- gls(logdailyfDOM ~ site.ID, 
-               na.action = na.omit, 
-               data = mean_daily_2018, 
-               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
-"
-"2","Error in eval(predvars, data, env) : object 'logdailyfDOM' not found
-"

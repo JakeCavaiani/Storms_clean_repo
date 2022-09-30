@@ -1,7 +1,0 @@
-"0","plot(fDOM.mod.ar1, resid(., type = ""p"") ~ fitted(.), abline = 0)
-
-plot(fDOM.mod.ar1, dailyfDOM ~ fitted(.) | site.ID, abline = c(0,1))
-"
-"0",""
-"0","qqnorm(fDOM.mod.ar1, abline = c(0,1))"
-"0",""

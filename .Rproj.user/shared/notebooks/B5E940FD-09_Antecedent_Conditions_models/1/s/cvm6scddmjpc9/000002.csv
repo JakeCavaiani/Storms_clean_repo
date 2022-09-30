@@ -1,0 +1,17 @@
+"0","FRCH.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_FRCH)
+
+vif(FRCH.model.log)
+"
+"1","   StormPrecip "
+"1","    PrecipWeek "
+"1","   PrecipMonth "
+"1","TimeSinceChena "
+"1","
+"
+"1","      1.052652 "
+"1","      1.551590 "
+"1","      1.547921 "
+"1","      1.063944 "
+"1","
+"
+"0","plot(FRCH.model.log)"

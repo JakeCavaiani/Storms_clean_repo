@@ -1,0 +1,17 @@
+"0","summary(SPC.mod.arma.1.1)
+"
+"1","Generalized least squares fit by "
+"1","REML
+"
+"1","  Model:"
+"1"," "
+"1","dailySPC ~ site.ID"
+"1"," "
+"1","
+"
+"1","  Data:"
+"1"," "
+"1","mean_daily_2019"
+"1"," "
+"1","
+"

@@ -1,0 +1,17 @@
+"0","VAUL.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_POKE)
+
+vif(VAUL.model.log)
+"
+"1","   StormPrecip "
+"1","    PrecipWeek "
+"1","   PrecipMonth "
+"1","TimeSinceChena "
+"1","
+"
+"1","      1.057505 "
+"1","      1.503184 "
+"1","      1.481290 "
+"1","      1.032551 "
+"1","
+"
+"0","plot(VAUL.model.log)"
