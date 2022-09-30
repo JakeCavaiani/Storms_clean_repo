@@ -1,0 +1,4 @@
+"0","fDOM_data_year<- CV_all_year_fDOM[,c(""site.ID"", ""year"", ""meanHI"", ""meanBETA"", ""sdHI"", ""sdBETA"", ""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"", ""CatBurn"", ""CatPF"")]"
+"0",""
+"0","fDOM_data<- CV_all_fDOM[,c(""site.ID"", ""meanHI"", ""meanBETA"", ""sdHI"", ""sdBETA"", ""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"", ""CatBurn"", ""CatPF"")]"
+"0",""

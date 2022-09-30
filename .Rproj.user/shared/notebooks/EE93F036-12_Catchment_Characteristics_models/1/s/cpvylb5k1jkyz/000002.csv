@@ -1,7 +1,0 @@
-"0","CVfDOM <- fDOM_data_year %>% 
-  group_by(CatPF) %>% 
-  dplyr::summarise(meanCVhi = mean(CVhi),
-                   meanCVbeta = mean(CVbeta))
-"
-"2","Error in group_by(., CatPF) : object 'fDOM_data_year' not found
-"

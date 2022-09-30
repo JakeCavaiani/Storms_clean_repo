@@ -1,0 +1,4 @@
+"0","turb_data_year<- CV_all_year_turb[,c(""site.ID"", ""year"", ""meanHI"", ""meanBETA"", ""sdHI"", ""sdBETA"", ""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"", ""CatBurn"", ""CatPF"")]"
+"0",""
+"0","turb_data<- CV_all_turb[,c(""site.ID"", ""meanHI"", ""meanBETA"", ""sdHI"", ""sdBETA"", ""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"", ""CatBurn"", ""CatPF"")]"
+"0",""

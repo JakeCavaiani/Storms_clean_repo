@@ -1,3 +1,0 @@
-"0","plot(CVhi.no3.year,"
-"0","     sqrt(abs(resid(.)))~fitted(.),"
-"0","     type=c(""p"",""smooth""), col.line=1)"
