@@ -1,2 +1,0 @@
-"0",""
-"0","plot(no3.mod.gls.2018.log, logDailyNO3 ~ fitted(.) | site.ID, abline = c(0,1))"

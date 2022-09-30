@@ -1,0 +1,3 @@
+"0",""
+"0","qqnorm(SPC.mod.gls, ~ resid(., type = ""p""), abline = c(0,1))"
+"0",""

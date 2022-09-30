@@ -1,6 +1,0 @@
-"0","NO3_data <- subset(mean_daily_long, response_var == ""dailyNO3"" )"
-"0","ggplot(mean_daily, aes(x = julian, y = dailyNO3, color = site.ID)) +"
-"0","  geom_point(size = 0.5) +"
-"0","   scale_color_manual(values=c(""#3288BD"",""#FF7F00"", ""#A6761D"", ""#6A3D9A"", ""#66C2A5"", ""#E7298A"")) +"
-"0","  facet_grid(site.ID ~ year, scales = ""free"") +"
-"0","  theme_classic()"

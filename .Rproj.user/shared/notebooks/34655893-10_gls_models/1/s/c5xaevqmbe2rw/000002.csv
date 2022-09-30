@@ -1,0 +1,7 @@
+"0","mean_daily_2019$logDailyfDOM <- log(mean_daily_2019$dailyfDOM)"
+"0",""
+"0","fDOM.mod.log <- gls(logDailyfDOM ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2019,"
+"0","               weights = varfixed)"
+"0",""

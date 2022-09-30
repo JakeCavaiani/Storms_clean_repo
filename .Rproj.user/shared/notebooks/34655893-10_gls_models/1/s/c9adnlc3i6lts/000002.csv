@@ -1,0 +1,6 @@
+"0","SPC.mod.ar1 <- gls(dailySPC ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2020,"
+"0","               weights = varfixed,"
+"0","               correlation = corAR1(form = ~ julian|site.ID))"
+"0",""

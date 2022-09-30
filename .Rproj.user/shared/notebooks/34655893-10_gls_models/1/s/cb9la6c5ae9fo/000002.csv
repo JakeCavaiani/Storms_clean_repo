@@ -1,4 +1,0 @@
-"0","no3.mod.arma.1.1.no.2018 <- gls(dailyNO3 ~ site.ID*year, "
-"0","               na.action = na.omit, "
-"0","               data = mean_daily_no_2018, "
-"0","               correlation = corARMA(form = ~ julian|site.ID/year, p = 1, q = 1))"

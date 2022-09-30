@@ -1,0 +1,7 @@
+"0","mean_daily_2018 <- subset(mean_daily, year == ""2018"")"
+"0",""
+"0","ggplot(mean_daily_2018, aes(x = julian, y = dailyNO3, color = site.ID)) +"
+"0","  geom_line() +"
+"0","  scale_color_manual(values=c(""#3288BD"",""#FF7F00"", ""#A6761D"")) +"
+"0","  facet_wrap(~site.ID, scales = ""free"") +"
+"0","  theme_classic()"

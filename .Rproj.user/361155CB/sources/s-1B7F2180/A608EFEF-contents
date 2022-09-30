@@ -1,0 +1,831 @@
+---
+title: "12_Catchment_Characteristics_models"
+author: "Jake Cavaiani"
+date: "9/14/2022"
+output:
+  word_document: default
+  html_document: default
+---
+
+#load libraries 
+```{r}
+library(here)
+library(tidyverse)
+library(nlme)
+library(forecast)
+library(stats)
+library(readr)
+library(ggplot2)
+library(plotly)
+library(GGally)
+library(ggpmisc)
+library(ggpubr)
+library(ggExtra)
+library(lubridate)
+library(nlme)
+library(MuMIn)
+library(multcomp)
+library(lme4)
+library(car)
+library(ggeffects)
+library(dotwhisker)
+library(broom)
+library(jtools)
+library(sjPlot)
+library(AICcmodavg)
+```
+
+
+``` {r}
+# reading in data 
+AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
+
+AMC <- AMC[c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "month.y", "day.y", "year", "Beta_index", "Beta_ymin", "Beta_ymax", "precip", "temp", "precip.week", "precip.month", "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", "date", "TimeSinceChena", "SLOPE_MEAN", "fireyear_lg", "pctburn_lg", "areaburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central", "NDVI_p50__mean", "NDVI_p50__standard_deviation")] # selecting the columns that I want
+
+
+AMC <- AMC[!duplicated(AMC$Hyst_index), ] # removing duplicated rows 
+
+```
+
+
+```{r}
+# taking the mean HI for each catchment and year 
+CV.all.year <- AMC %>% group_by(response_var,site.ID, year) %>%
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI_change = as.numeric(NDVI_p50__mean_abs_change),
+                  NDVI_derivative = as.numeric(NDVI_p50__mean_second_derivative_central),
+                  NDVI = as.numeric(NDVI_p50__mean),
+                  NDVIsd = as.numeric(NDVI_p50__standard_deviation))
+
+
+CV.all.year <- CV.all.year[!duplicated(CV.all.year$meanHI), ] # removing duplicated rows
+# NDVI didnt properly merge over so manually putting in the NDVI value 
+# I am taking the average value from 2018-2020 and applying it to all the years (it shouldnt be changing that much within a couple years of unburned areas)
+
+# CARI Average: 0.2106070103
+# FRCH Average: 0.2125723437
+# MOOS Average: 0.2294949194
+# POKE Average: 0.232423168
+# STRT Average: 0.2558581085
+# VAUL Average: 0.227537246
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "POKE", 0.232423168, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+
+CV.all.year <- CV.all.year %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+
+CV.all <- AMC %>% group_by(response_var,site.ID) %>%
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI = as.numeric(NDVI_p50__mean))
+
+CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "POKE", 0.232423168, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+
+
+
+
+```
+
+```{r}
+# scaling data # 
+#scaling # 
+CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")] <- lapply(CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")], function(x) c(scale(x)))
+
+CV_all_year_NO3 = subset(CV.all.year, response_var == "NO3")
+# fDOM #
+CV_all_year_fDOM = subset(CV.all.year, response_var == "fDOM")
+# SPC #
+CV_all_year_SPC = subset(CV.all.year, response_var == "SPC")
+# turb #
+CV_all_year_turb = subset(CV.all.year, response_var == "turb")
+
+
+
+# all years in one 
+CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+
+CV_all_NO3 = subset(CV.all, response_var == "NO3")
+# fDOM #
+CV_all_fDOM = subset(CV.all, response_var == "fDOM")
+# SPC #
+CV_all_SPC = subset(CV.all, response_var == "SPC")
+# turb #
+CV_all_turb = subset(CV.all, response_var == "turb")
+
+```
+
+```{r}
+# testing to see if outliers are real from the input data 
+# VAUL_2019 for NO3 has a really low meanHI...lets investigate that 
+
+# VAUL_NO3_2019 <- subset(AMC, site.ID == "VAUL" & year == "2019" & response_var == "NO3")
+# 
+# mean(VAUL_NO3_2019$Hyst_index)
+# 
+# ggplot(VAUL_NO3_2019, aes(Beta_index, Hyst_index)) +
+#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), color = "black", alpha = 0.5, size = 0.5, width = 0.05) +
+#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+#   geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) 
+# 
+# ggplot(HI_FI_NO3, aes(Beta_index, Hyst_index)) + 
+#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+#   geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+#   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+#   theme_bw() +
+#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+#   ggtitle(vn)+ 
+#   ylab("HI") +
+#   xlab("") +
+#   theme(panel.border = element_blank(), 
+#         panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(), 
+#         axis.line = element_line(colour = "black"), 
+#         text = element_text(size = 15),
+#         legend.position = "none") +
+#     labs(
+#       colour = "Catchment",
+#       shape = "PF Extent")
+
+```
+
+# Catchment characteristics
+This plot will show us what characteristics are correlated with each other and what we can put in our model 
+```{r}
+Catchment_characteristics <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
+
+Catchment_characteristics <- Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
+
+# scaling data # 
+#scaling # 
+Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")] <- lapply(Catchment_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x","NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")], function(x) c(scale(x)))
+
+ggpairs(Catchment_characteristics,
+        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation"),
+        ggplot2::aes())
+
+ggsave("ALL_pairs.pdf",
+       path = here("Ancillary_data"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+DOD_characteristics <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
+
+DOD_characteristics <- DOD_characteristics[c("site.ID", "SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
+
+# scaling data # 
+#scaling # 
+DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")], function(x) c(scale(x)))
+
+ggpairs(DOD_characteristics,
+        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("DOD_pairs.pdf",
+       path = here("Ancillary_data"),
+       width = 10, height = 10)
+
+```
+
+# NO3
+```{r}
+NO3_data_year<- CV_all_year_NO3[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd", "CatBurn", "CatPF")]
+
+NO3_data<- CV_all_NO3[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+# We tried doing out models are discrete characterization about PF extent (High vs. Moderate) and it doesnt appear that this is the best way to go about it.
+# 1) maybe we will use mean NDVI as a proxy for PF...lets see if these are correlated with burn 
+
+ggpairs(NO3_data_year,
+        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_HI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_BETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_sdHI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(NO3_data_year,
+        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("NO3_sdBETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+# NO3
+# HI 
+```{r}
+HI.no3.slope <- lm(meanHI ~ Slope, 
+             data = NO3_data)
+
+HI.no3.burn <- lm(meanHI ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(HI.no3.slope, HI.no3.burn) 
+aictab(cand.set = models) # burn is the better model 
+summary(HI.no3.burn)
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("HI_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+```
+
+# BETA
+```{r}
+BETA.no3.slope <- lm(meanBETA ~ Slope, 
+             data = NO3_data)
+
+BETA.no3.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(BETA.no3.slope, BETA.no3.burn)
+aictab(cand.set = models) # burn is the better model delta AIC > 2
+summary(BETA.no3.burn) # p-value: 0.2065
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("BETA_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+
+```
+
+# sdHI
+```{r}
+sdHI.no3.slope <- lm(sdHI ~ Slope, 
+             data = NO3_data)
+
+sdHI.no3.burn <- lm(sdHI ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(sdHI.no3.slope, sdHI.no3.burn)
+aictab(cand.set = models) # slope model is better...they are both negative? is that okay?
+summary(sdHI.no3.slope) # p-value = 0.0501
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdHI_NO3_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+```
+
+# sdBETA
+```{r}
+sdBETA.no3.slope <- lm(sdBETA ~ Slope, 
+             data = NO3_data)
+
+sdBETA.no3.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = NO3_data)
+
+models <- list(sdBETA.no3.slope, sdBETA.no3.burn)
+aictab(cand.set = models) # burn model is better but the AIC difference isnt greater than 2 so we would say according to our text that these models perform in the same way right?
+summary(sdBETA.no3.burn) # p-value: 0.00686
+summary(sdBETA.no3.slope) # p-value: 0.09170
+```
+
+# R^2 plot 
+```{r}
+ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_NO3_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+
+```
+
+# fDOM # 
+```{r}
+fDOM_data_year<- CV_all_year_fDOM[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+fDOM_data<- CV_all_fDOM[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+```
+
+```{r}
+
+HI.fDOM.slope <- lm(meanHI ~ Slope, 
+             data = fDOM_data)
+
+HI.fDOM.burn <- lm(meanHI ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(HI.fDOM.slope, HI.fDOM.burn)
+aictab(cand.set = models) # slope is better model, deltaAIC > 2
+summary(HI.fDOM.slope) # p-value 0.0624
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("HI_fDOM_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+```
+
+
+# BETA
+```{r}
+BETA.fDOM.slope <- lm(meanBETA ~ Slope, 
+             data = fDOM_data)
+
+BETA.fDOM.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(BETA.fDOM.slope, BETA.fDOM.burn)
+aictab(cand.set = models) # slope is the better model: deltaAIC>2
+summary(BETA.fDOM.slope) #0.037
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("BETA_fDOM_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+```
+
+# sdHI
+```{r}
+sdHI.fDOM.slope <- lm(sdHI ~ Slope, 
+             data = fDOM_data)
+
+sdHI.fDOM.burn <- lm(sdHI ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(sdHI.fDOM.slope, sdHI.fDOM.burn)
+aictab(cand.set = models) # burn is the better model deltaAIC>2
+summary(sdHI.fDOM.burn) # p-value 0.182369
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdHI_fDOM_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+
+```
+
+# sdBETA
+```{r}
+sdBETA.fDOM.slope <- lm(sdBETA ~ Slope, 
+             data = fDOM_data)
+
+sdBETA.fDOM.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = fDOM_data)
+
+models <- list(sdBETA.fDOM.slope, sdBETA.fDOM.burn)
+aictab(cand.set = models) # slope model better but the deltaAIC is not >2
+summary(sdBETA.fDOM.slope) # 0.53313 
+```
+
+# R^2 plot 
+```{r}
+ggplot(fDOM_data, aes(x = Slope, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+```
+
+
+# SPC # 
+```{r}
+SPC_data_year<- CV_all_year_SPC[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+SPC_data<- CV_all_SPC[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+```
+
+```{r}
+
+HI.SPC.slope <- lm(meanHI ~ Slope, 
+             data = SPC_data)
+
+HI.SPC.burn <- lm(meanHI ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(HI.SPC.slope, HI.SPC.burn)
+aictab(cand.set = models) # slope is better model, deltaAIC > 2
+summary(HI.SPC.slope) # p-value 0.0347
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("HI_SPC_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "HI"),
+       width = 10, height = 10)
+
+
+```
+
+
+# BETA
+```{r}
+BETA.SPC.slope <- lm(meanBETA ~ Slope, 
+             data = SPC_data)
+
+BETA.SPC.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(BETA.SPC.slope, BETA.SPC.burn)
+aictab(cand.set = models) # slope is the better model but deltaAIC are not greater than 2
+summary(BETA.SPC.slope) # 0.1140
+summary(BETA.SPC.burn) # 0.1140
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("BETA_SPC_slope.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+# sdHI
+```{r}
+sdHI.SPC.slope <- lm(sdHI ~ Slope, 
+             data = SPC_data)
+
+sdHI.SPC.burn <- lm(sdHI ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(sdHI.SPC.slope, sdHI.SPC.burn)
+aictab(cand.set = models) # burn is the better model but deltaAIC is not greater than 2 
+summary(sdHI.SPC.burn) # p-value 0.388143
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = pctburn_lg, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+```
+
+# sdBETA
+```{r}
+sdBETA.SPC.slope <- lm(sdBETA ~ Slope, 
+             data = SPC_data)
+
+sdBETA.SPC.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = SPC_data)
+
+models <- list(sdBETA.SPC.slope, sdBETA.SPC.burn)
+aictab(cand.set = models) # burn model better deltaAIC>2
+summary(sdBETA.SPC.burn) # 0.0596
+```
+
+# R^2 plot 
+```{r}
+ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_SPC_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+
+# Turb # 
+```{r}
+turb_data_year<- CV_all_year_turb[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+turb_data<- CV_all_turb[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+```
+
+```{r}
+
+HI.turb.slope <- lm(meanHI ~ Slope, 
+             data = turb_data)
+
+HI.turb.burn <- lm(meanHI ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(HI.turb.slope, HI.turb.burn)
+aictab(cand.set = models) # burn is better model but deltaAIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(HI.turb.burn) # p-value 0.353
+```
+
+
+# BETA
+```{r}
+BETA.turb.slope <- lm(meanBETA ~ Slope, 
+             data = turb_data)
+
+BETA.turb.burn <- lm(meanBETA ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(BETA.turb.slope, BETA.turb.burn)
+aictab(cand.set = models) # slope is the better model but deltaAIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = Slope, y = meanBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(BETA.turb.slope) # 0.61108
+```
+
+# sdHI
+```{r}
+sdHI.turb.slope <- lm(sdHI ~ Slope, 
+             data = turb_data)
+
+sdHI.turb.burn <- lm(sdHI ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(sdHI.turb.slope, sdHI.turb.burn)
+aictab(cand.set = models) # burn is the better model but delta AIC is not greater than 2 
+
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = pctburn_lg, y = sdHI)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+summary(sdHI.turb.burn) # p-value 0.73519
+```
+
+# sdBETA
+```{r}
+sdBETA.turb.slope <- lm(sdBETA ~ Slope, 
+             data = turb_data)
+
+sdBETA.turb.burn <- lm(sdBETA ~ pctburn_lg, 
+             data = turb_data)
+
+models <- list(sdBETA.turb.slope, sdBETA.turb.burn)
+aictab(cand.set = models) # slope model better: deltaAIC >2
+summary(sdBETA.turb.slope) # 0.06055
+```
+
+# R^2 plot 
+```{r}
+ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic()
+
+ggsave("sdBETA_Turb_burn.pdf",
+       path = here("plots", "Catchment_characteristics", "BETA"),
+       width = 10, height = 10)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

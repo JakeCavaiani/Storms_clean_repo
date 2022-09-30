@@ -1,0 +1,5 @@
+"0","CV_mean_conc_all_years <- CV_mean_conc %>% 
+  group_by(response_var,site.ID) %>%
+  dplyr::summarise(meanCV = mean(CVconc, na.rm = TRUE))
+"
+"2","`summarise()` has grouped output by 'response_var'. You can override using the `.groups` argument."
