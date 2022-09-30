@@ -1,0 +1,1471 @@
+---
+title: "14_Catchment_Characteristics_graveyard"
+author: "Jake Cavaiani"
+date: "9/26/2022"
+output: html_document
+---
+# NO3
+```{r}
+HI.no3 <- gls(meanHI ~ Slope + pctburn_lg, 
+             data = NO3_data)
+
+vif(HI.no3)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(HI.no3, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(HI.no3, meanHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(HI.no3, abline = c(0,1))
+
+plot(predictorEffects(HI.no3, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(HI.no3) # no significance/ t-value>2 for burn 
+```
+
+# BETA #
+```{r}
+BETA.no3 <- gls(meanBETA ~ Slope + pctburn_lg, 
+             data = NO3_data)
+
+vif(BETA.no3)
+
+```
+Vifs pass 
+#diagnostic plots 
+```{r}
+plot(BETA.no3, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(BETA.no3, meanBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(BETA.no3, abline = c(0,1))
+
+plot(predictorEffects(BETA.no3, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(BETA.no3) # no significance 
+
+```
+
+# SD HI #
+```{r}
+sdHI.no3 <- gls(sdHI ~ Slope + pctburn_lg, 
+             data = NO3_data)
+
+vif(sdHI.no3)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdHI.no3, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdHI.no3, sdHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdHI.no3, abline = c(0,1))
+
+
+plot(predictorEffects(sdHI.no3, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdHI.no3) # no significance /t va;ue > 2 for slope 
+```
+
+# SD BETA #
+```{r}
+sdBETA.no3 <- gls(sdBETA ~ Slope + pctburn_lg, 
+             data = NO3_data)
+
+vif(sdBETA.no3)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdBETA.no3, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdBETA.no3, sdBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdBETA.no3, abline = c(0,1))
+
+plot(predictorEffects(sdBETA.no3, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdBETA.no3) # no significance 
+
+```
+
+
+
+# fDOM
+```{r}
+HI.fDOM <- gls(meanHI ~ Slope + pctburn_lg, 
+             data = fDOM_data)
+
+vif(HI.fDOM)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(HI.fDOM, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(HI.fDOM, meanHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(HI.fDOM, abline = c(0,1))
+
+plot(predictorEffects(HI.fDOM, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(HI.fDOM) # no significance/ t -values > 2 for slope 
+
+```
+
+# BETA #
+```{r}
+BETA.fDOM <- gls(meanBETA ~ Slope + pctburn_lg, 
+             data = fDOM_data)
+
+vif(BETA.fDOM)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(BETA.fDOM, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(BETA.fDOM, meanBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(BETA.fDOM, abline = c(0,1))
+
+plot(predictorEffects(BETA.fDOM, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(BETA.fDOM) # no significance/ t-value > 2 for slope 
+```
+
+# SD HI #
+```{r}
+sdHI.fDOM <- gls(sdHI ~ Slope + pctburn_lg, 
+             data = fDOM_data)
+
+vif(sdHI.fDOM)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdHI.fDOM, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdHI.fDOM, sdHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdHI.fDOM, abline = c(0,1))
+
+plot(predictorEffects(sdHI.fDOM, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdHI.fDOM) # no significance
+
+```
+
+# SD BETA #
+```{r}
+sdBETA.fDOM <- gls(sdBETA ~ Slope + pctburn_lg, 
+             data = fDOM_data)
+
+vif(sdBETA.fDOM)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdBETA.fDOM, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdBETA.fDOM, sdBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdBETA.fDOM, abline = c(0,1))
+
+plot(predictorEffects(sdBETA.fDOM, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdBETA.fDOM) # no significance 
+
+```
+
+
+# SPC
+```{r}
+HI.SPC <- gls(meanHI ~ Slope + pctburn_lg, 
+             data = SPC_data)
+
+vif(HI.SPC)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(HI.SPC, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(HI.SPC, meanHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(HI.SPC, abline = c(0,1))
+
+plot(predictorEffects(HI.SPC, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(HI.SPC) # no significance/ t-value > 2 for slope 
+
+```
+
+# BETA #
+```{r}
+BETA.SPC <- gls(meanBETA ~ Slope + pctburn_lg, 
+             data = SPC_data)
+
+vif(BETA.SPC)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(BETA.SPC, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(BETA.SPC, meanBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(BETA.SPC, abline = c(0,1))
+
+plot(predictorEffects(BETA.SPC, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(BETA.SPC) # no significance 
+
+```
+
+# SD HI #
+```{r}
+sdHI.SPC <- gls(sdHI ~ Slope + pctburn_lg, 
+             data = SPC_data)
+
+vif(sdHI.SPC)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdHI.SPC, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdHI.SPC, sdHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdHI.SPC, abline = c(0,1))
+
+plot(predictorEffects(sdHI.SPC, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdHI.SPC) # no significance 
+
+```
+
+# SD BETA #
+```{r}
+sdBETA.SPC <- gls(sdBETA ~ Slope + pctburn_lg, 
+             data = SPC_data)
+
+vif(sdBETA.SPC)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdBETA.SPC, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdBETA.SPC, sdBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdBETA.SPC, abline = c(0,1))
+
+plot(predictorEffects(sdBETA.SPC, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdBETA.SPC) # no significance/ t-value > 2 for burn 
+
+```
+
+
+# turb
+```{r}
+HI.turb <- gls(meanHI ~ Slope + pctburn_lg, 
+             data = turb_data)
+
+vif(HI.turb)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(HI.turb, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(HI.turb, meanHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(HI.turb, abline = c(0,1))
+
+plot(predictorEffects(HI.turb, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(HI.turb) # no significancce
+
+```
+
+# BETA #
+```{r}
+BETA.turb <- gls(meanBETA ~ Slope + pctburn_lg, 
+             data = turb_data)
+
+vif(BETA.turb)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(BETA.turb, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(BETA.turb, meanBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(BETA.turb, abline = c(0,1))
+
+plot(predictorEffects(BETA.turb, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(BETA.turb) # no significance 
+
+```
+
+# SD HI #
+```{r}
+sdHI.turb <- gls(sdHI ~ Slope + pctburn_lg, 
+             data = turb_data)
+
+vif(sdHI.turb)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdHI.turb, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdHI.turb, sdHI ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdHI.turb, abline = c(0,1))
+
+plot(predictorEffects(sdHI.turb, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdHI.turb) # no significance 
+
+```
+
+# SD BETA #
+```{r}
+sdBETA.turb <- gls(sdBETA ~ Slope + pctburn_lg, 
+             data = turb_data)
+
+vif(sdBETA.turb)
+
+```
+
+#diagnostic plots 
+```{r}
+plot(sdBETA.turb, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(sdBETA.turb, sdBETA ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(sdBETA.turb, abline = c(0,1))
+
+plot(predictorEffects(sdBETA.turb, partial.residuals=TRUE),
+partial.residual=list(pch=".", col="#FF00FF80"),
+axes=list(x=list(rotate=45)),
+rows=1, cols=2)
+
+summary(sdBETA.turb) # no significance 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# HI model - year  
+```{r}
+HI.no3.year <- lmer(meanHI ~ Slope + pctburn_lg + (1|year), 
+             data = NO3_data_year)
+
+vif(HI.no3.year)
+```
+Vifs are low - all good 
+
+# diagnostic plot 
+```{r, echo=FALSE}
+plot(HI.no3.year, type=c("p","smooth"), col.line=1)
+plot(HI.no3.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(HI.no3.year)
+
+```
+
+```{r}
+pr <- ggpredict(HI.no3.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(HI.no3.year) # burn is significant, R^2 is 0.222
+summary(HI.no3.year)
+ranef(HI.no3.year)
+
+```
+
+# HI model - all years 
+```{r}
+HI.no3 <- lm(meanHI ~ Slope + pctburn_lg, 
+             data = NO3_data)
+
+vif(HI.no3)
+plot(HI.no3)
+summary(HI.no3)
+```
+
+# BETA model- year 
+```{r}
+BETA.no3.year <- lmer(meanBETA ~ Slope + pctburn_lg + (1|year), 
+             data = NO3_data_year) # boundary (singular) fit: see ?isSingular
+vif(BETA.no3.year)
+ranef(BETA.no3.year)
+```
+
+
+```{r, echo=FALSE}
+plot(BETA.no3.year, type=c("p","smooth"), col.line=1)
+plot(BETA.no3.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(BETA.no3.year)
+
+```
+
+
+```{r}
+pr <- ggpredict(BETA.no3.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(BETA.no3.year) # burn is significant/R^2 os 0.303
+summary(BETA.no3.year) # year is adding NO variance
+# burn is significant
+```
+
+# BETA model - all years 
+```{r}
+BETA.no3 <- lm(meanBETA ~ Slope*pctburn_lg, 
+             data = NO3_data)
+plot(BETA.no3)
+```
+
+# sdHI model - year 
+```{r}
+sdHI.no3.year <- lmer(sdHI ~ Slope+pctburn_lg + (1|year), 
+             data = NO3_data_year) #boundary (singular) fit: see ?isSingular
+vif(sdHI.no3.year)
+ranef(sdHI.no3.year)
+```
+Vifs pass
+```{r, echo=FALSE}
+plot(sdHI.no3.year, type=c("p","smooth"), col.line=1)
+plot(sdHI.no3.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdHI.no3.year)
+```
+
+```{r}
+pr <- ggpredict(sdHI.no3.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdHI.no3.year) # slope is significant/ R^2 is 0.415
+summary(sdHI.no3.year)
+```
+
+# sdHI model 
+```{r}
+sdHI.no3 <- lm(sdHI ~ Slope*pctburn_lg, 
+             data = NO3_data) 
+vif(sdHI.no3)
+plot(sdHI.no3)
+```
+
+# sdBETA model - year
+```{r}
+sdBETA.no3.year <- lmer(sdBETA ~ Slope+pctburn_lg + (1|year), 
+             data = NO3_data_year) #boundary (singular) fit: see ?isSingular
+vif(sdBETA.no3.year) 
+ranef(sdBETA.no3.year)
+```
+Vifs pass 
+
+```{r, echo=FALSE}
+plot(sdBETA.no3.year, type=c("p","smooth"), col.line=1)
+plot(sdBETA.no3.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdBETA.no3.year)
+```
+residuals dont look great. What if I log transform here
+
+# let me log transform 
+```{r}
+NO3_data_year$logSDbeta <- log(abs(NO3_data_year$sdBETA))
+# 
+sdBETA.no3.year.log <- lmer(logSDbeta ~ Slope*pctburn_lg + (1|year), 
+             data = NO3_data_year) # boundary (singular) fit: see ?isSingular
+
+ 
+vif(sdBETA.no3.year.log)
+
+```
+
+```{r, echo=FALSE}
+plot(sdBETA.no3.year.log, type=c("p","smooth"), col.line=1)
+plot(sdBETA.no3.year.log,
+      sqrt(abs(resid(.)))~fitted(.),
+      type=c("p","smooth"), col.line=1)
+ lattice::qqmath(sdBETA.no3.year.log)
+```
+This is better but we have two big points for CARI 2020 and POKE 2020 that could be causing this issue...Maybe have to be further transformed 
+
+```{r}
+# pr <- ggpredict(sdBETA.no3.year, terms = c("Slope", "pctburn_lg"))
+# 
+# ggplot(pr, aes(x, predicted, colour = group)) +
+#   geom_point(position = position_dodge(.1)) +
+#   geom_errorbar(
+#     aes(ymin = conf.low, ymax = conf.high),
+#     position = position_dodge(.1)) +
+#   theme_classic()
+# 
+# tab_model(sdBETA.no3.year) # noth
+```
+
+# sdBETA model 
+```{r}
+sdBETA.no3 <- lm(sdBETA ~ Slope+pctburn_lg, 
+             data = NO3_data) 
+plot(sdBETA.no3)
+summary(sdBETA.no3) # burn is significant 
+```
+
+# fDOM # 
+```{r}
+fDOM_data_year<- CV_all_year_fDOM[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+fDOM_data<- CV_all_fDOM[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+ggpairs(fDOM_data_year,
+        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_HI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(fDOM_data_year,
+        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_BETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+ggpairs(fDOM_data_year,
+        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_sdHI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+ggpairs(fDOM_data_year,
+        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_sdBETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+```
+
+# HI model - year 
+```{r}
+HI.fDOM.year <- lmer(meanHI ~ Slope+pctburn_lg + (1|year), 
+             data = fDOM_data_year) # boundary (singular) fit: see ?isSingular
+vif(HI.fDOM.year)
+ranef(HI.fDOM.year)
+```
+
+```{r, echo=FALSE}
+plot(HI.fDOM.year, type=c("p","smooth"), col.line=1)
+plot(HI.fDOM.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(HI.fDOM.year)
+```
+how would log transform help this?
+
+# HI model - year 
+```{r}
+fDOM_data_year$logmeanHI <- log(abs(fDOM_data_year$meanHI))
+HI.fDOM.year.log <- lmer(logmeanHI ~ Slope*pctburn_lg + (1|year), 
+             data = fDOM_data_year) # boundary (singular) fit: see ?isSingular
+
+```
+
+```{r, echo=FALSE}
+plot(HI.fDOM.year.log, type=c("p","smooth"), col.line=1)
+plot(HI.fDOM.year.log,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(HI.fDOM.year.log)
+```
+May need further transformation 
+
+```{r}
+pr <- ggpredict(HI.fDOM.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(HI.fDOM.year) # slope is significant/R^2 = 0.525
+summary(HI.fDOM.year)
+```
+
+# HI model - all years
+```{r}
+HI.fDOM <- lm(meanHI ~ Slope*pctburn_lg, 
+             data = fDOM_data)
+
+plot(HI.fDOM)
+
+```
+
+# BETA model - year 
+```{r}
+BETA.fDOM.year <- lmer(meanBETA ~ Slope*pctburn_lg + (1|year), 
+             data = fDOM_data_year)
+vif(BETA.fDOM.year)
+
+```
+Vifs pass
+
+```{r, echo=FALSE}
+plot(BETA.fDOM.year, type=c("p","smooth"), col.line=1)
+plot(BETA.fDOM.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(BETA.fDOM.year)
+```
+let me log transform to see if its better:
+
+
+```{r}
+# log transform 
+fDOM_data_year$logmeanBETA <- log(abs(fDOM_data_year$meanBETA))
+
+BETA.fDOM.year.log <- lmer(logmeanBETA ~ Slope*pctburn_lg + (1|year), 
+             data = fDOM_data_year) #boundary (singular) fit: see ?isSingular
+vif(BETA.fDOM.year.log)
+
+```
+
+
+```{r, echo=FALSE}
+plot(BETA.fDOM.year.log, type=c("p","smooth"), col.line=1)
+plot(BETA.fDOM.year.log,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(BETA.fDOM.year.log)
+
+summary(BETA.fDOM.year.log)
+```
+this looks worse TBH... may need further transformation 
+
+```{r}
+# pr <- ggpredict(BETA.fDOM.year.log, terms = c("Slope", "pctburn_lg"))
+# 
+# ggplot(pr, aes(x, predicted, colour = group)) +
+#   geom_point(position = position_dodge(.1)) +
+#   geom_errorbar(
+#     aes(ymin = conf.low, ymax = conf.high),
+#     position = position_dodge(.1)) +
+#   theme_classic()
+# 
+# tab_model(BETA.fDOM.year.log)
+```
+
+
+# sdHI model 
+```{r}
+sdHI.fDOM.year <- lmer(sdHI ~ Slope*pctburn_lg + (1|year), 
+             data = fDOM_data_year) # boundary (singular) fit: see ?isSingular
+vif(sdHI.fDOM.year)
+ranef(sdHI.fDOM.year)
+
+```
+
+```{r, echo=FALSE}
+plot(sdHI.fDOM.year, type=c("p","smooth"), col.line=1)
+plot(sdHI.fDOM.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdHI.fDOM.year)
+```
+Lets log transform 
+
+```{r}
+#log transform 
+fDOM_data_year$logSDhi <- log(abs(fDOM_data_year$sdHI))
+SDhi.fDOM.year.log <- lmer(logSDhi ~ Slope*pctburn_lg + (1|year), 
+              data = fDOM_data_year)
+vif(SDhi.fDOM.year.log)
+
+```
+
+```{r, echo=FALSE}
+plot(SDhi.fDOM.year.log, type=c("p","smooth"), col.line=1)
+plot(SDhi.fDOM.year.log,
+      sqrt(abs(resid(.)))~fitted(.),
+      type=c("p","smooth"), col.line=1)
+lattice::qqmath(SDhi.fDOM.year.log)
+```
+this looks worse....lets interpret the regular model 
+
+```{r}
+pr <- ggpredict(sdHI.fDOM.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdHI.fDOM.year) # burn is significant 
+```
+
+# sdBETA model - year
+```{r}
+sdBETA.fDOM.year <- lmer(sdBETA ~ Slope*pctburn_lg + (1|year), 
+             data = fDOM_data_year) # boundary (singular) fit: see ?isSingular
+vif(sdBETA.fDOM.year)
+
+```
+
+```{r, echo=FALSE}
+plot(sdBETA.fDOM.year, type=c("p","smooth"), col.line=1)
+plot(sdBETA.fDOM.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdBETA.fDOM.year)
+```
+do i need to transform 
+
+```{r}
+# # log transform
+# fDOM_data_year$logCVbeta <- log(abs(fDOM_data_year$CVbeta))
+# 
+# CVbeta.fDOM.year.log <- lmer(logCVbeta ~ CatPF*pctburn_lg + (1|year), 
+#              data = fDOM_data_year)
+# summary(CVbeta.fDOM.year.log) # year adds 0 variance and nothing is really explaining it here 
+
+```
+
+```{r, echo=FALSE}
+# plot(CVbeta.fDOM.year.log, type=c("p","smooth"), col.line=1)
+# plot(CVbeta.fDOM.year.log,
+#      sqrt(abs(resid(.)))~fitted(.),
+#      type=c("p","smooth"), col.line=1)
+# lattice::qqmath(CVbeta.fDOM.year.log)
+```
+This still doesnt look great 
+
+```{r}
+pr <- ggpredict(sdBETA.fDOM.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdBETA.fDOM.year) # nothing is significant 
+```
+
+# sdBETA model
+```{r}
+sdBETA.fDOM <- lm(sdBETA ~ Slope*pctburn_lg, 
+             data = fDOM_data) # boundary (singular) fit: see ?isSingular
+vif(sdBETA.fDOM.year)
+plot(sdBETA.fDOM)
+```
+
+# SPC # 
+
+```{r}
+SPC_data_year<- CV_all_year_SPC[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+SPC_data<- CV_all_SPC[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+ggpairs(SPC_data_year,
+        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_HI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+ggpairs(SPC_data_year,
+        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_BETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(SPC_data_year,
+        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_sdHI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(SPC_data_year,
+        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_sdBETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+# HI model - year 
+```{r}
+HI.SPC.year <- lmer(meanHI ~ Slope*pctburn_lg + (1|year), 
+             data = SPC_data_year)
+vif(HI.SPC.year)
+```
+
+```{r, echo=FALSE}
+plot(HI.SPC.year, type=c("p","smooth"), col.line=1)
+plot(HI.SPC.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(HI.SPC.year)
+```
+looks like we have some outliers here 
+
+```{r}
+pr <- ggpredict(HI.SPC.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(HI.SPC.year) # nothing significant 
+```
+
+# HI model - year 
+```{r}
+HI.SPC <- lm(meanHI ~ Slope*pctburn_lg, 
+             data = SPC_data)
+plot(HI.SPC)
+```
+
+# BETA model 
+```{r}
+BETA.SPC.year <- lmer(meanBETA ~ Slope*pctburn_lg + (1|year), 
+             data = SPC_data_year)
+vif(BETA.SPC.year)
+```
+VIFs pass 
+
+```{r, echo=FALSE}
+plot(BETA.SPC.year, type=c("p","smooth"), col.line=1)
+plot(BETA.SPC.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(BETA.SPC.year)
+```
+I got one outlier 
+
+```{r}
+# # log transform 
+# SPC_data_year$logmeanBETA <- log(abs(SPC_data_year$meanBETA))
+# 
+# BETA.SPC.year.log <- lmer(logmeanBETA ~ CatPF*pctburn_lg + (1|year), 
+#              data = SPC_data_year)
+# summary(BETA.SPC.year.log) # year is adding 0 variance 
+# # nothing is really explaining this here 
+
+```
+
+```{r, echo=FALSE}
+# plot(BETA.SPC.year.log, type=c("p","smooth"), col.line=1)
+# plot(BETA.SPC.year.log,
+#      sqrt(abs(resid(.)))~fitted(.),
+#      type=c("p","smooth"), col.line=1)
+# lattice::qqmath(BETA.SPC.year.log)
+```
+
+```{r}
+pr <- ggpredict(BETA.SPC.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(BETA.SPC.year) #nothing is significant 
+```
+
+
+```{r}
+BETA.SPC <- lm(meanBETA ~ Slope*pctburn_lg, 
+             data = SPC_data)
+
+plot(BETA.SPC)
+```
+
+# sdHI model 
+```{r}
+sdHI.SPC.year <- lmer(sdHI ~ Slope*pctburn_lg + (1|year), 
+             data = SPC_data_year)
+vif(sdHI.SPC.year)
+
+```
+Vifs pass 
+
+```{r, echo=FALSE}
+plot(sdHI.SPC.year, type=c("p","smooth"), col.line=1)
+plot(sdHI.SPC.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdHI.SPC.year)
+```
+One point is really out of whack 
+```{r}
+pr <- ggpredict(sdHI.SPC.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdHI.SPC.year) # burn is significant 
+```
+
+# sdHI model 
+```{r}
+sdHI.SPC <- lm(sdHI ~ Slope*pctburn_lg, 
+             data = SPC_data)
+plot(sdHI.SPC)
+
+```
+
+# sdBETA model 
+```{r}
+sdBETA.SPC.year <- lmer(sdBETA ~ Slope*pctburn_lg + (1|year), 
+             data = SPC_data_year)
+vif(sdBETA.SPC.year)
+
+```
+
+```{r, echo=FALSE}
+plot(sdBETA.SPC.year, type=c("p","smooth"), col.line=1)
+plot(sdBETA.SPC.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdBETA.SPC.year)
+```
+looks like we got a couple outlier 
+
+```{r}
+pr <- ggpredict(sdBETA.SPC.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdBETA.SPC.year) # nothing is significant 
+```
+
+# turb # 
+```{r}
+turb_data_year<- CV_all_year_turb[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+turb_data<- CV_all_turb[,c("site.ID", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+
+ggpairs(turb_data_year,
+        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_HI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+ggpairs(turb_data_year,
+        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_BETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(turb_data_year,
+        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_sdHI_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(turb_data_year,
+        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
+        ggplot2::aes(colour = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_sdBETA_pairs.pdf",
+       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       width = 10, height = 10)
+
+```
+
+# HI model 
+```{r}
+HI.turb.year <- lmer(meanHI ~ Slope*pctburn_lg + (1|year), 
+             data = turb_data_year)
+vif(HI.turb.year)
+
+```
+
+```{r, echo=FALSE}
+plot(HI.turb.year, type=c("p","smooth"), col.line=1)
+plot(HI.turb.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(HI.turb.year)
+```
+
+```{r}
+pr <- ggpredict(HI.turb.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(HI.turb.year) # nothing is significant 
+summary(HI.turb.year)
+```
+
+```{r}
+HI.turb <- lm(meanHI ~ Slope*pctburn_lg, 
+             data = turb_data)
+plot(HI.turb)
+
+```
+
+# BETA model 
+```{r}
+BETA.turb.year <- lmer(meanBETA ~ Slope*pctburn_lg + (1|year), 
+             data = turb_data_year)
+
+vif(BETA.turb.year)
+
+```
+
+```{r, echo=FALSE}
+plot(BETA.turb.year, type=c("p","smooth"), col.line=1)
+plot(BETA.turb.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(BETA.turb.year)
+```
+
+```{r}
+pr <- ggpredict(BETA.turb.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(BETA.turb.year)
+```
+
+# BETA model 
+```{r}
+BETA.turb <- lm(meanBETA ~ Slope*pctburn_lg, 
+             data = turb_data)
+
+plot(BETA.turb)
+
+```
+
+# sdHI model 
+```{r}
+sdHI.turb.year <- lmer(sdHI ~ Slope*pctburn_lg + (1|year), 
+             data = turb_data_year) # boundary (singular) fit: see ?isSingular
+vif(sdHI.turb.year)
+
+```
+
+```{r, echo=FALSE}
+plot(sdHI.turb.year, type=c("p","smooth"), col.line=1)
+plot(sdHI.turb.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdHI.turb.year)
+```
+lets log transform 
+```{r}
+# # log transform 
+# turb_data_year$logCVhi <- log(abs(turb_data_year$CVhi))
+# 
+# CVhi.turb.year.log <- lmer(logCVhi ~ CatPF*pctburn_lg + (1|year), 
+#              data = turb_data_year)
+# summary(CVhi.turb.year.log)
+# 
+# vif(CVhi.turb.year.log)
+
+```
+
+```{r, echo=FALSE}
+# plot(CVhi.turb.year.log, type=c("p","smooth"), col.line=1)
+# plot(CVhi.turb.year.log,
+#      sqrt(abs(resid(.)))~fitted(.),
+#      type=c("p","smooth"), col.line=1)
+# lattice::qqmath(CVhi.turb.year.log)
+```
+
+
+```{r}
+pr <- ggpredict(sdHI.turb.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdHI.turb.year)
+```
+
+# sdHI model 
+```{r}
+sdHI.turb <- lm(sdHI ~ Slope*pctburn_lg, 
+             data = turb_data) 
+plot(sdHI.turb)
+
+```
+
+# sdBETA model 
+```{r}
+sdBETA.turb.year <- lmer(sdBETA ~ Slope*pctburn_lg + (1|year), 
+             data = turb_data_year) # boundary (singular) fit: see ?isSingular
+vif(sdBETA.turb.year)
+```
+
+```{r, echo=FALSE}
+plot(sdBETA.turb.year, type=c("p","smooth"), col.line=1)
+plot(sdBETA.turb.year,
+     sqrt(abs(resid(.)))~fitted(.),
+     type=c("p","smooth"), col.line=1)
+lattice::qqmath(sdBETA.turb.year)
+```
+
+
+```{r}
+pr <- ggpredict(sdBETA.turb.year, terms = c("Slope", "pctburn_lg"))
+
+ggplot(pr, aes(x, predicted, colour = group)) +
+  geom_point(position = position_dodge(.1)) +
+  geom_errorbar(
+    aes(ymin = conf.low, ymax = conf.high),
+    position = position_dodge(.1)) +
+  theme_classic()
+
+tab_model(sdBETA.turb.year) # nothing is significant 
+```
+
+
+# sdBETA model 
+```{r}
+sdBETA.turb <- lm(sdBETA ~ Slope*pctburn_lg, 
+             data = turb_data) 
+plot(sdBETA.turb)
+```
+
+
+
+### PLOTTING ###
+# HI 
+```{r}
+ggplot(CV.all.year, aes(x = pctburn_lg, y = meanHI, color = CatPF)) +
+  xlab("Burn") +
+  ylab("Hysteresis") +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
+  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic() +
+  facet_wrap(~response_var, scales = "free")
+
+ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
+       filename = "HI_burn.pdf",
+       width = 10, height = 10)
+
+
+```
+
+# BETA
+```{r}
+ggplot(CV.all.year, aes(x = pctburn_lg, y = meanBETA, color = CatPF)) +
+  xlab("Burn") +
+  ylab("BETA") +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
+  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic() +
+  facet_wrap(~response_var, scales = "free")
+
+ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
+       filename = "BETA_burn.pdf",
+       width = 10, height = 10)
+
+```
+
+
+# CVhi
+```{r}
+ggplot(CV.all.year, aes(x = pctburn_lg, y = CVhi, color = CatPF)) +
+  xlab("Burn") +
+  ylab("CV Hysteresis") +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
+  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic() +
+  facet_wrap(~response_var, scales = "free")
+
+ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
+       filename = "CVhi_burn.pdf",
+       width = 10, height = 10)
+
+
+```
+
+# CVbeta
+```{r}
+ggplot(CV.all.year, aes(x = pctburn_lg, y = CVbeta, color = CatPF)) +
+  xlab("Burn") +
+  ylab("CV BETA") +
+  geom_point() +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = CatPF)) +
+  scale_color_manual(values = c("#0072B2", "#CC79A7"), "PF Extent") +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE) + 
+  theme_classic() +
+  facet_wrap(~response_var, scales = "free")
+
+ggsave(path = "~/Documents/Storms_clean_repo/plots/Catchment_characteristics", 
+       filename = "CVbeta_burn.pdf",
+       width = 10, height = 10)
+
+
+
+```
