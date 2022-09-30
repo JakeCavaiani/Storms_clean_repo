@@ -1,6 +1,0 @@
-"0","CV_mean_conc <- mean_daily_long %>% group_by(response_var,site.ID, year) %>%
-  dplyr::summarise(MEANconc = mean(concentration, na.rm = TRUE),
-                   SDconc = sd(concentration, na.rm = TRUE),
-                   CVconc = SDconc/MEANconc)
-"
-"2","`summarise()` has grouped output by 'response_var', 'site.ID'. You can override using the `.groups` argument."
