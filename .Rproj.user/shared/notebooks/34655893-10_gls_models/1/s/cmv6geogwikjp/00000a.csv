@@ -1,0 +1,3 @@
+"0",""
+"0","qqnorm(no3.mod.gls.log, ~resid(., type = ""p""), abline = c(0,1))"
+"0",""

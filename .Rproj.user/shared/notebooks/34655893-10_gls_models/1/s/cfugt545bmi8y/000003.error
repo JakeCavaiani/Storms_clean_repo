@@ -1,1 +1,0 @@
-{"frames":[],"message":"Error in ggplot(mean_daily_2019, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +  : \n  could not find function \"+<-\"\n"}

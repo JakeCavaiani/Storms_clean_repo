@@ -1,0 +1,4 @@
+"0","turb.mod.gls <- gls(dailyTurb ~ site.ID, "
+"0","               na.action = na.omit, "
+"0","               data = mean_daily_2020)"
+"0",""

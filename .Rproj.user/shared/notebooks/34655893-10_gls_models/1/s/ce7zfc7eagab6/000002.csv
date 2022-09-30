@@ -1,5 +1,0 @@
-"0","turb.mod.arma.1.2 <- gls(logDailyTurb ~ site.ID, "
-"0","               na.action = na.omit, "
-"0","               data = mean_daily_2019, "
-"0","               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 2))"
-"0",""
