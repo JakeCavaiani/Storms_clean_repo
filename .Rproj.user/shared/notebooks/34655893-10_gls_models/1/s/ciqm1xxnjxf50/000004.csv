@@ -1,7 +1,0 @@
-"0","plot(turb.mod.gls, resid(., type = ""p"") ~ fitted(.), abline = 0)
-
-plot(turb.mod.gls, dailyTurb ~ fitted(.) | site.ID, abline = c(0,1))
-"
-"0",""
-"0","qqnorm(turb.mod.gls, ~resid(., type = ""p""), abline = c(0,1))"
-"0",""

@@ -2882,11 +2882,20 @@ ggplot(CV_NO3, aes(site.ID, CVconc, fill = site.ID)) +
 #        path = here("plots", "Chem_variation"),
 #        width = 10, height = 10)
 
+##### TKH  note: there is only one observation per site*year and therefore no way to estimate a variance for the interaction term. This should be a mixed effects model, with year as a random effect.
 NO3 <- lm(CVconc ~ site.ID*year, 
            data = CV_NO3)
 
 plot(NO3)
 summary(NO3) # nothing is significant 
+
+NO3.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_NO3)
+
+plot(NO3.CV.mod)
+qqnorm(resid(NO3.CV.mod))
+summary(NO3.CV.mod)
+
+# add post hoc pairwise comparisons
 ```
 
 ```{r}

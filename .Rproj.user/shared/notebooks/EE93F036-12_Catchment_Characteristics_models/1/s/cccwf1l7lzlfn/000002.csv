@@ -1,8 +1,0 @@
-"0","# reading in data "
-"0","AMC <- read.csv(here(""Output_from_analysis"", ""08_Catchment_characteristics"", ""Antecedent_HI_BETA_Catchment.csv""))"
-"0",""
-"0","AMC <- AMC[c(""Hyst_index"", ""HI_ymin"", ""HI_ymax"", ""site.ID"", ""storm.ID"", ""response_var"", ""Flush_index"", ""FI_ymin"", ""FI_ymax"", ""month.y"", ""day.y"", ""year"", ""Beta_index"", ""Beta_ymin"", ""Beta_ymax"", ""precip"", ""temp"", ""precip.week"", ""precip.month"", ""ThreeMonth"", ""temp.week"", ""TOTAL.TIME"", ""Intensity"", ""doy"", ""burn"", ""pf"", ""date"", ""TimeSinceChena"", ""SLOPE_MEAN"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""Pf_Prob_1m_mean_x"", ""NDVI_p50__mean_abs_change"", ""NDVI_p50__mean_second_derivative_central"", ""NDVI_p50__mean"", ""NDVI_p50__standard_deviation"")] # selecting the columns that I want"
-"0",""
-"0",""
-"0","AMC <- AMC[!duplicated(AMC$Hyst_index), ] # removing duplicated rows "
-"0",""

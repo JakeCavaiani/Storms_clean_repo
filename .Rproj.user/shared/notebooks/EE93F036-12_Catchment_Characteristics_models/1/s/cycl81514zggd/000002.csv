@@ -1,8 +1,0 @@
-"0","ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +"
-"0","  geom_point() +"
-"0","  geom_smooth(method = ""lm"", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +"
-"0","  stat_poly_eq(formula = y~x,"
-"0","               label.y = ""top"", label.x = ""right"","
-"0","               aes(label = paste(..eq.label.., ..rr.label.., sep = ""~~~"")), "
-"0","               parse = TRUE) + "
-"0","  theme_classic()"

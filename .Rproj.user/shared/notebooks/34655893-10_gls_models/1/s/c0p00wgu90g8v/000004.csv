@@ -1,6 +1,0 @@
-"0","Ear1<-residuals(turb.mod.arma.1.2, type=""normalized"")"
-"0","I1<-!is.na(mean_daily_2020$logDailyTurb)"
-"0","Efulla<-vector(length = length(mean_daily_2020$logDailyTurb))"
-"0","Efulla<-NA"
-"0","Efulla[I1]<-Ear1"
-"0","acf(Efulla, na.action=na.pass)"

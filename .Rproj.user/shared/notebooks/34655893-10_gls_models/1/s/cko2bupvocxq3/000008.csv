@@ -1,2 +1,0 @@
-"0",""
-"0","plot(turb.mod.gls.log, dailyTurb ~ fitted(.) | site.ID, abline = c(0,1))"

@@ -1,6 +1,0 @@
-"0","HI_FI_NO3_MOOS <- subset(HI_FI_NO3, site.ID == ""MOOS"")"
-"0","HI_FI_NO3_FRCH <- subset(HI_FI_NO3, site.ID == ""FRCH"")"
-"0","HI_FI_NO3_CARI <- subset(HI_FI_NO3, site.ID == ""CARI"")"
-"0","HI_FI_NO3_POKE <- subset(HI_FI_NO3, site.ID == ""POKE"")"
-"0","HI_FI_NO3_VAUL <- subset(HI_FI_NO3, site.ID == ""VAUL"")"
-"0","HI_FI_NO3_STRT <- subset(HI_FI_NO3, site.ID == ""STRT"")"

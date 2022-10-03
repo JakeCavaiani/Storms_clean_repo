@@ -1,8 +1,0 @@
-"0","#### Correlation "
-"0","NO3_data <- HI_FI_NO3[,c(""Hyst_index"", ""site.ID"", ""StormPrecip"", ""PrecipWeek"", ""PrecipMonth"", ""ThreeMonth"", ""Intensity"", ""TimeSinceChena"", ""pf"", ""burn"", ""year"")]"
-"0","NO3_data <- na.omit(NO3_data) # 244 to 236 rows "
-"0",""
-"0","ggpairs(NO3_data,"
-"0","        columns = c(""Hyst_index"", ""StormPrecip"", ""PrecipWeek"", ""PrecipMonth"",""ThreeMonth"", ""Intensity"", ""TimeSinceChena""),"
-"0","        ggplot2::aes(color = site.ID))+"
-"0","  scale_color_manual(values = c(""#3288BD"", ""#FF7F00"",""#A6761D"", ""#6A3D9A"", ""#66C2A5"", ""#E7298A""))"

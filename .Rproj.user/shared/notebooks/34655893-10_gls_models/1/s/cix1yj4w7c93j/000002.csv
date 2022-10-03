@@ -1,5 +1,0 @@
-"0","Ecs <- residuals(SPC.mod.cs, type=""normalized"")
-"
-"2","Error in residuals(SPC.mod.cs, type = ""normalized"") : 
-  object 'SPC.mod.cs' not found
-"

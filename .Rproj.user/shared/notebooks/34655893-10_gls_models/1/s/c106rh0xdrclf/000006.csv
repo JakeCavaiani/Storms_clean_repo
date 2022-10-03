@@ -1,8 +1,0 @@
-"0","#ACF plot function assumes no skipped time points. GLS removed missing values. Need to fill in the residual series to account for missing value"
-"0","E <- residuals(no3.mod.gls, type=""normalized"")"
-"0","I1 <- !is.na(mean_daily$dailyNO3)"
-"0","Efull <- vector(length=length(mean_daily$dailyNO3))"
-"0","Efull <- NA"
-"0","Efull[I1] <- E"
-"0","par(mfrow=c(2,1))"
-"0","acf(Efull, na.action=na.pass)"

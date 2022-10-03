@@ -1,2 +1,0 @@
-"0",""
-"0","plot(SPC.mod, dailySPC ~ fitted(.) | site.ID, abline = c(0,1))"

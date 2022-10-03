@@ -1,1 +1,0 @@
-"0","plot(turb.mod, resid(., type = ""p"") ~ fitted(.), abline = 0)"

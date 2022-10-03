@@ -1,7 +1,0 @@
-"0","mean_daily_2019$logDailyTurb <- log(mean_daily_2019$dailyTurb)"
-"0",""
-"0","turb.mod.gls.log <- gls(logDailyTurb ~ site.ID, "
-"0","               na.action = na.omit, "
-"0","               weights = varfixed,"
-"0","               data = mean_daily_2019)"
-"0",""

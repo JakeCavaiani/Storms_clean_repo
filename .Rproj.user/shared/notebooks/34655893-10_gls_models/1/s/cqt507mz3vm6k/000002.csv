@@ -1,4 +1,0 @@
-"0","fDOM.mod.gls <- gls(dailyfDOM ~ site.ID, "
-"0","               na.action = na.omit,"
-"0","               weights = varfixed,"
-"0","               data = mean_daily_2020)"

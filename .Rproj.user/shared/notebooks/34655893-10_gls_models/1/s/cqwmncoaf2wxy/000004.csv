@@ -1,8 +1,0 @@
-"0","turb.mod.arma.2.2 <- gls(logDailyTurb ~ site.ID, "
-"0","               na.action = na.omit, "
-"0","               data = mean_daily_2020, "
-"0","               weights = varfixed,"
-"0","               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 2))"
-"2","Error in `coef<-.corARMA`(`*tmp*`, value = value[parMap[, i]]) : 
-  Coefficient matrix not invertible
-"

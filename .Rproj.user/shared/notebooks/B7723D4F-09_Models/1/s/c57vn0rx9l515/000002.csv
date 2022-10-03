@@ -1,7 +1,0 @@
-"0","# scaling data # 
-#scaling # 
-CV.all[c(""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"")] <- lapply(AMC[c(""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"", ""PF"", ""NDVI"")], function(x) c(scale(x)))
-"
-"2","Error in `[.data.frame`(AMC, c(""Slope"", ""fireyear_lg"", ""pctburn_lg"", ""areaburn_lg"",  : 
-  undefined columns selected
-"

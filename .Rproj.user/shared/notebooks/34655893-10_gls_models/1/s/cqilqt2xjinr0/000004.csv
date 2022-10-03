@@ -1,8 +1,0 @@
-"0","mean_daily_2020 <- subset(mean_daily, year == ""2020"")"
-"0","mean_daily_2020$site.ID <- as.factor(mean_daily_2020$site.ID)"
-"0",""
-"0","ggplot(mean_daily_2020, aes(x = julian, y = dailyNO3, color = site.ID)) +"
-"0","  geom_line() +"
-"0","  scale_color_manual(values=c(""#3288BD"",""#FF7F00"", ""#A6761D"", ""#6A3D9A"", ""#66C2A5"", ""#E7298A"")) +"
-"0","  facet_wrap(~site.ID, scales = ""free"") +"
-"0","  theme_classic()"

@@ -1,5 +1,0 @@
-"0","ggplot(mean_daily_2019, aes(x = julian, y = dailyTurb, color = site.ID)) +"
-"0","  geom_line() +"
-"0","    scale_color_manual(values=c(""#3288BD"",""#FF7F00"", ""#A6761D"", ""#6A3D9A"", ""#66C2A5"", ""#E7298A"")) +"
-"0","  facet_wrap(~site.ID, scales = ""free"") +"
-"0","  theme_classic()"
