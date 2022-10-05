@@ -28,6 +28,8 @@ library(multcomp)
 library(sjPlot)
 library(AICcmodavg)
 library(stats)
+library(lme4)
+library(emmeans)
 ```
 
 
@@ -41,6 +43,7 @@ mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
 
 mean_daily$year <- as.character(mean_daily$year)
 
+vn = expression(paste(N*O[3]^"-"))
 # mean concentration across years for each site 
 mean_daily_site <- mean_daily %>% 
   group_by(site.ID) %>% 
@@ -84,8 +87,10 @@ ggplot(mean_daily_2018, aes(x = julian, y = dailyNO3, color = site.ID)) +
 
 ggplot(mean_daily_2018, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D")) +
-  theme_classic()
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D"), "Site") +
+  theme_classic() + 
+  xlab("Site") +
+  ylab(vn) 
 
 
 ```
@@ -247,9 +252,11 @@ ggplot(mean_daily_2018, aes(x = julian, y = dailyfDOM, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2018, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
+fDOM.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D"), "Site") +
+  xlab("") +
+  ylab("Daily fDOM (QSU)") +
   theme_classic()
 ```
 
@@ -455,9 +462,11 @@ ggplot(mean_daily_2018, aes(x = julian, y = dailySPC, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2018, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
+spc.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D"), "Site") +
+  xlab("") +
+  ylab("Daily SPC (µS/cm)") +
   theme_classic()
 ```
 #gls
@@ -609,9 +618,11 @@ ggplot(mean_daily_2018, aes(x = julian, y = dailyTurb, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2018, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+turb.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D"), "Site") +
+  xlab("") +
+  ylab("Daily Turbidity (FNU)") +
   theme_classic()
 ```
 
@@ -924,9 +935,11 @@ ggplot(mean_daily_2019, aes(x = julian, y = dailyfDOM, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2019, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
+fDOM.2019 <- ggplot(mean_daily_2019, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("") +
+  ylab("") +
   theme_classic()
 ```
 # gls 
@@ -1125,9 +1138,11 @@ ggplot(mean_daily_2019, aes(x = julian, y = dailySPC, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2019, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
+spc.2019 <- ggplot(mean_daily_2019, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("") +
+  ylab("") +
   theme_classic()
 ```
 
@@ -1304,9 +1319,11 @@ ggplot(mean_daily_2019, aes(x = julian, y = dailyTurb, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2019, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+turb.2019 <- ggplot(mean_daily_2019, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("") +
+  ylab("") +
   theme_classic()
 ```
 
@@ -1508,10 +1525,17 @@ ggplot(mean_daily_2020, aes(x = julian, y = dailyNO3, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2020, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
+no3.2020 <- ggplot(mean_daily_2020, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_classic()
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") + 
+  theme_classic() +
+  xlab("Site") +
+  ylab(vn)
+
+ggsave("NO3_2020.pdf",
+       path = here("plots", "Chems_year"),
+       width = 10, height = 10)
+
 ```
 
 # gls
@@ -1617,9 +1641,11 @@ ggplot(mean_daily_2020, aes(x = julian, y = dailyfDOM, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2020, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
+fDOM.2020 <- ggplot(mean_daily_2020, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("Daily fDOM (QSU)") +
   theme_classic()
 ```
 
@@ -1728,9 +1754,11 @@ ggplot(mean_daily_2020, aes(x = julian, y = dailySPC, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2020, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
+spc.2020 <- ggplot(mean_daily_2020, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("Daily SPC (µS/cm)") +
   theme_classic()
 ```
 
@@ -1908,9 +1936,11 @@ ggplot(mean_daily_2020, aes(x = julian, y = dailyTurb, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2020, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+turb.2020 <- ggplot(mean_daily_2020, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("Daily Turbidity (FNU)") +
   theme_classic()
 ```
 # gls
@@ -2109,9 +2139,11 @@ ggplot(mean_daily_2021, aes(x = julian, y = dailyNO3, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2021, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
+no3.2021 <- ggplot(mean_daily_2021, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab(vn) +
   theme_classic()
 ```
 
@@ -2265,9 +2297,11 @@ ggplot(mean_daily_2021, aes(x = julian, y = dailyfDOM, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2021, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
+fDOM.2021 <- ggplot(mean_daily_2021, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") +
   theme_classic()
 ```
 
@@ -2468,9 +2502,11 @@ ggplot(mean_daily_2021, aes(x = julian, y = dailySPC, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2021, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
+spc.2021 <- ggplot(mean_daily_2021, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") + 
   theme_classic()
 ```
 
@@ -2641,9 +2677,11 @@ ggplot(mean_daily_2021, aes(x = julian, y = dailyTurb, color = site.ID)) +
   facet_wrap(~site.ID, scales = "free") +
   theme_classic()
 
-ggplot(mean_daily_2021, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+turb.2021 <- ggplot(mean_daily_2021, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
   geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") +
   theme_classic()
 ```
 
@@ -2805,6 +2843,58 @@ CARI is different to FRCH,MOOS,VAUL
 VAUL and POKE
 
 
+### PLOTS FOR THESIS ###
+
+```{r}
+ggarrange(no3.2020, no3.2021,
+           ncol = 2, nrow = 1,
+           common.legend = TRUE,
+           labels = c("A)", "B)"),
+        legend = "bottom")
+
+ggsave("NO3_2020_2021.pdf",
+       path = here("plots", "Chems_year"),
+       width = 15, height = 10)
+
+ggarrange(fDOM.2018, fDOM.2019,
+          fDOM.2020, fDOM.2021,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)",
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("fDOM_2018_2021.pdf",
+       path = here("plots", "Chems_year"),
+       width = 15, height = 10)
+
+ggarrange(spc.2018, spc.2019,
+          spc.2020, spc.2021,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)",
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("SPC_2018_2021.pdf",
+       path = here("plots", "Chems_year"),
+       width = 15, height = 10)
+
+ggarrange(turb.2018, turb.2019,
+          turb.2020, turb.2021,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)",
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("Turb_2018_2021.pdf",
+       path = here("plots", "Chems_year"),
+       width = 15, height = 10)
+
+```
+
+
 
 ### CV of daily concentrations ### 
 
@@ -2873,9 +2963,11 @@ ggplot(CV_mean_conc, aes(site.ID, CVconc, color = site.ID)) +
 
 ```{r}
 #NO3
-ggplot(CV_NO3, aes(site.ID, CVconc, fill = site.ID)) +
+cv.no3 <- ggplot(CV_NO3, aes(site.ID, CVconc, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab(vn) +
   theme_classic()
 
 # ggsave("CV_NO3_sites.pdf",
@@ -2883,105 +2975,101 @@ ggplot(CV_NO3, aes(site.ID, CVconc, fill = site.ID)) +
 #        width = 10, height = 10)
 
 ##### TKH  note: there is only one observation per site*year and therefore no way to estimate a variance for the interaction term. This should be a mixed effects model, with year as a random effect.
-NO3 <- lm(CVconc ~ site.ID*year, 
-           data = CV_NO3)
-
-plot(NO3)
-summary(NO3) # nothing is significant 
-
 NO3.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_NO3)
 
 plot(NO3.CV.mod)
 qqnorm(resid(NO3.CV.mod))
 summary(NO3.CV.mod)
 
+emmeans(NO3.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 ```
 
 ```{r}
 #fDOM
-ggplot(CV_fDOM, aes(site.ID, CVconc, fill = site.ID)) +
+cv.fDOM <- ggplot(CV_fDOM, aes(site.ID, CVconc, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  theme_classic()
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  theme_classic() +
+  xlab("Site") +
+  ylab("CV-fDOM")
 
 ggsave("CV_fDOM_sites.pdf",
        path = here("plots", "Chem_variation"),
        width = 10, height = 10)
 
-fDOM <- aov(CVconc ~ site.ID*year, 
-           data = CV_fDOM)
+fDOM.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_fDOM)
 
-plot(fDOM)
+plot(fDOM.CV.mod)
+qqnorm(resid(fDOM.CV.mod))
+
+summary(fDOM.CV.mod)
+
+emmeans(fDOM.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
+
 
 ```
- normality doesnt look great...lets log transform 
+ normality isnt the best 
 
 ```{r}
 #log transform 
 CV_fDOM$logCVconc <- log(abs(CV_fDOM$CVconc))
-fDOM.log <- aov(logCVconc ~ site.ID*year, 
-           data = CV_fDOM)
-plot(fDOM.log)
+
+fDOM.CV.mod.log <- lmer(logCVconc ~ site.ID + (1|year), data = CV_fDOM)
+
+# boundary (singular) fit...not good. use the untransformed model 
+
+
 
 ```
-
-```{r} 
-summary(fDOM.log)
-TukeyHSD(fDOM.log, which = "site.ID")
-
-```
-MOOS and CARI are different
-VAUl and CARI are different
 
 ```{r}
 #SPC
-ggplot(CV_SPC, aes(site.ID, CVconc, fill = site.ID)) +
+cv.spc <- ggplot(CV_SPC, aes(site.ID, CVconc, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("CV-SPC") +
   theme_classic()
 
 ggsave("CV_SPC_sites.pdf",
        path = here("plots", "Chem_variation"),
        width = 10, height = 10)
 
-SPC <- aov(CVconc ~ site.ID*year, 
-           data = CV_SPC)
+SPC.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_SPC)
 
-plot(SPC)
+plot(SPC.CV.mod)
+qqnorm(resid(SPC.CV.mod))
 
-```
+summary(SPC.CV.mod)
 
+emmeans(SPC.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
-```{r} 
-summary(SPC) # site.ID is significant
-
-TukeyHSD(SPC, which = "site.ID")
-
-
-#VAUL/CARI
-#VAUL/FRCH
-#VAUL/MOOS
-#VAUL/POKE
-#VAUL/STRT
 
 ```
 
 
 ```{r}
 #turb
-ggplot(CV_turb, aes(site.ID, CVconc, fill = site.ID)) +
+cv.turb <- ggplot(CV_turb, aes(site.ID, CVconc, fill = site.ID)) +
   geom_boxplot() +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("CV-Turb") +
   theme_classic()
 
 ggsave("CV_turb_sites.pdf",
        path = here("plots", "Chem_variation"),
        width = 10, height = 10)
 
-turb <- aov(CVconc ~ site.ID*year, 
-           data = CV_turb)
-plot(turb)
+turb.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_turb)
+
+plot(turb.CV.mod)
+qqnorm(resid(turb.CV.mod))
+
+summary(turb.CV.mod)
+
+emmeans(turb.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 
 ```
@@ -3013,7 +3101,21 @@ TukeyHSD(turb.log, which = "site.ID")
 ```
 
 
+### PLOTS FOR THESIS ###
 
+```{r}
+ggarrange(cv.no3, cv.fDOM,
+          cv.spc, cv.turb,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)", 
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("CV_all_solutes.pdf",
+       path = here("plots", "Chem_variation"),
+       width = 15, height = 10)
+```
 
 
 

@@ -330,14 +330,16 @@ summary(HI.no3.burn)
 
 # R^2 plot 
 ```{r}
-ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
+no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Percent Burn") +
+  ylab("Mean HI")
 
 ggsave("HI_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -359,14 +361,16 @@ summary(BETA.no3.burn) # p-value: 0.2065
 
 # R^2 plot 
 ```{r}
-ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
+no3.beta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Percent Burn") +
+  ylab("Mean BETA")
 
 ggsave("BETA_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -391,14 +395,16 @@ summary(sdHI.no3.slope) # p-value = 0.0501
 
 # R^2 plot 
 ```{r}
-ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
+no3.sdhi.slope <- ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Slope") +
+  ylab("Standard Deviation HI")
 
 ggsave("sdHI_NO3_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -422,14 +428,16 @@ summary(sdBETA.no3.slope) # p-value: 0.09170
 
 # R^2 plot 
 ```{r}
-ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
+no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Percent Burn") +
+  ylab("Standard Deviation BETA")
 
 ggsave("sdBETA_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -461,14 +469,16 @@ summary(HI.fDOM.slope) # p-value 0.0624
 
 # R^2 plot 
 ```{r}
-ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
+fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Slope") +
+  ylab("Mean HI")
 
 ggsave("HI_fDOM_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -492,14 +502,16 @@ summary(BETA.fDOM.slope) #0.037
 
 # R^2 plot 
 ```{r}
-ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
+fDOM.beta.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic() +
+  xlab("Slope") +
+  ylab("Mean BETA")
 
 ggsave("BETA_fDOM_slope.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -521,14 +533,16 @@ summary(sdHI.fDOM.burn) # p-value 0.182369
 
 # R^2 plot 
 ```{r}
-ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
+fDOM.sdhi.burn <- ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Percent Burn") +
+  ylab("Standard Deviation HI")
 
 ggsave("sdHI_fDOM_burn.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -552,14 +566,16 @@ summary(sdBETA.fDOM.slope) # 0.53313
 
 # R^2 plot 
 ```{r}
-ggplot(fDOM_data, aes(x = Slope, y = sdBETA)) +
+fDOM.sdbeta.slope <- ggplot(fDOM_data, aes(x = Slope, y = sdBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Slope") +
+  ylab("Standard Deviation BETA")
 
 ```
 
@@ -587,14 +603,16 @@ summary(HI.SPC.slope) # p-value 0.0347
 
 # R^2 plot 
 ```{r}
-ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
+spc.hi.slope <- ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Slope") +
+  ylab("Mean HI")
 
 ggsave("HI_SPC_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -620,14 +638,16 @@ summary(BETA.SPC.burn) # 0.1140
 
 # R^2 plot 
 ```{r}
-ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
+spc.beta.slope <- ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Slope") +
+  ylab("Mean BETA")
 
 ggsave("BETA_SPC_slope.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -650,14 +670,16 @@ summary(sdHI.SPC.burn) # p-value 0.388143
 
 # R^2 plot 
 ```{r}
-ggplot(SPC_data, aes(x = pctburn_lg, y = sdHI)) +
+spc.sdhi.burn <- ggplot(SPC_data, aes(x = pctburn_lg, y = sdHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Percent Burn") +
+  ylab("Standard Deviation HI")
 
 ```
 
@@ -676,14 +698,16 @@ summary(sdBETA.SPC.burn) # 0.0596
 
 # R^2 plot 
 ```{r}
-ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
+spc.sdbeta.burn <- ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Percent Burn") +
+  ylab("Standard Deviation BETA")
 
 ggsave("sdBETA_SPC_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -715,14 +739,16 @@ aictab(cand.set = models) # burn is better model but deltaAIC is not greater tha
 
 # R^2 plot 
 ```{r}
-ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
+turb.hi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Percent Burn") +
+  ylab("Mean HI")
 summary(HI.turb.burn) # p-value 0.353
 ```
 
@@ -742,14 +768,16 @@ aictab(cand.set = models) # slope is the better model but deltaAIC is not greate
 
 # R^2 plot 
 ```{r}
-ggplot(turb_data, aes(x = Slope, y = meanBETA)) +
+turb.beta.slope <- ggplot(turb_data, aes(x = Slope, y = meanBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Slope") +
+  ylab("Mean BETA")
 summary(BETA.turb.slope) # 0.61108
 ```
 
@@ -768,14 +796,16 @@ aictab(cand.set = models) # burn is the better model but delta AIC is not greate
 
 # R^2 plot 
 ```{r}
-ggplot(turb_data, aes(x = pctburn_lg, y = sdHI)) +
+turb.sdhi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = sdHI)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Percent Burn") +
+  ylab("Standard Deviation HI")
 summary(sdHI.turb.burn) # p-value 0.73519
 ```
 
@@ -794,14 +824,16 @@ summary(sdBETA.turb.slope) # 0.06055
 
 # R^2 plot 
 ```{r}
-ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
+turb.sdbeta.slope <- ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
   geom_point() +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE) + 
-  theme_classic()
+  theme_classic()+
+  xlab("Slope") +
+  ylab("Standard Deviation BETA")
 
 ggsave("sdBETA_Turb_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
@@ -811,6 +843,57 @@ ggsave("sdBETA_Turb_burn.pdf",
 
 
 
+### PLOTS FOR THESIS ###
+
+```{r}
+ggarrange(no3.hi.burn, no3.beta.burn,
+          no3.sdhi.slope, no3.sdbeta.burn,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)", 
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("no3_characteristics.pdf",
+       path = here("plots", "Catchment_characteristics"),
+       width = 15, height = 10)
+
+ggarrange(fdom.hi.slope, fDOM.beta.slope,
+          fDOM.sdhi.burn, fDOM.sdbeta.slope,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)", 
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("fDOM_characteristics.pdf",
+       path = here("plots", "Catchment_characteristics"),
+       width = 15, height = 10)
+
+ggarrange(spc.hi.slope, spc.beta.slope,
+          spc.sdhi.burn, spc.sdbeta.burn,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)", 
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("SPC_characteristics.pdf",
+       path = here("plots", "Catchment_characteristics"),
+       width = 15, height = 10)
+
+ggarrange(turb.hi.burn, turb.beta.slope,
+          turb.sdhi.burn, turb.sdbeta.slope,
+           ncol = 2, nrow = 2,
+           common.legend = TRUE,
+           labels = c("A)", "B)", 
+                      "C)", "D)"),
+        legend = "bottom")
+
+ggsave("turb_characteristics.pdf",
+       path = here("plots", "Catchment_characteristics"),
+       width = 15, height = 10)
+```
 
 
 

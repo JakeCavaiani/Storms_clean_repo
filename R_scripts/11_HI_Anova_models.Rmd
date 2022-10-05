@@ -22,7 +22,7 @@ library(ggpmisc)
 library(ggpubr)
 library(ggExtra)
 library(lubridate)
-library(nlme)
+library(lme4)
 library(MuMIn)
 library(multcomp)
 ```
@@ -53,7 +53,7 @@ AMC <- AMC %>%
 
 AMC <- AMC[!duplicated(AMC$meanHI), ] # removing duplicated rows 
 
-
+AMC$year <- as.character(AMC$year)
 ##subsetting by solute 
 # NO3 #
 HI_FI_NO3 = subset(AMC, response_var == "NO3")
@@ -94,31 +94,16 @@ ggsave("HI_NO3.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-NO3 <- aov(meanHI ~ site.ID*year, 
-           data = HI_FI_NO3)
-plot(NO3)
+NO3.CV.HI.mod <- lmer(meanHI ~ site.ID + (1|year), data = HI_FI_NO3)
 
+plot(NO3.CV.HI.mod)
+qqnorm(resid(NO3.CV.HI.mod))
+summary(NO3.CV.HI.mod)
+
+emmeans(NO3.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 ```
-normality is not great... lemme try log transform 
-
-# log transform 
-```{r}
-# log transform 
-HI_FI_NO3$logmeanHI <- log(abs(HI_FI_NO3$meanHI))
-
-NO3.log <- aov(logmeanHI ~ site.ID*year, 
-           data = HI_FI_NO3)
-
-plot(NO3.log)
-
-```
-normality looks a little better 
-
-```{r}
-summary(NO3.log) # nothing is showing significance
-```
-
-
+ 
 #fDOM 
 
 ```{r}
@@ -132,47 +117,17 @@ ggsave("HI_fDOM.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-fDOM <- aov(meanHI ~ site.ID*year, 
-           data = HI_FI_fDOM)
+fDOM.CV.HI.mod <- lmer(meanHI ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-plot(fDOM)
+plot(fDOM.CV.HI.mod)
+qqnorm(resid(fDOM.CV.HI.mod))
+summary(fDOM.CV.HI.mod)
+
+emmeans(fDOM.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 
 ```
 normality looks good 
-
-# log transform 
-```{r}
-# log transform 
-HI_FI_fDOM$logmeanHI <- log(abs(HI_FI_fDOM$meanHI))
-
-fDOM.log <- aov(logmeanHI ~ site.ID*year, 
-           data = HI_FI_fDOM)
-
-plot(fDOM.log)
-
-```
-This looks worse, lets work with the non-transformed model
-
-```{r} 
-
-summary(fDOM) # this shows that site.ID is significantly different 
-summary.lm(fDOM)
-
-TukeyHSD(fDOM, which = "site.ID")
-
-#CARI/MOOS
-#CARI/VAUL
-#FRCH/MOOS
-#FRCH/VAUL
-#MOOS/POKE
-#MOOS/STRT
-#MOOS/VAUL
-#VAUL/POKE
-#VAUL/STRT
-# all of these sites are significantly different from each other 
-
-```
-
 
 
 ```{r}
@@ -186,29 +141,18 @@ ggsave("HI_SPC.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-SPC <- aov(meanHI ~ site.ID*year, 
-           data = HI_FI_SPC)
+SPC.CV.HI.mod <- lmer(meanHI ~ site.ID + (1|year), data = HI_FI_SPC)
 
-plot(SPC)
+plot(SPC.CV.HI.mod)
+qqnorm(resid(SPC.CV.HI.mod))
+summary(SPC.CV.HI.mod)
+
+emmeans(SPC.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 
 ```
 non-normal....lets try to do a log transformation 
 
-```{r}
-# log transform
-HI_FI_SPC$logmeanHI <- log(abs(HI_FI_SPC$meanHI))
-
-SPC.log <- aov(logmeanHI ~ site.ID*year, 
-           data = HI_FI_SPC)
-plot(SPC.log)
-
-```
-
-```{r}
-summary(SPC.log) # nothing significant
-summary.lm(SPC.log)
-
-```
 
 ```{r}
 #turb
@@ -221,26 +165,14 @@ ggsave("HI_turb.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-turb <- aov(meanHI ~ site.ID*year, 
-           data = HI_FI_turb)
-plot(turb)
+turb.CV.HI.mod <- lmer(meanHI ~ site.ID + (1|year), data = HI_FI_turb)
 
+plot(turb.CV.HI.mod)
+qqnorm(resid(turb.CV.HI.mod))
+summary(turb.CV.HI.mod)
 
-```
-
-```{r}
-# log transform
-HI_FI_turb$logmeanHI <- log(abs(HI_FI_turb$meanHI))
-
-turb.log <- aov(logmeanHI ~ site.ID*year, 
-           data = HI_FI_turb)
-plot(turb.log)
-
-```
-May need further transformation 
-
-```{r}
-summary(turb.log) # this shows that year is significant
+emmeans(turb.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 
 ```
 
@@ -271,12 +203,14 @@ ggsave("BETA_NO3.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-NO3 <- aov(meanBETA ~ site.ID*year, 
-           data = HI_FI_NO3)
+NO3.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(NO3)
+plot(NO3.CV.BETA.mod)
+qqnorm(resid(NO3.CV.BETA.mod))
+summary(NO3.CV.BETA.mod)
 
-
+emmeans(NO3.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 ```
 
 ```{r}
@@ -296,16 +230,16 @@ ggsave("BETA_fDOM.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-fDOM <- aov(meanBETA ~ site.ID*year, 
-           data = HI_FI_fDOM)
-plot(fDOM)
+fDOM.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
+
+plot(fDOM.CV.BETA.mod)
+qqnorm(resid(fDOM.CV.BETA.mod))
+summary(fDOM.CV.BETA.mod)
+
+emmeans(fDOM.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
+
 ```
-
-```{r}
-summary(fDOM)
-
-```
-
 
 ```{r}
 #SPC
@@ -318,14 +252,14 @@ ggsave("BETA_SPC_year.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-SPC <- aov(meanBETA ~ site.ID*year, 
-           data = HI_FI_SPC)
-plot(SPC)
-```
+SPC.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_SPC)
 
-```{r}
-summary(SPC) # year is significant
-summary.lm(SPC)
+plot(SPC.CV.BETA.mod)
+qqnorm(resid(SPC.CV.BETA.mod))
+summary(SPC.CV.BETA.mod)
+
+emmeans(SPC.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+# add post hoc pairwise comparisons
 
 ```
 
@@ -340,17 +274,14 @@ ggsave("BETA_turb.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-turb <- aov(meanBETA ~ site.ID*year, 
-           data = HI_FI_turb)
+turb.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_turb)
 
-plot(turb)
+plot(turb.CV.BETA.mod)
+qqnorm(resid(turb.CV.BETA.mod))
+summary(turb.CV.BETA.mod)
+
+emmeans(turb.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
-```{r}
-summary(turb) # nothing is significant 
-summary.lm(turb)
-
-```
-
 
 ### SDs of storm metrics ###
 
@@ -391,26 +322,13 @@ ggsave("sdHI_NO3.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-no3 <- aov(sdHI ~ site.ID*year, 
-           data = HI_FI_NO3)
+NO3.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(no3)
+plot(NO3.CV.sdHI.mod)
+qqnorm(resid(NO3.CV.sdHI.mod))
+summary(NO3.CV.sdHI.mod)
 
-```
-let me try log transform 
-
-```{r}
-no3.log <- aov(logSDhi ~ site.ID*year, 
-           data = HI_FI_NO3)
-plot(no3.log)
-
-```
-meh, may need further transformation
-
-```{r}
-summary(no3.log) # nothing is signficant 
-summary.lm(no3.log)
-
+emmeans(NO3.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -423,30 +341,13 @@ ggsave("sdHI_fDOM.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-fDOM <- aov(sdHI ~ site.ID*year, 
-           data = HI_FI_fDOM)
-plot(fDOM)
+fDOM.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-```
-Log transform 
-```{r}
-fDOM.log <- aov(logSDhi ~ site.ID*year, 
-           data = HI_FI_fDOM)
-plot(fDOM.log)
+plot(fDOM.CV.sdHI.mod)
+qqnorm(resid(fDOM.CV.sdHI.mod))
+summary(fDOM.CV.sdHI.mod)
 
-```
-this looks better
-```{r}
-summary(fDOM.log) # site.ID is different 
-summary.lm(fDOM.log)
-TukeyHSD(fDOM.log, which = "site.ID")
-
-#CARI/FRCH
-#CARI/MOOS
-#CARI/STRT
-#MOOS/POKE
-
-
+emmeans(fDOM.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 # SPC
@@ -460,26 +361,13 @@ ggsave("sdHI_SPC.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-SPC <- aov(sdHI ~ site.ID*year, 
-           data = HI_FI_SPC)
-plot(SPC)
+SPC.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_SPC)
 
-```
-log transform 
+plot(SPC.CV.sdHI.mod)
+qqnorm(resid(SPC.CV.sdHI.mod))
+summary(SPC.CV.sdHI.mod)
 
-```{r}
-SPC.log <- aov(logSDhi ~ site.ID*year, 
-           data = HI_FI_SPC)
-
-plot(SPC.log)
-
-```
-still meh 
-
-```{r}
-summary(SPC.log) # nothing is significant 
-summary.lm(SPC.log)
-
+emmeans(SPC.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 # turb
@@ -502,27 +390,15 @@ ggsave("sdHI_Turb_year.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-turb <- aov(sdHI ~ site.ID*year, 
-           data = HI_FI_turb)
-plot(turb)
+turb.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_turb)
+
+plot(turb.CV.sdHI.mod)
+qqnorm(resid(turb.CV.sdHI.mod))
+summary(turb.CV.sdHI.mod)
+
+emmeans(turb.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
-log transform 
-
-```{r}
-turb.log <- aov(logSDhi ~ site.ID*year, 
-           data = HI_FI_turb)
-plot(turb.log)
-
-```
-May need further transformation 
-
-```{r}
-summary(turb.log) # year is significant 
-summary.lm(turb.log)
-
-```
-
 # BETA 
 ```{r}
 #plot 
@@ -541,89 +417,45 @@ ggsave("sdBETA_all_solutes.pdf",
 
 # NO3
 ```{r}
-no3 <- aov(sdBETA ~ site.ID*year, 
-           data = HI_FI_NO3)
+NO3.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(no3)
+plot(NO3.CV.sdBETA.mod)
+qqnorm(resid(NO3.CV.sdBETA.mod))
+summary(NO3.CV.sdBETA.mod)
 
+emmeans(NO3.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
-
-
-```{r}
-summary(no3) # nothing is significant 
-summary.lm(no3)
-
-```
-
 
 # fDOM
 ```{r}
-fDOM <- aov(sdBETA ~ site.ID*year, 
-           data = HI_FI_fDOM)
-plot(fDOM)
+fDOM.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-```
-log transform 
+plot(fDOM.CV.sdBETA.mod)
+qqnorm(resid(fDOM.CV.sdBETA.mod))
+summary(fDOM.CV.sdBETA.mod)
 
-```{r}
-fDOM.log <- aov(logSDbeta ~ site.ID*year, 
-           data = HI_FI_fDOM)
-
-plot(fDOM.log)
-
-```
-may need further transformation 
-
-```{r}
-summary(fDOM.log) # nothing is significant 
-summary.lm(fDOM.log)
-
+emmeans(fDOM.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 # SPC
 ```{r}
-SPC <- aov(sdBETA ~ site.ID*year, 
-           data = HI_FI_SPC)
+SPC.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_SPC)
 
-plot(SPC)
+plot(SPC.CV.sdBETA.mod)
+qqnorm(resid(SPC.CV.sdBETA.mod))
+summary(SPC.CV.sdBETA.mod)
 
+emmeans(SPC.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
-log transform 
-
+# turb 
 ```{r}
-SPC.log <- aov(logSDbeta ~ site.ID*year, 
-           data = HI_FI_SPC)
-plot(SPC.log)
+turb.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_turb)
 
+plot(turb.CV.sdBETA.mod)
+qqnorm(resid(turb.CV.sdBETA.mod))
+summary(turb.CV.sdBETA.mod)
+
+emmeans(turb.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
-Looks like we have an outlier issue here.
-
-```{r}
-summary(SPC.log) # nothing is significant 
-summary.lm(SPC.log)
-```
-
-# turb
-```{r}
-turb <- aov(sdBETA ~ site.ID*year, 
-           data = HI_FI_turb)
-
-plot(turb)
-
-```
-log transform 
-
-```{r}
-turb.log <- aov(logSDbeta ~ site.ID*year, 
-           data = HI_FI_turb)
-plot(turb.log)
-
-```
-
-```{r}
-summary(turb.log) # nothing is significant 
-summary.lm(turb.log)
-```
-
 
 
