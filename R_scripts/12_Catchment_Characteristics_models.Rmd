@@ -147,9 +147,6 @@ CV.all <- CV.all %>%
   mutate(across(c(NDVI), 
                 ~ifelse(site.ID == "VAUL", 0.227537246, .)))
 
-
-
-
 ```
 
 ```{r}
@@ -164,7 +161,6 @@ CV_all_year_fDOM = subset(CV.all.year, response_var == "fDOM")
 CV_all_year_SPC = subset(CV.all.year, response_var == "SPC")
 # turb #
 CV_all_year_turb = subset(CV.all.year, response_var == "turb")
-
 
 
 # all years in one 
@@ -243,12 +239,91 @@ DOD_characteristics <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_19090
 
 DOD_characteristics <- DOD_characteristics[c("site.ID", "SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
 
+DOD_characteristics$Deciduous.2016 <- NA
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "VAUL", 20.6,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "CARI", 22.5,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "STRT", 16.9,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "MOOS", 21.6,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "FRCH", 29.6,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2016),
+                ~ifelse(site.ID == "POKE", 27.3,.)))
+
+DOD_characteristics$Deciduous.2020 <- NA
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "VAUL", 18.77078206,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "CARI", 18.32282211,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "STRT", 19.85717556,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "MOOS", 22.65342014,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "FRCH", 22.48530634,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "POKE", 21.60550729,.)))
+
+DOD_characteristics$Evergreen <- NA
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "VAUL", 50.8,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "CARI", 51.9,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "STRT", 15.2,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "MOOS", 10.3,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "FRCH", 53.4,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Evergreen),
+                ~ifelse(site.ID == "POKE", 30.5,.)))
+
+
 # scaling data # 
 #scaling # 
-DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")], function(x) c(scale(x)))
+DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2016", "Deciduous.2020", "Evergreen")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2016", "Deciduous.2020", "Evergreen")], function(x) c(scale(x)))
 
 ggpairs(DOD_characteristics,
-        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation"),
+        columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2020"),
         ggplot2::aes(color = site.ID)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
@@ -330,20 +405,28 @@ summary(HI.no3.burn)
 
 # R^2 plot 
 ```{r}
+#no3.hi.burn
 no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Percent Burn") +
-  ylab("Mean HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn Extent") +
+  ylab("Mean HI-NO3-") +
+  theme(aspect.ratio = 1)
 
 ggsave("HI_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 ```
 
 # BETA
@@ -362,19 +445,26 @@ summary(BETA.no3.burn) # p-value: 0.2065
 # R^2 plot 
 ```{r}
 no3.beta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Percent Burn") +
-  ylab("Mean BETA")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn Extent") +
+  ylab("Mean ß-NO3-") +
+  theme(aspect.ratio = 1)
 
 ggsave("BETA_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 
 ```
@@ -396,19 +486,25 @@ summary(sdHI.no3.slope) # p-value = 0.0501
 # R^2 plot 
 ```{r}
 no3.sdhi.slope <- ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Slope") +
-  ylab("Standard Deviation HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment Slope") +
+  ylab("SD HI-NO3-")
 
 ggsave("sdHI_NO3_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 ```
 
@@ -429,19 +525,25 @@ summary(sdBETA.no3.slope) # p-value: 0.09170
 # R^2 plot 
 ```{r}
 no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Percent Burn") +
-  ylab("Standard Deviation BETA")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn extent") +
+  ylab("SD ß-NO3-")
 
 ggsave("sdBETA_NO3_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 
 ```
@@ -470,19 +572,25 @@ summary(HI.fDOM.slope) # p-value 0.0624
 # R^2 plot 
 ```{r}
 fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Slope") +
-  ylab("Mean HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment slope") +
+  ylab("Mean HI-fDOM")
 
 ggsave("HI_fDOM_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 ```
 
@@ -503,19 +611,25 @@ summary(BETA.fDOM.slope) #0.037
 # R^2 plot 
 ```{r}
 fDOM.beta.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic() +
-  xlab("Slope") +
-  ylab("Mean BETA")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment slope") +
+  ylab("Mean ß-fDOM")
 
 ggsave("BETA_fDOM_slope.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 ```
 
 # sdHI
@@ -534,19 +648,25 @@ summary(sdHI.fDOM.burn) # p-value 0.182369
 # R^2 plot 
 ```{r}
 fDOM.sdhi.burn <- ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic()+
-  xlab("Percent Burn") +
-  ylab("Standard Deviation HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn extent") +
+  ylab("SD HI-fDOM")
 
 ggsave("sdHI_fDOM_burn.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 
 ```
@@ -604,19 +724,25 @@ summary(HI.SPC.slope) # p-value 0.0347
 # R^2 plot 
 ```{r}
 spc.hi.slope <- ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic()+
-  xlab("Slope") +
-  ylab("Mean HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment slope") +
+  ylab("Mean HI-SPC")
 
 ggsave("HI_SPC_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 
 ```
@@ -639,19 +765,25 @@ summary(BETA.SPC.burn) # 0.1140
 # R^2 plot 
 ```{r}
 spc.beta.slope <- ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic()+
-  xlab("Slope") +
-  ylab("Mean BETA")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment slope") +
+  ylab("Mean ß-SPC")
 
 ggsave("BETA_SPC_slope.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 ```
 
@@ -699,19 +831,25 @@ summary(sdBETA.SPC.burn) # 0.0596
 # R^2 plot 
 ```{r}
 spc.sdbeta.burn <- ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic()+
-  xlab("Percent Burn") +
-  ylab("Standard Deviation BETA")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn extent") +
+  ylab("SD ß-SPC")
 
 ggsave("sdBETA_SPC_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 ```
 
@@ -740,15 +878,21 @@ aictab(cand.set = models) # burn is better model but deltaAIC is not greater tha
 # R^2 plot 
 ```{r}
 turb.hi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
+               parse = TRUE, size = 5) + 
   theme_classic()+
-  xlab("Percent Burn") +
-  ylab("Mean HI")
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Burn extent") +
+  ylab("Mean HI-turbidity")
 summary(HI.turb.burn) # p-value 0.353
 ```
 
@@ -825,19 +969,25 @@ summary(sdBETA.turb.slope) # 0.06055
 # R^2 plot 
 ```{r}
 turb.sdbeta.slope <- ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()+
-  xlab("Slope") +
-  ylab("Standard Deviation BETA")
+               parse = TRUE, size = 5) + 
+    theme_classic()+
+    theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("Catchment slope") +
+  ylab("SD ß-turbidity")
 
 ggsave("sdBETA_Turb_burn.pdf",
        path = here("plots", "Catchment_characteristics", "BETA"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 ```
 
@@ -856,43 +1006,41 @@ ggarrange(no3.hi.burn, no3.beta.burn,
 
 ggsave("no3_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 
 ggarrange(fdom.hi.slope, fDOM.beta.slope,
-          fDOM.sdhi.burn, fDOM.sdbeta.slope,
+          fDOM.sdhi.burn,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
            labels = c("A)", "B)", 
-                      "C)", "D)"),
+                      "C)"),
         legend = "bottom")
 
 ggsave("fDOM_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 
 ggarrange(spc.hi.slope, spc.beta.slope,
-          spc.sdhi.burn, spc.sdbeta.burn,
+          spc.sdbeta.burn,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
            labels = c("A)", "B)", 
-                      "C)", "D)"),
+                      "C)"),
         legend = "bottom")
 
 ggsave("SPC_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 
-ggarrange(turb.hi.burn, turb.beta.slope,
-          turb.sdhi.burn, turb.sdbeta.slope,
+ggarrange(turb.hi.burn, turb.sdbeta.slope,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
-           labels = c("A)", "B)", 
-                      "C)", "D)"),
+           labels = c("A)", "B)"), 
         legend = "bottom")
 
 ggsave("turb_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 ```
 
 

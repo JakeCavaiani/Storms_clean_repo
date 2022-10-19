@@ -54,6 +54,17 @@ AMC <- AMC %>%
 AMC <- AMC[!duplicated(AMC$meanHI), ] # removing duplicated rows 
 
 AMC$year <- as.character(AMC$year)
+
+
+AMC <- AMC %>% 
+  mutate(across(c(burn),
+                ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
+
+AMC <- AMC %>% 
+  mutate(across(c(PF),
+                ~ifelse(site.ID == "VAUL" | site.ID == "STRT", "High", "Moderate")))
+
+
 ##subsetting by solute 
 # NO3 #
 HI_FI_NO3 = subset(AMC, response_var == "NO3")
@@ -70,11 +81,26 @@ HI_FI_turb = subset(AMC, response_var == "turb")
 
 # plot 
 ```{r}
-ggplot(AMC, aes(site.ID, meanHI, fill = site.ID)) +
+AMC_new <- AMC
+AMC_new$site.ID <- factor(AMC_new$site.ID,     # Reorder factor levels
+                         c("CARI", "FRCH", "VAUL", "MOOS", "POKE", "STRT"))
+
+ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
   geom_boxplot() +
-  facet_wrap(~response_var, scales = "free") +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  theme_classic()
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none"), "Permafrost") +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("Mean HI") +
+  theme_classic() +
+  facet_wrap(~response_var) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20)) 
+
 
 ggsave("HI_all_solutes.pdf",
        path = here("plots", "Storm_metrics_sites"),
@@ -179,11 +205,21 @@ emmeans(turb.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ### BETA ###
 
 ```{r}
-ggplot(AMC, aes(site.ID, meanBETA, fill = site.ID)) +
+ggplot(AMC_new, aes(x = site.ID, y = meanBETA, pattern = PF, fill = site.ID)) +
   geom_boxplot() +
-  facet_wrap(~response_var, scales = "free") +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  theme_classic()
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("Mean ß") +
+  theme_classic() +
+  facet_wrap(~response_var) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20)) 
 
 ggsave("BETA_all_solutes.pdf",
        path = here("plots", "Storm_metrics_sites"),
@@ -287,11 +323,21 @@ emmeans(turb.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```{r}
 #plot 
-ggplot(AMC, aes(site.ID, sdHI, fill = site.ID)) +
+ggplot(AMC_new, aes(x = site.ID, y = sdHI, pattern = PF, fill = site.ID)) +
   geom_boxplot() +
-  facet_wrap(~response_var, scales = "free") +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  theme_classic()
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("SD HI") +
+  theme_classic() +
+  facet_wrap(~response_var) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20))
 
 ggsave("sdHI_all_solutes.pdf",
        path = here("plots", "Storm_metrics_sites"),
@@ -402,11 +448,22 @@ emmeans(turb.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # BETA 
 ```{r}
 #plot 
-ggplot(AMC, aes(site.ID, sdBETA, fill = site.ID)) +
+ggplot(AMC_new, aes(x = site.ID, y = sdBETA, pattern = PF, fill = site.ID)) +
   geom_boxplot() +
-  facet_wrap(~response_var, scales = "free") +
-  scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  theme_classic()
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("SD ß") +
+  theme_classic() +
+  facet_wrap(~response_var) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20))
+
 
 ggsave("sdBETA_all_solutes.pdf",
        path = here("plots", "Storm_metrics_sites"),

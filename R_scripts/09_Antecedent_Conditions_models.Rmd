@@ -149,6 +149,7 @@ vif(MOOS.model)
 plot(MOOS.model)
 summary(MOOS.model)
 
+
 ```
 
 ```{r}
@@ -265,19 +266,20 @@ STRT.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceC
 
 vif(STRT.model.log)
 plot(STRT.model.log)
+summary(STRT.model.log)
 
 ```
 Doesnt look much better -  do we need to further transform?
 
 ```{r}
-Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
-           CARI.model, POKE.model, 
+Plot_1 <- plot_summs(MOOS.model, FRCH.model,
+           CARI.model, POKE.model,
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
            colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
-
+vn = expression(paste(HI*-N*O[3]^"-"))
 no3_hi <- Plot_1 + 
-  xlab("Coefficient estimate") + ylab("") +
+  xlab("") + ylab("") +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
@@ -285,7 +287,14 @@ scale_y_discrete(labels= c("Seasonality",
                              "Precipitation Month", 
                              "Precipitation Week",
                              "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle(vn)
+
 
 ggsave("HI_NO3.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -451,18 +460,21 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
+  theme(aspect.ratio = 1)
 
 fDOM_hi <- Plot_1 + 
-  xlab("Coefficient estimate") + ylab("") +
+  xlab("") + ylab("") +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
-scale_y_discrete(labels= c("Seasonality", 
-                             "Precipitation Month", 
-                             "Precipitation Week",
-                             "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("HI-fDOM")
 
 ggsave("HI_fDOM.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -565,7 +577,7 @@ POKE.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(POKE.model)
 plot(POKE.model)
-
+summary(POKE.model)
 ```
 lets log transform 
 
@@ -593,6 +605,7 @@ VAUL.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(VAUL.model)
 plot(VAUL.model)
+summary(VAUL.model)
 
 ```
 Lets log transform 
@@ -629,7 +642,8 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))+
+  theme(aspect.ratio = 1)
 
 SPC_hi <- Plot_1 + 
   xlab("Coefficient estimate") + ylab("") +
@@ -640,7 +654,13 @@ scale_y_discrete(labels= c("Seasonality",
                              "Precipitation Month", 
                              "Precipitation Week",
                              "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("HI-SPC")
 
 ggsave("HI_SPC.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -689,7 +709,7 @@ MOOS.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(MOOS.model)
 plot(MOOS.model)
-
+summary(MOOS.model)
 ```
 lets log transform 
 
@@ -789,7 +809,7 @@ STRT.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(STRT.model)
 plot(STRT.model)
-
+summary(STRT.model)
 ```
 lets log transform 
 
@@ -808,18 +828,21 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
+  theme(aspect.ratio = 1)
 
 turb_hi <- Plot_1 + 
   xlab("Coefficient estimate") + ylab("") +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
-scale_y_discrete(labels= c("Seasonality", 
-                             "Precipitation Month", 
-                             "Precipitation Week",
-                             "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("HI-turbidity")
 
 ggsave("HI_turb.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -886,7 +909,7 @@ MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(MOOS.model)
 plot(MOOS.model)
-
+summary(MOOS.model)
 ```
 
 ```{r}
@@ -904,7 +927,7 @@ FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(FRCH.model)
 plot(FRCH.model)
-
+summary(FRCH.model)
 ```
 
 ```{r}
@@ -922,6 +945,7 @@ CARI.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(CARI.model)
 plot(CARI.model)
+summary(CARI.model)
 
 ```
 
@@ -958,6 +982,7 @@ VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(VAUL.model)
 plot(VAUL.model)
+summary(VAUL.model)
 
 ```
 
@@ -976,6 +1001,7 @@ STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(STRT.model)
 plot(STRT.model)
+summary(STRT.model)
 
 ```
 let me log transform
@@ -996,9 +1022,9 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
            colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
-
+vn = expression(paste(ß*-N*O[3]^"-"))
 no3_beta <- Plot_1 + 
-  xlab("Coefficient estimate") + ylab("") +
+  xlab("") + ylab("") +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
@@ -1006,7 +1032,13 @@ scale_y_discrete(labels= c("Seasonality",
                              "Precipitation Month", 
                              "Precipitation Week",
                              "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle(vn)
 
 ggsave("BETA_NO3.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -1068,6 +1100,7 @@ ggsave("fDOM_pairs_BETA_FRCH.pdf",
        path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
        width = 10, height = 10)
 
+HI_FI_fDOM_FRCH <- HI_FI_fDOM_FRCH[-c(25,30), ]
 
 FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_FRCH)
 
@@ -1104,6 +1137,7 @@ ggsave("fDOM_pairs_BETA_POKE.pdf",
        path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
        width = 10, height = 10)
 
+HI_FI_fDOM_POKE <- HI_FI_fDOM_POKE[-c(12,32),]
 
 POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_POKE)
 
@@ -1156,15 +1190,17 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))
 
 fDOM_beta <- Plot_1 + 
-  xlab("Coefficient estimate") + ylab("") +
+  xlab("") + ylab("") +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
-scale_y_discrete(labels= c("Seasonality", 
-                             "Precipitation Month", 
-                             "Precipitation Week",
-                             "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("ß-fDOM")
 
 ggsave("BETA_fDOM.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -1212,7 +1248,7 @@ MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(MOOS.model)
 plot(MOOS.model)
-
+summary(MOOS.model)
 ```
 Lets log transform
 
@@ -1276,7 +1312,7 @@ POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(POKE.model)
 plot(POKE.model)
-
+summary(POKE.model)
 ```
 
 ```{r}
@@ -1294,7 +1330,7 @@ VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(VAUL.model)
 plot(VAUL.model)
-
+summary(VAUL.model)
 ```
 lets log transform 
 
@@ -1322,7 +1358,7 @@ STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(STRT.model)
 plot(STRT.model)
-
+summary(STRT.model)
 ```
 
 lets log transform 
@@ -1352,7 +1388,13 @@ scale_y_discrete(labels= c("Seasonality",
                              "Precipitation Month", 
                              "Precipitation Week",
                              "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw()+
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("ß-SPC")
 
 ggsave("BETA_SPC.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -1419,7 +1461,7 @@ FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(FRCH.model)
 plot(FRCH.model)
-
+summary(FRCH.model)
 ```
 lets loog transform 
 
@@ -1465,6 +1507,7 @@ POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 
 vif(POKE.model)
 plot(POKE.model)
+summary(POKE.model)
 
 ```
 log transform 
@@ -1550,11 +1593,13 @@ turb_beta <- Plot_1 +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
-scale_y_discrete(labels= c("Seasonality", 
-                             "Precipitation Month", 
-                             "Precipitation Week",
-                             "Storm Precipitation")) +
-  theme_bw() 
+  theme_bw() +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm')) +
+  ggtitle("ß-turbidity")
 
 ggsave("BETA_turb.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -1564,13 +1609,32 @@ ggsave("BETA_turb.pdf",
 
 # plots for thesis # 
 ```{r}
-# ggarrange(no3_hi, fdom_hi,
-#           no3_beta, fDOM_beta,
-#           ncol = 2, nrow = 2,
-#           common.legend = TRUE,
-#           labels = c("A)", "B)",
-#                      "C)", "D)"),
-#           legend = "bottom")
+ggarrange(no3_hi, fDOM_hi,
+          SPC_hi, turb_hi,
+          ncol = 2, nrow = 2,
+          common.legend = TRUE,
+          labels = c("A)", "B)",
+                     "C)", "D)"),
+          legend = "bottom",
+          align = "hv")
+
+
+ggsave("HIs.pdf",
+       path = here("plots", "Coefficient_Plots"),
+       width = 12, height = 12)
+
+ggarrange(no3_beta, fDOM_beta,
+          SPC_beta, turb_beta,
+          ncol = 2, nrow = 2,
+          common.legend = TRUE,
+          labels = c("A)", "B)",
+                     "C)", "D)"),
+          legend = "bottom",
+          align = "hv")
+
+ggsave("BETAs.pdf",
+       path = here("plots", "Coefficient_Plots"),
+       width = 12, height = 12)
 # 
 # ggsave("NO3_fDOM.pdf",
 #        path = here("plots", "Coefficient_Plots"),

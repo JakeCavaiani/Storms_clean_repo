@@ -30,6 +30,7 @@ library(AICcmodavg)
 library(stats)
 library(lme4)
 library(emmeans)
+library(ggpattern)
 ```
 
 
@@ -43,6 +44,19 @@ mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
 
 mean_daily$year <- as.character(mean_daily$year)
 
+mean_daily$Burn <- NA
+
+mean_daily <- mean_daily %>% 
+  mutate(across(c(Burn),
+                ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
+
+mean_daily$PF <- NA
+
+mean_daily <- mean_daily %>% 
+  mutate(across(c(PF),
+                ~ifelse(site.ID == "VAUL" | site.ID == "STRT", "High", "Moderate")))
+
+
 vn = expression(paste(N*O[3]^"-"))
 # mean concentration across years for each site 
 mean_daily_site <- mean_daily %>% 
@@ -51,6 +65,8 @@ mean_daily_site <- mean_daily %>%
                    meanfDOM = mean(dailyfDOM, na.rm = TRUE),
                    meanSPC = mean(dailySPC, na.rm = TRUE),
                    meanTurb = mean(dailyTurb, na.rm = TRUE))
+
+write.csv(mean_daily_site, "~/Documents/Storms_clean_repo/Output_from_analysis/10_gls_models/mean_daily_site.csv")
 
 
 
@@ -241,6 +257,7 @@ summary(site.ID.comp) # no site is significantly different
 summary(no3.mod.arma.1.1)
 intervals(no3.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(no3.mod.arma.1.1)
 
 ```
 
@@ -258,6 +275,22 @@ fDOM.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailyfDOM, fill = site
   xlab("") +
   ylab("Daily fDOM (QSU)") +
   theme_classic()
+
+library(tidyverse)
+library(rstatix)
+library(ggpubr)
+pwc <- mean_daily_2018 %>%
+  pairwise_t_test(dailyfDOM ~ site.ID, p.adjust.method = "bonferroni")
+pwc
+
+pwc <- pwc %>% add_xy_position(x = "site.ID")
+res.aov <- mean_daily_2018 %>% anova_test(dailyfDOM ~ site.ID)
+res.aov
+ggboxplot(mean_daily_2018, x = "site.ID", y = "dailyfDOM") +
+  stat_pvalue_manual(pwc, label = "p.adj", tip.length = 0, step.increase = 0.1)
+
+ggboxplot(mean_daily_2018, x = "site.ID", y = "dailyfDOM") +
+  stat_pvalue_manual(pwc, hide.ns = TRUE, label = "p.adj.signif")
 ```
 
 # gls  
@@ -449,6 +482,7 @@ summary(fDOM.mod.arma.1.2)
 
 plot(print(confint(site.ID.comp)))
 tab_model(fDOM.mod.arma.1.2)
+anova(fDOM.mod.arma.1.2)
 
 ```
 This shows that FRCH and CARI are significantly different from MOOS
@@ -606,6 +640,7 @@ summary(site.ID.comp)
 summary(SPC.mod.arma.1.1)
 intervals(SPC.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(SPC.mod.arma.1.1)
 
 ```
 This shows that MOOS is significantly different than CARI and FRCH 
@@ -732,6 +767,7 @@ site.ID.comp <- glht(turb.mod.arma.1.1, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
 summary(turb.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(turb.mod.arma.1.1)
 
 ```
 This shows no significance for any of the sites 
@@ -922,6 +958,7 @@ summary(site.ID.comp)
 summary(NO3.mod.arma.2.2)
 
 plot(print(confint(site.ID.comp)))
+anova(NO3.mod.arma.2.2)
 
 ```
 This shows significance for any of the sites 
@@ -1125,6 +1162,7 @@ summary(site.ID.comp)
 summary(fDOM.mod.arma.2.1)
 intervals(fDOM.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+anova(fDOM.mod.arma.2.1)
 
 ```
 This shows that VAUL is different from CARI, FRCH, POKE, STRT 
@@ -1307,6 +1345,7 @@ summary(site.ID.comp)
 summary(SPC.mod.arma.2.1)
 intervals(SPC.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+anova(SPC.mod.arma.2.1)
 
 ```
 This shows that MOOS is significantly different than CARI and FRCH 
@@ -1509,6 +1548,7 @@ summary(site.ID.comp)
 summary(turb.mod.arma.2.2)
 intervals(turb.mod.arma.2.2)
 plot(print(confint(site.ID.comp)))
+anova(turb.mod.arma.2.2)
 
 ```
 This shows that CARI is different than FRCH, MOOS, STRT, VAUL
@@ -1626,6 +1666,7 @@ summary(site.ID.comp)
 summary(NO3.mod.arma.1.1)
 intervals(NO3.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(NO3.mod.arma.1.1)
 
 ```
 This shows significance for STRT and CARI
@@ -1738,6 +1779,7 @@ summary(site.ID.comp)
 summary(fDOM.mod.arma.1.1)
 intervals(fDOM.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(fDOM.mod.arma.1.1)
 
 ```
 This shows that CARI is different than MOOS, POKE, VAUL
@@ -1924,6 +1966,7 @@ summary(site.ID.comp)
 summary(SPC.mod.arma.2.1)
 intervals(SPC.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+anova(SPC.mod.arma.2.1)
 
 ```
 This shows that MOOS is significantly different than CARI and FRCH 
@@ -2123,6 +2166,7 @@ summary(site.ID.comp)
 summary(turb.mod.arma.2.2)
 intervals(turb.mod.arma.2.2)
 plot(print(confint(site.ID.comp)))
+anova(turb.mod.arma.2.2)
 
 ```
 CARI is different to FRCH,MOOS,VAUL
@@ -2277,6 +2321,7 @@ summary(site.ID.comp)
 summary(NO3.mod.arma.1.1)
 intervals(NO3.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(NO3.mod.arma.1.1)
 
 ```
 
@@ -2486,6 +2531,7 @@ summary(site.ID.comp)
 summary(fDOM.mod.arma.2.2)
 intervals(fDOM.mod.arma.2.2)
 plot(print(confint(site.ID.comp)))
+anova(fDOM.mod.arma.2.2)
 
 ```
 This shows that CARI is different than MOOS, POKE, VAUL
@@ -2665,6 +2711,7 @@ site.ID.comp <- glht(SPC.mod.arma.1.1, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
 summary(SPC.mod.arma.1.1)
 plot(print(confint(site.ID.comp)))
+anova(SPC.mod.arma.1.1)
 
 ```
 This shows that MOOS is significantly different than CARI and FRCH 
@@ -2837,7 +2884,56 @@ summary(site.ID.comp)
 summary(turb.mod.arma.2.1)
 intervals(turb.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+library(datasets)
+library(multcompView)
 
+anova <- aov(logDailyTurb ~ site.ID, data = mean_daily_2021)
+summary(anova)
+tukey <- TukeyHSD(anova)
+print(tukey)
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+cld <- as.data.frame.list(cld$site.ID)
+
+Tk <- mean_daily_2021 %>% 
+  group_by(site.ID) %>% 
+  summarise(mean = mean(dailyTurb, na.rm = TRUE), 
+            quant = quantile(dailyTurb, na.rm = TRUE), probs = 0.75) %>% 
+  arrange(desc(mean))
+Tk <- Tk[!duplicated(Tk$mean), ]
+Tk$cld <- cld$Letters
+
+
+
+mean_daily_2021$cld <- NA
+
+mean_daily_2021 <- mean_daily_2021 %>% 
+  mutate(across(c(cld),
+                ~ifelse(site.ID == "CARI", "e", .)))
+
+mean_daily_2021 <- mean_daily_2021 %>% 
+  mutate(across(c(cld),
+                ~ifelse(site.ID == "VAUL", "a", .)))
+
+mean_daily_2021 <- mean_daily_2021 %>% 
+  mutate(across(c(cld),
+                ~ifelse(site.ID == "FRCH", "b", .)))
+
+mean_daily_2021 <- mean_daily_2021 %>% 
+  mutate(across(c(cld),
+                ~ifelse(site.ID == "c", "b", .)))
+
+
+ggplot(mean_daily_2021, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+  geom_boxplot() +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") +
+  theme_classic() +
+  geom_text(data = Tk, aes(label = cld, x = site.ID, y = quant),
+            vjust = -5, hjust = -1, size = 3)
+
+anova(turb.mod.arma.2.1)
 ```
 CARI is different to FRCH,MOOS,VAUL
 VAUL and POKE
@@ -2846,51 +2942,143 @@ VAUL and POKE
 ### PLOTS FOR THESIS ###
 
 ```{r}
-ggarrange(no3.2020, no3.2021,
-           ncol = 2, nrow = 1,
-           common.legend = TRUE,
-           labels = c("A)", "B)"),
-        legend = "bottom")
+# ggarrange(no3.2020, no3.2021,
+#            ncol = 2, nrow = 1,
+#            common.legend = TRUE,
+#            labels = c("A)", "B)"),
+#         legend = "bottom")
+# 
+# ggsave("NO3_2020_2021.pdf",
+#        path = here("plots", "Chems_year"),
+#        width = 15, height = 10)
+# 
+# ggarrange(fDOM.2018, fDOM.2019,
+#           fDOM.2020, fDOM.2021,
+#            ncol = 2, nrow = 2,
+#            common.legend = TRUE,
+#            labels = c("A)", "B)",
+#                       "C)", "D)"),
+#         legend = "bottom")
+# 
+# ggsave("fDOM_2018_2021.pdf",
+#        path = here("plots", "Chems_year"),
+#        width = 15, height = 10)
+# 
+# ggarrange(spc.2018, spc.2019,
+#           spc.2020, spc.2021,
+#            ncol = 2, nrow = 2,
+#            common.legend = TRUE,
+#            labels = c("A)", "B)",
+#                       "C)", "D)"),
+#         legend = "bottom")
+# 
+# ggsave("SPC_2018_2021.pdf",
+#        path = here("plots", "Chems_year"),
+#        width = 15, height = 10)
+# 
+# ggarrange(turb.2018, turb.2019,
+#           turb.2020, turb.2021,
+#            ncol = 2, nrow = 2,
+#            common.legend = TRUE,
+#            labels = c("A)", "B)",
+#                       "C)", "D)"),
+#         legend = "bottom")
+# 
+# ggsave("Turb_2018_2021.pdf",
+#        path = here("plots", "Chems_year"),
+#        width = 15, height = 10)
 
-ggsave("NO3_2020_2021.pdf",
+
+# THESE ARE THE ONES THAT I AM USING 
+vn = expression(paste(N*O[3]^"-"*(μM)))
+
+mean_daily_new <- mean_daily
+mean_daily_new$site.ID <- factor(mean_daily_new$site.ID,     # Reorder factor levels
+                         c("CARI", "FRCH", "VAUL", "MOOS", "POKE", "STRT"))
+
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  geom_boxplot() +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab(vn) +
+  theme_classic() +
+  facet_wrap(~year) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20))
+
+ggsave("NO3_facet.pdf",
        path = here("plots", "Chems_year"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 
-ggarrange(fDOM.2018, fDOM.2019,
-          fDOM.2020, fDOM.2021,
-           ncol = 2, nrow = 2,
-           common.legend = TRUE,
-           labels = c("A)", "B)",
-                      "C)", "D)"),
-        legend = "bottom")
 
-ggsave("fDOM_2018_2021.pdf",
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyfDOM, pattern = PF, fill = site.ID)) +
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"))+
+  xlab("") +
+  ylab("fDOM (QSU)") +
+  theme_classic() +
+  facet_wrap(~year) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20)) 
+
+ggsave("fDOM_facet.pdf",
        path = here("plots", "Chems_year"),
-       width = 15, height = 10)
+       width = 10, height = 10)
 
-ggarrange(spc.2018, spc.2019,
-          spc.2020, spc.2021,
-           ncol = 2, nrow = 2,
-           common.legend = TRUE,
-           labels = c("A)", "B)",
-                      "C)", "D)"),
-        legend = "bottom")
+ggplot(mean_daily_new, aes(x = site.ID, y = dailySPC, pattern = PF, fill = site.ID)) +
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("SPC (μS/cm)") +
+  theme_classic() +
+  facet_wrap(~year) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20)) 
 
-ggsave("SPC_2018_2021.pdf",
+ggsave("SPC_facet.pdf",
        path = here("plots", "Chems_year"),
-       width = 15, height = 10)
+       width = 11, height = 11)
 
-ggarrange(turb.2018, turb.2019,
-          turb.2020, turb.2021,
-           ncol = 2, nrow = 2,
-           common.legend = TRUE,
-           labels = c("A)", "B)",
-                      "C)", "D)"),
-        legend = "bottom")
 
-ggsave("Turb_2018_2021.pdf",
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyTurb, pattern = PF, fill = site.ID)) +
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  scale_y_continuous(trans='log10') +
+  xlab("") +
+  ylab("Turbidity (FNU)") +
+  theme_classic() +
+  facet_wrap(~year) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "right",
+        strip.text = element_text(size = 20)) 
+
+ggsave("Turb_facet.pdf",
        path = here("plots", "Chems_year"),
-       width = 15, height = 10)
+       width = 11, height = 11)
+
 
 ```
 
@@ -2933,6 +3121,7 @@ CV_mean_conc_all_years <- CV_mean_conc %>%
   group_by(response_var,site.ID) %>%
   dplyr::summarise(meanCV = mean(CVconc, na.rm = TRUE))
 
+
 ##subsetting by solute
 # NO3 #
 CV_NO3 = subset(CV_mean_conc, response_var == "dailyNO3")
@@ -2942,6 +3131,31 @@ CV_fDOM = subset(CV_mean_conc, response_var == "dailyfDOM")
 CV_SPC = subset(CV_mean_conc, response_var == "dailySPC")
 # turb #
 CV_turb = subset(CV_mean_conc, response_var == "dailyTurb")
+
+
+
+CV_mean_site_NO3 <- CV_NO3 %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanNO3 = mean(CVconc, na.rm = TRUE))
+
+CV_mean_site_fDOM <- CV_fDOM %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanfDOM = mean(CVconc, na.rm = TRUE))
+
+CV_mean_site_SPC <- CV_SPC %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanSPC = mean(CVconc, na.rm = TRUE))
+
+CV_mean_site_turb <- CV_turb %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanTurb = mean(CVconc, na.rm = TRUE))
+
+CV_site <- full_join(CV_mean_site_NO3, CV_mean_site_fDOM)
+CV_site <- full_join(CV_site, CV_mean_site_SPC)
+CV_site <- full_join(CV_site, CV_mean_site_turb)
+
+write.csv(CV_site, "~/Documents/Storms_clean_repo/Output_from_analysis/10_gls_models/CVs_site.csv")
+
 
 
 
@@ -3104,6 +3318,7 @@ TukeyHSD(turb.log, which = "site.ID")
 ### PLOTS FOR THESIS ###
 
 ```{r}
+library(facetscales)
 ggarrange(cv.no3, cv.fDOM,
           cv.spc, cv.turb,
            ncol = 2, nrow = 2,
@@ -3115,6 +3330,38 @@ ggarrange(cv.no3, cv.fDOM,
 ggsave("CV_all_solutes.pdf",
        path = here("plots", "Chem_variation"),
        width = 15, height = 10)
+
+scales_y <- list(
+  `dailyfDOM` = scale_y_continuous(limits = c(0.05, 0.5), breaks = seq(0.05, 0.5, 0.1)),
+  `dailyNO3` = scale_y_continuous(limits = c(0.05, 0.5), breaks = seq(0.05, 0.5, 0.1)),
+  `dailySPC` = scale_y_continuous(limits = c(0.05, 0.5), breaks = seq(0.05, 0.5, 0.1)),
+  `dailyTurb` = scale_y_continuous(limits = c(0, 5), breaks = seq(0.0, 5, 1))
+)
+
+supp.labs <- c(`dailyfDOM` = "CV-fDOM",
+               `dailyNO3` = "CV-NO3-",
+               `dailySPC` = "CV-SPC",
+               `dailyTurb` = "CV-turbidity")
+ggplot(CV_mean_conc, aes(x = site.ID, y = CVconc, fill = site.ID)) +
+  geom_boxplot() +
+  scale_y_continuous(trans='log10') +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("") +
+  ylab("") +
+  theme_classic() +
+  facet_wrap(~response_var, scales = "free_y", 
+             labeller = as_labeller(supp.labs)) +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20))
+
+
+ggsave("CV_facet.pdf",
+       path = here("plots", "Chem_variation"),
+       width = 10, height = 10)
 ```
 
 

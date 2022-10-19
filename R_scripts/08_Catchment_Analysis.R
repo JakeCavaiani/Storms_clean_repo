@@ -257,6 +257,13 @@ a <- ggMarginal(HI_BETA_NO3.p, groupColour = TRUE, groupFill = TRUE)
   
   
 # fDOM
+# which()
+# HI_FI_fDOM <- HI_FI_fDOM %>%
+#   mutate(across(c(Hyst_index), 
+#                 ~ifelse(Hyst_index > 0.25 & Beta_index > 0.4, NA, .)))
+
+HI_FI_fDOM <- HI_FI_fDOM[-c(131, 190, 219,237), ]
+
 HI_BETA_fDOM.p = 
     ggplot(HI_FI_fDOM, aes(Beta_index, Hyst_index)) + 
     geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
@@ -291,7 +298,7 @@ HI_BETA_SPC.p =
   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
   ggtitle("SPC")+ 
   ylab("HI") +
-  xlab("BETA") +
+  xlab("ß") +
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
@@ -313,9 +320,9 @@ HI_BETA_turb.p =
   theme_bw() +
   ylim(-1.5, 1.5) + 
   xlim(-1.5, 1.5) +
-  ggtitle("Turb")+ 
+  ggtitle("Turbidity")+ 
   ylab("") +
-  xlab("BETA") +
+  xlab("ß") +
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
@@ -330,11 +337,11 @@ d <- ggMarginal(HI_BETA_turb.p, groupColour = TRUE, groupFill = TRUE)
  
 ggarrange(a, b,
           c,d, 
-          labels = c("A", "B",
-                     "C", "D"))
+          labels = c("A)", "B)",
+                     "C)", "D)"))
 ggsave("HI_BETA.pdf",
        path = here("plots", "HI_BETA"),
-       width = 7, height = 7)
+       width = 9, height = 9)
 
 
 
@@ -407,6 +414,20 @@ table(sign(HI_FI_fDOM$Beta_index))
 which(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index > 0)
 which(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index < 0)
 
+MOOS.fDOM <- subset(HI_FI_fDOM, site.ID == "MOOS")
+table(sign(MOOS.fDOM$Beta_index))
+which(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index > 0)
+which(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index < 0)
+
+VAUL.fDOM <- subset(HI_FI_fDOM, site.ID == "VAUL")
+table(sign(VAUL.fDOM$Beta_index))
+which(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index > 0)
+which(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index < 0)
+
+CARI.fDOM <- subset(HI_FI_fDOM, site.ID == "CARI")
+table(sign(CARI.fDOM$Beta_index))
+which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index > 0)
+which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index < 0)
 
 #SPC
 table(sign(HI_FI_SPC$Hyst_index))
@@ -439,6 +460,10 @@ table(sign(HI_FI_NO3_FRCH_2018$Hyst_index))
 which(HI_FI_NO3_FRCH_2018$HI_ymin < 0 & HI_FI_NO3_FRCH_2018$HI_ymax > 0 & HI_FI_NO3_FRCH_2018$Hyst_index > 0)
 which(HI_FI_NO3_FRCH_2018$HI_ymin < 0 & HI_FI_NO3_FRCH_2018$HI_ymax > 0 & HI_FI_NO3_FRCH_2018$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_FRCH_2018$Beta_index))
+which(HI_FI_NO3_FRCH_2018$Beta_ymin < 0 & HI_FI_NO3_FRCH_2018$Beta_ymax > 0 & HI_FI_NO3_FRCH_2018$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2018$Beta_ymin < 0 & HI_FI_NO3_FRCH_2018$Beta_ymax > 0 & HI_FI_NO3_FRCH_2018$Beta_index < 0)
+
 # fDOM
 HI_FI_fDOM_FRCH_2018 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2018")
 
@@ -446,12 +471,20 @@ table(sign(HI_FI_fDOM_FRCH_2018$Hyst_index))
 which(HI_FI_fDOM_FRCH_2018$HI_ymin < 0 & HI_FI_fDOM_FRCH_2018$HI_ymax > 0 & HI_FI_fDOM_FRCH_2018$Hyst_index > 0)
 which(HI_FI_fDOM_FRCH_2018$HI_ymin < 0 & HI_FI_fDOM_FRCH_2018$HI_ymax > 0 & HI_FI_fDOM_FRCH_2018$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_FRCH_2018$Beta_index))
+which(HI_FI_fDOM_FRCH_2018$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2018$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2018$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2018$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2018$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2018$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_FRCH_2018 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2018")
 
 table(sign(HI_FI_SPC_FRCH_2018$Hyst_index))
 which(HI_FI_SPC_FRCH_2018$HI_ymin < 0 & HI_FI_SPC_FRCH_2018$HI_ymax > 0 & HI_FI_SPC_FRCH_2018$Hyst_index > 0)
 which(HI_FI_SPC_FRCH_2018$HI_ymin < 0 & HI_FI_SPC_FRCH_2018$HI_ymax > 0 & HI_FI_SPC_FRCH_2018$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2018$Beta_index))
+which(HI_FI_SPC_FRCH_2018$Beta_ymin < 0 & HI_FI_SPC_FRCH_2018$Beta_ymax > 0 & HI_FI_SPC_FRCH_2018$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2018$Beta_ymin < 0 & HI_FI_SPC_FRCH_2018$Beta_ymax > 0 & HI_FI_SPC_FRCH_2018$Beta_index < 0)
 
 #turb
 HI_FI_turb_FRCH_2018 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2018")
@@ -472,6 +505,10 @@ table(sign(HI_FI_NO3_MOOS_2018$Hyst_index))
 which(HI_FI_NO3_MOOS_2018$HI_ymin < 0 & HI_FI_NO3_MOOS_2018$HI_ymax > 0 & HI_FI_NO3_MOOS_2018$Hyst_index > 0)
 which(HI_FI_NO3_MOOS_2018$HI_ymin < 0 & HI_FI_NO3_MOOS_2018$HI_ymax > 0 & HI_FI_NO3_MOOS_2018$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_MOOS_2018$Beta_index))
+which(HI_FI_NO3_MOOS_2018$Beta_ymin < 0 & HI_FI_NO3_MOOS_2018$Beta_ymax > 0 & HI_FI_NO3_MOOS_2018$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2018$Beta_ymin < 0 & HI_FI_NO3_MOOS_2018$Beta_ymax > 0 & HI_FI_NO3_MOOS_2018$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_MOOS_2018 <- subset(HI_FI_fDOM, site.ID == "MOOS" & year == "2018")
@@ -480,12 +517,20 @@ table(sign(HI_FI_fDOM_MOOS_2018$Hyst_index))
 which(HI_FI_fDOM_MOOS_2018$HI_ymin < 0 & HI_FI_fDOM_MOOS_2018$HI_ymax > 0 & HI_FI_fDOM_MOOS_2018$Hyst_index > 0)
 which(HI_FI_fDOM_MOOS_2018$HI_ymin < 0 & HI_FI_fDOM_MOOS_2018$HI_ymax > 0 & HI_FI_fDOM_MOOS_2018$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_MOOS_2018$Beta_index))
+which(HI_FI_fDOM_MOOS_2018$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2018$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2018$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2018$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2018$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2018$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_MOOS_2018 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2018")
 
 table(sign(HI_FI_SPC_MOOS_2018$Hyst_index))
 which(HI_FI_SPC_MOOS_2018$HI_ymin < 0 & HI_FI_SPC_MOOS_2018$HI_ymax > 0 & HI_FI_SPC_MOOS_2018$Hyst_index > 0)
 which(HI_FI_SPC_MOOS_2018$HI_ymin < 0 & HI_FI_SPC_MOOS_2018$HI_ymax > 0 & HI_FI_SPC_MOOS_2018$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_MOOS_2018$Beta_index))
+which(HI_FI_SPC_MOOS_2018$Beta_ymin < 0 & HI_FI_SPC_MOOS_2018$Beta_ymax > 0 & HI_FI_SPC_MOOS_2018$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2018$Beta_ymin < 0 & HI_FI_SPC_MOOS_2018$Beta_ymax > 0 & HI_FI_SPC_MOOS_2018$Beta_index < 0)
 
 #turb
 HI_FI_turb_MOOS_2018 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2018")
@@ -494,10 +539,9 @@ table(sign(HI_FI_turb_MOOS_2018$Hyst_index))
 which(HI_FI_turb_MOOS_2018$HI_ymin < 0 & HI_FI_turb_MOOS_2018$HI_ymax > 0 & HI_FI_turb_MOOS_2018$Hyst_index > 0)
 which(HI_FI_turb_MOOS_2018$HI_ymin < 0 & HI_FI_turb_MOOS_2018$HI_ymax > 0 & HI_FI_turb_MOOS_2018$Hyst_index < 0)
 
-
-
-
-
+table(sign(HI_FI_turb_MOOS_2018$Beta_index))
+which(HI_FI_turb_MOOS_2018$Beta_ymin < 0 & HI_FI_turb_MOOS_2018$Beta_ymax > 0 & HI_FI_turb_MOOS_2018$Beta_index > 0)
+which(HI_FI_turb_MOOS_2018$Beta_ymin < 0 & HI_FI_turb_MOOS_2018$Beta_ymax > 0 & HI_FI_turb_MOOS_2018$Beta_index < 0)
 
 # CARI ####
 # NO3 
@@ -507,6 +551,9 @@ table(sign(HI_FI_NO3_CARI_2018$Hyst_index))
 which(HI_FI_NO3_CARI_2018$HI_ymin < 0 & HI_FI_NO3_CARI_2018$HI_ymax > 0 & HI_FI_NO3_CARI_2018$Hyst_index > 0)
 which(HI_FI_NO3_CARI_2018$HI_ymin < 0 & HI_FI_NO3_CARI_2018$HI_ymax > 0 & HI_FI_NO3_CARI_2018$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_CARI_2018$Beta_index))
+which(HI_FI_NO3_CARI_2018$Beta_ymin < 0 & HI_FI_NO3_CARI_2018$Beta_ymax > 0 & HI_FI_NO3_CARI_2018$Beta_index > 0)
+which(HI_FI_NO3_CARI_2018$Beta_ymin < 0 & HI_FI_NO3_CARI_2018$Beta_ymax > 0 & HI_FI_NO3_CARI_2018$Beta_index < 0)
 
 #fDOM 
 HI_FI_fDOM_CARI_2018 <- subset(HI_FI_fDOM, site.ID == "CARI" & year == "2018")
@@ -515,12 +562,20 @@ table(sign(HI_FI_fDOM_CARI_2018$Hyst_index))
 which(HI_FI_fDOM_CARI_2018$HI_ymin < 0 & HI_FI_fDOM_CARI_2018$HI_ymax > 0 & HI_FI_fDOM_CARI_2018$Hyst_index > 0)
 which(HI_FI_fDOM_CARI_2018$HI_ymin < 0 & HI_FI_fDOM_CARI_2018$HI_ymax > 0 & HI_FI_fDOM_CARI_2018$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_CARI_2018$Beta_index))
+which(HI_FI_fDOM_CARI_2018$Beta_ymin < 0 & HI_FI_fDOM_CARI_2018$Beta_ymax > 0 & HI_FI_fDOM_CARI_2018$Beta_index > 0)
+which(HI_FI_fDOM_CARI_2018$Beta_ymin < 0 & HI_FI_fDOM_CARI_2018$Beta_ymax > 0 & HI_FI_fDOM_CARI_2018$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_CARI_2018 <- subset(HI_FI_SPC, site.ID == "CARI" & year == "2018")
 
 table(sign(HI_FI_SPC_CARI_2018$Hyst_index))
 which(HI_FI_SPC_CARI_2018$HI_ymin < 0 & HI_FI_SPC_CARI_2018$HI_ymax > 0 & HI_FI_SPC_CARI_2018$Hyst_index > 0)
 which(HI_FI_SPC_CARI_2018$HI_ymin < 0 & HI_FI_SPC_CARI_2018$HI_ymax > 0 & HI_FI_SPC_CARI_2018$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_CARI_2018$Beta_index))
+which(HI_FI_SPC_CARI_2018$Beta_ymin < 0 & HI_FI_SPC_CARI_2018$Beta_ymax > 0 & HI_FI_SPC_CARI_2018$Beta_index > 0)
+which(HI_FI_SPC_CARI_2018$Beta_ymin < 0 & HI_FI_SPC_CARI_2018$Beta_ymax > 0 & HI_FI_SPC_CARI_2018$Beta_index < 0)
 
 #turb
 HI_FI_turb_CARI_2018 <- subset(HI_FI_turb, site.ID == "CARI" & year == "2018")
@@ -529,14 +584,9 @@ table(sign(HI_FI_turb_CARI_2018$Hyst_index))
 which(HI_FI_turb_CARI_2018$HI_ymin < 0 & HI_FI_turb_CARI_2018$HI_ymax > 0 & HI_FI_turb_CARI_2018$Hyst_index > 0)
 which(HI_FI_turb_CARI_2018$HI_ymin < 0 & HI_FI_turb_CARI_2018$HI_ymax > 0 & HI_FI_turb_CARI_2018$Hyst_index < 0)
 
-
-
-
-
-
-
-
-
+table(sign(HI_FI_turb_CARI_2018$Beta_index))
+which(HI_FI_turb_CARI_2018$Beta_ymin < 0 & HI_FI_turb_CARI_2018$Beta_ymax > 0 & HI_FI_turb_CARI_2018$Beta_index > 0)
+which(HI_FI_turb_CARI_2018$Beta_ymin < 0 & HI_FI_turb_CARI_2018$Beta_ymax > 0 & HI_FI_turb_CARI_2018$Beta_index < 0)
 
 #
 
@@ -549,6 +599,10 @@ table(sign(HI_FI_NO3_FRCH_2019$Hyst_index))
 which(HI_FI_NO3_FRCH_2019$HI_ymin < 0 & HI_FI_NO3_FRCH_2019$HI_ymax > 0 & HI_FI_NO3_FRCH_2019$Hyst_index > 0)
 which(HI_FI_NO3_FRCH_2019$HI_ymin < 0 & HI_FI_NO3_FRCH_2019$HI_ymax > 0 & HI_FI_NO3_FRCH_2019$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_FRCH_2019$Beta_index))
+which(HI_FI_NO3_FRCH_2019$Beta_ymin < 0 & HI_FI_NO3_FRCH_2019$Beta_ymax > 0 & HI_FI_NO3_FRCH_2019$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2019$Beta_ymin < 0 & HI_FI_NO3_FRCH_2019$Beta_ymax > 0 & HI_FI_NO3_FRCH_2019$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_FRCH_2019 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2019")
@@ -557,12 +611,20 @@ table(sign(HI_FI_fDOM_FRCH_2019$Hyst_index))
 which(HI_FI_fDOM_FRCH_2019$HI_ymin < 0 & HI_FI_fDOM_FRCH_2019$HI_ymax > 0 & HI_FI_fDOM_FRCH_2019$Hyst_index > 0)
 which(HI_FI_fDOM_FRCH_2019$HI_ymin < 0 & HI_FI_fDOM_FRCH_2019$HI_ymax > 0 & HI_FI_fDOM_FRCH_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_FRCH_2019$Beta_index))
+which(HI_FI_fDOM_FRCH_2019$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2019$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2019$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2019$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2019$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_FRCH_2019 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2019")
 
 table(sign(HI_FI_SPC_FRCH_2019$Hyst_index))
 which(HI_FI_SPC_FRCH_2019$HI_ymin < 0 & HI_FI_SPC_FRCH_2019$HI_ymax > 0 & HI_FI_SPC_FRCH_2019$Hyst_index > 0)
 which(HI_FI_SPC_FRCH_2019$HI_ymin < 0 & HI_FI_SPC_FRCH_2019$HI_ymax > 0 & HI_FI_SPC_FRCH_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2019$Beta_index))
+which(HI_FI_SPC_FRCH_2019$Beta_ymin < 0 & HI_FI_SPC_FRCH_2019$Beta_ymax > 0 & HI_FI_SPC_FRCH_2019$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2019$Beta_ymin < 0 & HI_FI_SPC_FRCH_2019$Beta_ymax > 0 & HI_FI_SPC_FRCH_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_FRCH_2019 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2019")
@@ -571,6 +633,10 @@ table(sign(HI_FI_turb_FRCH_2019$Hyst_index))
 which(HI_FI_turb_FRCH_2019$HI_ymin < 0 & HI_FI_turb_FRCH_2019$HI_ymax > 0 & HI_FI_turb_FRCH_2019$Hyst_index > 0)
 which(HI_FI_turb_FRCH_2019$HI_ymin < 0 & HI_FI_turb_FRCH_2019$HI_ymax > 0 & HI_FI_turb_FRCH_2019$Hyst_index < 0)
 
+table(sign(HI_FI_turb_FRCH_2019$Beta_index))
+which(HI_FI_turb_FRCH_2019$Beta_ymin < 0 & HI_FI_turb_FRCH_2019$Beta_ymax > 0 & HI_FI_turb_FRCH_2019$Beta_index > 0)
+which(HI_FI_turb_FRCH_2019$Beta_ymin < 0 & HI_FI_turb_FRCH_2019$Beta_ymax > 0 & HI_FI_turb_FRCH_2019$Beta_index < 0)
+
 # MOOS ####
 HI_FI_NO3_MOOS_2019 <- subset(HI_FI_NO3, site.ID == "MOOS" & year == "2019")
 
@@ -578,6 +644,9 @@ table(sign(HI_FI_NO3_MOOS_2019$Hyst_index))
 which(HI_FI_NO3_MOOS_2019$HI_ymin < 0 & HI_FI_NO3_MOOS_2019$HI_ymax > 0 & HI_FI_NO3_MOOS_2019$Hyst_index > 0)
 which(HI_FI_NO3_MOOS_2019$HI_ymin < 0 & HI_FI_NO3_MOOS_2019$HI_ymax > 0 & HI_FI_NO3_MOOS_2019$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_MOOS_2019$Beta_index))
+which(HI_FI_NO3_MOOS_2019$Beta_ymin < 0 & HI_FI_NO3_MOOS_2019$Beta_ymax > 0 & HI_FI_NO3_MOOS_2019$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2019$Beta_ymin < 0 & HI_FI_NO3_MOOS_2019$Beta_ymax > 0 & HI_FI_NO3_MOOS_2019$Beta_index < 0)
 
 #fDOM 
 HI_FI_fDOM_MOOS_2019 <- subset(HI_FI_fDOM, site.ID == "MOOS" & year == "2019")
@@ -586,12 +655,20 @@ table(sign(HI_FI_fDOM_MOOS_2019$Hyst_index))
 which(HI_FI_fDOM_MOOS_2019$HI_ymin < 0 & HI_FI_fDOM_MOOS_2019$HI_ymax > 0 & HI_FI_fDOM_MOOS_2019$Hyst_index > 0)
 which(HI_FI_fDOM_MOOS_2019$HI_ymin < 0 & HI_FI_fDOM_MOOS_2019$HI_ymax > 0 & HI_FI_fDOM_MOOS_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_MOOS_2019$Beta_index))
+which(HI_FI_fDOM_MOOS_2019$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2019$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2019$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2019$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2019$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_MOOS_2019 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2019")
 
 table(sign(HI_FI_SPC_MOOS_2019$Hyst_index))
 which(HI_FI_SPC_MOOS_2019$HI_ymin < 0 & HI_FI_SPC_MOOS_2019$HI_ymax > 0 & HI_FI_SPC_MOOS_2019$Hyst_index > 0)
 which(HI_FI_SPC_MOOS_2019$HI_ymin < 0 & HI_FI_SPC_MOOS_2019$HI_ymax > 0 & HI_FI_SPC_MOOS_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_MOOS_2019$Beta_index))
+which(HI_FI_SPC_MOOS_2019$Beta_ymin < 0 & HI_FI_SPC_MOOS_2019$Beta_ymax > 0 & HI_FI_SPC_MOOS_2019$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2019$Beta_ymin < 0 & HI_FI_SPC_MOOS_2019$Beta_ymax > 0 & HI_FI_SPC_MOOS_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_MOOS_2019 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2019")
@@ -600,6 +677,10 @@ table(sign(HI_FI_turb_MOOS_2019$Hyst_index))
 which(HI_FI_turb_MOOS_2019$HI_ymin < 0 & HI_FI_turb_MOOS_2019$HI_ymax > 0 & HI_FI_turb_MOOS_2019$Hyst_index > 0)
 which(HI_FI_turb_MOOS_2019$HI_ymin < 0 & HI_FI_turb_MOOS_2019$HI_ymax > 0 & HI_FI_turb_MOOS_2019$Hyst_index < 0)
 
+table(sign(HI_FI_turb_MOOS_2019$Beta_index))
+which(HI_FI_turb_MOOS_2019$Beta_ymin < 0 & HI_FI_turb_MOOS_2019$Beta_ymax > 0 & HI_FI_turb_MOOS_2019$Beta_index > 0)
+which(HI_FI_turb_MOOS_2019$Beta_ymin < 0 & HI_FI_turb_MOOS_2019$Beta_ymax > 0 & HI_FI_turb_MOOS_2019$Beta_index < 0)
+
 # CARI ####
 HI_FI_NO3_CARI_2019 <- subset(HI_FI_NO3, site.ID == "CARI" & year == "2019")
 
@@ -607,6 +688,9 @@ table(sign(HI_FI_NO3_CARI_2019$Hyst_index))
 which(HI_FI_NO3_CARI_2019$HI_ymin < 0 & HI_FI_NO3_CARI_2019$HI_ymax > 0 & HI_FI_NO3_CARI_2019$Hyst_index > 0)
 which(HI_FI_NO3_CARI_2019$HI_ymin < 0 & HI_FI_NO3_CARI_2019$HI_ymax > 0 & HI_FI_NO3_CARI_2019$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_CARI_2019$Beta_index))
+which(HI_FI_NO3_CARI_2019$Beta_ymin < 0 & HI_FI_NO3_CARI_2019$Beta_ymax > 0 & HI_FI_NO3_CARI_2019$Beta_index > 0)
+which(HI_FI_NO3_CARI_2019$Beta_ymin < 0 & HI_FI_NO3_CARI_2019$Beta_ymax > 0 & HI_FI_NO3_CARI_2019$Beta_index < 0)
 
 #fDOM 
 HI_FI_fDOM_CARI_2019 <- subset(HI_FI_fDOM, site.ID == "CARI" & year == "2019")
@@ -615,12 +699,20 @@ table(sign(HI_FI_fDOM_CARI_2019$Hyst_index))
 which(HI_FI_fDOM_CARI_2019$HI_ymin < 0 & HI_FI_fDOM_CARI_2019$HI_ymax > 0 & HI_FI_fDOM_CARI_2019$Hyst_index > 0)
 which(HI_FI_fDOM_CARI_2019$HI_ymin < 0 & HI_FI_fDOM_CARI_2019$HI_ymax > 0 & HI_FI_fDOM_CARI_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_CARI_2019$Beta_index))
+which(HI_FI_fDOM_CARI_2019$Beta_ymin < 0 & HI_FI_fDOM_CARI_2019$Beta_ymax > 0 & HI_FI_fDOM_CARI_2019$Beta_index > 0)
+which(HI_FI_fDOM_CARI_2019$Beta_ymin < 0 & HI_FI_fDOM_CARI_2019$Beta_ymax > 0 & HI_FI_fDOM_CARI_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_CARI_2019 <- subset(HI_FI_SPC, site.ID == "CARI" & year == "2019")
 
 table(sign(HI_FI_SPC_CARI_2019$Hyst_index))
 which(HI_FI_SPC_CARI_2019$HI_ymin < 0 & HI_FI_SPC_CARI_2019$HI_ymax > 0 & HI_FI_SPC_CARI_2019$Hyst_index > 0)
 which(HI_FI_SPC_CARI_2019$HI_ymin < 0 & HI_FI_SPC_CARI_2019$HI_ymax > 0 & HI_FI_SPC_CARI_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_CARI_2019$Beta_index))
+which(HI_FI_SPC_CARI_2019$Beta_ymin < 0 & HI_FI_SPC_CARI_2019$Beta_ymax > 0 & HI_FI_SPC_CARI_2019$Beta_index > 0)
+which(HI_FI_SPC_CARI_2019$Beta_ymin < 0 & HI_FI_SPC_CARI_2019$Beta_ymax > 0 & HI_FI_SPC_CARI_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_CARI_2019 <- subset(HI_FI_turb, site.ID == "CARI" & year == "2019")
@@ -629,12 +721,20 @@ table(sign(HI_FI_turb_CARI_2019$Hyst_index))
 which(HI_FI_turb_CARI_2019$HI_ymin < 0 & HI_FI_turb_CARI_2019$HI_ymax > 0 & HI_FI_turb_CARI_2019$Hyst_index > 0)
 which(HI_FI_turb_CARI_2019$HI_ymin < 0 & HI_FI_turb_CARI_2019$HI_ymax > 0 & HI_FI_turb_CARI_2019$Hyst_index < 0)
 
+table(sign(HI_FI_turb_CARI_2019$Beta_index))
+which(HI_FI_turb_CARI_2019$Beta_ymin < 0 & HI_FI_turb_CARI_2019$Beta_ymax > 0 & HI_FI_turb_CARI_2019$Beta_index > 0)
+which(HI_FI_turb_CARI_2019$Beta_ymin < 0 & HI_FI_turb_CARI_2019$Beta_ymax > 0 & HI_FI_turb_CARI_2019$Beta_index < 0)
+
 # POKE ####
 HI_FI_NO3_POKE_2019 <- subset(HI_FI_NO3, site.ID == "POKE" & year == "2019")
 
 table(sign(HI_FI_NO3_POKE_2019$Hyst_index))
 which(HI_FI_NO3_POKE_2019$HI_ymin < 0 & HI_FI_NO3_POKE_2019$HI_ymax > 0 & HI_FI_NO3_POKE_2019$Hyst_index > 0)
 which(HI_FI_NO3_POKE_2019$HI_ymin < 0 & HI_FI_NO3_POKE_2019$HI_ymax > 0 & HI_FI_NO3_POKE_2019$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_POKE_2019$Beta_index))
+which(HI_FI_NO3_POKE_2019$Beta_ymin < 0 & HI_FI_NO3_POKE_2019$Beta_ymax > 0 & HI_FI_NO3_POKE_2019$Beta_index > 0)
+which(HI_FI_NO3_POKE_2019$Beta_ymin < 0 & HI_FI_NO3_POKE_2019$Beta_ymax > 0 & HI_FI_NO3_POKE_2019$Beta_index < 0)
 
 
 #fDOM 
@@ -644,12 +744,20 @@ table(sign(HI_FI_fDOM_POKE_2019$Hyst_index))
 which(HI_FI_fDOM_POKE_2019$HI_ymin < 0 & HI_FI_fDOM_POKE_2019$HI_ymax > 0 & HI_FI_fDOM_POKE_2019$Hyst_index > 0)
 which(HI_FI_fDOM_POKE_2019$HI_ymin < 0 & HI_FI_fDOM_POKE_2019$HI_ymax > 0 & HI_FI_fDOM_POKE_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_POKE_2019$Beta_index))
+which(HI_FI_fDOM_POKE_2019$Beta_ymin < 0 & HI_FI_fDOM_POKE_2019$Beta_ymax > 0 & HI_FI_fDOM_POKE_2019$Beta_index > 0)
+which(HI_FI_fDOM_POKE_2019$Beta_ymin < 0 & HI_FI_fDOM_POKE_2019$Beta_ymax > 0 & HI_FI_fDOM_POKE_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_POKE_2019 <- subset(HI_FI_SPC, site.ID == "POKE" & year == "2019")
 
 table(sign(HI_FI_SPC_POKE_2019$Hyst_index))
 which(HI_FI_SPC_POKE_2019$HI_ymin < 0 & HI_FI_SPC_POKE_2019$HI_ymax > 0 & HI_FI_SPC_POKE_2019$Hyst_index > 0)
 which(HI_FI_SPC_POKE_2019$HI_ymin < 0 & HI_FI_SPC_POKE_2019$HI_ymax > 0 & HI_FI_SPC_POKE_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_POKE_2019$Beta_index))
+which(HI_FI_SPC_POKE_2019$Beta_ymin < 0 & HI_FI_SPC_POKE_2019$Beta_ymax > 0 & HI_FI_SPC_POKE_2019$Beta_index > 0)
+which(HI_FI_SPC_POKE_2019$Beta_ymin < 0 & HI_FI_SPC_POKE_2019$Beta_ymax > 0 & HI_FI_SPC_POKE_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_POKE_2019 <- subset(HI_FI_turb, site.ID == "POKE" & year == "2019")
@@ -658,12 +766,20 @@ table(sign(HI_FI_turb_POKE_2019$Hyst_index))
 which(HI_FI_turb_POKE_2019$HI_ymin < 0 & HI_FI_turb_POKE_2019$HI_ymax > 0 & HI_FI_turb_POKE_2019$Hyst_index > 0)
 which(HI_FI_turb_POKE_2019$HI_ymin < 0 & HI_FI_turb_POKE_2019$HI_ymax > 0 & HI_FI_turb_POKE_2019$Hyst_index < 0)
 
+table(sign(HI_FI_turb_POKE_2019$Beta_index))
+which(HI_FI_turb_POKE_2019$Beta_ymin < 0 & HI_FI_turb_POKE_2019$Beta_ymax > 0 & HI_FI_turb_POKE_2019$Beta_index > 0)
+which(HI_FI_turb_POKE_2019$Beta_ymin < 0 & HI_FI_turb_POKE_2019$Beta_ymax > 0 & HI_FI_turb_POKE_2019$Beta_index < 0)
+
 # STRT ####
 HI_FI_NO3_STRT_2019 <- subset(HI_FI_NO3, site.ID == "STRT" & year == "2019")
 
 table(sign(HI_FI_NO3_STRT_2019$Hyst_index))
 which(HI_FI_NO3_STRT_2019$HI_ymin < 0 & HI_FI_NO3_STRT_2019$HI_ymax > 0 & HI_FI_NO3_STRT_2019$Hyst_index > 0)
 which(HI_FI_NO3_STRT_2019$HI_ymin < 0 & HI_FI_NO3_STRT_2019$HI_ymax > 0 & HI_FI_NO3_STRT_2019$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_STRT_2019$Beta_index))
+which(HI_FI_NO3_STRT_2019$Beta_ymin < 0 & HI_FI_NO3_STRT_2019$Beta_ymax > 0 & HI_FI_NO3_STRT_2019$Beta_index > 0)
+which(HI_FI_NO3_STRT_2019$Beta_ymin < 0 & HI_FI_NO3_STRT_2019$Beta_ymax > 0 & HI_FI_NO3_STRT_2019$Beta_index < 0)
 
 
 #fDOM 
@@ -673,12 +789,20 @@ table(sign(HI_FI_fDOM_STRT_2019$Hyst_index))
 which(HI_FI_fDOM_STRT_2019$HI_ymin < 0 & HI_FI_fDOM_STRT_2019$HI_ymax > 0 & HI_FI_fDOM_STRT_2019$Hyst_index > 0)
 which(HI_FI_fDOM_STRT_2019$HI_ymin < 0 & HI_FI_fDOM_STRT_2019$HI_ymax > 0 & HI_FI_fDOM_STRT_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_STRT_2019$Beta_index))
+which(HI_FI_fDOM_STRT_2019$Beta_ymin < 0 & HI_FI_fDOM_STRT_2019$Beta_ymax > 0 & HI_FI_fDOM_STRT_2019$Beta_index > 0)
+which(HI_FI_fDOM_STRT_2019$Beta_ymin < 0 & HI_FI_fDOM_STRT_2019$Beta_ymax > 0 & HI_FI_fDOM_STRT_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_STRT_2019 <- subset(HI_FI_SPC, site.ID == "STRT" & year == "2019")
 
 table(sign(HI_FI_SPC_STRT_2019$Hyst_index))
 which(HI_FI_SPC_STRT_2019$HI_ymin < 0 & HI_FI_SPC_STRT_2019$HI_ymax > 0 & HI_FI_SPC_STRT_2019$Hyst_index > 0)
 which(HI_FI_SPC_STRT_2019$HI_ymin < 0 & HI_FI_SPC_STRT_2019$HI_ymax > 0 & HI_FI_SPC_STRT_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_STRT_2019$Beta_index))
+which(HI_FI_SPC_STRT_2019$Beta_ymin < 0 & HI_FI_SPC_STRT_2019$Beta_ymax > 0 & HI_FI_SPC_STRT_2019$Beta_index > 0)
+which(HI_FI_SPC_STRT_2019$Beta_ymin < 0 & HI_FI_SPC_STRT_2019$Beta_ymax > 0 & HI_FI_SPC_STRT_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_STRT_2019 <- subset(HI_FI_turb, site.ID == "STRT" & year == "2019")
@@ -687,6 +811,9 @@ table(sign(HI_FI_turb_STRT_2019$Hyst_index))
 which(HI_FI_turb_STRT_2019$HI_ymin < 0 & HI_FI_turb_STRT_2019$HI_ymax > 0 & HI_FI_turb_STRT_2019$Hyst_index > 0)
 which(HI_FI_turb_STRT_2019$HI_ymin < 0 & HI_FI_turb_STRT_2019$HI_ymax > 0 & HI_FI_turb_STRT_2019$Hyst_index < 0)
 
+table(sign(HI_FI_turb_STRT_2019$Beta_index))
+which(HI_FI_turb_STRT_2019$Beta_ymin < 0 & HI_FI_turb_STRT_2019$Beta_ymax > 0 & HI_FI_turb_STRT_2019$Beta_index > 0)
+which(HI_FI_turb_STRT_2019$Beta_ymin < 0 & HI_FI_turb_STRT_2019$Beta_ymax > 0 & HI_FI_turb_STRT_2019$Beta_index < 0)
 
 # VAUL ####
 HI_FI_NO3_VAUL_2019 <- subset(HI_FI_NO3, site.ID == "VAUL" & year == "2019")
@@ -694,6 +821,10 @@ HI_FI_NO3_VAUL_2019 <- subset(HI_FI_NO3, site.ID == "VAUL" & year == "2019")
 table(sign(HI_FI_NO3_VAUL_2019$Hyst_index))
 which(HI_FI_NO3_VAUL_2019$HI_ymin < 0 & HI_FI_NO3_VAUL_2019$HI_ymax > 0 & HI_FI_NO3_VAUL_2019$Hyst_index > 0)
 which(HI_FI_NO3_VAUL_2019$HI_ymin < 0 & HI_FI_NO3_VAUL_2019$HI_ymax > 0 & HI_FI_NO3_VAUL_2019$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_VAUL_2019$Beta_index))
+which(HI_FI_NO3_VAUL_2019$Beta_ymin < 0 & HI_FI_NO3_VAUL_2019$Beta_ymax > 0 & HI_FI_NO3_VAUL_2019$Beta_index > 0)
+which(HI_FI_NO3_VAUL_2019$Beta_ymin < 0 & HI_FI_NO3_VAUL_2019$Beta_ymax > 0 & HI_FI_NO3_VAUL_2019$Beta_index < 0)
 
 
 #fDOM 
@@ -703,12 +834,20 @@ table(sign(HI_FI_fDOM_VAUL_2019$Hyst_index))
 which(HI_FI_fDOM_VAUL_2019$HI_ymin < 0 & HI_FI_fDOM_VAUL_2019$HI_ymax > 0 & HI_FI_fDOM_VAUL_2019$Hyst_index > 0)
 which(HI_FI_fDOM_VAUL_2019$HI_ymin < 0 & HI_FI_fDOM_VAUL_2019$HI_ymax > 0 & HI_FI_fDOM_VAUL_2019$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_VAUL_2019$Beta_index))
+which(HI_FI_fDOM_VAUL_2019$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2019$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2019$Beta_index > 0)
+which(HI_FI_fDOM_VAUL_2019$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2019$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2019$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_VAUL_2019 <- subset(HI_FI_SPC, site.ID == "VAUL" & year == "2019")
 
 table(sign(HI_FI_SPC_VAUL_2019$Hyst_index))
 which(HI_FI_SPC_VAUL_2019$HI_ymin < 0 & HI_FI_SPC_VAUL_2019$HI_ymax > 0 & HI_FI_SPC_VAUL_2019$Hyst_index > 0)
 which(HI_FI_SPC_VAUL_2019$HI_ymin < 0 & HI_FI_SPC_VAUL_2019$HI_ymax > 0 & HI_FI_SPC_VAUL_2019$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_VAUL_2019$Beta_index))
+which(HI_FI_SPC_VAUL_2019$Beta_ymin < 0 & HI_FI_SPC_VAUL_2019$Beta_ymax > 0 & HI_FI_SPC_VAUL_2019$Beta_index > 0)
+which(HI_FI_SPC_VAUL_2019$Beta_ymin < 0 & HI_FI_SPC_VAUL_2019$Beta_ymax > 0 & HI_FI_SPC_VAUL_2019$Beta_index < 0)
 
 #turb
 HI_FI_turb_VAUL_2019 <- subset(HI_FI_turb, site.ID == "VAUL" & year == "2019")
@@ -717,18 +856,9 @@ table(sign(HI_FI_turb_VAUL_2019$Hyst_index))
 which(HI_FI_turb_VAUL_2019$HI_ymin < 0 & HI_FI_turb_VAUL_2019$HI_ymax > 0 & HI_FI_turb_VAUL_2019$Hyst_index > 0)
 which(HI_FI_turb_VAUL_2019$HI_ymin < 0 & HI_FI_turb_VAUL_2019$HI_ymax > 0 & HI_FI_turb_VAUL_2019$Hyst_index < 0)
 
-
-
-
-
-
-
-
-
-
-
-
-
+table(sign(HI_FI_turb_VAUL_2019$Beta_index))
+which(HI_FI_turb_VAUL_2019$Beta_ymin < 0 & HI_FI_turb_VAUL_2019$Beta_ymax > 0 & HI_FI_turb_VAUL_2019$Beta_index > 0)
+which(HI_FI_turb_VAUL_2019$Beta_ymin < 0 & HI_FI_turb_VAUL_2019$Beta_ymax > 0 & HI_FI_turb_VAUL_2019$Beta_index < 0)
 
 
 # 2020 ####
@@ -740,6 +870,10 @@ table(sign(HI_FI_NO3_FRCH_2020$Hyst_index))
 which(HI_FI_NO3_FRCH_2020$HI_ymin < 0 & HI_FI_NO3_FRCH_2020$HI_ymax > 0 & HI_FI_NO3_FRCH_2020$Hyst_index > 0)
 which(HI_FI_NO3_FRCH_2020$HI_ymin < 0 & HI_FI_NO3_FRCH_2020$HI_ymax > 0 & HI_FI_NO3_FRCH_2020$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_FRCH_2020$Beta_index))
+which(HI_FI_NO3_FRCH_2020$Beta_ymin < 0 & HI_FI_NO3_FRCH_2020$Beta_ymax > 0 & HI_FI_NO3_FRCH_2020$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2020$Beta_ymin < 0 & HI_FI_NO3_FRCH_2020$Beta_ymax > 0 & HI_FI_NO3_FRCH_2020$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_FRCH_2020 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2020")
@@ -748,12 +882,20 @@ table(sign(HI_FI_fDOM_FRCH_2020$Hyst_index))
 which(HI_FI_fDOM_FRCH_2020$HI_ymin < 0 & HI_FI_fDOM_FRCH_2020$HI_ymax > 0 & HI_FI_fDOM_FRCH_2020$Hyst_index > 0)
 which(HI_FI_fDOM_FRCH_2020$HI_ymin < 0 & HI_FI_fDOM_FRCH_2020$HI_ymax > 0 & HI_FI_fDOM_FRCH_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_FRCH_2020$Beta_index))
+which(HI_FI_fDOM_FRCH_2020$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2020$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2020$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2020$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2020$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_FRCH_2020 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2020")
 
 table(sign(HI_FI_SPC_FRCH_2020$Hyst_index))
 which(HI_FI_SPC_FRCH_2020$HI_ymin < 0 & HI_FI_SPC_FRCH_2020$HI_ymax > 0 & HI_FI_SPC_FRCH_2020$Hyst_index > 0)
 which(HI_FI_SPC_FRCH_2020$HI_ymin < 0 & HI_FI_SPC_FRCH_2020$HI_ymax > 0 & HI_FI_SPC_FRCH_2020$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2020$Beta_index))
+which(HI_FI_SPC_FRCH_2020$Beta_ymin < 0 & HI_FI_SPC_FRCH_2020$Beta_ymax > 0 & HI_FI_SPC_FRCH_2020$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2020$Beta_ymin < 0 & HI_FI_SPC_FRCH_2020$Beta_ymax > 0 & HI_FI_SPC_FRCH_2020$Beta_index < 0)
 
 #turb
 HI_FI_turb_FRCH_2020 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2020")
@@ -762,12 +904,20 @@ table(sign(HI_FI_turb_FRCH_2020$Hyst_index))
 which(HI_FI_turb_FRCH_2020$HI_ymin < 0 & HI_FI_turb_FRCH_2020$HI_ymax > 0 & HI_FI_turb_FRCH_2020$Hyst_index > 0)
 which(HI_FI_turb_FRCH_2020$HI_ymin < 0 & HI_FI_turb_FRCH_2020$HI_ymax > 0 & HI_FI_turb_FRCH_2020$Hyst_index < 0)
 
+table(sign(HI_FI_turb_FRCH_2020$Beta_index))
+which(HI_FI_turb_FRCH_2020$Beta_ymin < 0 & HI_FI_turb_FRCH_2020$Beta_ymax > 0 & HI_FI_turb_FRCH_2020$Beta_index > 0)
+which(HI_FI_turb_FRCH_2020$Beta_ymin < 0 & HI_FI_turb_FRCH_2020$Beta_ymax > 0 & HI_FI_turb_FRCH_2020$Beta_index < 0)
+
 # MOOS ####
 HI_FI_NO3_MOOS_2020 <- subset(HI_FI_NO3, site.ID == "MOOS" & year == "2020")
 
 table(sign(HI_FI_NO3_MOOS_2020$Hyst_index))
 which(HI_FI_NO3_MOOS_2020$HI_ymin < 0 & HI_FI_NO3_MOOS_2020$HI_ymax > 0 & HI_FI_NO3_MOOS_2020$Hyst_index > 0)
 which(HI_FI_NO3_MOOS_2020$HI_ymin < 0 & HI_FI_NO3_MOOS_2020$HI_ymax > 0 & HI_FI_NO3_MOOS_2020$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_MOOS_2020$Beta_index))
+which(HI_FI_NO3_MOOS_2020$Beta_ymin < 0 & HI_FI_NO3_MOOS_2020$Beta_ymax > 0 & HI_FI_NO3_MOOS_2020$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2020$Beta_ymin < 0 & HI_FI_NO3_MOOS_2020$Beta_ymax > 0 & HI_FI_NO3_MOOS_2020$Beta_index < 0)
 
 
 #fDOM 
@@ -777,12 +927,20 @@ table(sign(HI_FI_fDOM_MOOS_2020$Hyst_index))
 which(HI_FI_fDOM_MOOS_2020$HI_ymin < 0 & HI_FI_fDOM_MOOS_2020$HI_ymax > 0 & HI_FI_fDOM_MOOS_2020$Hyst_index > 0)
 which(HI_FI_fDOM_MOOS_2020$HI_ymin < 0 & HI_FI_fDOM_MOOS_2020$HI_ymax > 0 & HI_FI_fDOM_MOOS_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_MOOS_2020$Beta_index))
+which(HI_FI_fDOM_MOOS_2020$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2020$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2020$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2020$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2020$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_MOOS_2020 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2020")
 
 table(sign(HI_FI_SPC_MOOS_2020$Hyst_index))
 which(HI_FI_SPC_MOOS_2020$HI_ymin < 0 & HI_FI_SPC_MOOS_2020$HI_ymax > 0 & HI_FI_SPC_MOOS_2020$Hyst_index > 0)
 which(HI_FI_SPC_MOOS_2020$HI_ymin < 0 & HI_FI_SPC_MOOS_2020$HI_ymax > 0 & HI_FI_SPC_MOOS_2020$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_MOOS_2020$Beta_index))
+which(HI_FI_SPC_MOOS_2020$Beta_ymin < 0 & HI_FI_SPC_MOOS_2020$Beta_ymax > 0 & HI_FI_SPC_MOOS_2020$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2020$Beta_ymin < 0 & HI_FI_SPC_MOOS_2020$Beta_ymax > 0 & HI_FI_SPC_MOOS_2020$Beta_index < 0)
 
 #turb
 HI_FI_turb_MOOS_2020 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2020")
@@ -791,12 +949,20 @@ table(sign(HI_FI_turb_MOOS_2020$Hyst_index))
 which(HI_FI_turb_MOOS_2020$HI_ymin < 0 & HI_FI_turb_MOOS_2020$HI_ymax > 0 & HI_FI_turb_MOOS_2020$Hyst_index > 0)
 which(HI_FI_turb_MOOS_2020$HI_ymin < 0 & HI_FI_turb_MOOS_2020$HI_ymax > 0 & HI_FI_turb_MOOS_2020$Hyst_index < 0)
 
+table(sign(HI_FI_turb_MOOS_2020$Beta_index))
+which(HI_FI_turb_MOOS_2020$Beta_ymin < 0 & HI_FI_turb_MOOS_2020$Beta_ymax > 0 & HI_FI_turb_MOOS_2020$Beta_index > 0)
+which(HI_FI_turb_MOOS_2020$Beta_ymin < 0 & HI_FI_turb_MOOS_2020$Beta_ymax > 0 & HI_FI_turb_MOOS_2020$Beta_index < 0)
+
 # CARI ####
 HI_FI_NO3_CARI_2020 <- subset(HI_FI_NO3, site.ID == "CARI" & year == "2020")
 
 table(sign(HI_FI_NO3_CARI_2020$Hyst_index))
 which(HI_FI_NO3_CARI_2020$HI_ymin < 0 & HI_FI_NO3_CARI_2020$HI_ymax > 0 & HI_FI_NO3_CARI_2020$Hyst_index > 0)
 which(HI_FI_NO3_CARI_2020$HI_ymin < 0 & HI_FI_NO3_CARI_2020$HI_ymax > 0 & HI_FI_NO3_CARI_2020$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_CARI_2020$Beta_index))
+which(HI_FI_NO3_CARI_2020$Beta_ymin < 0 & HI_FI_NO3_CARI_2020$Beta_ymax > 0 & HI_FI_NO3_CARI_2020$Beta_index > 0)
+which(HI_FI_NO3_CARI_2020$Beta_ymin < 0 & HI_FI_NO3_CARI_2020$Beta_ymax > 0 & HI_FI_NO3_CARI_2020$Beta_index < 0)
 
 
 #fDOM 
@@ -806,12 +972,20 @@ table(sign(HI_FI_fDOM_CARI_2020$Hyst_index))
 which(HI_FI_fDOM_CARI_2020$HI_ymin < 0 & HI_FI_fDOM_CARI_2020$HI_ymax > 0 & HI_FI_fDOM_CARI_2020$Hyst_index > 0)
 which(HI_FI_fDOM_CARI_2020$HI_ymin < 0 & HI_FI_fDOM_CARI_2020$HI_ymax > 0 & HI_FI_fDOM_CARI_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_CARI_2020$Beta_index))
+which(HI_FI_fDOM_CARI_2020$Beta_ymin < 0 & HI_FI_fDOM_CARI_2020$Beta_ymax > 0 & HI_FI_fDOM_CARI_2020$Beta_index > 0)
+which(HI_FI_fDOM_CARI_2020$Beta_ymin < 0 & HI_FI_fDOM_CARI_2020$Beta_ymax > 0 & HI_FI_fDOM_CARI_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_CARI_2020 <- subset(HI_FI_SPC, site.ID == "CARI" & year == "2020")
 
 table(sign(HI_FI_SPC_CARI_2020$Hyst_index))
 which(HI_FI_SPC_CARI_2020$HI_ymin < 0 & HI_FI_SPC_CARI_2020$HI_ymax > 0 & HI_FI_SPC_CARI_2020$Hyst_index > 0)
 which(HI_FI_SPC_CARI_2020$HI_ymin < 0 & HI_FI_SPC_CARI_2020$HI_ymax > 0 & HI_FI_SPC_CARI_2020$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_CARI_2020$Beta_index))
+which(HI_FI_SPC_CARI_2020$Beta_ymin < 0 & HI_FI_SPC_CARI_2020$Beta_ymax > 0 & HI_FI_SPC_CARI_2020$Beta_index > 0)
+which(HI_FI_SPC_CARI_2020$Beta_ymin < 0 & HI_FI_SPC_CARI_2020$Beta_ymax > 0 & HI_FI_SPC_CARI_2020$Beta_index < 0)
 
 #turb
 HI_FI_turb_CARI_2020 <- subset(HI_FI_turb, site.ID == "CARI" & year == "2020")
@@ -820,12 +994,20 @@ table(sign(HI_FI_turb_CARI_2020$Hyst_index))
 which(HI_FI_turb_CARI_2020$HI_ymin < 0 & HI_FI_turb_CARI_2020$HI_ymax > 0 & HI_FI_turb_CARI_2020$Hyst_index > 0)
 which(HI_FI_turb_CARI_2020$HI_ymin < 0 & HI_FI_turb_CARI_2020$HI_ymax > 0 & HI_FI_turb_CARI_2020$Hyst_index < 0)
 
+table(sign(HI_FI_turb_CARI_2020$Beta_index))
+which(HI_FI_turb_CARI_2020$Beta_ymin < 0 & HI_FI_turb_CARI_2020$Beta_ymax > 0 & HI_FI_turb_CARI_2020$Beta_index > 0)
+which(HI_FI_turb_CARI_2020$Beta_ymin < 0 & HI_FI_turb_CARI_2020$Beta_ymax > 0 & HI_FI_turb_CARI_2020$Beta_index < 0)
+
 # POKE ####
 HI_FI_NO3_POKE_2020 <- subset(HI_FI_NO3, site.ID == "POKE" & year == "2020")
 
 table(sign(HI_FI_NO3_POKE_2020$Hyst_index))
 which(HI_FI_NO3_POKE_2020$HI_ymin < 0 & HI_FI_NO3_POKE_2020$HI_ymax > 0 & HI_FI_NO3_POKE_2020$Hyst_index > 0)
 which(HI_FI_NO3_POKE_2020$HI_ymin < 0 & HI_FI_NO3_POKE_2020$HI_ymax > 0 & HI_FI_NO3_POKE_2020$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_POKE_2020$Beta_index))
+which(HI_FI_NO3_POKE_2020$Beta_ymin < 0 & HI_FI_NO3_POKE_2020$Beta_ymax > 0 & HI_FI_NO3_POKE_2020$Beta_index > 0)
+which(HI_FI_NO3_POKE_2020$Beta_ymin < 0 & HI_FI_NO3_POKE_2020$Beta_ymax > 0 & HI_FI_NO3_POKE_2020$Beta_index < 0)
 
 
 #fDOM 
@@ -835,12 +1017,20 @@ table(sign(HI_FI_fDOM_POKE_2020$Hyst_index))
 which(HI_FI_fDOM_POKE_2020$HI_ymin < 0 & HI_FI_fDOM_POKE_2020$HI_ymax > 0 & HI_FI_fDOM_POKE_2020$Hyst_index > 0)
 which(HI_FI_fDOM_POKE_2020$HI_ymin < 0 & HI_FI_fDOM_POKE_2020$HI_ymax > 0 & HI_FI_fDOM_POKE_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_POKE_2020$Beta_index))
+which(HI_FI_fDOM_POKE_2020$Beta_ymin < 0 & HI_FI_fDOM_POKE_2020$Beta_ymax > 0 & HI_FI_fDOM_POKE_2020$Beta_index > 0)
+which(HI_FI_fDOM_POKE_2020$Beta_ymin < 0 & HI_FI_fDOM_POKE_2020$Beta_ymax > 0 & HI_FI_fDOM_POKE_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_POKE_2020 <- subset(HI_FI_SPC, site.ID == "POKE" & year == "2020")
 
 table(sign(HI_FI_SPC_POKE_2020$Hyst_index))
 which(HI_FI_SPC_POKE_2020$HI_ymin < 0 & HI_FI_SPC_POKE_2020$HI_ymax > 0 & HI_FI_SPC_POKE_2020$Hyst_index > 0)
 which(HI_FI_SPC_POKE_2020$HI_ymin < 0 & HI_FI_SPC_POKE_2020$HI_ymax > 0 & HI_FI_SPC_POKE_2020$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_POKE_2020$Beta_index))
+which(HI_FI_SPC_POKE_2020$Beta_ymin < 0 & HI_FI_SPC_POKE_2020$Beta_ymax > 0 & HI_FI_SPC_POKE_2020$Beta_index > 0)
+which(HI_FI_SPC_POKE_2020$Beta_ymin < 0 & HI_FI_SPC_POKE_2020$Beta_ymax > 0 & HI_FI_SPC_POKE_2020$Beta_index < 0)
 
 #turb
 HI_FI_turb_POKE_2020 <- subset(HI_FI_turb, site.ID == "POKE" & year == "2020")
@@ -849,12 +1039,20 @@ table(sign(HI_FI_turb_POKE_2020$Hyst_index))
 which(HI_FI_turb_POKE_2020$HI_ymin < 0 & HI_FI_turb_POKE_2020$HI_ymax > 0 & HI_FI_turb_POKE_2020$Hyst_index > 0)
 which(HI_FI_turb_POKE_2020$HI_ymin < 0 & HI_FI_turb_POKE_2020$HI_ymax > 0 & HI_FI_turb_POKE_2020$Hyst_index < 0)
 
+table(sign(HI_FI_turb_POKE_2020$Beta_index))
+which(HI_FI_turb_POKE_2020$Beta_ymin < 0 & HI_FI_turb_POKE_2020$Beta_ymax > 0 & HI_FI_turb_POKE_2020$Beta_index > 0)
+which(HI_FI_turb_POKE_2020$Beta_ymin < 0 & HI_FI_turb_POKE_2020$Beta_ymax > 0 & HI_FI_turb_POKE_2020$Beta_index < 0)
+
 # STRT ####
 HI_FI_NO3_STRT_2020 <- subset(HI_FI_NO3, site.ID == "STRT" & year == "2020")
 
 table(sign(HI_FI_NO3_STRT_2020$Hyst_index))
 which(HI_FI_NO3_STRT_2020$HI_ymin < 0 & HI_FI_NO3_STRT_2020$HI_ymax > 0 & HI_FI_NO3_STRT_2020$Hyst_index > 0)
 which(HI_FI_NO3_STRT_2020$HI_ymin < 0 & HI_FI_NO3_STRT_2020$HI_ymax > 0 & HI_FI_NO3_STRT_2020$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_STRT_2020$Beta_index))
+which(HI_FI_NO3_STRT_2020$Beta_ymin < 0 & HI_FI_NO3_STRT_2020$Beta_ymax > 0 & HI_FI_NO3_STRT_2020$Beta_index > 0)
+which(HI_FI_NO3_STRT_2020$Beta_ymin < 0 & HI_FI_NO3_STRT_2020$Beta_ymax > 0 & HI_FI_NO3_STRT_2020$Beta_index < 0)
 
 
 #fDOM 
@@ -864,6 +1062,10 @@ table(sign(HI_FI_fDOM_STRT_2020$Hyst_index))
 which(HI_FI_fDOM_STRT_2020$HI_ymin < 0 & HI_FI_fDOM_STRT_2020$HI_ymax > 0 & HI_FI_fDOM_STRT_2020$Hyst_index > 0)
 which(HI_FI_fDOM_STRT_2020$HI_ymin < 0 & HI_FI_fDOM_STRT_2020$HI_ymax > 0 & HI_FI_fDOM_STRT_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_STRT_2020$Beta_index))
+which(HI_FI_fDOM_STRT_2020$Beta_ymin < 0 & HI_FI_fDOM_STRT_2020$Beta_ymax > 0 & HI_FI_fDOM_STRT_2020$Beta_index > 0)
+which(HI_FI_fDOM_STRT_2020$Beta_ymin < 0 & HI_FI_fDOM_STRT_2020$Beta_ymax > 0 & HI_FI_fDOM_STRT_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_STRT_2020 <- subset(HI_FI_SPC, site.ID == "STRT" & year == "2020")
 
@@ -871,12 +1073,20 @@ table(sign(HI_FI_SPC_STRT_2020$Hyst_index))
 which(HI_FI_SPC_STRT_2020$HI_ymin < 0 & HI_FI_SPC_STRT_2020$HI_ymax > 0 & HI_FI_SPC_STRT_2020$Hyst_index > 0)
 which(HI_FI_SPC_STRT_2020$HI_ymin < 0 & HI_FI_SPC_STRT_2020$HI_ymax > 0 & HI_FI_SPC_STRT_2020$Hyst_index < 0)
 
+table(sign(HI_FI_SPC_STRT_2020$Beta_index))
+which(HI_FI_SPC_STRT_2020$Beta_ymin < 0 & HI_FI_SPC_STRT_2020$Beta_ymax > 0 & HI_FI_SPC_STRT_2020$Beta_index > 0)
+which(HI_FI_SPC_STRT_2020$Beta_ymin < 0 & HI_FI_SPC_STRT_2020$Beta_ymax > 0 & HI_FI_SPC_STRT_2020$Beta_index < 0)
+
 #turb
 HI_FI_turb_STRT_2020 <- subset(HI_FI_turb, site.ID == "STRT" & year == "2020")
 
 table(sign(HI_FI_turb_STRT_2020$Hyst_index))
 which(HI_FI_turb_STRT_2020$HI_ymin < 0 & HI_FI_turb_STRT_2020$HI_ymax > 0 & HI_FI_turb_STRT_2020$Hyst_index > 0)
 which(HI_FI_turb_STRT_2020$HI_ymin < 0 & HI_FI_turb_STRT_2020$HI_ymax > 0 & HI_FI_turb_STRT_2020$Hyst_index < 0)
+
+table(sign(HI_FI_turb_STRT_2020$Beta_index))
+which(HI_FI_turb_STRT_2020$Beta_ymin < 0 & HI_FI_turb_STRT_2020$Beta_ymax > 0 & HI_FI_turb_STRT_2020$Beta_index > 0)
+which(HI_FI_turb_STRT_2020$Beta_ymin < 0 & HI_FI_turb_STRT_2020$Beta_ymax > 0 & HI_FI_turb_STRT_2020$Beta_index < 0)
 
 
 # VAUL ####
@@ -886,6 +1096,10 @@ table(sign(HI_FI_NO3_VAUL_2020$Hyst_index))
 which(HI_FI_NO3_VAUL_2020$HI_ymin < 0 & HI_FI_NO3_VAUL_2020$HI_ymax > 0 & HI_FI_NO3_VAUL_2020$Hyst_index > 0)
 which(HI_FI_NO3_VAUL_2020$HI_ymin < 0 & HI_FI_NO3_VAUL_2020$HI_ymax > 0 & HI_FI_NO3_VAUL_2020$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_VAUL_2020$Beta_index))
+which(HI_FI_NO3_VAUL_2020$Beta_ymin < 0 & HI_FI_NO3_VAUL_2020$Beta_ymax > 0 & HI_FI_NO3_VAUL_2020$Beta_index > 0)
+which(HI_FI_NO3_VAUL_2020$Beta_ymin < 0 & HI_FI_NO3_VAUL_2020$Beta_ymax > 0 & HI_FI_NO3_VAUL_2020$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_VAUL_2020 <- subset(HI_FI_fDOM, site.ID == "VAUL" & year == "2020")
@@ -894,12 +1108,20 @@ table(sign(HI_FI_fDOM_VAUL_2020$Hyst_index))
 which(HI_FI_fDOM_VAUL_2020$HI_ymin < 0 & HI_FI_fDOM_VAUL_2020$HI_ymax > 0 & HI_FI_fDOM_VAUL_2020$Hyst_index > 0)
 which(HI_FI_fDOM_VAUL_2020$HI_ymin < 0 & HI_FI_fDOM_VAUL_2020$HI_ymax > 0 & HI_FI_fDOM_VAUL_2020$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_VAUL_2020$Beta_index))
+which(HI_FI_fDOM_VAUL_2020$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2020$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2020$Beta_index > 0)
+which(HI_FI_fDOM_VAUL_2020$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2020$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2020$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_VAUL_2020 <- subset(HI_FI_SPC, site.ID == "VAUL" & year == "2020")
 
 table(sign(HI_FI_SPC_VAUL_2020$Hyst_index))
 which(HI_FI_SPC_VAUL_2020$HI_ymin < 0 & HI_FI_SPC_VAUL_2020$HI_ymax > 0 & HI_FI_SPC_VAUL_2020$Hyst_index > 0)
 which(HI_FI_SPC_VAUL_2020$HI_ymin < 0 & HI_FI_SPC_VAUL_2020$HI_ymax > 0 & HI_FI_SPC_VAUL_2020$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_VAUL_2020$Beta_index))
+which(HI_FI_SPC_VAUL_2020$Beta_ymin < 0 & HI_FI_SPC_VAUL_2020$Beta_ymax > 0 & HI_FI_SPC_VAUL_2020$Beta_index > 0)
+which(HI_FI_SPC_VAUL_2020$Beta_ymin < 0 & HI_FI_SPC_VAUL_2020$Beta_ymax > 0 & HI_FI_SPC_VAUL_2020$Beta_index < 0)
 
 #turb
 HI_FI_turb_VAUL_2020 <- subset(HI_FI_turb, site.ID == "VAUL" & year == "2020")
@@ -908,22 +1130,9 @@ table(sign(HI_FI_turb_VAUL_2020$Hyst_index))
 which(HI_FI_turb_VAUL_2020$HI_ymin < 0 & HI_FI_turb_VAUL_2020$HI_ymax > 0 & HI_FI_turb_VAUL_2020$Hyst_index > 0)
 which(HI_FI_turb_VAUL_2020$HI_ymin < 0 & HI_FI_turb_VAUL_2020$HI_ymax > 0 & HI_FI_turb_VAUL_2020$Hyst_index < 0)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+table(sign(HI_FI_turb_VAUL_2020$Beta_index))
+which(HI_FI_turb_VAUL_2020$Beta_ymin < 0 & HI_FI_turb_VAUL_2020$Beta_ymax > 0 & HI_FI_turb_VAUL_2020$Beta_index > 0)
+which(HI_FI_turb_VAUL_2020$Beta_ymin < 0 & HI_FI_turb_VAUL_2020$Beta_ymax > 0 & HI_FI_turb_VAUL_2020$Beta_index < 0)
 
 
 # 2021 ####
@@ -935,6 +1144,10 @@ table(sign(HI_FI_NO3_FRCH_2021$Hyst_index))
 which(HI_FI_NO3_FRCH_2021$HI_ymin < 0 & HI_FI_NO3_FRCH_2021$HI_ymax > 0 & HI_FI_NO3_FRCH_2021$Hyst_index > 0)
 which(HI_FI_NO3_FRCH_2021$HI_ymin < 0 & HI_FI_NO3_FRCH_2021$HI_ymax > 0 & HI_FI_NO3_FRCH_2021$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_FRCH_2021$Beta_index))
+which(HI_FI_NO3_FRCH_2021$Beta_ymin < 0 & HI_FI_NO3_FRCH_2021$Beta_ymax > 0 & HI_FI_NO3_FRCH_2021$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2021$Beta_ymin < 0 & HI_FI_NO3_FRCH_2021$Beta_ymax > 0 & HI_FI_NO3_FRCH_2021$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_FRCH_2021 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2021")
@@ -943,12 +1156,20 @@ table(sign(HI_FI_fDOM_FRCH_2021$Hyst_index))
 which(HI_FI_fDOM_FRCH_2021$HI_ymin < 0 & HI_FI_fDOM_FRCH_2021$HI_ymax > 0 & HI_FI_fDOM_FRCH_2021$Hyst_index > 0)
 which(HI_FI_fDOM_FRCH_2021$HI_ymin < 0 & HI_FI_fDOM_FRCH_2021$HI_ymax > 0 & HI_FI_fDOM_FRCH_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_FRCH_2021$Beta_index))
+which(HI_FI_fDOM_FRCH_2021$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2021$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2021$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2021$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2021$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_FRCH_2021 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2021")
 
 table(sign(HI_FI_SPC_FRCH_2021$Hyst_index))
 which(HI_FI_SPC_FRCH_2021$HI_ymin < 0 & HI_FI_SPC_FRCH_2021$HI_ymax > 0 & HI_FI_SPC_FRCH_2021$Hyst_index > 0)
 which(HI_FI_SPC_FRCH_2021$HI_ymin < 0 & HI_FI_SPC_FRCH_2021$HI_ymax > 0 & HI_FI_SPC_FRCH_2021$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2021$Beta_index))
+which(HI_FI_SPC_FRCH_2021$Beta_ymin < 0 & HI_FI_SPC_FRCH_2021$Beta_ymax > 0 & HI_FI_SPC_FRCH_2021$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2021$Beta_ymin < 0 & HI_FI_SPC_FRCH_2021$Beta_ymax > 0 & HI_FI_SPC_FRCH_2021$Beta_index < 0)
 
 #turb
 HI_FI_turb_FRCH_2021 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2021")
@@ -957,12 +1178,20 @@ table(sign(HI_FI_turb_FRCH_2021$Hyst_index))
 which(HI_FI_turb_FRCH_2021$HI_ymin < 0 & HI_FI_turb_FRCH_2021$HI_ymax > 0 & HI_FI_turb_FRCH_2021$Hyst_index > 0)
 which(HI_FI_turb_FRCH_2021$HI_ymin < 0 & HI_FI_turb_FRCH_2021$HI_ymax > 0 & HI_FI_turb_FRCH_2021$Hyst_index < 0)
 
+table(sign(HI_FI_turb_FRCH_2021$Beta_index))
+which(HI_FI_turb_FRCH_2021$Beta_ymin < 0 & HI_FI_turb_FRCH_2021$Beta_ymax > 0 & HI_FI_turb_FRCH_2021$Beta_index > 0)
+which(HI_FI_turb_FRCH_2021$Beta_ymin < 0 & HI_FI_turb_FRCH_2021$Beta_ymax > 0 & HI_FI_turb_FRCH_2021$Beta_index < 0)
+
 # MOOS ####
 HI_FI_NO3_MOOS_2021 <- subset(HI_FI_NO3, site.ID == "MOOS" & year == "2021")
 
 table(sign(HI_FI_NO3_MOOS_2021$Hyst_index))
 which(HI_FI_NO3_MOOS_2021$HI_ymin < 0 & HI_FI_NO3_MOOS_2021$HI_ymax > 0 & HI_FI_NO3_MOOS_2021$Hyst_index > 0)
 which(HI_FI_NO3_MOOS_2021$HI_ymin < 0 & HI_FI_NO3_MOOS_2021$HI_ymax > 0 & HI_FI_NO3_MOOS_2021$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_MOOS_2021$Beta_index))
+which(HI_FI_NO3_MOOS_2021$Beta_ymin < 0 & HI_FI_NO3_MOOS_2021$Beta_ymax > 0 & HI_FI_NO3_MOOS_2021$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2021$Beta_ymin < 0 & HI_FI_NO3_MOOS_2021$Beta_ymax > 0 & HI_FI_NO3_MOOS_2021$Beta_index < 0)
 
 
 #fDOM 
@@ -972,12 +1201,20 @@ table(sign(HI_FI_fDOM_MOOS_2021$Hyst_index))
 which(HI_FI_fDOM_MOOS_2021$HI_ymin < 0 & HI_FI_fDOM_MOOS_2021$HI_ymax > 0 & HI_FI_fDOM_MOOS_2021$Hyst_index > 0)
 which(HI_FI_fDOM_MOOS_2021$HI_ymin < 0 & HI_FI_fDOM_MOOS_2021$HI_ymax > 0 & HI_FI_fDOM_MOOS_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_MOOS_2021$Beta_index))
+which(HI_FI_fDOM_MOOS_2021$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2021$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2021$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2021$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2021$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_MOOS_2021 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2021")
 
 table(sign(HI_FI_SPC_MOOS_2021$Hyst_index))
 which(HI_FI_SPC_MOOS_2021$HI_ymin < 0 & HI_FI_SPC_MOOS_2021$HI_ymax > 0 & HI_FI_SPC_MOOS_2021$Hyst_index > 0)
 which(HI_FI_SPC_MOOS_2021$HI_ymin < 0 & HI_FI_SPC_MOOS_2021$HI_ymax > 0 & HI_FI_SPC_MOOS_2021$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_MOOS_2021$Beta_index))
+which(HI_FI_SPC_MOOS_2021$Beta_ymin < 0 & HI_FI_SPC_MOOS_2021$Beta_ymax > 0 & HI_FI_SPC_MOOS_2021$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2021$Beta_ymin < 0 & HI_FI_SPC_MOOS_2021$Beta_ymax > 0 & HI_FI_SPC_MOOS_2021$Beta_index < 0)
 
 #turb
 HI_FI_turb_MOOS_2021 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2021")
@@ -986,12 +1223,20 @@ table(sign(HI_FI_turb_MOOS_2021$Hyst_index))
 which(HI_FI_turb_MOOS_2021$HI_ymin < 0 & HI_FI_turb_MOOS_2021$HI_ymax > 0 & HI_FI_turb_MOOS_2021$Hyst_index > 0)
 which(HI_FI_turb_MOOS_2021$HI_ymin < 0 & HI_FI_turb_MOOS_2021$HI_ymax > 0 & HI_FI_turb_MOOS_2021$Hyst_index < 0)
 
+table(sign(HI_FI_turb_MOOS_2021$Beta_index))
+which(HI_FI_turb_MOOS_2021$Beta_ymin < 0 & HI_FI_turb_MOOS_2021$Beta_ymax > 0 & HI_FI_turb_MOOS_2021$Beta_index > 0)
+which(HI_FI_turb_MOOS_2021$Beta_ymin < 0 & HI_FI_turb_MOOS_2021$Beta_ymax > 0 & HI_FI_turb_MOOS_2021$Beta_index < 0)
+
 # CARI ####
 HI_FI_NO3_CARI_2021 <- subset(HI_FI_NO3, site.ID == "CARI" & year == "2021")
 
 table(sign(HI_FI_NO3_CARI_2021$Hyst_index))
 which(HI_FI_NO3_CARI_2021$HI_ymin < 0 & HI_FI_NO3_CARI_2021$HI_ymax > 0 & HI_FI_NO3_CARI_2021$Hyst_index > 0)
 which(HI_FI_NO3_CARI_2021$HI_ymin < 0 & HI_FI_NO3_CARI_2021$HI_ymax > 0 & HI_FI_NO3_CARI_2021$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_CARI_2021$Beta_index))
+which(HI_FI_NO3_CARI_2021$Beta_ymin < 0 & HI_FI_NO3_CARI_2021$Beta_ymax > 0 & HI_FI_NO3_CARI_2021$Beta_index > 0)
+which(HI_FI_NO3_CARI_2021$Beta_ymin < 0 & HI_FI_NO3_CARI_2021$Beta_ymax > 0 & HI_FI_NO3_CARI_2021$Beta_index < 0)
 
 
 #fDOM 
@@ -1001,12 +1246,20 @@ table(sign(HI_FI_fDOM_CARI_2021$Hyst_index))
 which(HI_FI_fDOM_CARI_2021$HI_ymin < 0 & HI_FI_fDOM_CARI_2021$HI_ymax > 0 & HI_FI_fDOM_CARI_2021$Hyst_index > 0)
 which(HI_FI_fDOM_CARI_2021$HI_ymin < 0 & HI_FI_fDOM_CARI_2021$HI_ymax > 0 & HI_FI_fDOM_CARI_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_CARI_2021$Beta_index))
+which(HI_FI_fDOM_CARI_2021$Beta_ymin < 0 & HI_FI_fDOM_CARI_2021$Beta_ymax > 0 & HI_FI_fDOM_CARI_2021$Beta_index > 0)
+which(HI_FI_fDOM_CARI_2021$Beta_ymin < 0 & HI_FI_fDOM_CARI_2021$Beta_ymax > 0 & HI_FI_fDOM_CARI_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_CARI_2021 <- subset(HI_FI_SPC, site.ID == "CARI" & year == "2021")
 
 table(sign(HI_FI_SPC_CARI_2021$Hyst_index))
 which(HI_FI_SPC_CARI_2021$HI_ymin < 0 & HI_FI_SPC_CARI_2021$HI_ymax > 0 & HI_FI_SPC_CARI_2021$Hyst_index > 0)
 which(HI_FI_SPC_CARI_2021$HI_ymin < 0 & HI_FI_SPC_CARI_2021$HI_ymax > 0 & HI_FI_SPC_CARI_2021$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_CARI_2021$Beta_index))
+which(HI_FI_SPC_CARI_2021$Beta_ymin < 0 & HI_FI_SPC_CARI_2021$Beta_ymax > 0 & HI_FI_SPC_CARI_2021$Beta_index > 0)
+which(HI_FI_SPC_CARI_2021$Beta_ymin < 0 & HI_FI_SPC_CARI_2021$Beta_ymax > 0 & HI_FI_SPC_CARI_2021$Beta_index < 0)
 
 #turb
 HI_FI_turb_CARI_2021 <- subset(HI_FI_turb, site.ID == "CARI" & year == "2021")
@@ -1015,12 +1268,20 @@ table(sign(HI_FI_turb_CARI_2021$Hyst_index))
 which(HI_FI_turb_CARI_2021$HI_ymin < 0 & HI_FI_turb_CARI_2021$HI_ymax > 0 & HI_FI_turb_CARI_2021$Hyst_index > 0)
 which(HI_FI_turb_CARI_2021$HI_ymin < 0 & HI_FI_turb_CARI_2021$HI_ymax > 0 & HI_FI_turb_CARI_2021$Hyst_index < 0)
 
+table(sign(HI_FI_turb_CARI_2021$Beta_index))
+which(HI_FI_turb_CARI_2021$Beta_ymin < 0 & HI_FI_turb_CARI_2021$Beta_ymax > 0 & HI_FI_turb_CARI_2021$Beta_index > 0)
+which(HI_FI_turb_CARI_2021$Beta_ymin < 0 & HI_FI_turb_CARI_2021$Beta_ymax > 0 & HI_FI_turb_CARI_2021$Beta_index < 0)
+
 # POKE ####
 HI_FI_NO3_POKE_2021 <- subset(HI_FI_NO3, site.ID == "POKE" & year == "2021")
 
 table(sign(HI_FI_NO3_POKE_2021$Hyst_index))
 which(HI_FI_NO3_POKE_2021$HI_ymin < 0 & HI_FI_NO3_POKE_2021$HI_ymax > 0 & HI_FI_NO3_POKE_2021$Hyst_index > 0)
 which(HI_FI_NO3_POKE_2021$HI_ymin < 0 & HI_FI_NO3_POKE_2021$HI_ymax > 0 & HI_FI_NO3_POKE_2021$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_POKE_2021$Beta_index))
+which(HI_FI_NO3_POKE_2021$Beta_ymin < 0 & HI_FI_NO3_POKE_2021$Beta_ymax > 0 & HI_FI_NO3_POKE_2021$Beta_index > 0)
+which(HI_FI_NO3_POKE_2021$Beta_ymin < 0 & HI_FI_NO3_POKE_2021$Beta_ymax > 0 & HI_FI_NO3_POKE_2021$Beta_index < 0)
 
 
 #fDOM 
@@ -1030,12 +1291,20 @@ table(sign(HI_FI_fDOM_POKE_2021$Hyst_index))
 which(HI_FI_fDOM_POKE_2021$HI_ymin < 0 & HI_FI_fDOM_POKE_2021$HI_ymax > 0 & HI_FI_fDOM_POKE_2021$Hyst_index > 0)
 which(HI_FI_fDOM_POKE_2021$HI_ymin < 0 & HI_FI_fDOM_POKE_2021$HI_ymax > 0 & HI_FI_fDOM_POKE_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_POKE_2021$Beta_index))
+which(HI_FI_fDOM_POKE_2021$Beta_ymin < 0 & HI_FI_fDOM_POKE_2021$Beta_ymax > 0 & HI_FI_fDOM_POKE_2021$Beta_index > 0)
+which(HI_FI_fDOM_POKE_2021$Beta_ymin < 0 & HI_FI_fDOM_POKE_2021$Beta_ymax > 0 & HI_FI_fDOM_POKE_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_POKE_2021 <- subset(HI_FI_SPC, site.ID == "POKE" & year == "2021")
 
 table(sign(HI_FI_SPC_POKE_2021$Hyst_index))
 which(HI_FI_SPC_POKE_2021$HI_ymin < 0 & HI_FI_SPC_POKE_2021$HI_ymax > 0 & HI_FI_SPC_POKE_2021$Hyst_index > 0)
 which(HI_FI_SPC_POKE_2021$HI_ymin < 0 & HI_FI_SPC_POKE_2021$HI_ymax > 0 & HI_FI_SPC_POKE_2021$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_POKE_2021$Beta_index))
+which(HI_FI_SPC_POKE_2021$Beta_ymin < 0 & HI_FI_SPC_POKE_2021$Beta_ymax > 0 & HI_FI_SPC_POKE_2021$Beta_index > 0)
+which(HI_FI_SPC_POKE_2021$Beta_ymin < 0 & HI_FI_SPC_POKE_2021$Beta_ymax > 0 & HI_FI_SPC_POKE_2021$Beta_index < 0)
 
 #turb
 HI_FI_turb_POKE_2021 <- subset(HI_FI_turb, site.ID == "POKE" & year == "2021")
@@ -1044,12 +1313,20 @@ table(sign(HI_FI_turb_POKE_2021$Hyst_index))
 which(HI_FI_turb_POKE_2021$HI_ymin < 0 & HI_FI_turb_POKE_2021$HI_ymax > 0 & HI_FI_turb_POKE_2021$Hyst_index > 0)
 which(HI_FI_turb_POKE_2021$HI_ymin < 0 & HI_FI_turb_POKE_2021$HI_ymax > 0 & HI_FI_turb_POKE_2021$Hyst_index < 0)
 
+table(sign(HI_FI_turb_POKE_2021$Beta_index))
+which(HI_FI_turb_POKE_2021$Beta_ymin < 0 & HI_FI_turb_POKE_2021$Beta_ymax > 0 & HI_FI_turb_POKE_2021$Beta_index > 0)
+which(HI_FI_turb_POKE_2021$Beta_ymin < 0 & HI_FI_turb_POKE_2021$Beta_ymax > 0 & HI_FI_turb_POKE_2021$Beta_index < 0)
+
 # STRT ####
 HI_FI_NO3_STRT_2021 <- subset(HI_FI_NO3, site.ID == "STRT" & year == "2021")
 
 table(sign(HI_FI_NO3_STRT_2021$Hyst_index))
 which(HI_FI_NO3_STRT_2021$HI_ymin < 0 & HI_FI_NO3_STRT_2021$HI_ymax > 0 & HI_FI_NO3_STRT_2021$Hyst_index > 0)
 which(HI_FI_NO3_STRT_2021$HI_ymin < 0 & HI_FI_NO3_STRT_2021$HI_ymax > 0 & HI_FI_NO3_STRT_2021$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_STRT_2021$Beta_index))
+which(HI_FI_NO3_STRT_2021$Beta_ymin < 0 & HI_FI_NO3_STRT_2021$Beta_ymax > 0 & HI_FI_NO3_STRT_2021$Beta_index > 0)
+which(HI_FI_NO3_STRT_2021$Beta_ymin < 0 & HI_FI_NO3_STRT_2021$Beta_ymax > 0 & HI_FI_NO3_STRT_2021$Beta_index < 0)
 
 
 #fDOM 
@@ -1059,6 +1336,10 @@ table(sign(HI_FI_fDOM_STRT_2021$Hyst_index))
 which(HI_FI_fDOM_STRT_2021$HI_ymin < 0 & HI_FI_fDOM_STRT_2021$HI_ymax > 0 & HI_FI_fDOM_STRT_2021$Hyst_index > 0)
 which(HI_FI_fDOM_STRT_2021$HI_ymin < 0 & HI_FI_fDOM_STRT_2021$HI_ymax > 0 & HI_FI_fDOM_STRT_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_STRT_2021$Beta_index))
+which(HI_FI_fDOM_STRT_2021$Beta_ymin < 0 & HI_FI_fDOM_STRT_2021$Beta_ymax > 0 & HI_FI_fDOM_STRT_2021$Beta_index > 0)
+which(HI_FI_fDOM_STRT_2021$Beta_ymin < 0 & HI_FI_fDOM_STRT_2021$Beta_ymax > 0 & HI_FI_fDOM_STRT_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_STRT_2021 <- subset(HI_FI_SPC, site.ID == "STRT" & year == "2021")
 
@@ -1066,12 +1347,20 @@ table(sign(HI_FI_SPC_STRT_2021$Hyst_index))
 which(HI_FI_SPC_STRT_2021$HI_ymin < 0 & HI_FI_SPC_STRT_2021$HI_ymax > 0 & HI_FI_SPC_STRT_2021$Hyst_index > 0)
 which(HI_FI_SPC_STRT_2021$HI_ymin < 0 & HI_FI_SPC_STRT_2021$HI_ymax > 0 & HI_FI_SPC_STRT_2021$Hyst_index < 0)
 
+table(sign(HI_FI_SPC_STRT_2021$Beta_index))
+which(HI_FI_SPC_STRT_2021$Beta_ymin < 0 & HI_FI_SPC_STRT_2021$Beta_ymax > 0 & HI_FI_SPC_STRT_2021$Beta_index > 0)
+which(HI_FI_SPC_STRT_2021$Beta_ymin < 0 & HI_FI_SPC_STRT_2021$Beta_ymax > 0 & HI_FI_SPC_STRT_2021$Beta_index < 0)
+
 #turb
 HI_FI_turb_STRT_2021 <- subset(HI_FI_turb, site.ID == "STRT" & year == "2021")
 
 table(sign(HI_FI_turb_STRT_2021$Hyst_index))
 which(HI_FI_turb_STRT_2021$HI_ymin < 0 & HI_FI_turb_STRT_2021$HI_ymax > 0 & HI_FI_turb_STRT_2021$Hyst_index > 0)
 which(HI_FI_turb_STRT_2021$HI_ymin < 0 & HI_FI_turb_STRT_2021$HI_ymax > 0 & HI_FI_turb_STRT_2021$Hyst_index < 0)
+
+table(sign(HI_FI_turb_STRT_2021$Beta_index))
+which(HI_FI_turb_STRT_2021$Beta_ymin < 0 & HI_FI_turb_STRT_2021$Beta_ymax > 0 & HI_FI_turb_STRT_2021$Beta_index > 0)
+which(HI_FI_turb_STRT_2021$Beta_ymin < 0 & HI_FI_turb_STRT_2021$Beta_ymax > 0 & HI_FI_turb_STRT_2021$Beta_index < 0)
 
 
 # VAUL ####
@@ -1081,6 +1370,10 @@ table(sign(HI_FI_NO3_VAUL_2021$Hyst_index))
 which(HI_FI_NO3_VAUL_2021$HI_ymin < 0 & HI_FI_NO3_VAUL_2021$HI_ymax > 0 & HI_FI_NO3_VAUL_2021$Hyst_index > 0)
 which(HI_FI_NO3_VAUL_2021$HI_ymin < 0 & HI_FI_NO3_VAUL_2021$HI_ymax > 0 & HI_FI_NO3_VAUL_2021$Hyst_index < 0)
 
+table(sign(HI_FI_NO3_VAUL_2021$Beta_index))
+which(HI_FI_NO3_VAUL_2021$Beta_ymin < 0 & HI_FI_NO3_VAUL_2021$Beta_ymax > 0 & HI_FI_NO3_VAUL_2021$Beta_index > 0)
+which(HI_FI_NO3_VAUL_2021$Beta_ymin < 0 & HI_FI_NO3_VAUL_2021$Beta_ymax > 0 & HI_FI_NO3_VAUL_2021$Beta_index < 0)
+
 
 #fDOM 
 HI_FI_fDOM_VAUL_2021 <- subset(HI_FI_fDOM, site.ID == "VAUL" & year == "2021")
@@ -1089,6 +1382,10 @@ table(sign(HI_FI_fDOM_VAUL_2021$Hyst_index))
 which(HI_FI_fDOM_VAUL_2021$HI_ymin < 0 & HI_FI_fDOM_VAUL_2021$HI_ymax > 0 & HI_FI_fDOM_VAUL_2021$Hyst_index > 0)
 which(HI_FI_fDOM_VAUL_2021$HI_ymin < 0 & HI_FI_fDOM_VAUL_2021$HI_ymax > 0 & HI_FI_fDOM_VAUL_2021$Hyst_index < 0)
 
+table(sign(HI_FI_fDOM_VAUL_2021$Beta_index))
+which(HI_FI_fDOM_VAUL_2021$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2021$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2021$Beta_index > 0)
+which(HI_FI_fDOM_VAUL_2021$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2021$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2021$Beta_index < 0)
+
 #SPC
 HI_FI_SPC_VAUL_2021 <- subset(HI_FI_SPC, site.ID == "VAUL" & year == "2021")
 
@@ -1096,12 +1393,20 @@ table(sign(HI_FI_SPC_VAUL_2021$Hyst_index))
 which(HI_FI_SPC_VAUL_2021$HI_ymin < 0 & HI_FI_SPC_VAUL_2021$HI_ymax > 0 & HI_FI_SPC_VAUL_2021$Hyst_index > 0)
 which(HI_FI_SPC_VAUL_2021$HI_ymin < 0 & HI_FI_SPC_VAUL_2021$HI_ymax > 0 & HI_FI_SPC_VAUL_2021$Hyst_index < 0)
 
+table(sign(HI_FI_SPC_VAUL_2021$Beta_index))
+which(HI_FI_SPC_VAUL_2021$Beta_ymin < 0 & HI_FI_SPC_VAUL_2021$Beta_ymax > 0 & HI_FI_SPC_VAUL_2021$Beta_index > 0)
+which(HI_FI_SPC_VAUL_2021$Beta_ymin < 0 & HI_FI_SPC_VAUL_2021$Beta_ymax > 0 & HI_FI_SPC_VAUL_2021$Beta_index < 0)
+
 #turb
 HI_FI_turb_VAUL_2021 <- subset(HI_FI_turb, site.ID == "VAUL" & year == "2021")
 
 table(sign(HI_FI_turb_VAUL_2021$Hyst_index))
 which(HI_FI_turb_VAUL_2021$HI_ymin < 0 & HI_FI_turb_VAUL_2021$HI_ymax > 0 & HI_FI_turb_VAUL_2021$Hyst_index > 0)
 which(HI_FI_turb_VAUL_2021$HI_ymin < 0 & HI_FI_turb_VAUL_2021$HI_ymax > 0 & HI_FI_turb_VAUL_2021$Hyst_index < 0)
+
+table(sign(HI_FI_turb_VAUL_2021$Beta_index))
+which(HI_FI_turb_VAUL_2021$Beta_ymin < 0 & HI_FI_turb_VAUL_2021$Beta_ymax > 0 & HI_FI_turb_VAUL_2021$Beta_index > 0)
+which(HI_FI_turb_VAUL_2021$Beta_ymin < 0 & HI_FI_turb_VAUL_2021$Beta_ymax > 0 & HI_FI_turb_VAUL_2021$Beta_index < 0)
 
 
 

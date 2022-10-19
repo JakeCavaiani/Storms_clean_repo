@@ -39,6 +39,23 @@ library(zoo)
 library(xts)
 library(forecast)
 library(here)
+library(RColorBrewer)
+library(dplyr)
+library(here)
+library(stats)
+library(readr)
+library(plotly)
+library(GGally)
+library(ggpmisc)
+library(ggpubr)
+library(ggExtra)
+library(nlme)
+library(MuMIn)
+library(multcomp)
+library(sjPlot)
+library(AICcmodavg)
+
+
 
 
 #### load data ####
@@ -51,7 +68,7 @@ snow = read.table(file = "386_SNOWPILLOW_CARSNOW_2007-2021.txt", header = T, sep
 #snow$dateAK = as.POSIXct(paste(snow$date, snow$hour), "%Y-%m-%d %H%M", tz="America/Anchorage")
 snow$dateAK = as.POSIXct(snow$date, "%Y-%m-%d", tz="America/Anchorage")
 
-#### determine longest records ####
+#### determine longest records #
 
 min(dat$dateAK[!is.na(dat$CPCRW.Caribou.Peak..AirTemp_1000cm.CPEAK..C.)], na.rm=T) #1998
 min(dat$dateAK[!is.na(dat$CPCRW.Caribou.Peak..AirTemp_200cm.CPEAK..C.)], na.rm=T) #1998
@@ -73,7 +90,7 @@ min(snow$dateAK) #2007
 
 # longest snow 
 
-#### select data for summaries ####
+#### select data for summaries #
 
 temp = data.frame(
   date_timeAK = dat$dateAK,
@@ -93,7 +110,7 @@ rain = na.trim(rain, is.na = "any") # trim nas from ends
 any(is.na(rain))
 #plot(rain$Rain ~ rain$date_timeAK)
 
-#### clean data ####
+#### clean data #
 
 temp.c = temp[temp$AirTemp < 40,]
 #plot(temp.c$AirTemp ~ temp.c$date_timeAK)
@@ -109,10 +126,10 @@ rain.c.r = na.trim(rain.c.r, is.na="all")
 snow.c = snow[snow$value > 0,]
 #plot(snow.c$value ~ snow.c$dateAK)
 
-#### set date limits for study period ####
+#### set date limits for study period #
 yr.limit = 2022 # this should be the year AFTER your study
 yr.of = 2017 # this should be the year OF your study
-#### air temp ####
+#### air temp #
 
 temp.c$day = day(temp.c$date_timeAK) # add a column for day
 temp.c$mo = month(temp.c$date_timeAK) # add a column for month
@@ -192,7 +209,7 @@ now.aug - then.aug
 # study is 0.589 deg higher than long term avg = "similar"
 
 #
-#### precip RAIN ####
+#### precip RAIN #
 rain.c.r$day = day(rain.c.r$date_timeAK) # add a column for day
 rain.c.r$mo = month(rain.c.r$date_timeAK) # add a column for month
 rain.c.r$yr = year(rain.c.r$date_timeAK) # add a column for year
@@ -249,7 +266,7 @@ then.aug = mean(rain.monthly$Rain[rain.monthly$mo == 8 & rain.monthly$yr < yr.li
 now.aug - then.aug
 # study is 1.1 mm higher than long term avg = "similar"
 
-#### precip SNOW ####
+#### precip SNOW #
 # 	The snow pillow records the hourly water content of the snowpack (snow water equivalent) at the CARSNOW site within the Caribou Poker Creeks Research Watershed during the winter months. It consists of two 1m square aluminium "pillows" filled with a propylene glycol/water solution attached via piping to a druck pressure transducer. The pressure on the pillow is converted to **cm of water**. A manometer tube is also attached for manaul readings and calibration
 
 snow.c$day = day(snow.c$dateAK) # add a column for day
@@ -289,15 +306,14 @@ mean(rain.annual$Rain[rain.annual$yr<yr.limit], na.rm=T) +
 
 
 snow.annual$value <- snow.annual$value*10 # converting cm to mm to add to the rain figure
-#### final report ####
+#### final report #
 
 # this is for a study that occurred May-Sept. 2017
 # Mean annual air temperature is -3.6°C, with lowest mean monthly temperature typically in January (-23.2°C) and highest in July (15.1°C). During the study period (May-Sept. 2017), mean monthly temperatures were similar to long-term averages (since 1992), with the exception of mean July temperatures ~2°C warmer than average. The CPCRW receives 351.1 mm precipitation annually on average, with 294.2 mm falling as rain. Mean monthly precipitation during the study period was higher in May (39.4 mm), lower in June (34.8 mm), and similar in July (104.1 mm) and Aug. (83.1 mm) compared to long term monthly averages. 
 
 
 
-######## PLOTS #####################
-library(RColorBrewer)
+######## PLOTS #
 brewer.pal(n = 8, name = "Dark2")
 
 rain.monthly.summer <- subset(rain.monthly, rain.monthly$mo > 4 & rain.monthly$mo < 10)
@@ -372,109 +388,100 @@ ggplot(snow.rain.new, aes(fill=method, y= precip, x= yr)) +
 
 ggsave("~/Documents/Storms/Harms_general/Climate.pdf", width = 6, height = 6, device = "pdf")
 
+#### THESIS plot test #
+# ggplot(rain.sum, aes(x = year, y = rain, fill = MONTH)) + 
+#   geom_bar(position="stack", stat="identity", color = "black") +
+#   xlab("Year") +
+#   ylab("Precipitation (mm)") +
+#   theme_classic() +
+#   theme(legend.title = element_blank()) +
+#   scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) 
+# 
+# # Snow 
+# snow.pillow <- read.csv(here("Climate", "177_SNOWPILLOW_LTER1_1989-2021.txt"))
+# snow.pillow$value <- as.numeric(snow.pillow$value)
+# snow.pillow <- snow.pillow %>% 
+#   mutate(across(c(value),
+#                 ~ifelse(unit == "cm", value*10, .)))
+# 
+# 
+# snow.pillow <- snow.pillow[c("date", "value")]
+# names(snow.pillow)[names(snow.pillow) == 'date'] <- 'Date'
+# names(snow.pillow)[names(snow.pillow) == 'value'] <- 'snow'
+# 
+# snow.pillow$Date <- ymd(snow.pillow$Date)
+# snow.pillow$snow <- as.numeric(snow.pillow$snow)
+# snow.pillow$month <- month(snow.pillow$Date)
+# snow.pillow$year <- year(snow.pillow$Date)
+# 
+# snow.sum <- snow.pillow %>% 
+#   group_by(year) %>% 
+#   dplyr::summarise(snow = max(snow, na.rm = TRUE)) # totaling by year and snow/rain 
+# 
+# 
+# 
+# climate <- left_join(snow.sum, rain.sum)
+# 
+# climate.long <- climate %>%
+#      pivot_longer(
+#        cols = c(snow,rain),
+#        names_to = "response_var",
+#        values_to = "precip",
+#        values_drop_na = TRUE
+#      ) # converting to a long format so each response_var is within a single column
+#    
+# climate.sum <- climate.long %>% 
+#   group_by(year,month, response_var) %>% 
+#   dplyr::summarise(precip = mean(precip, na.rm = TRUE)) # totaling by year and snow/rain 
+# 
+# climate.sum <- climate.sum[!duplicated(climate.sum$precip), ]
+# 
+# climate.sum <- climate.sum[-c(1:3),]
+# 
+# climate.sum$MONTH <- NA
+# 
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "1", "Snow Water Equivalent", .)))
+# 
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "5", "May", .)))
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "6", "June", .)))
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "7", "July", .)))
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "8", "August", .)))
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "9", "September", .)))
+# climate.sum <- climate.sum %>% 
+#   mutate(across(c(MONTH),
+#                 ~ifelse(month == "10", "October", .)))
+# 
+# climate.sum$MONTH <- factor(climate.sum$MONTH,                 # Relevel group factor
+#                          levels = c("May", "June", "July", "August", "September", "October", "Snow Water Equivalent"))
+# 
+# cbPalette <- c("#CC79A7", "#E69F00", "#D55E00", "#009E73", "#F0E442", "#0072B2", "#56B4E9")
+# 
+# ggplot(climate.sum, aes(x = year, y = precip, fill = MONTH)) + 
+#   geom_bar(position="stack", stat="identity", color = "black") +
+#   xlab("Year") +
+#   ylab("Precipitation (mm)") +
+#   theme_classic() +
+#   theme(legend.title = element_blank()) +
+#   scale_fill_manual(values=cbPalette)
+# 
+# ggsave("total_precip.pdf",
+#        path = here("Climate"),
+#        width = 10, height = 10)
+# 
 
-
-
-
-
-#### THESIS plot test ######
-
-
-ggplot(rain.sum, aes(x = year, y = rain, fill = MONTH)) + 
-  geom_bar(position="stack", stat="identity", color = "black") +
-  xlab("Year") +
-  ylab("Precipitation (mm)") +
-  theme_classic() +
-  theme(legend.title = element_blank()) +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) 
-
-# Snow 
-snow.pillow <- read.csv(here("Climate", "177_SNOWPILLOW_LTER1_1989-2021.txt"))
-snow.pillow$value <- as.numeric(snow.pillow$value)
-snow.pillow <- snow.pillow %>% 
-  mutate(across(c(value),
-                ~ifelse(unit == "cm", value*10, .)))
-
-
-snow.pillow <- snow.pillow[c("date", "value")]
-names(snow.pillow)[names(snow.pillow) == 'date'] <- 'Date'
-names(snow.pillow)[names(snow.pillow) == 'value'] <- 'snow'
-
-snow.pillow$Date <- ymd(snow.pillow$Date)
-snow.pillow$snow <- as.numeric(snow.pillow$snow)
-snow.pillow$month <- month(snow.pillow$Date)
-snow.pillow$year <- year(snow.pillow$Date)
-
-snow.sum <- snow.pillow %>% 
-  group_by(year) %>% 
-  dplyr::summarise(snow = max(snow, na.rm = TRUE)) # totaling by year and snow/rain 
-
-
-
-climate <- left_join(snow.sum, rain.sum)
-
-climate.long <- climate %>%
-     pivot_longer(
-       cols = c(snow,rain),
-       names_to = "response_var",
-       values_to = "precip",
-       values_drop_na = TRUE
-     ) # converting to a long format so each response_var is within a single column
-   
-climate.sum <- climate.long %>% 
-  group_by(year,month, response_var) %>% 
-  dplyr::summarise(precip = mean(precip, na.rm = TRUE)) # totaling by year and snow/rain 
-
-climate.sum <- climate.sum[!duplicated(climate.sum$precip), ]
-
-climate.sum <- climate.sum[-c(1:3),]
-
-climate.sum$MONTH <- NA
-
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "1", "Snow Water Equivalent", .)))
-
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "5", "May", .)))
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "6", "June", .)))
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "7", "July", .)))
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "8", "August", .)))
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "9", "September", .)))
-climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
-                ~ifelse(month == "10", "October", .)))
-
-climate.sum$MONTH <- factor(climate.sum$MONTH,                 # Relevel group factor
-                         levels = c("May", "June", "July", "August", "September", "October", "Snow Water Equivalent"))
-
-cbPalette <- c("#CC79A7", "#E69F00", "#D55E00", "#009E73", "#F0E442", "#0072B2", "#56B4E9")
-
-ggplot(climate.sum, aes(x = year, y = precip, fill = MONTH)) + 
-  geom_bar(position="stack", stat="identity", color = "black") +
-  xlab("Year") +
-  ylab("Precipitation (mm)") +
-  theme_classic() +
-  theme(legend.title = element_blank()) +
-  scale_fill_manual(values=cbPalette)
-
-ggsave("total_precip.pdf",
-       path = here("Climate"),
-       width = 10, height = 10)
-
-
-
-
-#### SNOTEL DATA ####
+#### SNOTEL DATA # This is what I am using in my thesis as of 10/7/22 ####
 precip_file_list <- list.files(path= here("Climate", "SWE_Precip/"),
                                   recursive=F,
                                   full.names=TRUE) # reading in individual storms by site 
@@ -557,8 +564,6 @@ rain.sum[308,3] <- 54.611
 rain.sum[319,3] <- 25.657
 
 
-
-
 # snow 
 snow.pillow <- precip[c("Date", "WTEQ.I-1 (in)")]
 snow.pillow$SWEmm <- snow.pillow$`WTEQ.I-1 (in)`*25.4 # converting to mm 
@@ -637,12 +642,21 @@ ggplot(climate.sum, aes(x = year, y = precip, fill = MONTH)) +
   xlab("Year") +
   ylab("Precipitation (mm)") +
   theme_classic() +
-  theme(legend.title = element_blank()) +
-  scale_fill_manual(values=cbPalette)
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        legend.direction = "horizontal",
+        legend.key.size = unit(0.5, 'cm')) +
+  scale_fill_manual(values=cbPalette) +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20))
+
+
 
 ggsave("total_precip_snotel.pdf",
        path = here("Climate"),
-       width = 10, height = 10)
+       width = 7, height = 7)
 
 
 
