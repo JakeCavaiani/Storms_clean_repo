@@ -71,27 +71,27 @@ AMC <- AMC[!duplicated(AMC$Hyst_index), ] # removing duplicated rows
 
 ```{r}
 # taking the mean HI for each catchment and year 
-CV.all.year <- AMC %>% group_by(response_var,site.ID, year) %>%
-  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
-                   meanBETA = mean(Beta_index, na.rm = TRUE),
-                   sdHI = sd(Hyst_index, na.rm = TRUE),
-                   sdBETA = sd(Beta_index, na.rm = TRUE),
-                  CVhi = sdHI/meanHI,
-                  CVbeta = sdBETA/meanBETA,
-                  CatBurn = paste(burn),
-                  CatPF = paste(pf),
-                  Slope = as.numeric(SLOPE_MEAN),
-                  fireyear_lg = as.numeric(fireyear_lg),
-                  pctburn_lg = as.numeric(pctburn_lg),
-                  areaburn_lg = as.numeric(areaburn_lg),
-                  PF = as.numeric(Pf_Prob_1m_mean_x),
-                  NDVI_change = as.numeric(NDVI_p50__mean_abs_change),
-                  NDVI_derivative = as.numeric(NDVI_p50__mean_second_derivative_central),
-                  NDVI = as.numeric(NDVI_p50__mean),
-                  NDVIsd = as.numeric(NDVI_p50__standard_deviation))
-
-
-CV.all.year <- CV.all.year[!duplicated(CV.all.year$meanHI), ] # removing duplicated rows
+# CV.all.year <- AMC %>% group_by(response_var,site.ID, year) %>%
+#   dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+#                    meanBETA = mean(Beta_index, na.rm = TRUE),
+#                    sdHI = sd(Hyst_index, na.rm = TRUE),
+#                    sdBETA = sd(Beta_index, na.rm = TRUE),
+#                   CVhi = sdHI/meanHI,
+#                   CVbeta = sdBETA/meanBETA,
+#                   CatBurn = paste(burn),
+#                   CatPF = paste(pf),
+#                   Slope = as.numeric(SLOPE_MEAN),
+#                   fireyear_lg = as.numeric(fireyear_lg),
+#                   pctburn_lg = as.numeric(pctburn_lg),
+#                   areaburn_lg = as.numeric(areaburn_lg),
+#                   PF = as.numeric(Pf_Prob_1m_mean_x),
+#                   NDVI_change = as.numeric(NDVI_p50__mean_abs_change),
+#                   NDVI_derivative = as.numeric(NDVI_p50__mean_second_derivative_central),
+#                   NDVI = as.numeric(NDVI_p50__mean),
+#                   NDVIsd = as.numeric(NDVI_p50__standard_deviation))
+# 
+# 
+# CV.all.year <- CV.all.year[!duplicated(CV.all.year$meanHI), ] # removing duplicated rows
 # NDVI didnt properly merge over so manually putting in the NDVI value 
 # I am taking the average value from 2018-2020 and applying it to all the years (it shouldnt be changing that much within a couple years of unburned areas)
 
@@ -102,168 +102,32 @@ CV.all.year <- CV.all.year[!duplicated(CV.all.year$meanHI), ] # removing duplica
 # STRT Average: 0.2558581085
 # VAUL Average: 0.227537246
 
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
-
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
-
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
-
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "POKE", 0.232423168, .)))
-
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
-
-CV.all.year <- CV.all.year %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
-
-CV.all <- AMC %>% group_by(response_var,site.ID) %>%
-  dplyr::summarise(n = n(),
-                   meanHI = mean(Hyst_index, na.rm = TRUE),
-                   meanBETA = mean(Beta_index, na.rm = TRUE),
-                   sdHI = sd(Hyst_index, na.rm = TRUE),
-                   sdBETA = sd(Beta_index, na.rm = TRUE),
-                  CVhi = sdHI/meanHI,
-                  CVbeta = sdBETA/meanBETA,
-                  CatBurn = paste(burn),
-                  CatPF = paste(pf),
-                  Slope = as.numeric(SLOPE_MEAN),
-                  fireyear_lg = as.numeric(fireyear_lg),
-                  pctburn_lg = as.numeric(pctburn_lg),
-                  areaburn_lg = as.numeric(areaburn_lg),
-                  PF = as.numeric(Pf_Prob_1m_mean_x),
-                  NDVI = as.numeric(NDVI_p50__mean)) %>% 
-  mutate(seHI = sdHI/sqrt(n),
-         seBETA = sdBETA/sqrt(n))
-
-
-CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "POKE", 0.232423168, .)))
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
-
-CV.all <- CV.all %>%
-  mutate(across(c(NDVI), 
-                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "CARI", 0.2106070103, .)))
+# 
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
+# 
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
+# 
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "POKE", 0.232423168, .)))
+# 
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+# 
+# CV.all.year <- CV.all.year %>%
+#   mutate(across(c(NDVI), 
+#                 ~ifelse(site.ID == "VAUL", 0.227537246, .)))
 
 ```
 
-```{r}
-# scaling data # 
-#scaling # 
-CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")] <- lapply(CV.all.year[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd")], function(x) c(scale(x)))
-
-CV_all_year_NO3 = subset(CV.all.year, response_var == "NO3")
-# fDOM #
-CV_all_year_fDOM = subset(CV.all.year, response_var == "fDOM")
-# SPC #
-CV_all_year_SPC = subset(CV.all.year, response_var == "SPC")
-# turb #
-CV_all_year_turb = subset(CV.all.year, response_var == "turb")
-
-
-# all years in one 
-CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
-
-# These values are coming from the DOD_characteristics chunk down below so it gets a little out of order but I just want to quickly run these regressions with this deciduous metric 
-CV.all$Deciduous.2020 <- NA
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "VAUL", -1.068837,.)))
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "CARI", -1.3259120,.)))
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "STRT", -0.4386875,.)))
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "MOOS", 1.1782128,.)))
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "FRCH", 1.0810027,.)))
-
-CV.all <- CV.all %>% 
-  mutate(across(c(Deciduous.2020),
-                ~ifelse(site.ID == "POKE", 0.5722677,.)))
-
-CV_all_NO3 = subset(CV.all, response_var == "NO3")
-# fDOM #
-CV_all_fDOM = subset(CV.all, response_var == "fDOM")
-# SPC #
-CV_all_SPC = subset(CV.all, response_var == "SPC")
-# turb #
-CV_all_turb = subset(CV.all, response_var == "turb")
-
-```
-
-```{r}
-# testing to see if outliers are real from the input data 
-# VAUL_2019 for NO3 has a really low meanHI...lets investigate that 
-
-# VAUL_NO3_2019 <- subset(AMC, site.ID == "VAUL" & year == "2019" & response_var == "NO3")
-# 
-# mean(VAUL_NO3_2019$Hyst_index)
-# 
-# ggplot(VAUL_NO3_2019, aes(Beta_index, Hyst_index)) +
-#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), color = "black", alpha = 0.5, size = 0.5, width = 0.05) +
-#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-#   geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) 
-# 
-# ggplot(HI_FI_NO3, aes(Beta_index, Hyst_index)) + 
-#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-#   geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-#   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-#   theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle(vn)+ 
-#   ylab("HI") +
-#   xlab("") +
-#   theme(panel.border = element_blank(), 
-#         panel.grid.major = element_blank(),
-#         panel.grid.minor = element_blank(), 
-#         axis.line = element_line(colour = "black"), 
-#         text = element_text(size = 15),
-#         legend.position = "none") +
-#     labs(
-#       colour = "Catchment",
-#       shape = "PF Extent")
-
-```
 
 # Catchment characteristics
 This plot will show us what characteristics are correlated with each other and what we can put in our model 
@@ -290,6 +154,32 @@ ggsave("ALL_pairs.pdf",
 DOD_characteristics <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv")) # this file only contains our DoD sites rather than the whole shabang 
 
 DOD_characteristics <- DOD_characteristics[c("site.ID", "SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation")]
+
+DOD_characteristics$Deciduous.2010 <- NA # adding decidous metrics that we got from Neal
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "VAUL", 18.58329933,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "CARI", 18.20288543,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "STRT", 24.73179123,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "MOOS", 28.25133033,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "FRCH", 21.84850526,.)))
+
+DOD_characteristics <- DOD_characteristics %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "POKE", 20.1648046,.)))
 
 DOD_characteristics$Deciduous.2016 <- NA # adding decidous metrics that we got from Neal
 
@@ -372,7 +262,7 @@ DOD_characteristics <- DOD_characteristics %>%
 
 # scaling data # 
 #scaling # 
-DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2016", "Deciduous.2020", "Evergreen")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2016", "Deciduous.2020", "Evergreen")], function(x) c(scale(x)))
+DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2010", "Deciduous.2016", "Deciduous.2020", "Evergreen")] <- lapply(DOD_characteristics[c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2010", "Deciduous.2016", "Deciduous.2020", "Evergreen")], function(x) c(scale(x)))
 
 ggpairs(DOD_characteristics,
         columns = c("SLOPE_MEAN", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean_abs_change", "NDVI_p50__mean_second_derivative_central",  "NDVI_p50__mean", "NDVI_p50__standard_deviation", "Deciduous.2020"),
@@ -385,58 +275,171 @@ ggsave("DOD_pairs.pdf",
 
 ```
 
+```{r}
+# CV and means across all years 
+CV.all <- AMC %>% group_by(response_var,site.ID) %>%
+  dplyr::summarise(n = n(),
+                   meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                  CVhi = sdHI/meanHI,
+                  CVbeta = sdBETA/meanBETA,
+                  CatBurn = paste(burn),
+                  CatPF = paste(pf),
+                  Slope = as.numeric(SLOPE_MEAN),
+                  fireyear_lg = as.numeric(fireyear_lg),
+                  pctburn_lg = as.numeric(pctburn_lg),
+                  areaburn_lg = as.numeric(areaburn_lg),
+                  PF = as.numeric(Pf_Prob_1m_mean_x),
+                  NDVI = as.numeric(NDVI_p50__mean)) %>% 
+  mutate(seHI = sdHI/sqrt(n),
+         seBETA = sdBETA/sqrt(n))
+
+
+# CV.all <- CV.all[!duplicated(CV.all$meanHI), ] # removing duplicated rows
+
+# Adding NDVI values from Josh to this data set 
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "CARI", 0.2106070103, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "FRCH", 0.2125723437, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "MOOS", 0.2294949194, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "POKE", 0.232423168, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "STRT", 0.2558581085, .)))
+
+CV.all <- CV.all %>%
+  mutate(across(c(NDVI), 
+                ~ifelse(site.ID == "VAUL", 0.227537246, .)))
+
+# scaling data # 
+# all years in one 
+CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+
+# Adding scaled data for the deciduous cover from Neal data  
+CV.all$Deciduous.2010 <- NA
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "VAUL", -0.5862145,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "CARI", -0.1377014,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "STRT", -1.4596347,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "MOOS", -0.3501550,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "FRCH", 1.5383212,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "POKE", 0.9953843,.)))
+
+CV.all$Deciduous.2020 <- NA
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "VAUL", -1.068837,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "CARI", -1.3259120,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "STRT", -0.4386875,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "MOOS", 1.1782128,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "FRCH", 1.0810027,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2020),
+                ~ifelse(site.ID == "POKE", 0.5722677,.)))
+
+CV_all_NO3 = subset(CV.all, response_var == "NO3")
+# fDOM #
+CV_all_fDOM = subset(CV.all, response_var == "fDOM")
+# SPC #
+CV_all_SPC = subset(CV.all, response_var == "SPC")
+# turb #
+CV_all_turb = subset(CV.all, response_var == "turb")
+```
+
 # NO3
 ```{r}
-NO3_data_year<- CV_all_year_NO3[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd", "CatBurn", "CatPF")]
-
-NO3_data<- CV_all_NO3[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
+NO3_data<- CV_all_NO3[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
 
 # We tried doing out models are discrete characterization about PF extent (High vs. Moderate) and it doesnt appear that this is the best way to go about it.
 # 1) maybe we will use mean NDVI as a proxy for PF...lets see if these are correlated with burn 
 
-ggpairs(NO3_data_year,
-        columns = c("meanHI","Slope", "pctburn_lg", "PF", "NDVI_change", "NDVI_derivative", "NDVI", "NDVIsd"),
-        ggplot2::aes(colour = site.ID)) +
+ggpairs(NO3_data,
+        columns = c("meanHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
 ggsave("NO3_HI_pairs.pdf",
-       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       path = here("plots", "Correlation_matrices", "NO3"),
        width = 10, height = 10)
 
 ```
 
 ```{r}
-ggpairs(NO3_data_year,
-        columns = c("meanBETA","Slope", "pctburn_lg", "PF", "NDVI"),
-        ggplot2::aes(colour = site.ID)) +
+ggpairs(NO3_data,
+        columns = c("meanBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
 ggsave("NO3_BETA_pairs.pdf",
-       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       path = here("plots", "Correlation_matrices", "NO3"),
        width = 10, height = 10)
 
 ```
 
 ```{r}
-ggpairs(NO3_data_year,
-        columns = c("sdHI","Slope", "pctburn_lg", "PF", "NDVI"),
-        ggplot2::aes(colour = site.ID)) +
+ggpairs(NO3_data,
+        columns = c("sdHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
 ggsave("NO3_sdHI_pairs.pdf",
-       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       path = here("plots", "Correlation_matrices", "NO3"),
        width = 10, height = 10)
 
 ```
 
 ```{r}
-ggpairs(NO3_data_year,
-        columns = c("sdBETA","Slope", "pctburn_lg", "PF", "NDVI"),
-        ggplot2::aes(colour = site.ID)) +
+ggpairs(NO3_data,
+        columns = c("sdBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
 ggsave("NO3_sdBETA_pairs.pdf",
-       path = here("Output_from_analysis", "12_Catchment_Characteristics_models", "plots"),
+       path = here("plots", "Correlation_matrices", "NO3"),
        width = 10, height = 10)
 
 ```
@@ -461,6 +464,8 @@ summary(HI.no3.burn)
 # R^2 plot 
 ```{r}
 #no3.hi.burn
+NO3_data <- NO3_data[!duplicated(NO3_data$meanHI), ] # removing duplicated rows
+
 vn = expression(paste("Mean HI-"*N*O[3]^"-"))
 no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
   geom_point(size = 3) +
@@ -712,10 +717,52 @@ ggsave("sdBETA_NO3_burn.pdf",
 
 # fDOM # 
 ```{r}
-fDOM_data_year<- CV_all_year_fDOM[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+fDOM_data<- CV_all_fDOM[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
 
-fDOM_data<- CV_all_fDOM[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
+ggpairs(fDOM_data,
+        columns = c("meanHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
+ggsave("fDOM_HI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "fDOM"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(fDOM_data,
+        columns = c("meanBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_BETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "fDOM"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(fDOM_data,
+        columns = c("sdHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_sdHI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "fDOM"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(fDOM_data,
+        columns = c("sdBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("fDOM_sdBETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "fDOM"),
+       width = 10, height = 10)
 ```
 
 ```{r}
@@ -736,6 +783,8 @@ summary(HI.fDOM.slope) # p-value 0.0624
 
 # R^2 plot 
 ```{r}
+fDOM_data <- fDOM_data[!duplicated(fDOM_data$meanHI), ] # removing duplicated rows
+
 fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
@@ -967,13 +1016,58 @@ ggplot(fDOM_data, aes(x = Deciduous.2020, y = sdBETA)) +
 
 # SPC # 
 ```{r}
-SPC_data_year<- CV_all_year_SPC[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+SPC_data<- CV_all_SPC[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
 
-SPC_data<- CV_all_SPC[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
+ggpairs(SPC_data,
+        columns = c("meanHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_HI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "SPC"),
+       width = 10, height = 10)
 
 ```
 
 ```{r}
+ggpairs(SPC_data,
+        columns = c("meanBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_BETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "SPC"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(SPC_data,
+        columns = c("sdHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_sdHI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "SPC"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(SPC_data,
+        columns = c("sdBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("SPC_sdBETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "SPC"),
+       width = 10, height = 10)
+
+```
+
+
+```{r}
+SPC_data <- SPC_data[!duplicated(SPC_data$meanHI), ] # removing duplicated rows
 
 HI.SPC.slope <- lm(meanHI ~ Slope, 
              data = SPC_data)
@@ -1221,13 +1315,58 @@ ggsave("sdBETA_SPC_burn.pdf",
 
 # Turb # 
 ```{r}
-turb_data_year<- CV_all_year_turb[,c("site.ID", "year", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "CatBurn", "CatPF")]
+turb_data<- CV_all_turb[,c("site.ID",  "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
 
-turb_data<- CV_all_turb[,c("site.ID",  "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
+ggpairs(turb_data,
+        columns = c("meanHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_HI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "Turb"),
+       width = 10, height = 10)
 
 ```
 
 ```{r}
+ggpairs(turb_data,
+        columns = c("meanBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_BETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "Turb"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(turb_data,
+        columns = c("sdHI", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_sdHI_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "Turb"),
+       width = 10, height = 10)
+
+```
+
+```{r}
+ggpairs(turb_data,
+        columns = c("sdBETA", "Slope", "pctburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020"),
+        ggplot2::aes(color = site.ID)) +
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+
+ggsave("turb_sdBETA_pairs.pdf",
+       path = here("plots", "Correlation_matrices", "Turb"),
+       width = 10, height = 10)
+
+```
+
+
+```{r}
+turb_data <- turb_data[!duplicated(turb_data$meanHI), ] # removing duplicated rows
 
 HI.turb.slope <- lm(meanHI ~ Slope, 
              data = turb_data)
