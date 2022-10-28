@@ -241,7 +241,7 @@ HI_BETA_NO3.p =
   theme_bw() +
   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
   ggtitle(vn)+ 
-  ylab("HI") +
+  ylab("") +
   xlab("") +
   theme(panel.border = element_blank(), 
         panel.grid.major = element_blank(),
@@ -274,7 +274,7 @@ HI_BETA_fDOM.p =
     theme_bw() +
     ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
     ggtitle("fDOM")+ 
-    ylab("") +
+    ylab("HI") +
     xlab("") +
     theme(panel.border = element_blank(), 
           panel.grid.major = element_blank(),
@@ -316,7 +316,7 @@ HI_BETA_turb.p =
   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
   geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Permafrost Extent") + 
   theme_bw() +
   ylim(-1.5, 1.5) + 
   xlim(-1.5, 1.5) +
@@ -335,10 +335,11 @@ d <- ggMarginal(HI_BETA_turb.p, groupColour = TRUE, groupFill = TRUE)
 
 
  
-ggarrange(a, b,
+ggarrange(b, a,
           c,d, 
           labels = c("A)", "B)",
-                     "C)", "D)"))
+                     "C)", "D)"),
+          common.legend = TRUE)
 ggsave("HI_BETA.pdf",
        path = here("plots", "HI_BETA"),
        width = 9, height = 9)
@@ -1429,22 +1430,22 @@ which(HI_FI_turb_VAUL_2021$Beta_ymin < 0 & HI_FI_turb_VAUL_2021$Beta_ymax > 0 & 
 # 2018 ####
 MOOS_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_MOOS_final_formatted.csv"))
 FRCH_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_FRCH_final_formatted.csv"))
+CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
 
 # converting to datetime 
 MOOS_2018$datetimeAK <- ymd_hms(MOOS_2018$datetimeAK)
 FRCH_2018$datetimeAK <- ymd_hms(FRCH_2018$datetimeAK)
+CARI_2018$DateTimeAK <- ymd_hms(CARI_2018$DateTimeAK)
+
+# CARI_2018 <- CARI_2018 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2018-06-27" & DateTimeAK <= "2018-10-12", NA, .)))
+
+CARI_2018 <- CARI_2018[-c(1:3793),]  # removing not within the common window
 
 #plot
-ggplot(FRCH_2018, aes(x = datetimeAK, y = fDOM.QSU.mn.adj)) +
+ggplot(CARI_2018, aes(x = DateTimeAK, y = NO3)) +
   geom_point()
-
-AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
-             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
-             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
-             "df", "p", "precip", "temp", "precip.week", "precip.month", 
-             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
-             "date", "TimeSinceChena")] # selecting the columns that I want
-
 
 #  MOOS
 MOOS_2018$DOY <- yday(FRCH_2018$datetimeAK)
@@ -1458,13 +1459,20 @@ FRCH_fDOM <- FRCH_2018[c("datetimeAK", "fDOM.QSU.mn.adj")]
 FRCH_SPC <- FRCH_2018[c("datetimeAK", "SpCond.uScm.mn.adj")]
 FRCH_turb <- FRCH_2018[c("datetimeAK", "Turbidity.FNU.mn.adj")]
 
+# CARI
+CARI_2018$DOY <- yday(CARI_2018$DateTimeAK)
+CARI_fDOM <- CARI_2018[c("DateTimeAK", "fDOM")]
+CARI_SPC <- CARI_2018[c("DateTimeAK", "SPC")]
+CARI_turb <- CARI_2018[c("DateTimeAK", "Turb")]
+CARI_no3 <- CARI_2018[c("DateTimeAK", "NO3")]
+
 # identifying gaps 
-my_dat = data.frame(datetimeAK = na.omit(FRCH_turb$datetimeAK))
-my_dat$datetimeAK = sort(my_dat$datetimeAK, decreasing = F)
-my_dat$gap <- c(NA, with(my_dat, datetimeAK[-1] - datetimeAK[-nrow(my_dat)]))
+my_dat = data.frame(DateTimeAK = na.omit(CARI_turb$DateTimeAK))
+my_dat$DateTimeAK = sort(my_dat$DateTimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, DateTimeAK[-1] - DateTimeAK[-nrow(my_dat)]))
 gap_threshold <- 720 # 12 hours in minutes
 my_dat$over_thresh <- my_dat$gap > gap_threshold
-range(my_dat$datetimeAK, na.rm=T)
+range(my_dat$DateTimeAK, na.rm=T)
 my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
@@ -1501,6 +1509,7 @@ STRT_2019 <- read.csv(here("processed_sensor_data", "2019", "STRT_EXO_stitched_f
 VAUL_2019 <- read.csv(here("processed_sensor_data", "2019", "VAUL_EXO_stitched_formatted.csv"))
 MOOS_2019 <- read.csv(here("processed_sensor_data", "2019", "MOOS_EXO_stitched_formatted.csv"))
 FRCH_2019 <- read.csv(here("processed_sensor_data", "2019", "FRCH_EXO_stitched_formatted.csv"))
+CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
 
 # converting to datetime 
 POKE_2019$datetimeAK <- ymd_hms(POKE_2019$datetimeAK)
@@ -1508,6 +1517,14 @@ STRT_2019$datetimeAK <- ymd_hms(STRT_2019$datetimeAK)
 VAUL_2019$datetimeAK <- ymd_hms(VAUL_2019$datetimeAK)
 MOOS_2019$datetimeAK <- ymd_hms(MOOS_2019$datetimeAK)
 FRCH_2019$datetimeAK <- ymd_hms(FRCH_2019$datetimeAK)
+CARI_2019$DateTimeAK <- ymd_hms(CARI_2019$DateTimeAK)
+
+# CARI_2019 <- CARI_2019 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2019-06-16" & DateTimeAK <= "2019-10-01", NA, .)))
+
+CARI_2019 <- CARI_2019[-c(1:3794),]  # removing not within the common window
+
 
 #plot
 ggplot(FRCH_2019, aes(x = datetimeAK, y = FRCH_2019$fDOM.QSU)) +
@@ -1542,6 +1559,28 @@ FRCH_2019$DOY <- yday(FRCH_2019$datetimeAK)
 FRCH_fDOM <- FRCH_2019[c("fDOM.QSU", "datetimeAK", "DOY")]
 FRCH_SPC <- FRCH_2019[c("SpCond.uScm", "datetimeAK", "DOY")]
 FRCH_turb <- FRCH_2019[c("Turbidity.FNU", "datetimeAK", "DOY")]
+
+# CARI
+CARI_2019$DOY <- yday(CARI_2019$DateTimeAK)
+CARI_fDOM <- CARI_2019[c("fDOM", "DateTimeAK", "DOY")]
+CARI_SPC <- CARI_2019[c("SPC", "DateTimeAK", "DOY")]
+CARI_turb <- CARI_2019[c("Turb", "DateTimeAK", "DOY")]
+CARI_no3 <- CARI_2019[c("NO3", "DateTimeAK", "DOY")]
+
+#plot
+ggplot(CARI_2019, aes(x = DateTimeAK, y = CARI_2019$NO3)) +
+  geom_point()
+
+# identifying gaps 
+my_dat = data.frame(DateTimeAK = na.omit(CARI_no3$DateTimeAK))
+my_dat$DateTimeAK = sort(my_dat$DateTimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, DateTimeAK[-1] - DateTimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$DateTimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(FRCH_turb$datetimeAK))
@@ -1609,6 +1648,7 @@ STRT_2020 <- read.csv(here("processed_sensor_data", "2020", "STRT.EXO.cl.csv"))
 VAUL_2020 <- read.csv(here("processed_sensor_data", "2020", "VAUL.EXO.cl.csv"))
 MOOS_2020 <- read.csv(here("processed_sensor_data", "2020", "MOOS.EXO.cl.csv"))
 FRCH_2020 <- read.csv(here("processed_sensor_data", "2020", "FRCH.EXO.cl.csv"))
+CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
 
 # converting to datetime 
 POKE_2020$datetimeAK <- ymd_hms(POKE_2020$datetimeAK)
@@ -1616,6 +1656,15 @@ STRT_2020$datetimeAK <- ymd_hms(STRT_2020$datetimeAK)
 VAUL_2020$datetimeAK <- ymd_hms(VAUL_2020$datetimeAK)
 MOOS_2020$datetimeAK <- ymd_hms(MOOS_2020$datetimeAK)
 FRCH_2020$datetimeAK <- ymd_hms(FRCH_2020$datetimeAK)
+CARI_2020$DateTimeAK <- ymd_hms(CARI_2020$DateTimeAK)
+
+# CARI_2020 <- CARI_2020 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2020-06-17" & DateTimeAK <= "2020-09-30", NA, .)))
+
+CARI_2020 <- CARI_2020[-c(1:4461),]  # removing not within the common window
+
+
 
 #plot
 ggplot(FRCH_2020, aes(x = datetimeAK, y = FRCH_2020$fDOM.QSU.mn)) +
@@ -1650,6 +1699,27 @@ FRCH_2020$DOY <- yday(FRCH_2020$datetimeAK)
 FRCH_fDOM <- FRCH_2020[c("fDOM.QSU.mn", "datetimeAK", "DOY")]
 FRCH_SPC <- FRCH_2020[c("SpCond.uScm.mn", "datetimeAK", "DOY")]
 FRCH_turb <- FRCH_2020[c("Turbidity.FNU.mn", "datetimeAK", "DOY")]
+
+#  CARI
+CARI_2020$DOY <- yday(CARI_2020$DateTimeAK)
+CARI_fDOM <- CARI_2020[c("fDOM", "DateTimeAK", "DOY")]
+CARI_SPC <- CARI_2020[c("SPC", "DateTimeAK", "DOY")]
+CARI_turb <- CARI_2020[c("Turb", "DateTimeAK", "DOY")]
+CARI_no3 <- CARI_2020[c("NO3", "DateTimeAK", "DOY")]
+
+ggplot(CARI_2020, aes(x = DateTimeAK, y = CARI_2020$NO3)) +
+  geom_point()
+
+# identifying gaps 
+my_dat = data.frame(DateTimeAK = na.omit(CARI_no3$DateTimeAK))
+my_dat$DateTimeAK = sort(my_dat$DateTimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, DateTimeAK[-1] - DateTimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$DateTimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
 
 
 # identifying gaps 
@@ -1716,12 +1786,23 @@ my_dat[my_dat$over_thresh==T,]
 
 # 2021 ####
 EXO_processed <- read_csv("~/Documents/DoD_2021/EXO_data/from_internal_harddrive/processed/EXO.processed.csv")
+CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
 
 POKE_2021 <- subset(EXO_processed, site.ID == "POKE")
 STRT_2021 <- subset(EXO_processed, site.ID == "STRT")
 VAUL_2021 <- subset(EXO_processed, site.ID == "VAUL")
 MOOS_2021 <- subset(EXO_processed, site.ID == "MOOS")
 FRCH_2021 <- subset(EXO_processed, site.ID == "FRCH")
+
+CARI_2021$DateTimeAK <- ymd_hms(CARI_2021$DateTimeAK)
+
+# CARI_2021 <- CARI_2021 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2021-06-12" & DateTimeAK <= "2021-09-27", NA, .)))
+
+CARI_2021 <- CARI_2021[-c(1:3944),]  # removing not within the common window
+CARI_2021 <- CARI_2021[-c(10329:12387),]  # removing not within the common window
+
 
 #plot
 ggplot(POKE_2021, aes(x = datetimeAK, y = POKE_2021$fDOM.QSU)) +
@@ -1757,6 +1838,27 @@ FRCH_2021$DOY <- yday(FRCH_2021$datetimeAK)
 FRCH_fDOM <- FRCH_2021[,-c(1:6,8:22) ]
 FRCH_SPC <- FRCH_2021[,-c(1:13,15:22) ]
 FRCH_turb <- FRCH_2021[,-c(1:15, 17:22) ]
+
+#  CARI
+CARI_2021$DOY <- yday(CARI_2021$DateTimeAK)
+CARI_fDOM <- CARI_2021[c("fDOM", "DateTimeAK", "DOY")]
+CARI_SPC <- CARI_2021[c("SPC", "DateTimeAK", "DOY")]
+CARI_turb <- CARI_2021[c("Turb", "DateTimeAK", "DOY")]
+CARI_no3 <- CARI_2021[c("NO3", "DateTimeAK", "DOY")]
+
+ggplot(CARI_2021, aes(x = DateTimeAK, y = CARI_2021$NO3)) +
+  geom_point()
+
+# identifying gaps 
+my_dat = data.frame(DateTimeAK = na.omit(CARI_no3$DateTimeAK))
+my_dat$DateTimeAK = sort(my_dat$DateTimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, DateTimeAK[-1] - DateTimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$DateTimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
 
 # identifying gaps 
 my_dat = data.frame(datetimeAK = na.omit(FRCH_fDOM$datetimeAK))
@@ -1837,7 +1939,6 @@ DOD_2020 <-  subset(DOD_2020, select=-c(X))
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
 names(DOD_2020)<- colNames # renaming columns 
 DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
-DOD_2021 <-  subset(DOD_2021, select=-c(X))
 
 DOD_2018$year <- "2018"
 DOD_2019$year <- "2019"
@@ -1876,7 +1977,8 @@ CARI_2021$year <- "2021"
 
 CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021)
 CARI_chem$day <- as.character(CARI_chem$DateTimeAK)
-CARI_chem <- CARI_chem[, c(2,1,5,6,7,4,3,9,8)] # reorganizing column headers
+CARI_chem <- CARI_chem[c("DateTimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Discharge",
+                         "day", "year")] # reorganizing column headers
 
 
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
@@ -2038,7 +2140,7 @@ ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
 # mean_daily[c(1542:2074), 9] <- mean_daily[c(1542:2074), 8] - 128 # 2021
 
 # mean_daily <- mean_daily[-2130, ] # last row
-write.csv(mean_daily, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv")
+write.csv(mean_daily, here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
 # plot
 # across all years ####
 # NO3

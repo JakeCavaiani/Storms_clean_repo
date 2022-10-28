@@ -17725,6 +17725,148 @@ write.csv(CARI_storm9_09_07_SPC, "~/Documents/Storms/Storm_Events/2020/CARI/CARI
 write.csv(CARI_storm9_09_07_turb, "~/Documents/Storms/Storm_Events/2020/CARI/CARI_storm9_09_07_Turb.csv")
 
 
+#### 2021 #### 
+FRCH.Q.daily <- read.csv(here("Q", "2021", "FRCH_Q_2021.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+MOOS.Q.daily <- read.csv(here("Q", "2021", "MOOS_Q_2021.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+POKE.Q.daily <- read.csv(here("Q", "2021", "POKE_Q_2021.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+STRT.Q.daily <- read.csv(here("Q", "2021", "STRT_Q_2021.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+VAUL.Q.daily <- read.csv(here("Q", "2021", "VAUL_Q_2021.csv")) # this is from my DoD Discharge script that finalizes Q and is QA/QCd data
+
+FRCH.Q.daily$site.ID <- "FRCH"
+MOOS.Q.daily$site.ID <- "MOOS"
+POKE.Q.daily$site.ID <- "POKE"
+STRT.Q.daily$site.ID <- "STRT"
+VAUL.Q.daily$site.ID <- "VAUL"
+
+Q.daily.2021 <- rbind(FRCH.Q.daily, MOOS.Q.daily, POKE.Q.daily,
+                      STRT.Q.daily, VAUL.Q.daily)
+
+
+Q.2021 <- read.csv(here("Q", "2021", "DOD.2021.csv")) 
+
+Q.2021 <- Q.2021[c("DateTime", "Site", "Q", "day")]
+
+names(Q.2021) <- c("datetimeAK", "site.ID", "Q", "day") # renaming the column headers to match that of the chem file 
+
+Q.2021$datetimeAK <- ymd_hms(Q.2021$datetimeAK) # converting character to datetime
+
+Q.2021 <- Q.2021[!duplicated(Q.2021$Q), ]
+
+
+chem.2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv")) # this is from the DOD_2018 github repository that has cleaned QA/QCd all of this data 
+
+chem.2021 <- chem.2021[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
+                         "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
+                         "nitrateuM.adj.mn")] # reading in the only columns I want
+
+chem.2021$datetimeAK <- ymd_hms(chem.2021$datetimeAK) # converting character to datetime
+
+names(chem.2021) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3")
+
+
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+chem_2021_long <- chem.2021 %>%
+  pivot_longer(
+    cols = fDOM:NO3,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(chem_2021_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+### when merging the previous file in another script the dates got all screwed up ###
+# I am reading in the file and separating by site and then ordering the dates in ascending order and then 
+# deleting dates that are NAs and remerging 
+FRCH.2021 <-  subset(chem.2021, site.ID == "FRCH")
+FRCH.2021 <- FRCH.2021[order(FRCH.2021$datetimeAK),]
+FRCH.2021 <- FRCH.2021[-c(14090:14359), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+
+MOOS.2021 <-  subset(chem.2021, site.ID == "MOOS")
+MOOS.2021 <- MOOS.2021[order(MOOS.2021$datetimeAK),]
+MOOS.2021 <- MOOS.2021[-c(14001:14304), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+POKE.2021 <-  subset(chem.2021, site.ID == "POKE")
+POKE.2021 <- POKE.2021[order(POKE.2021$datetimeAK),]
+POKE.2021 <- POKE.2021[-c(14004:14376), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+STRT.2021 <-  subset(chem.2021, site.ID == "STRT")
+STRT.2021 <- STRT.2021[order(STRT.2021$datetimeAK),]
+STRT.2021 <- STRT.2021[-c(12567:12845), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+VAUL.2021 <-  subset(chem.2021, site.ID == "VAUL")
+VAUL.2021 <- VAUL.2021[order(VAUL.2021$datetimeAK),]
+VAUL.2021 <- VAUL.2021[-c(13446:13788), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+chem.2021 <- rbind(FRCH.2021, MOOS.2021, POKE.2021, STRT.2021, VAUL.2021)
+
+
+
+DOD.2021 <- full_join(chem.2021, Q.2021) # merging chem and discharge data 
+
+write_csv(DOD.2021, here("Q", "Q_chem", "DOD.2021.csv"))
+
+### READ in CARI Data ###
+# this is data directly from the NEON data base website that I downloaded 
+CARI.2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv")) # this is from my NEON repository that reads in NEON data using their NEONutilities package and then manually cleaning points 
+
+CARI.2021$DateTimeAK <- ymd_hms(CARI.2021$DateTimeAK)
+# CARI.2018 <- read_csv("NEON_Q_WaterQuality2018.csv",
+#                       col_types = cols(Discharge = col_double(),
+#                                        fDOM = col_double(), NO3 = col_double(),
+#                                        SPC = col_double(), Turb = col_double()))
+
+CARI.2021 <- CARI.2021[ , -which(names(CARI.2021) %in% c("site.ID.y"))] # dropping column header that I dont want
+
+names(CARI.2021)[names(CARI.2021) == 'DateTimeAK'] <- 'datetimeAK'
+names(CARI.2021)[names(CARI.2021) == 'site.ID.x'] <- 'site.ID'
+
+CARI.2021$site.ID <- "CARI"
+
+
+CARI.2021$day <-  format(as.POSIXct(CARI.2021$datetimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
+CARI.2021$day <-  as.POSIXct(CARI.2021$day, "%Y-%m-%d", tz="America/Anchorage")
+
+# make a daily Q record for CARI
+cari.final.discharge.2021 <- CARI.2021[ , -which(names(CARI.2021) %in% c("NO3", "fDOM", "SPC", "Turb"))] # dropping column header that I dont want
+CARI.daily.2021 <-  with(CARI.2021, tapply(Discharge, list(day, site.ID), mean))
+CARI.daily.2021 <-  as.data.frame(CARI.daily.2021)
+
+CARI.Q.2021 <-  as.data.frame(CARI.daily.2021$CARI)
+CARI.Q.2021$day <-  as.Date(rownames(CARI.daily.2021))
+names(CARI.Q.2021) <-  c("Discharge_Lsec", "day")
+
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+cari_2021_long <- CARI.2021 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) 
+
+ggplot(cari_2021_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+chem_total <- full_join(cari_2021_long, chem_2021_long)
+
+ggplot(chem_total, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
 
 
 

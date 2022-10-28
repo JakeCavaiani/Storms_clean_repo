@@ -7,6 +7,31 @@ output:
   html_document: default
   pdf_document: default
 ---
+The purpose of this script is to compare mean concentrations of measured constituents across catchments over a common period of observation (TSC 32-145) within each year using generalized least square models (GLS) that accounted for temporal autocorrelation of daily observations
+
+Input: Mean_daily file from 08_Catchment_Analysis script that is located in "Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/mean_daily.csv"
+
+Step 1) import full file 
+Step 2) model without autocorrelation structure or transformations
+Step 3) Check model assumptions
+Step 4) Transform if needed (log/heterogeneous variances)
+Step 5) Add correlation structure- ususually ARMA needed to be used: 
+
+mod <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_xxxx, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
+               
+Step 6) Check ACF and PACF plots for autocorrelation 
+Step 7)*if necessary use AIC to determine which autocorrelation structure is most appropriate 
+Step 8) Post-hoc analysis - pairwise comparison if there is significance among site
+Step 9) plot box plots
+
+This script also contains CVs of each constituent
+-Perform linear regression to compare CVs
+
+Output: boxplots with letters signifying difference 
+
 #load libraries 
 ```{r setup, include=FALSE}
 library(here)
@@ -31,6 +56,9 @@ library(stats)
 library(lme4)
 library(emmeans)
 library(ggpattern)
+library(grid)
+library(pBrackets)
+library(multcompView)
 ```
 
 
@@ -108,8 +136,8 @@ ggplot(mean_daily_2018, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   xlab("Site") +
   ylab(vn) 
 
-
 ```
+
 ### no autocorrelation structure
 ```{r}
 no3.mod.gls.2018 <- gls(dailyNO3 ~ site.ID, 
@@ -276,22 +304,9 @@ fDOM.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailyfDOM, fill = site
   ylab("Daily fDOM (QSU)") +
   theme_classic()
 
-library(tidyverse)
-library(rstatix)
-library(ggpubr)
-pwc <- mean_daily_2018 %>%
-  pairwise_t_test(dailyfDOM ~ site.ID, p.adjust.method = "bonferroni")
-pwc
-
-pwc <- pwc %>% add_xy_position(x = "site.ID")
-res.aov <- mean_daily_2018 %>% anova_test(dailyfDOM ~ site.ID)
-res.aov
-ggboxplot(mean_daily_2018, x = "site.ID", y = "dailyfDOM") +
-  stat_pvalue_manual(pwc, label = "p.adj", tip.length = 0, step.increase = 0.1)
-
-ggboxplot(mean_daily_2018, x = "site.ID", y = "dailyfDOM") +
-  stat_pvalue_manual(pwc, hide.ns = TRUE, label = "p.adj.signif")
 ```
+
+
 
 # gls  
 ```{r}
@@ -961,7 +976,7 @@ plot(print(confint(site.ID.comp)))
 anova(NO3.mod.arma.2.2)
 
 ```
-This shows significance for any of the sites 
+This shows no significance for any of the sites 
 
 
 ### fDOM ### 
@@ -1162,11 +1177,19 @@ summary(site.ID.comp)
 summary(fDOM.mod.arma.2.1)
 intervals(fDOM.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+
 anova(fDOM.mod.arma.2.1)
 
 ```
-This shows that VAUL is different from CARI, FRCH, POKE, STRT 
-MOOS is different than CARI, POKE, STRT
+MOOS:CARI
+MOOS:POKE
+MOOS:STRT
+
+VAUL:POKE
+VAUL:STRT
+VAUL:CARI
+VAUL:FRCH
+
 
 ### SPC ### 
 ```{r}
@@ -1348,7 +1371,9 @@ plot(print(confint(site.ID.comp)))
 anova(SPC.mod.arma.2.1)
 
 ```
-This shows that MOOS is significantly different than CARI and FRCH 
+VAUL:CARI
+VAUL:FRCH
+
 
 ### Turb ### 
 ```{r}
@@ -1551,7 +1576,7 @@ plot(print(confint(site.ID.comp)))
 anova(turb.mod.arma.2.2)
 
 ```
-This shows that CARI is different than FRCH, MOOS, STRT, VAUL
+FRCH:CARI
 
 
 # 2020 #
@@ -1669,10 +1694,17 @@ plot(print(confint(site.ID.comp)))
 anova(NO3.mod.arma.1.1)
 
 ```
-This shows significance for STRT and CARI
-FRCH and MOOS, VAUL
-MOOS and POKE,STRT, VAUL
-VAUL and POKE,STRT
+FRCH:CARI
+
+MOOS:POKE
+MOOS:STRT
+MOOS:FRCH
+
+VAUL:FRCH
+VAUL:MOOS
+VAUL:CARI
+VAUL:POKE
+VAUL:STRT
 
 ### fDOM ### 
 ```{r}
@@ -1782,11 +1814,20 @@ plot(print(confint(site.ID.comp)))
 anova(fDOM.mod.arma.1.1)
 
 ```
-This shows that CARI is different than MOOS, POKE, VAUL
-FRCH to MOOS and POKE and VAUL
-MOOS to POKE, STRT, VAUL
-POKE to STRT VAUL
-VAUL - STRT
+POKE:CARI
+POKE:STRT
+POKE:FRCH
+POKE:MOOS
+
+MOOS:FRCH
+MOOS:STRT
+MOOS:CARI
+
+VAUL:POKE
+VAUL:STRT
+VAUL:CARI
+VAUL:FRCH
+VAUL:MOOS
 
 ### SPC ### 
 ```{r}
@@ -1969,7 +2010,9 @@ plot(print(confint(site.ID.comp)))
 anova(SPC.mod.arma.2.1)
 
 ```
-This shows that MOOS is significantly different than CARI and FRCH 
+VAUL:CARI
+VAUL:FRCH
+
 
 ### Turb ### 
 ```{r}
@@ -2169,7 +2212,8 @@ plot(print(confint(site.ID.comp)))
 anova(turb.mod.arma.2.2)
 
 ```
-CARI is different to FRCH,MOOS,VAUL
+CARI:FRCH
+
 
 
 # 2021 #
@@ -2324,7 +2368,7 @@ plot(print(confint(site.ID.comp)))
 anova(NO3.mod.arma.1.1)
 
 ```
-
+VAUL:POKE
 
 ### fDOM ### 
 ```{r}
@@ -2534,11 +2578,17 @@ plot(print(confint(site.ID.comp)))
 anova(fDOM.mod.arma.2.2)
 
 ```
-This shows that CARI is different than MOOS, POKE, VAUL
-FRCH to MOOS and POKE and VAUL
-MOOS to POKE, STRT, VAUL
-POKE to STRT VAUL
-VAUL - STRT
+
+STRT:POKE
+
+MOOS:FRCH
+MOOS:POKE
+MOOS:STRT
+
+VAUL:POKE
+VAUL:STRT
+VAUL:CARI
+VAUL:FRCH
 
 ### SPC ### 
 ```{r}
@@ -2714,7 +2764,18 @@ plot(print(confint(site.ID.comp)))
 anova(SPC.mod.arma.1.1)
 
 ```
-This shows that MOOS is significantly different than CARI and FRCH 
+
+CARI:MOOS
+CARI:POKE
+CARI:STRT
+
+POKE:FRCH
+
+VAUL:CARI
+VAUL:FRCH
+VAUL:MOOS
+VAUL:POKE
+VAUL:STRT
 
 ### Turb ### 
 ```{r}
@@ -2884,59 +2945,12 @@ summary(site.ID.comp)
 summary(turb.mod.arma.2.1)
 intervals(turb.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
-library(datasets)
-library(multcompView)
-
-anova <- aov(logDailyTurb ~ site.ID, data = mean_daily_2021)
-summary(anova)
-tukey <- TukeyHSD(anova)
-print(tukey)
-cld <- multcompLetters4(anova, tukey)
-print(cld)
-cld <- as.data.frame.list(cld$site.ID)
-
-Tk <- mean_daily_2021 %>% 
-  group_by(site.ID) %>% 
-  summarise(mean = mean(dailyTurb, na.rm = TRUE), 
-            quant = quantile(dailyTurb, na.rm = TRUE), probs = 0.75) %>% 
-  arrange(desc(mean))
-Tk <- Tk[!duplicated(Tk$mean), ]
-Tk$cld <- cld$Letters
-
-
-
-mean_daily_2021$cld <- NA
-
-mean_daily_2021 <- mean_daily_2021 %>% 
-  mutate(across(c(cld),
-                ~ifelse(site.ID == "CARI", "e", .)))
-
-mean_daily_2021 <- mean_daily_2021 %>% 
-  mutate(across(c(cld),
-                ~ifelse(site.ID == "VAUL", "a", .)))
-
-mean_daily_2021 <- mean_daily_2021 %>% 
-  mutate(across(c(cld),
-                ~ifelse(site.ID == "FRCH", "b", .)))
-
-mean_daily_2021 <- mean_daily_2021 %>% 
-  mutate(across(c(cld),
-                ~ifelse(site.ID == "c", "b", .)))
-
-
-ggplot(mean_daily_2021, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
-  geom_boxplot() +
-    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
-  xlab("Site") +
-  ylab("") +
-  theme_classic() +
-  geom_text(data = Tk, aes(label = cld, x = site.ID, y = quant),
-            vjust = -5, hjust = -1, size = 3)
-
-anova(turb.mod.arma.2.1)
 ```
-CARI is different to FRCH,MOOS,VAUL
-VAUL and POKE
+CARI:FRCH
+CARI:MOOS
+
+VAUL:CARI
+VAUL:POKE
 
 
 ### PLOTS FOR THESIS ###
@@ -3009,7 +3023,7 @@ ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20))
 
 ggsave("NO3_facet.pdf",
@@ -3030,7 +3044,7 @@ ggplot(mean_daily_new, aes(x = site.ID, y = dailyfDOM, pattern = PF, fill = site
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20)) 
 
 ggsave("fDOM_facet.pdf",
@@ -3042,6 +3056,7 @@ ggplot(mean_daily_new, aes(x = site.ID, y = dailySPC, pattern = PF, fill = site.
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
   scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
   scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  scale_y_continuous(trans='log10') +
   xlab("") +
   ylab("SPC (μS/cm)") +
   theme_classic() +
@@ -3050,7 +3065,7 @@ ggplot(mean_daily_new, aes(x = site.ID, y = dailySPC, pattern = PF, fill = site.
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20)) 
 
 ggsave("SPC_facet.pdf",
@@ -3072,13 +3087,39 @@ ggplot(mean_daily_new, aes(x = site.ID, y = dailyTurb, pattern = PF, fill = site
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20)) 
 
 ggsave("Turb_facet.pdf",
        path = here("plots", "Chems_year"),
        width = 11, height = 11)
 
+
+# brackets # When exporting it to a different size the brackets get all out of whack so it takes me just as much time doing it in word as it does here so let me just do it word 
+# ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+#   geom_boxplot() +
+#   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+#   scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+#   scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+#   xlab("") +
+#   ylab(vn) +
+#   theme_classic() +
+#   facet_wrap(~year) +
+#   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+#         axis.text.y = element_text(size = 20),
+#         axis.title.x = element_text(size = 20),
+#         axis.title.y = element_text(size = 20),
+#         legend.position = "none",
+#         strip.text = element_text(size = 20))
+# 
+# grid.brackets(150, 335, 65, 335, lwd=1, ticks=NA, type = 4)
+# grid.brackets(245, 335, 155, 335, lwd=1, ticks=NA, type = 4)
+# 
+# grid.brackets(340, 335, 255, 335, lwd=1, ticks=NA, type = 4)
+# grid.brackets(430, 335, 345, 335, lwd=1, ticks=NA, type = 4)
+# 
+# grid.text(x=unit(20,'npc'), y=unit(10,'npc'),
+#           label=expression(paste('Unburned'),'type=4'), hjust = -1.75, vjust=0)
 
 ```
 

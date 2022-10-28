@@ -6,6 +6,20 @@ output:
   word_document: default
   html_document: default
 ---
+The purpose of this script is to compare if HI/BETA for each constituent varied between sites using linear mixed effects models
+
+Input: Antecedent moisture conditions with HI_FI_BETA and catchment characteristics!
+
+Step 1) import full file 
+Step 2) Model for each constituent:
+
+mod <- lmer(meanHI ~ site.ID + (1|year), data = HI_FI_NO3)
+
+Step 3) Check model assumptions 
+Step 4) Post-hoc analysis - pairwise comparison if there is significance among site
+Step 5) Plot!
+
+Output: boxplots with letters signifying difference 
 
 #load libraries 
 ```{r}
@@ -25,6 +39,10 @@ library(lubridate)
 library(lme4)
 library(MuMIn)
 library(multcomp)
+library(ggpattern)
+library(emmeans)
+library(multcompView)
+install.packages("agricolae")
 ```
 
 # load in the data 
@@ -81,9 +99,23 @@ HI_FI_turb = subset(AMC, response_var == "turb")
 
 # plot 
 ```{r}
-AMC_new <- AMC
+AMC_new <- AMC # reordering the sites to group by burn categorization 
 AMC_new$site.ID <- factor(AMC_new$site.ID,     # Reorder factor levels
                          c("CARI", "FRCH", "VAUL", "MOOS", "POKE", "STRT"))
+
+vn = expression(paste(N*O[3]^"-"))
+
+supp.labs <- c("fDOM","NO3-", "SPC", "Turbidity")
+names(supp.labs) <- c("fDOM", "NO3", "SPC", "turb")
+
+AMC_new$facets = factor(AMC_new$response_var, labels = c(
+    "fDOM",
+    "NO3~^{-})",
+    "SPC", 
+    "Turbidity"))
+
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
 
 ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
   geom_boxplot() +
@@ -93,12 +125,12 @@ ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
   xlab("") +
   ylab("Mean HI") +
   theme_classic() +
-  facet_wrap(~response_var) +
+  facet_wrap(~response_var, labeller = my_labeller) +
   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20)) 
 
 
@@ -154,6 +186,28 @@ emmeans(fDOM.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
 normality looks good 
+CARI:FRCH
+CARI:VAUL
+FRCH:MOOS
+FRCH:VAUL
+MOOS:POKE
+POKE:VAUL
+STRT:VAUL
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(meanHI ~ site.ID, data = HI_FI_fDOM)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
 
 
 ```{r}
@@ -177,7 +231,7 @@ emmeans(SPC.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
 ```
-non-normal....lets try to do a log transformation 
+
 
 
 ```{r}
@@ -202,6 +256,20 @@ emmeans(turb.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
 
+```{r}
+# getting the letter designation for significance 
+anova <- aov(meanHI ~ site.ID, data = HI_FI_turb)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
 ### BETA ###
 
 ```{r}
@@ -213,12 +281,12 @@ ggplot(AMC_new, aes(x = site.ID, y = meanBETA, pattern = PF, fill = site.ID)) +
   xlab("") +
   ylab("Mean ß") +
   theme_classic() +
-  facet_wrap(~response_var) +
+  facet_wrap(~response_var, labeller = my_labeller) +
   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20)) 
 
 ggsave("BETA_all_solutes.pdf",
@@ -255,6 +323,7 @@ summary.lm(NO3)
 
 ```
 
+
 #fDOM
 ```{r}
 ggplot(HI_FI_fDOM, aes(site.ID, meanBETA, fill = site.ID)) +
@@ -275,6 +344,20 @@ summary(fDOM.CV.BETA.mod)
 emmeans(fDOM.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
+```
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(meanBETA ~ site.ID, data = HI_FI_fDOM)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
 ```
 
 ```{r}
@@ -300,6 +383,20 @@ emmeans(SPC.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
+# getting the letter designation for significance 
+anova <- aov(meanBETA ~ site.ID, data = HI_FI_SPC)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
+```{r}
 #turb
 ggplot(HI_FI_turb, aes(site.ID, meanBETA, fill = site.ID)) +
   geom_boxplot() +
@@ -319,6 +416,20 @@ summary(turb.CV.BETA.mod)
 emmeans(turb.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
+```{r}
+# getting the letter designation for significance 
+anova <- aov(meanBETA ~ site.ID, data = HI_FI_turb)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
 ### SDs of storm metrics ###
 
 ```{r}
@@ -331,12 +442,12 @@ ggplot(AMC_new, aes(x = site.ID, y = sdHI, pattern = PF, fill = site.ID)) +
   xlab("") +
   ylab("SD HI") +
   theme_classic() +
-  facet_wrap(~response_var) +
+  facet_wrap(~response_var, labeller = my_labeller) +
   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20))
 
 ggsave("sdHI_all_solutes.pdf",
@@ -378,6 +489,20 @@ emmeans(NO3.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
+# getting the letter designation for significance 
+anova <- aov(sdHI ~ site.ID, data = HI_FI_NO3)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
+```{r}
 ggplot(HI_FI_fDOM, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
@@ -394,6 +519,20 @@ qqnorm(resid(fDOM.CV.sdHI.mod))
 summary(fDOM.CV.sdHI.mod)
 
 emmeans(fDOM.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+```
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdHI ~ site.ID, data = HI_FI_fDOM)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
 ```
 
 # SPC
@@ -416,6 +555,19 @@ summary(SPC.CV.sdHI.mod)
 emmeans(SPC.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdHI ~ site.ID, data = HI_FI_SPC)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
 # turb
 ```{r}
 ggplot(HI_FI_turb, aes(site.ID, sdHI, fill = site.ID)) +
@@ -445,6 +597,21 @@ summary(turb.CV.sdHI.mod)
 emmeans(turb.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdHI ~ site.ID, data = HI_FI_turb)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
 # BETA 
 ```{r}
 #plot 
@@ -456,12 +623,12 @@ ggplot(AMC_new, aes(x = site.ID, y = sdBETA, pattern = PF, fill = site.ID)) +
   xlab("") +
   ylab("SD ß") +
   theme_classic() +
-  facet_wrap(~response_var) +
+  facet_wrap(~response_var, labeller = my_labeller) +
   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.position = "right",
+        legend.position = "none",
         strip.text = element_text(size = 20))
 
 
@@ -483,6 +650,19 @@ summary(NO3.CV.sdBETA.mod)
 emmeans(NO3.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdBETA ~ site.ID, data = HI_FI_NO3)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
 # fDOM
 ```{r}
 fDOM.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
@@ -492,6 +672,20 @@ qqnorm(resid(fDOM.CV.sdBETA.mod))
 summary(fDOM.CV.sdBETA.mod)
 
 emmeans(fDOM.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+```
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdBETA ~ site.ID, data = HI_FI_fDOM)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
 ```
 
 # SPC
@@ -504,6 +698,21 @@ summary(SPC.CV.sdBETA.mod)
 
 emmeans(SPC.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
+
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdBETA ~ site.ID, data = HI_FI_SPC)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+
 # turb 
 ```{r}
 turb.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_turb)
@@ -515,4 +724,17 @@ summary(turb.CV.sdBETA.mod)
 emmeans(turb.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
+```{r}
+# getting the letter designation for significance 
+anova <- aov(sdBETA ~ site.ID, data = HI_FI_turb)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
 
