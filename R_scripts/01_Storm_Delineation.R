@@ -17757,7 +17757,7 @@ chem.2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.l
 
 chem.2021 <- chem.2021[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
                          "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
-                         "nitrateuM.adj.mn")] # reading in the only columns I want
+                         "nitrateuM.mn.lab")] # reading in the only columns I want
 
 chem.2021$datetimeAK <- ymd_hms(chem.2021$datetimeAK) # converting character to datetime
 

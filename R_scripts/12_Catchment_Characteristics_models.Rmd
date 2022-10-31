@@ -54,6 +54,7 @@ library(AICcmodavg)
 library(gtable)
 library(gridExtra)
 library(grid)
+
 ```
 
 
@@ -447,13 +448,15 @@ ggsave("NO3_sdBETA_pairs.pdf",
 # NO3
 # HI 
 ```{r}
+NO3_data <- NO3_data[!duplicated(NO3_data$meanHI), ] # removing duplicated rows
+
 HI.no3.slope <- lm(meanHI ~ Slope, 
              data = NO3_data)
 
 HI.no3.burn <- lm(meanHI ~ pctburn_lg, 
              data = NO3_data)
 
-HI.no3.deciduous <- lm(meanHI ~ Deciduous.2020,
+HI.no3.deciduous <- lm(meanHI ~ Deciduous.2010,
                        data = NO3_data)
 
 models <- list(HI.no3.slope, HI.no3.burn, HI.no3.deciduous) 
@@ -464,8 +467,6 @@ summary(HI.no3.burn)
 # R^2 plot 
 ```{r}
 #no3.hi.burn
-NO3_data <- NO3_data[!duplicated(NO3_data$meanHI), ] # removing duplicated rows
-
 vn = expression(paste("Mean HI-"*N*O[3]^"-"))
 no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
   geom_point(size = 3) +
@@ -474,7 +475,12 @@ no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 5) + 
+               parse = TRUE, size = 5.5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.32, label.x = -.35, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -520,26 +526,31 @@ BETA.no3.slope <- lm(meanBETA ~ Slope,
 BETA.no3.burn <- lm(meanBETA ~ pctburn_lg, 
              data = NO3_data)
 
-BETA.no3.deciduous <- lm(meanBETA ~ Deciduous.2020, 
+BETA.no3.deciduous <- lm(meanBETA ~ Deciduous.2010, 
              data = NO3_data)
 
 models <- list(BETA.no3.slope, BETA.no3.burn, BETA.no3.deciduous)
-aictab(cand.set = models) # burn is the better model delta AIC > 2
-summary(BETA.no3.burn) # p-value: 0.2065
+aictab(cand.set = models) # deciduous  is the best  model
+summary(BETA.no3.deciduous) # p-value: 0.2065
 ```
 
 # R^2 plot 
 ```{r}
 vn = expression(paste("Mean ß-"*N*O[3]^"-"))
 
-no3.beta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
+no3.beta.deciduous <- ggplot(NO3_data, aes(x = Deciduous.2010, y = meanBETA)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
-  geom_errorbar(aes(x=pctburn_lg, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  geom_errorbar(aes(x=Deciduous.2010, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
+               label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 5) + 
+               parse = TRUE, size = 5.5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.2, label.x = -.7, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -547,7 +558,7 @@ no3.beta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanBETA)) +
         axis.title.y = element_text(size = 20),
         legend.key.size = unit(2.0, 'cm'),
         strip.text = element_text(size = 20)) +
-  xlab("Burn Extent") +
+  xlab("% Deciduous") +
   ylab(vn) +
   theme(aspect.ratio = 1)
 
@@ -587,7 +598,7 @@ sdHI.no3.slope <- lm(sdHI ~ Slope,
 sdHI.no3.burn <- lm(sdHI ~ pctburn_lg, 
              data = NO3_data)
 
-sdHI.no3.deciduous <- lm(sdHI ~ Deciduous.2020, 
+sdHI.no3.deciduous <- lm(sdHI ~ Deciduous.2010, 
              data = NO3_data)
 
 
@@ -608,7 +619,12 @@ no3.sdhi.slope <- ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 5) + 
+               parse = TRUE, size = 5.5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.515, label.x = -0.9, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -620,26 +636,6 @@ no3.sdhi.slope <- ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
   ylab(vn) +
   theme(aspect.ratio = 1)
 
-### Deciduous 
-# ggplot(NO3_data, aes(x = Deciduous.2020, y = sdHI)) +
-#   geom_point(size = 3) +
-#   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
-#   stat_poly_eq(formula = y~x,
-#                label.y = "top", label.x = "left",
-#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")),
-#                parse = TRUE, size = 6) +
-#   theme_classic() +
-#   theme(axis.text.x=element_text(size=20),
-#         axis.text.y = element_text(size = 20),
-#         axis.title.x = element_text(size = 20),
-#         axis.title.y = element_text(size = 20),
-#         legend.key.size = unit(2.0, 'cm'),
-#         strip.text = element_text(size = 20)) +
-#   xlab("% Deciduous") +
-#   ylab(vn) +
-#   theme(aspect.ratio = 1)
-
-###
 
 ggsave("sdHI_NO3_slope.pdf",
        path = here("plots", "Catchment_characteristics", "HI"),
@@ -655,7 +651,7 @@ sdBETA.no3.slope <- lm(sdBETA ~ Slope,
 sdBETA.no3.burn <- lm(sdBETA ~ pctburn_lg, 
              data = NO3_data)
 
-sdBETA.no3.deciduous <- lm(sdBETA ~ Deciduous.2020, 
+sdBETA.no3.deciduous <- lm(sdBETA ~ Deciduous.2010, 
              data = NO3_data)
 
 models <- list(sdBETA.no3.slope, sdBETA.no3.burn, sdBETA.no3.deciduous)
@@ -675,7 +671,12 @@ no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 5) + 
+               parse = TRUE, size = 5.5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 3.5, label.x = -.4, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -687,8 +688,8 @@ no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
   ylab(vn) +
   theme(aspect.ratio = 1)
 
-### Deciduous 
-# ggplot(NO3_data, aes(x = Deciduous.2020, y = sdBETA)) +
+# ### Deciduous
+# ggplot(NO3_data, aes(x = Deciduous.2010, y = sdBETA)) +
 #   geom_point(size = 3) +
 #   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
 #   stat_poly_eq(formula = y~x,
@@ -766,6 +767,7 @@ ggsave("fDOM_sdBETA_pairs.pdf",
 ```
 
 ```{r}
+fDOM_data <- fDOM_data[!duplicated(fDOM_data$meanHI), ] # removing duplicated rows
 
 HI.fDOM.slope <- lm(meanHI ~ Slope, 
              data = fDOM_data)
@@ -773,7 +775,7 @@ HI.fDOM.slope <- lm(meanHI ~ Slope,
 HI.fDOM.burn <- lm(meanHI ~ pctburn_lg, 
              data = fDOM_data)
 
-HI.fDOM.deciduous <- lm(meanHI ~ Deciduous.2020, 
+HI.fDOM.deciduous <- lm(meanHI ~ Deciduous.2010, 
              data = fDOM_data)
 
 models <- list(HI.fDOM.slope, HI.fDOM.burn, HI.fDOM.deciduous)
@@ -783,8 +785,6 @@ summary(HI.fDOM.slope) # p-value 0.0624
 
 # R^2 plot 
 ```{r}
-fDOM_data <- fDOM_data[!duplicated(fDOM_data$meanHI), ] # removing duplicated rows
-
 fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
@@ -793,6 +793,11 @@ fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=Slope, ymin=meanHI-seHI, ymax=meanHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.15, label.x = 0, size = 5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -857,6 +862,11 @@ fDOM.beta.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanBETA)) +
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=Slope, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 1.1, label.x = -1, size = 5.1) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -918,6 +928,11 @@ fDOM.sdhi.burn <- ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE, size = 5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = .475, label.x = -.5, size = 5) +
   theme_classic()+
   geom_errorbar(aes(x=pctburn_lg, ymin=sdHI-seHI, ymax=sdHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
   theme(axis.text.x=element_text(size=20), 
@@ -964,50 +979,39 @@ sdBETA.fDOM.slope <- lm(sdBETA ~ Slope,
 sdBETA.fDOM.burn <- lm(sdBETA ~ pctburn_lg, 
              data = fDOM_data)
 
-sdBETA.fDOM.deciduous <- lm(sdBETA ~ Deciduous.2020, 
+sdBETA.fDOM.deciduous <- lm(sdBETA ~ Deciduous.2010, 
              data = fDOM_data)
 
 models <- list(sdBETA.fDOM.slope, sdBETA.fDOM.burn, sdBETA.fDOM.deciduous)
 aictab(cand.set = models) # slope model better but the deltaAIC is not >2
-summary(sdBETA.fDOM.slope) # 0.53313 
+summary(sdBETA.fDOM.deciduous) # 0.53313 
 ```
 
 # R^2 plot 
 ```{r}
-fDOM.sdbeta.slope <- ggplot(fDOM_data, aes(x = Slope, y = sdBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
+fDOM.sdbeta.deciduous <- ggplot(fDOM_data, aes(x = Deciduous.2010, y = sdBETA)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  geom_errorbar(aes(x=Slope, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+               parse = TRUE, size = 5) + 
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 1.8, label.x = -0.9, size = 5) +
+  theme_classic()+
+  geom_errorbar(aes(x=Deciduous.2010, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
         legend.key.size = unit(2.0, 'cm'),
         strip.text = element_text(size = 20)) +
-  xlab("Burn extent") +
-  ylab("SD ß-fDOM")
-### Deciduous 
-ggplot(fDOM_data, aes(x = Deciduous.2020, y = sdBETA)) +
-  geom_point(size = 3) +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")),
-               parse = TRUE, size = 6) +
-  theme_classic() +
-  theme(axis.text.x=element_text(size=20),
-        axis.text.y = element_text(size = 20),
-        axis.title.x = element_text(size = 20),
-        axis.title.y = element_text(size = 20),
-        legend.key.size = unit(2.0, 'cm'),
-        strip.text = element_text(size = 20)) +
   xlab("% Deciduous") +
-  ylab("SD ß-fDOM") +
-  theme(aspect.ratio = 1)
+  ylab("SD ß-fDOM")
+
 
 ###
 
@@ -1075,7 +1079,7 @@ HI.SPC.slope <- lm(meanHI ~ Slope,
 HI.SPC.burn <- lm(meanHI ~ pctburn_lg, 
              data = SPC_data)
 
-HI.SPC.deciduous <- lm(meanHI ~ Deciduous.2020, 
+HI.SPC.deciduous <- lm(meanHI ~ Deciduous.2010, 
              data = SPC_data)
 
 models <- list(HI.SPC.slope, HI.SPC.burn, HI.SPC.deciduous)
@@ -1091,8 +1095,13 @@ spc.hi.slope <- ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 6) + 
+               parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=Slope, ymin=meanHI-seHI, ymax=meanHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.54, label.x = 0.2, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1157,8 +1166,13 @@ spc.beta.slope <- ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 6) + 
+               parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=Slope, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.4, label.x = 1, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1273,8 +1287,13 @@ spc.sdbeta.burn <- ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 6) + 
+               parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=pctburn_lg, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 7.2, label.x = -0.5, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1374,7 +1393,7 @@ HI.turb.slope <- lm(meanHI ~ Slope,
 HI.turb.burn <- lm(meanHI ~ pctburn_lg, 
              data = turb_data)
 
-HI.turb.deciduous <- lm(meanHI ~ Deciduous.2020, 
+HI.turb.deciduous <- lm(meanHI ~ Deciduous.2010, 
              data = turb_data)
 
 models <- list(HI.turb.slope, HI.turb.burn, HI.turb.deciduous)
@@ -1390,8 +1409,13 @@ turb.hi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "right",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE, size = 6) + 
+               parse = TRUE, size = 5) + 
   geom_errorbar(aes(x=pctburn_lg, ymin=meanHI-seHI, ymax=meanHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.11, label.x = 0.8, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1401,6 +1425,7 @@ turb.hi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = meanHI)) +
         strip.text = element_text(size = 20)) +
   xlab("Burn extent") +
   ylab("Mean HI-turbidity")
+
 summary(HI.turb.burn) # p-value 0.353
 
 ### Deciduous 
@@ -1435,7 +1460,7 @@ BETA.turb.slope <- lm(meanBETA ~ Slope,
 BETA.turb.burn <- lm(meanBETA ~ pctburn_lg, 
              data = turb_data)
 
-BETA.turb.deciduous <- lm(meanBETA ~ Deciduous.2020, 
+BETA.turb.deciduous <- lm(meanBETA ~ Deciduous.2010, 
              data = turb_data)
 
 models <- list(BETA.turb.slope, BETA.turb.burn, BETA.turb.deciduous)
@@ -1445,28 +1470,22 @@ aictab(cand.set = models) # slope is the better model but deltaAIC is not greate
 
 # R^2 plot 
 ```{r}
-turb.beta.slope <- ggplot(turb_data, aes(x = Slope, y = meanBETA)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()+
-  xlab("Slope") +
-  ylab("Mean BETA")
-summary(BETA.turb.slope) # 0.61108
-
 ### Deciduous 
-ggplot(turb_data, aes(x = Deciduous.2020, y = meanBETA)) +
+turb.beta.deciduous <- ggplot(turb_data, aes(x = Deciduous.2010, y = meanBETA)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "left",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")),
-               parse = TRUE, size = 6) +
-  theme_classic() +
-  theme(axis.text.x=element_text(size=20),
+               label.y = "top", label.x = "right",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE, size = 5) + 
+  geom_errorbar(aes(x=Deciduous.2010, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 1.6, label.x = 0.4, size = 5) +
+  theme_classic()+
+  theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
@@ -1476,7 +1495,7 @@ ggplot(turb_data, aes(x = Deciduous.2020, y = meanBETA)) +
   ylab("Mean ß-Turbidity") +
   theme(aspect.ratio = 1)
 
-###
+
 ```
 
 # sdHI
@@ -1487,36 +1506,29 @@ sdHI.turb.slope <- lm(sdHI ~ Slope,
 sdHI.turb.burn <- lm(sdHI ~ pctburn_lg, 
              data = turb_data)
 
-sdHI.turb.deciduous <- lm(sdHI ~ Deciduous.2020, 
+sdHI.turb.deciduous <- lm(sdHI ~ Deciduous.2010, 
              data = turb_data)
 
 models <- list(sdHI.turb.slope, sdHI.turb.burn, sdHI.turb.deciduous)
-aictab(cand.set = models) # burn is the better model but delta AIC is not greater than 2 
+aictab(cand.set = models) # deciduous is the better model 
 
 ```
 
 # R^2 plot 
 ```{r}
-turb.sdhi.burn <- ggplot(turb_data, aes(x = pctburn_lg, y = sdHI)) +
-  geom_point() +
-  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) +
-  stat_poly_eq(formula = y~x,
-               label.y = "top", label.x = "right",
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) + 
-  theme_classic()+
-  xlab("Percent Burn") +
-  ylab("Standard Deviation HI")
-summary(sdHI.turb.burn) # p-value 0.73519
-
-### Deciduous 
-ggplot(turb_data, aes(x = Deciduous.2020, y = sdHI)) +
+turb.sdhi.deciduous <- ggplot(turb_data, aes(x = Deciduous.2010, y = sdHI)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")),
-               parse = TRUE, size = 6) +
+               parse = TRUE, size = 5) +
+  geom_errorbar(aes(x=Deciduous.2010, ymin=sdHI-seHI, ymax=sdHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 0.21, label.x = -.75, size = 5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20),
         axis.text.y = element_text(size = 20),
@@ -1539,7 +1551,7 @@ sdBETA.turb.slope <- lm(sdBETA ~ Slope,
 sdBETA.turb.burn <- lm(sdBETA ~ pctburn_lg, 
              data = turb_data)
 
-sdBETA.turb.deciduous <- lm(sdBETA ~ Deciduous.2020, 
+sdBETA.turb.deciduous <- lm(sdBETA ~ Deciduous.2010, 
              data = turb_data)
 
 models <- list(sdBETA.turb.slope, sdBETA.turb.burn, sdBETA.turb.deciduous)
@@ -1558,6 +1570,11 @@ turb.sdbeta.slope <- ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
                parse = TRUE, size = 6) + 
     theme_classic()+
   geom_errorbar(aes(x=Slope, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_fit_glance(method = 'lm',
+                  method.args = list(formula = y~x),
+                  geom = 'text',
+                  aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
+                  label.y = 2.9, label.x = -.75, size = 5) +
     theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),

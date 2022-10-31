@@ -56,12 +56,6 @@ mean_daily_long <- mean_daily %>%
     names_prefix = "wk",
     values_to = "concentration") # converting to a long format so each response_var is within a single column
 
-df$dose <- factor(df$dose, levels = c("0.5", "1", "2"), 
-                  labels = c("D0.5", "D1", "D2"))
-supp.labs <- c(`dailyfDOM` = "fDOM (QSU)",
-               `dailyNO3` = "NO3- (µM)",
-               `dailySPC` = "SPC(µS/cm)",
-               `dailyTurb` = "Turbidity (FNU)")
 
 mean_daily_long$response_var <- factor(mean_daily_long$response_var, levels = c("dailyfDOM", "dailyNO3", 
                                                                                 "dailySPC", "dailyTurb"), 
@@ -113,7 +107,7 @@ ggsave("All_years.pdf",
 
 # NO3
 gA <- ggplotGrob(no3.hi.burn)
-gB <- ggplotGrob(no3.beta.burn)
+gB <- ggplotGrob(no3.beta.deciduous)
 gC <- ggplotGrob(no3.sdhi.slope)
 gD <- ggplotGrob(no3.sdbeta.burn)
 
@@ -122,11 +116,13 @@ grid.draw(cbind(rbind(gA, gB, size = "max"),
                 rbind(gC, gD, size = "max")))
 fig <- arrangeGrob(cbind(rbind(gA, gB, size = "max"),
                          rbind(gC, gD, size = "max")))
+
+
 # fDOM
 gA <- ggplotGrob(fdom.hi.slope)
 gB <- ggplotGrob(fDOM.beta.slope)
 gC <- ggplotGrob(fDOM.sdhi.burn)
-gD <- ggplotGrob(fDOM.sdbeta.slope)
+gD <- ggplotGrob(fDOM.sdbeta.deciduous)
 
 
 grid::grid.newpage()
@@ -150,8 +146,8 @@ fig <- arrangeGrob(cbind(rbind(gA, gB, size = "max"),
 
 # turb
 gA <- ggplotGrob(turb.hi.burn)
-gB <- ggplotGrob(spc.beta.slope)
-gC <- ggplotGrob(spc.sdhi.burn)
+gB <- ggplotGrob(turb.beta.deciduous)
+gC <- ggplotGrob(turb.sdhi.deciduous)
 gD <- ggplotGrob(turb.sdbeta.slope)
 
 
