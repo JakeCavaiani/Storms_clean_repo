@@ -25,6 +25,7 @@ library(EcoHydRology)
 library(dplyr)
 library(here)
 
+
 # plot on normalized scale # 
 # load data #
 #FRCH_storm1_06_21 <- read_csv("~/Documents/Storms/Storm_Events/2018/FRCH/FRCH_storm1_06_21.csv") # not a storm!!!!
@@ -3906,5 +3907,894 @@ ggsave("CARI_HI_Loops_2020.pdf",
        width = 20, height = 30, units = "in")
 
 
+
+
+####################################### 2021  ####
+
+# plot on normalized scale # 
+#### load data #####
+VAUL_storm1b_07_27_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_Q.csv"))
+VAUL_storm1b_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_NO3.csv"))
+VAUL_storm1b_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_fDOM.csv"))
+VAUL_storm1b_07_27_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_SPC.csv"))
+VAUL_storm1b_07_27_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_turb.csv"))
+
+VAUL_storm3_08_08_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm3_08_08_Q.csv"))
+VAUL_storm3_08_08_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm3_08_08_NO3.csv"))
+VAUL_storm3_08_08_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm3_08_08_fDOM.csv"))
+VAUL_storm3_08_08_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm3_08_08_SPC.csv"))
+VAUL_storm3_08_08_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm3_08_08_turb.csv"))
+
+VAUL_storm4a_08_15_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4a_08_15_Q.csv"))
+VAUL_storm4a_08_15_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4a_08_15_NO3.csv"))
+VAUL_storm4a_08_15_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4a_08_15_fDOM.csv"))
+VAUL_storm4a_08_15_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4a_08_15_SPC.csv"))
+VAUL_storm4a_08_15_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4a_08_15_turb.csv"))
+
+VAUL_storm4b_08_20_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4b_08_20_Q.csv"))
+VAUL_storm4b_08_20_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4b_08_20_NO3.csv"))
+VAUL_storm4b_08_20_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4b_08_20_fDOM.csv"))
+VAUL_storm4b_08_20_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4b_08_20_SPC.csv"))
+VAUL_storm4b_08_20_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm4b_08_20_turb.csv"))
+
+VAUL_storm5a_08_23_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_Q.csv"))
+VAUL_storm5a_08_23_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_NO3.csv"))
+VAUL_storm5a_08_23_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_fDOM.csv"))
+VAUL_storm5a_08_23_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_SPC.csv"))
+VAUL_storm5a_08_23_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_turb.csv"))
+
+VAUL_storm5b_08_26_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_Q.csv"))
+VAUL_storm5b_08_26_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_NO3.csv"))
+VAUL_storm5b_08_26_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_fDOM.csv"))
+VAUL_storm5b_08_26_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_SPC.csv"))
+VAUL_storm5b_08_26_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_turb.csv"))
+
+# STRT # 
+STRT_storm1a_08_15_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_Q.csv"))
+STRT_storm1a_08_15_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_NO3.csv"))
+STRT_storm1a_08_15_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_fDOM.csv"))
+STRT_storm1a_08_15_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_SPC.csv"))
+STRT_storm1a_08_15_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_turb.csv"))
+
+STRT_storm1b_08_17_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_Q.csv"))
+STRT_storm1b_08_17_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_NO3.csv"))
+STRT_storm1b_08_17_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_fDOM.csv"))
+STRT_storm1b_08_17_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_SPC.csv"))
+STRT_storm1b_08_17_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_turb.csv"))
+
+STRT_storm2a_08_19_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_Q.csv"))
+STRT_storm2a_08_19_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_NO3.csv"))
+STRT_storm2a_08_19_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_fDOM.csv"))
+STRT_storm2a_08_19_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_SPC.csv"))
+STRT_storm2a_08_19_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_turb.csv"))
+
+STRT_storm2b_08_20_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_Q.csv"))
+STRT_storm2b_08_20_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_NO3.csv"))
+STRT_storm2b_08_20_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_fDOM.csv"))
+STRT_storm2b_08_20_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_SPC.csv"))
+STRT_storm2b_08_20_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_turb.csv"))
+
+STRT_storm3_08_25_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_Q.csv"))
+STRT_storm3_08_25_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_NO3.csv"))
+STRT_storm3_08_25_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_fDOM.csv"))
+STRT_storm3_08_25_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_SPC.csv"))
+STRT_storm3_08_25_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_turb.csv"))
+
+# POKE # 
+POKE_storm1_05_16_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm1_05_16_Q.csv"))
+POKE_storm1_05_16_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm1_05_16_NO3.csv"))
+POKE_storm1_05_16_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm1_05_16_fDOM.csv"))
+POKE_storm1_05_16_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm1_05_16_SPC.csv"))
+POKE_storm1_05_16_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm1_05_16_turb.csv"))
+
+POKE_storm2_06_01_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm2_06_01_Q.csv"))
+POKE_storm2_06_01_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm2_06_01_NO3.csv"))
+POKE_storm2_06_01_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm2_06_01_fDOM.csv"))
+POKE_storm2_06_01_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm2_06_01_SPC.csv"))
+POKE_storm2_06_01_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm2_06_01_turb.csv"))
+
+POKE_storm3_06_19_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm3_06_19_Q.csv"))
+POKE_storm3_06_19_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm3_06_19_NO3.csv"))
+POKE_storm3_06_19_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm3_06_19_fDOM.csv"))
+POKE_storm3_06_19_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm3_06_19_SPC.csv"))
+POKE_storm3_06_19_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm3_06_19_turb.csv"))
+
+POKE_storm4_07_23_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm4_07_23_Q.csv"))
+POKE_storm4_07_23_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm4_07_23_NO3.csv"))
+POKE_storm4_07_23_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm4_07_23_fDOM.csv"))
+POKE_storm4_07_23_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm4_07_23_SPC.csv"))
+POKE_storm4_07_23_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm4_07_23_turb.csv"))
+
+POKE_storm5_07_27_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm5_07_27_Q.csv"))
+POKE_storm5_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm5_07_27_NO3.csv"))
+POKE_storm5_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm5_07_27_fDOM.csv"))
+POKE_storm5_07_27_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm5_07_27_SPC.csv"))
+POKE_storm5_07_27_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm5_07_27_turb.csv"))
+
+POKE_storm6_08_08_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm6_08_08_Q.csv"))
+POKE_storm6_08_08_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm6_08_08_NO3.csv"))
+POKE_storm6_08_08_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm6_08_08_fDOM.csv"))
+POKE_storm6_08_08_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm6_08_08_SPC.csv"))
+POKE_storm6_08_08_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm6_08_08_turb.csv"))
+
+POKE_storm7a_08_14_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7a_08_14_Q.csv"))
+POKE_storm7a_08_14_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7a_08_14_NO3.csv"))
+POKE_storm7a_08_14_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7a_08_14_fDOM.csv"))
+POKE_storm7a_08_14_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7a_08_14_SPC.csv"))
+POKE_storm7a_08_14_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7a_08_14_turb.csv"))
+
+POKE_storm7b_08_19_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_Q.csv"))
+POKE_storm7b_08_19_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_NO3.csv"))
+POKE_storm7b_08_19_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_fDOM.csv"))
+POKE_storm7b_08_19_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_SPC.csv"))
+POKE_storm7b_08_19_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_turb.csv"))
+
+POKE_storm7c_08_23_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_Q.csv"))
+POKE_storm7c_08_23_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_NO3.csv"))
+POKE_storm7c_08_23_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_fDOM.csv"))
+POKE_storm7c_08_23_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_SPC.csv"))
+POKE_storm7c_08_23_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_turb.csv"))
+
+POKE_storm7d_08_26_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_Q.csv"))
+POKE_storm7d_08_26_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_NO3.csv"))
+POKE_storm7d_08_26_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_fDOM.csv"))
+POKE_storm7d_08_26_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_SPC.csv"))
+POKE_storm7d_08_26_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_turb.csv"))
+
+# MOOS # 
+MOOS_storm1_07_23_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm1_07_23_Q.csv"))
+MOOS_storm1_07_23_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm1_07_23_NO3.csv"))
+MOOS_storm1_07_23_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm1_07_23_fDOM.csv"))
+MOOS_storm1_07_23_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm1_07_23_SPC.csv"))
+MOOS_storm1_07_23_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm1_07_23_turb.csv"))
+
+MOOS_storm2_07_27_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm2_07_27_Q.csv"))
+MOOS_storm2_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm2_07_27_NO3.csv"))
+MOOS_storm2_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm2_07_27_fDOM.csv"))
+MOOS_storm2_07_27_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm2_07_27_SPC.csv"))
+MOOS_storm2_07_27_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm2_07_27_turb.csv"))
+
+MOOS_storm3a_08_06_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3a_08_06_Q.csv"))
+MOOS_storm3a_08_06_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3a_08_06_NO3.csv"))
+MOOS_storm3a_08_06_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3a_08_06_fDOM.csv"))
+MOOS_storm3a_08_06_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3a_08_06_SPC.csv"))
+MOOS_storm3a_08_06_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3a_08_06_turb.csv"))
+
+MOOS_storm3b_08_08_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3b_08_08_Q.csv"))
+MOOS_storm3b_08_08_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3b_08_08_NO3.csv"))
+MOOS_storm3b_08_08_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3b_08_08_fDOM.csv"))
+MOOS_storm3b_08_08_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3b_08_08_SPC.csv"))
+MOOS_storm3b_08_08_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm3b_08_08_turb.csv"))
+
+MOOS_storm4a_08_15_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4a_08_15_Q.csv"))
+MOOS_storm4a_08_15_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4a_08_15_NO3.csv"))
+MOOS_storm4a_08_15_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4a_08_15_fDOM.csv"))
+MOOS_storm4a_08_15_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4a_08_15_SPC.csv"))
+MOOS_storm4a_08_15_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4a_08_15_turb.csv"))
+
+MOOS_storm4b_08_17_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4b_08_17_Q.csv"))
+MOOS_storm4b_08_17_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4b_08_17_NO3.csv"))
+MOOS_storm4b_08_17_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4b_08_17_fDOM.csv"))
+MOOS_storm4b_08_17_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4b_08_17_SPC.csv"))
+MOOS_storm4b_08_17_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm4b_08_17_turb.csv"))
+
+MOOS_storm5a_08_19_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5a_08_19_Q.csv"))
+MOOS_storm5a_08_19_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5a_08_19_NO3.csv"))
+MOOS_storm5a_08_19_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5a_08_19_fDOM.csv"))
+MOOS_storm5a_08_19_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5a_08_19_SPC.csv"))
+MOOS_storm5a_08_19_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5a_08_19_turb.csv"))
+
+MOOS_storm5b_08_21_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5b_08_21_Q.csv"))
+MOOS_storm5b_08_21_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5b_08_21_NO3.csv"))
+MOOS_storm5b_08_21_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5b_08_21_fDOM.csv"))
+MOOS_storm5b_08_21_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5b_08_21_SPC.csv"))
+MOOS_storm5b_08_21_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm5b_08_21_turb.csv"))
+
+MOOS_storm6_08_25_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm6_08_25_Q.csv"))
+MOOS_storm6_08_25_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm6_08_25_NO3.csv"))
+MOOS_storm6_08_25_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm6_08_25_fDOM.csv"))
+MOOS_storm6_08_25_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm6_08_25_SPC.csv"))
+MOOS_storm6_08_25_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm6_08_25_turb.csv"))
+
+MOOS_storm7_08_27_Q <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_Q.csv"))
+MOOS_storm7_08_27_NO3 <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_NO3.csv"))
+MOOS_storm7_08_27_fDOM <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_fDOM.csv"))
+MOOS_storm7_08_27_SPC <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_SPC.csv"))
+MOOS_storm7_08_27_turb <- read_csv(here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_turb.csv"))
+
+# FRCH # 
+FRCH_storm2_07_27_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_Q.csv"))
+FRCH_storm2_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_NO3.csv"))
+FRCH_storm2_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_fDOM.csv"))
+FRCH_storm2_07_27_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_SPC.csv"))
+FRCH_storm2_07_27_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_turb.csv"))
+
+FRCH_storm3_08_05_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_Q.csv"))
+FRCH_storm3_08_05_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_NO3.csv"))
+FRCH_storm3_08_05_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_fDOM.csv"))
+FRCH_storm3_08_05_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_SPC.csv"))
+FRCH_storm3_08_05_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_turb.csv"))
+
+FRCH_storm4_08_08_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_Q.csv"))
+FRCH_storm4_08_08_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_NO3.csv"))
+FRCH_storm4_08_08_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_fDOM.csv"))
+FRCH_storm4_08_08_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_SPC.csv"))
+FRCH_storm4_08_08_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_turb.csv"))
+
+FRCH_storm5a_08_15_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_Q.csv"))
+FRCH_storm5a_08_15_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_NO3.csv"))
+FRCH_storm5a_08_15_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_fDOM.csv"))
+FRCH_storm5a_08_15_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_SPC.csv"))
+FRCH_storm5a_08_15_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_turb.csv"))
+
+FRCH_storm5b_08_17_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_Q.csv"))
+FRCH_storm5b_08_17_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_NO3.csv"))
+FRCH_storm5b_08_17_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_fDOM.csv"))
+FRCH_storm5b_08_17_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_SPC.csv"))
+FRCH_storm5b_08_17_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_turb.csv"))
+
+FRCH_storm6a_08_19_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_Q.csv"))
+FRCH_storm6a_08_19_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_NO3.csv"))
+FRCH_storm6a_08_19_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_fDOM.csv"))
+FRCH_storm6a_08_19_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_SPC.csv"))
+FRCH_storm6a_08_19_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_turb.csv"))
+
+FRCH_storm6b_08_20_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_Q.csv"))
+FRCH_storm6b_08_20_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_NO3.csv"))
+FRCH_storm6b_08_20_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_fDOM.csv"))
+FRCH_storm6b_08_20_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_SPC.csv"))
+FRCH_storm6b_08_20_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_turb.csv"))
+
+FRCH_storm7_08_25_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_Q.csv"))
+FRCH_storm7_08_25_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_NO3.csv"))
+FRCH_storm7_08_25_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_fDOM.csv"))
+FRCH_storm7_08_25_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_SPC.csv"))
+FRCH_storm7_08_25_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_turb.csv"))
+
+FRCH_storm8_08_27_Q <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_Q.csv"))
+FRCH_storm8_08_27_NO3 <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_NO3.csv"))
+FRCH_storm8_08_27_fDOM <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_fDOM.csv"))
+FRCH_storm8_08_27_SPC <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_SPC.csv"))
+FRCH_storm8_08_27_turb <- read_csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_turb.csv"))
+
+# CARI # 
+CARI_storm1_05_16_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm1_05_16_Q.csv"))
+CARI_storm1_05_16_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm1_05_16_NO3.csv"))
+CARI_storm1_05_16_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm1_05_16_fDOM.csv"))
+CARI_storm1_05_16_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm1_05_16_SPC.csv"))
+CARI_storm1_05_16_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm1_05_16_turb.csv"))
+
+CARI_storm2_06_01_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm2_06_01_Q.csv"))
+CARI_storm2_06_01_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm2_06_01_NO3.csv"))
+CARI_storm2_06_01_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm2_06_01_fDOM.csv"))
+CARI_storm2_06_01_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm2_06_01_SPC.csv"))
+CARI_storm2_06_01_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm2_06_01_turb.csv"))
+
+CARI_storm3_06_19_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm3_06_19_Q.csv"))
+CARI_storm3_06_19_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm3_06_19_NO3.csv"))
+CARI_storm3_06_19_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm3_06_19_fDOM.csv"))
+CARI_storm3_06_19_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm3_06_19_SPC.csv"))
+CARI_storm3_06_19_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm3_06_19_turb.csv"))
+
+CARI_storm4_07_24_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm4_07_24_Q.csv"))
+CARI_storm4_07_24_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm4_07_24_NO3.csv"))
+CARI_storm4_07_24_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm4_07_24_fDOM.csv"))
+CARI_storm4_07_24_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm4_07_24_SPC.csv"))
+CARI_storm4_07_24_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm4_07_24_turb.csv"))
+
+CARI_storm5_07_27_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm5_07_27_Q.csv"))
+CARI_storm5_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm5_07_27_NO3.csv"))
+CARI_storm5_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm5_07_27_fDOM.csv"))
+CARI_storm5_07_27_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm5_07_27_SPC.csv"))
+CARI_storm5_07_27_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm5_07_27_turb.csv"))
+
+CARI_storm6_08_08_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm6_08_08_Q.csv"))
+CARI_storm6_08_08_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm6_08_08_NO3.csv"))
+CARI_storm6_08_08_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm6_08_08_fDOM.csv"))
+CARI_storm6_08_08_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm6_08_08_SPC.csv"))
+CARI_storm6_08_08_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm6_08_08_turb.csv"))
+
+CARI_storm7_08_15_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm7_08_15_Q.csv"))
+CARI_storm7_08_15_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm7_08_15_NO3.csv"))
+CARI_storm7_08_15_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm7_08_15_fDOM.csv"))
+CARI_storm7_08_15_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm7_08_15_SPC.csv"))
+CARI_storm7_08_15_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm7_08_15_turb.csv"))
+
+CARI_storm8_08_20_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm8_08_20_Q.csv"))
+CARI_storm8_08_20_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm8_08_20_NO3.csv"))
+CARI_storm8_08_20_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm8_08_20_fDOM.csv"))
+CARI_storm8_08_20_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm8_08_20_SPC.csv"))
+CARI_storm8_08_20_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm8_08_20_turb.csv"))
+
+CARI_storm9_08_23_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm9_08_23_Q.csv"))
+CARI_storm9_08_23_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm9_08_23_NO3.csv"))
+CARI_storm9_08_23_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm9_08_23_fDOM.csv"))
+CARI_storm9_08_23_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm9_08_23_SPC.csv"))
+CARI_storm9_08_23_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm9_08_23_turb.csv"))
+
+CARI_storm10_08_27_Q <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm10_08_27_Q.csv"))
+CARI_storm10_08_27_NO3 <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm10_08_27_NO3.csv"))
+CARI_storm10_08_27_fDOM <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm10_08_27_fDOM.csv"))
+CARI_storm10_08_27_SPC <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm10_08_27_SPC.csv"))
+CARI_storm10_08_27_turb <- read_csv(here("Storm_Events", "2021", "CARI", "CARI_storm10_08_27_turb.csv"))
+
+# normalize data #
+dfList <- Filter(function(x) is(x, "data.frame"), mget(ls()))
+
+for(i in 1:length(dfList)) {
+  dfList[[i]][["datavalue"]] = 
+    (dfList[[i]][["datavalue"]] - min(dfList[[i]][["datavalue"]], na.rm=T)) / (max(dfList[[i]][["datavalue"]], na.rm=T) - min(dfList[[i]][["datavalue"]], na.rm=T))
+}
+list2env(dfList ,.GlobalEnv)
+
+#### fxn: plot hysteresis loop ###
+hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
+  dat.p = ggplot(data = dat_Q, 
+                 aes(x=(dat_Q$datavalue), 
+                     y=(dat_response$datavalue), 
+                     color = as.numeric(dat_Q$valuedatetime))) +
+    geom_point() +
+    scale_colour_gradientn(colors = rainbow(3)) +
+    theme_bw() +
+    theme(legend.position="none") + 
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold")) +
+    ylab(paste(site, response_var))+
+    xlab("Normalized Discharge") +
+    ggtitle(paste("Storm", storm_num))
+  return(dat.p)
+}
+
+# plot VAUL loops #
+# NO3
+
+VAUL_storm1b_07_27_NO3.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_NO3, "VAUL", "NO3", "0727b")
+VAUL_storm3_08_08_NO3.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_NO3, "VAUL", "NO3", "0808")
+VAUL_storm4a_08_15_NO3.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_NO3, "VAUL", "NO3", "0815a")
+VAUL_storm4b_08_20_NO3.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_NO3, "VAUL", "NO3", "0820b")
+VAUL_storm5a_08_23_NO3.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_NO3, "VAUL", "NO3", "0823a")
+VAUL_storm5b_08_26_NO3.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_NO3, "VAUL", "NO3", "0826b")
+
+# fDOM #
+VAUL_storm1b_07_27_fDOM.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_fDOM, "VAUL", "fDOM", "0727b")
+VAUL_storm3_08_08_fDOM.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_fDOM, "VAUL", "fDOM", "0808")
+VAUL_storm4a_08_15_fDOM.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_fDOM, "VAUL", "fDOM", "0815a")
+VAUL_storm4b_08_20_fDOM.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_fDOM, "VAUL", "fDOM", "0820b")
+VAUL_storm5a_08_23_fDOM.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_fDOM, "VAUL", "fDOM", "0823a")
+VAUL_storm5b_08_26_fDOM.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_fDOM, "VAUL", "fDOM", "0826b")
+
+# SPC #
+VAUL_storm1b_07_27_SPC.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_SPC, "VAUL", "SPC", "0727b")
+VAUL_storm3_08_08_SPC.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_SPC, "VAUL", "SPC", "0808")
+VAUL_storm4a_08_15_SPC.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_SPC, "VAUL", "SPC", "0815a")
+VAUL_storm4b_08_20_SPC.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_SPC, "VAUL", "SPC", "0820b")
+VAUL_storm5a_08_23_SPC.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_SPC, "VAUL", "SPC", "0823a")
+VAUL_storm5b_08_26_SPC.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_SPC, "VAUL", "SPC", "0826b")
+
+# turb
+VAUL_storm1b_07_27_turb.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_turb, "VAUL", "turb", "0727b")
+VAUL_storm3_08_08_turb.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_turb, "VAUL", "turb", "0808")
+VAUL_storm4a_08_15_turb.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_turb, "VAUL", "turb", "0815a")
+VAUL_storm4b_08_20_turb.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_turb, "VAUL", "turb", "0820b")
+VAUL_storm5a_08_23_turb.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_turb, "VAUL", "turb", "0823a")
+VAUL_storm5b_08_26_turb.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_turb, "VAUL", "turb", "0826b")
+
+# Multiplots of VAUL storms #
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+multiplot(VAUL_storm1b_07_27_NO3.p, VAUL_storm1b_07_27_fDOM.p, VAUL_storm1b_07_27_SPC.p, VAUL_storm1b_07_27_turb.p) # works
+multiplot(VAUL_storm3_08_08_NO3.p, VAUL_storm3_08_08_fDOM.p, VAUL_storm3_08_08_SPC.p, VAUL_storm3_08_08_turb.p) # works/empty
+multiplot(VAUL_storm4a_08_15_NO3.p, VAUL_storm4a_08_15_fDOM.p, VAUL_storm4a_08_15_SPC.p, VAUL_storm4a_08_15_turb.p) # works 
+multiplot(VAUL_storm4b_08_20_NO3.p, VAUL_storm4b_08_20_fDOM.p, VAUL_storm4b_08_20_SPC.p, VAUL_storm4b_08_20_turb.p) # works 
+multiplot(VAUL_storm5a_08_23_NO3.p, VAUL_storm5a_08_23_fDOM.p, VAUL_storm5a_08_23_SPC.p, VAUL_storm5a_08_23_turb.p) # works 
+multiplot(VAUL_storm5b_08_26_NO3.p, VAUL_storm5b_08_26_fDOM.p, VAUL_storm5b_08_26_SPC.p, VAUL_storm5b_08_26_turb.p) # works 
+
+
+multiplot(
+          VAUL_storm1b_07_27_NO3.p, VAUL_storm1b_07_27_fDOM.p, VAUL_storm1b_07_27_SPC.p, VAUL_storm1b_07_27_turb.p,
+          
+          VAUL_storm3_08_08_NO3.p, VAUL_storm3_08_08_fDOM.p, VAUL_storm3_08_08_SPC.p, VAUL_storm3_08_08_turb.p,
+          VAUL_storm4a_08_15_NO3.p, VAUL_storm4a_08_15_fDOM.p, VAUL_storm4a_08_15_SPC.p, VAUL_storm4a_08_15_turb.p,
+          VAUL_storm4b_08_20_NO3.p, VAUL_storm4b_08_20_fDOM.p, VAUL_storm4b_08_20_SPC.p, VAUL_storm4b_08_20_turb.p,
+          VAUL_storm5a_08_23_NO3.p, VAUL_storm5a_08_23_fDOM.p, VAUL_storm5a_08_23_SPC.p, VAUL_storm5a_08_23_turb.p,
+          VAUL_storm5b_08_26_NO3.p, VAUL_storm5b_08_26_fDOM.p, VAUL_storm5b_08_26_SPC.p, VAUL_storm5b_08_26_turb.p,
+          cols = 7)
+
+# export pdf 20 x 30 #
+ggsave("VAUL_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "VAUL"),
+       width = 20, height = 30, units = "in")
+
+
+# STRT #
+# plot STRT loops #
+# NO3 #
+STRT_storm1a_08_15_NO3.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_NO3, "STRT", "NO3", "0815a")
+STRT_storm1b_08_17_NO3.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_NO3, "STRT", "NO3", "0817a")
+STRT_storm2a_08_19_NO3.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_NO3, "STRT", "NO3", "0819a")
+STRT_storm2b_08_20_NO3.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_NO3, "STRT", "NO3", "0820b")
+STRT_storm3_08_25_NO3.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_NO3, "STRT", "NO3", "0825")
+
+# fDOM #
+STRT_storm1a_08_15_fDOM.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_fDOM, "STRT", "fDOM", "0815a")
+STRT_storm1b_08_17_fDOM.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_fDOM, "STRT", "fDOM", "0817a")
+STRT_storm2a_08_19_fDOM.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_fDOM, "STRT", "fDOM", "0819a")
+STRT_storm2b_08_20_fDOM.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_fDOM, "STRT", "fDOM", "0820b")
+STRT_storm3_08_25_fDOM.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_fDOM, "STRT", "fDOM", "0825")
+
+# SPC # 
+STRT_storm1a_08_15_SPC.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_SPC, "STRT", "SPC", "0815a")
+STRT_storm1b_08_17_SPC.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_SPC, "STRT", "SPC", "0817a")
+STRT_storm2a_08_19_SPC.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_SPC, "STRT", "SPC", "0819a")
+STRT_storm2b_08_20_SPC.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_SPC, "STRT", "SPC", "0820b")
+STRT_storm3_08_25_SPC.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_SPC, "STRT", "SPC", "0825")
+
+# Turb #
+STRT_storm1a_08_15_turb.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_turb, "STRT", "turb", "0815a")
+STRT_storm1b_08_17_turb.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_turb, "STRT", "turb", "0817a")
+STRT_storm2a_08_19_turb.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_turb, "STRT", "turb", "0819a")
+STRT_storm2b_08_20_turb.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_turb, "STRT", "turb", "0820b")
+STRT_storm3_08_25_turb.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_turb, "STRT", "turb", "0825")
+
+# Multiplots of STRT storms #
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+multiplot(STRT_storm1a_08_15_NO3.p,STRT_storm1a_08_15_fDOM.p,STRT_storm1a_08_15_SPC.p,STRT_storm1a_08_15_turb.p,
+          STRT_storm1b_08_17_NO3.p,STRT_storm1b_08_17_fDOM.p,STRT_storm1b_08_17_SPC.p,STRT_storm1b_08_17_turb.p,
+          STRT_storm2a_08_19_NO3.p,STRT_storm2a_08_19_fDOM.p,STRT_storm2a_08_19_SPC.p,STRT_storm2a_08_19_turb.p,
+          STRT_storm2b_08_20_NO3.p,STRT_storm2b_08_20_fDOM.p,STRT_storm2b_08_20_SPC.p,STRT_storm2b_08_20_turb.p,
+          STRT_storm3_08_25_NO3.p,STRT_storm3_08_25_fDOM.p,STRT_storm3_08_25_SPC.p,STRT_storm3_08_25_turb.p,
+          cols = 7)
+
+
+# export pdf 20 x 30 #
+ggsave("STRT_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "STRT"),
+       width = 20, height = 30, units = "in")
+
+# POKE #
+# plot STRT loops #
+# NO3 #
+POKE_storm1_05_16_NO3.p = hyst_plot(POKE_storm1_05_16_Q, POKE_storm1_05_16_NO3, "POKE", "NO3", "0516")
+POKE_storm2_06_01_NO3.p = hyst_plot(POKE_storm2_06_01_Q, POKE_storm2_06_01_NO3, "POKE", "NO3", "0601")
+POKE_storm3_06_19_NO3.p = hyst_plot(POKE_storm3_06_19_Q, POKE_storm3_06_19_NO3, "POKE", "NO3", "0619")
+POKE_storm4_07_23_NO3.p = hyst_plot(POKE_storm4_07_23_Q, POKE_storm4_07_23_NO3, "POKE", "NO3", "0723")
+POKE_storm5_07_27_NO3.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_NO3, "POKE", "NO3", "0727")
+POKE_storm6_08_08_NO3.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_NO3, "POKE", "NO3", "0808")
+POKE_storm7a_08_14_NO3.p = hyst_plot(POKE_storm7a_08_14_Q, POKE_storm7a_08_14_NO3, "POKE", "NO3", "0814a")
+POKE_storm7b_08_19_NO3.p = hyst_plot(POKE_storm7b_08_19_Q, POKE_storm7b_08_19_NO3, "POKE", "NO3", "0819b")
+POKE_storm7c_08_23_NO3.p = hyst_plot(POKE_storm7c_08_23_Q, POKE_storm7c_08_23_NO3, "POKE", "NO3", "0823c")
+POKE_storm7d_08_26_NO3.p = hyst_plot(POKE_storm7d_08_26_Q, POKE_storm7d_08_26_NO3, "POKE", "NO3", "0826d")
+
+# fDOM # 
+POKE_storm1_05_16_fDOM.p = hyst_plot(POKE_storm1_05_16_Q, POKE_storm1_05_16_fDOM, "POKE", "fDOM", "0516")
+POKE_storm2_06_01_fDOM.p = hyst_plot(POKE_storm2_06_01_Q, POKE_storm2_06_01_fDOM, "POKE", "fDOM", "0601")
+POKE_storm3_06_19_fDOM.p = hyst_plot(POKE_storm3_06_19_Q, POKE_storm3_06_19_fDOM, "POKE", "fDOM", "0619")
+POKE_storm4_07_23_fDOM.p = hyst_plot(POKE_storm4_07_23_Q, POKE_storm4_07_23_fDOM, "POKE", "fDOM", "0723")
+POKE_storm5_07_27_fDOM.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_fDOM, "POKE", "fDOM", "0727")
+POKE_storm6_08_08_fDOM.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_fDOM, "POKE", "fDOM", "0808")
+
+# SPC # 
+POKE_storm1_05_16_SPC.p = hyst_plot(POKE_storm1_05_16_Q, POKE_storm1_05_16_SPC, "POKE", "SPC", "0516")
+POKE_storm2_06_01_SPC.p = hyst_plot(POKE_storm2_06_01_Q, POKE_storm2_06_01_SPC, "POKE", "SPC", "0601")
+POKE_storm3_06_19_SPC.p = hyst_plot(POKE_storm3_06_19_Q, POKE_storm3_06_19_SPC, "POKE", "SPC", "0619")
+POKE_storm4_07_23_SPC.p = hyst_plot(POKE_storm4_07_23_Q, POKE_storm4_07_23_SPC, "POKE", "SPC", "0723")
+POKE_storm5_07_27_SPC.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_SPC, "POKE", "SPC", "0727")
+POKE_storm6_08_08_SPC.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_SPC, "POKE", "SPC", "0808")
+
+# SPC # 
+POKE_storm1_05_16_SPC.p = hyst_plot(POKE_storm1_05_16_Q, POKE_storm1_05_16_SPC, "POKE", "SPC", "0516")
+POKE_storm2_06_01_SPC.p = hyst_plot(POKE_storm2_06_01_Q, POKE_storm2_06_01_SPC, "POKE", "SPC", "0601")
+POKE_storm3_06_19_SPC.p = hyst_plot(POKE_storm3_06_19_Q, POKE_storm3_06_19_SPC, "POKE", "SPC", "0619")
+POKE_storm4_07_23_SPC.p = hyst_plot(POKE_storm4_07_23_Q, POKE_storm4_07_23_SPC, "POKE", "SPC", "0723")
+POKE_storm5_07_27_SPC.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_SPC, "POKE", "SPC", "0727")
+POKE_storm6_08_08_SPC.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_SPC, "POKE", "SPC", "0808")
+
+# Turb # 
+POKE_storm1_05_16_turb.p = hyst_plot(POKE_storm1_05_16_Q, POKE_storm1_05_16_turb, "POKE", "turb", "0516")
+POKE_storm2_06_01_turb.p = hyst_plot(POKE_storm2_06_01_Q, POKE_storm2_06_01_turb, "POKE", "turb", "0601")
+POKE_storm3_06_19_turb.p = hyst_plot(POKE_storm3_06_19_Q, POKE_storm3_06_19_turb, "POKE", "turb", "0619")
+POKE_storm4_07_23_turb.p = hyst_plot(POKE_storm4_07_23_Q, POKE_storm4_07_23_turb, "POKE", "turb", "0723")
+POKE_storm5_07_27_turb.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_turb, "POKE", "turb", "0727")
+POKE_storm6_08_08_turb.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_turb, "POKE", "turb", "0808")
+
+# Multiplots of POKE storms #
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+
+multiplot(POKE_storm1_05_16_NO3.p, POKE_storm1_05_16_fDOM.p,POKE_storm1_05_16_SPC.p,POKE_storm1_05_16_turb.p,
+          POKE_storm2_06_01_NO3.p,POKE_storm2_06_01_fDOM.p,POKE_storm2_06_01_SPC.p,POKE_storm2_06_01_turb.p,
+          POKE_storm3_06_19_NO3.p,
+          POKE_storm4_07_23_NO3.p,POKE_storm4_07_23_fDOM.p,POKE_storm4_07_23_SPC.p,POKE_storm4_07_23_turb.p,
+          POKE_storm5_07_27_NO3.p,POKE_storm5_07_27_fDOM.p,POKE_storm5_07_27_SPC.p,POKE_storm5_07_27_turb.p,
+          POKE_storm6_08_08_NO3.p,POKE_storm6_08_08_fDOM.p,POKE_storm6_08_08_SPC.p,POKE_storm6_08_08_turb.p,
+          POKE_storm7a_08_14_NO3.p,
+          POKE_storm7b_08_19_NO3.p,
+          POKE_storm7c_08_23_NO3.p,
+          POKE_storm7d_08_26_NO3.p,
+          cols = 7)
+
+# export pdf 20 x 30 #
+ggsave("POKE_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "POKE"),
+       width = 20, height = 30, units = "in")
+
+
+# plot MOOS loops #
+# NO3
+MOOS_storm1_07_23_NO3.p = hyst_plot(MOOS_storm1_07_23_Q, MOOS_storm1_07_23_NO3, "MOOS", "NO3", "0723")
+MOOS_storm2_07_27_NO3.p = hyst_plot(MOOS_storm2_07_27_Q, MOOS_storm2_07_27_NO3, "MOOS", "NO3", "0727")
+MOOS_storm3a_08_06_NO3.p = hyst_plot(MOOS_storm3a_08_06_Q, MOOS_storm3a_08_06_NO3, "MOOS", "NO3", "0806a")
+MOOS_storm3b_08_08_NO3.p = hyst_plot(MOOS_storm3b_08_08_Q, MOOS_storm3b_08_08_NO3, "MOOS", "NO3", "0808b")
+MOOS_storm4a_08_15_NO3.p = hyst_plot(MOOS_storm4a_08_15_Q, MOOS_storm4a_08_15_NO3, "MOOS", "NO3", "0815a")
+MOOS_storm4b_08_17_NO3.p = hyst_plot(MOOS_storm4b_08_17_Q, MOOS_storm4b_08_17_NO3, "MOOS", "NO3", "0817b")
+MOOS_storm5a_08_19_NO3.p = hyst_plot(MOOS_storm5a_08_19_Q, MOOS_storm5a_08_19_NO3, "MOOS", "NO3", "0819a")
+MOOS_storm5b_08_21_NO3.p = hyst_plot(MOOS_storm5b_08_21_Q, MOOS_storm5b_08_21_NO3, "MOOS", "NO3", "0821b")
+MOOS_storm6_08_25_NO3.p = hyst_plot(MOOS_storm6_08_25_Q, MOOS_storm6_08_25_NO3, "MOOS", "NO3", "0825")
+MOOS_storm7_08_27_NO3.p = hyst_plot(MOOS_storm7_08_27_Q, MOOS_storm7_08_27_NO3, "MOOS", "NO3", "0827")
+
+# fDOM #
+MOOS_storm1_07_23_fDOM.p = hyst_plot(MOOS_storm1_07_23_Q, MOOS_storm1_07_23_fDOM, "MOOS", "fDOM", "0723")
+MOOS_storm2_07_27_fDOM.p = hyst_plot(MOOS_storm2_07_27_Q, MOOS_storm2_07_27_fDOM, "MOOS", "fDOM", "0727")
+MOOS_storm3a_08_06_fDOM.p = hyst_plot(MOOS_storm3a_08_06_Q, MOOS_storm3a_08_06_fDOM, "MOOS", "fDOM", "0806a")
+MOOS_storm3b_08_08_fDOM.p = hyst_plot(MOOS_storm3b_08_08_Q, MOOS_storm3b_08_08_fDOM, "MOOS", "fDOM", "0808b")
+MOOS_storm4a_08_15_fDOM.p = hyst_plot(MOOS_storm4a_08_15_Q, MOOS_storm4a_08_15_fDOM, "MOOS", "fDOM", "0815a")
+MOOS_storm4b_08_17_fDOM.p = hyst_plot(MOOS_storm4b_08_17_Q, MOOS_storm4b_08_17_fDOM, "MOOS", "fDOM", "0817b")
+MOOS_storm5a_08_19_fDOM.p = hyst_plot(MOOS_storm5a_08_19_Q, MOOS_storm5a_08_19_fDOM, "MOOS", "fDOM", "0819a")
+MOOS_storm5b_08_21_fDOM.p = hyst_plot(MOOS_storm5b_08_21_Q, MOOS_storm5b_08_21_fDOM, "MOOS", "fDOM", "0821b")
+MOOS_storm6_08_25_fDOM.p = hyst_plot(MOOS_storm6_08_25_Q, MOOS_storm6_08_25_fDOM, "MOOS", "fDOM", "0825")
+MOOS_storm7_08_27_fDOM.p = hyst_plot(MOOS_storm7_08_27_Q, MOOS_storm7_08_27_fDOM, "MOOS", "fDOM", "0827")
+
+# SPC #
+MOOS_storm1_07_23_SPC.p = hyst_plot(MOOS_storm1_07_23_Q, MOOS_storm1_07_23_SPC, "MOOS", "SPC", "0723")
+MOOS_storm2_07_27_SPC.p = hyst_plot(MOOS_storm2_07_27_Q, MOOS_storm2_07_27_SPC, "MOOS", "SPC", "0727")
+MOOS_storm3a_08_06_SPC.p = hyst_plot(MOOS_storm3a_08_06_Q, MOOS_storm3a_08_06_SPC, "MOOS", "SPC", "0806a")
+MOOS_storm3b_08_08_SPC.p = hyst_plot(MOOS_storm3b_08_08_Q, MOOS_storm3b_08_08_SPC, "MOOS", "SPC", "0808b")
+MOOS_storm4a_08_15_SPC.p = hyst_plot(MOOS_storm4a_08_15_Q, MOOS_storm4a_08_15_SPC, "MOOS", "SPC", "0815a")
+MOOS_storm4b_08_17_SPC.p = hyst_plot(MOOS_storm4b_08_17_Q, MOOS_storm4b_08_17_SPC, "MOOS", "SPC", "0817b")
+MOOS_storm5a_08_19_SPC.p = hyst_plot(MOOS_storm5a_08_19_Q, MOOS_storm5a_08_19_SPC, "MOOS", "SPC", "0819a")
+MOOS_storm5b_08_21_SPC.p = hyst_plot(MOOS_storm5b_08_21_Q, MOOS_storm5b_08_21_SPC, "MOOS", "SPC", "0821b")
+MOOS_storm6_08_25_SPC.p = hyst_plot(MOOS_storm6_08_25_Q, MOOS_storm6_08_25_SPC, "MOOS", "SPC", "0825")
+MOOS_storm7_08_27_SPC.p = hyst_plot(MOOS_storm7_08_27_Q, MOOS_storm7_08_27_SPC, "MOOS", "SPC", "0827")
+
+# turb
+MOOS_storm1_07_23_turb.p = hyst_plot(MOOS_storm1_07_23_Q, MOOS_storm1_07_23_turb, "MOOS", "turb", "0723")
+MOOS_storm2_07_27_turb.p = hyst_plot(MOOS_storm2_07_27_Q, MOOS_storm2_07_27_turb, "MOOS", "turb", "0727")
+MOOS_storm3a_08_06_turb.p = hyst_plot(MOOS_storm3a_08_06_Q, MOOS_storm3a_08_06_turb, "MOOS", "turb", "0806a")
+MOOS_storm3b_08_08_turb.p = hyst_plot(MOOS_storm3b_08_08_Q, MOOS_storm3b_08_08_turb, "MOOS", "turb", "0808b")
+MOOS_storm4a_08_15_turb.p = hyst_plot(MOOS_storm4a_08_15_Q, MOOS_storm4a_08_15_turb, "MOOS", "turb", "0815a")
+MOOS_storm4b_08_17_turb.p = hyst_plot(MOOS_storm4b_08_17_Q, MOOS_storm4b_08_17_turb, "MOOS", "turb", "0817b")
+MOOS_storm5a_08_19_turb.p = hyst_plot(MOOS_storm5a_08_19_Q, MOOS_storm5a_08_19_turb, "MOOS", "turb", "0819a")
+MOOS_storm5b_08_21_turb.p = hyst_plot(MOOS_storm5b_08_21_Q, MOOS_storm5b_08_21_turb, "MOOS", "turb", "0821b")
+MOOS_storm6_08_25_turb.p = hyst_plot(MOOS_storm6_08_25_Q, MOOS_storm6_08_25_turb, "MOOS", "turb", "0825")
+MOOS_storm7_08_27_turb.p = hyst_plot(MOOS_storm7_08_27_Q, MOOS_storm7_08_27_turb, "MOOS", "turb", "0827")
+
+# Multiplots of MOOS storms #
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+multiplot(MOOS_storm1_07_23_fDOM.p, MOOS_storm1_07_23_SPC.p, MOOS_storm1_07_23_turb.p,
+          MOOS_storm2_07_27_fDOM.p, MOOS_storm2_07_27_SPC.p, MOOS_storm2_07_27_turb.p,
+          MOOS_storm3a_08_06_fDOM.p, MOOS_storm3a_08_06_SPC.p, MOOS_storm3a_08_06_turb.p,
+          MOOS_storm3b_08_08_fDOM.p, MOOS_storm3b_08_08_SPC.p, MOOS_storm3b_08_08_turb.p,
+          MOOS_storm4a_08_15_fDOM.p, MOOS_storm4a_08_15_SPC.p, MOOS_storm4a_08_15_turb.p,
+          MOOS_storm4b_08_17_fDOM.p, MOOS_storm4b_08_17_SPC.p, MOOS_storm4b_08_17_turb.p,
+          MOOS_storm5a_08_19_fDOM.p, MOOS_storm5a_08_19_SPC.p, MOOS_storm5a_08_19_turb.p,
+          MOOS_storm5b_08_21_fDOM.p, MOOS_storm5b_08_21_SPC.p, MOOS_storm5b_08_21_turb.p,
+          MOOS_storm6_08_25_fDOM.p, MOOS_storm6_08_25_SPC.p, MOOS_storm6_08_25_turb.p,
+          MOOS_storm7_08_27_fDOM.p, MOOS_storm7_08_27_SPC.p, MOOS_storm7_08_27_turb.p,
+          cols = 7)
+
+# export pdf 20 x 30 #
+ggsave("MOOS_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "MOOS"),
+       width = 20, height = 30, units = "in")
+
+# plot VAUL loops #
+# NO3
+FRCH_storm2_07_27_NO3.p = hyst_plot(FRCH_storm2_07_27_Q, FRCH_storm2_07_27_NO3, "FRCH", "NO3", "0727")
+FRCH_storm3_08_05_NO3.p = hyst_plot(FRCH_storm3_08_05_Q, FRCH_storm3_08_05_NO3, "VAUL", "NO3", "0805")
+FRCH_storm4_08_08_NO3.p = hyst_plot(FRCH_storm4_08_08_Q, FRCH_storm4_08_08_NO3, "FRCH", "NO3", "0808")
+FRCH_storm5a_08_15_NO3.p = hyst_plot(FRCH_storm5a_08_15_Q, FRCH_storm5a_08_15_NO3, "FRCH", "NO3", "0815a")
+FRCH_storm5b_08_17_NO3.p = hyst_plot(FRCH_storm5b_08_17_Q, FRCH_storm5b_08_17_NO3, "FRCH", "NO3", "0817b")
+FRCH_storm6a_08_19_NO3.p = hyst_plot(FRCH_storm6a_08_19_Q, FRCH_storm6a_08_19_NO3, "FRCH", "NO3", "0819q")
+FRCH_storm6b_08_20_NO3.p = hyst_plot(FRCH_storm6b_08_20_Q, FRCH_storm6b_08_20_NO3, "FRCH", "NO3", "0820b")
+FRCH_storm7_08_25_NO3.p = hyst_plot(FRCH_storm7_08_25_Q, FRCH_storm7_08_25_NO3, "FRCH", "NO3", "0825")
+FRCH_storm8_08_27_NO3.p = hyst_plot(FRCH_storm8_08_27_Q, FRCH_storm8_08_27_NO3, "FRCH", "NO3", "0827")
+
+# fDOM #
+FRCH_storm2_07_27_fDOM.p = hyst_plot(FRCH_storm2_07_27_Q, FRCH_storm2_07_27_fDOM, "FRCH", "fDOM", "0727")
+FRCH_storm3_08_05_fDOM.p = hyst_plot(FRCH_storm3_08_05_Q, FRCH_storm3_08_05_fDOM, "VAUL", "fDOM", "0805")
+FRCH_storm4_08_08_fDOM.p = hyst_plot(FRCH_storm4_08_08_Q, FRCH_storm4_08_08_fDOM, "FRCH", "fDOM", "0808")
+FRCH_storm5a_08_15_fDOM.p = hyst_plot(FRCH_storm5a_08_15_Q, FRCH_storm5a_08_15_fDOM, "FRCH", "fDOM", "0815a")
+FRCH_storm5b_08_17_fDOM.p = hyst_plot(FRCH_storm5b_08_17_Q, FRCH_storm5b_08_17_fDOM, "FRCH", "fDOM", "0817b")
+FRCH_storm6a_08_19_fDOM.p = hyst_plot(FRCH_storm6a_08_19_Q, FRCH_storm6a_08_19_fDOM, "FRCH", "fDOM", "0819q")
+FRCH_storm6b_08_20_fDOM.p = hyst_plot(FRCH_storm6b_08_20_Q, FRCH_storm6b_08_20_fDOM, "FRCH", "fDOM", "0820b")
+FRCH_storm7_08_25_fDOM.p = hyst_plot(FRCH_storm7_08_25_Q, FRCH_storm7_08_25_fDOM, "FRCH", "fDOM", "0825")
+FRCH_storm8_08_27_fDOM.p = hyst_plot(FRCH_storm8_08_27_Q, FRCH_storm8_08_27_fDOM, "FRCH", "fDOM", "0827")
+
+# SPC #
+FRCH_storm2_07_27_SPC.p = hyst_plot(FRCH_storm2_07_27_Q, FRCH_storm2_07_27_SPC, "FRCH", "SPC", "0727")
+FRCH_storm3_08_05_SPC.p = hyst_plot(FRCH_storm3_08_05_Q, FRCH_storm3_08_05_SPC, "VAUL", "SPC", "0805")
+FRCH_storm4_08_08_SPC.p = hyst_plot(FRCH_storm4_08_08_Q, FRCH_storm4_08_08_SPC, "FRCH", "SPC", "0808")
+FRCH_storm5a_08_15_SPC.p = hyst_plot(FRCH_storm5a_08_15_Q, FRCH_storm5a_08_15_SPC, "FRCH", "SPC", "0815a")
+FRCH_storm5b_08_17_SPC.p = hyst_plot(FRCH_storm5b_08_17_Q, FRCH_storm5b_08_17_SPC, "FRCH", "SPC", "0817b")
+FRCH_storm6a_08_19_SPC.p = hyst_plot(FRCH_storm6a_08_19_Q, FRCH_storm6a_08_19_SPC, "FRCH", "SPC", "0819q")
+FRCH_storm6b_08_20_SPC.p = hyst_plot(FRCH_storm6b_08_20_Q, FRCH_storm6b_08_20_SPC, "FRCH", "SPC", "0820b")
+FRCH_storm7_08_25_SPC.p = hyst_plot(FRCH_storm7_08_25_Q, FRCH_storm7_08_25_SPC, "FRCH", "SPC", "0825")
+FRCH_storm8_08_27_SPC.p = hyst_plot(FRCH_storm8_08_27_Q, FRCH_storm8_08_27_SPC, "FRCH", "SPC", "0827")
+
+# turb
+FRCH_storm2_07_27_turb.p = hyst_plot(FRCH_storm2_07_27_Q, FRCH_storm2_07_27_turb, "FRCH", "turb", "0727")
+FRCH_storm3_08_05_turb.p = hyst_plot(FRCH_storm3_08_05_Q, FRCH_storm3_08_05_turb, "VAUL", "turb", "0805")
+FRCH_storm4_08_08_turb.p = hyst_plot(FRCH_storm4_08_08_Q, FRCH_storm4_08_08_turb, "FRCH", "turb", "0808")
+FRCH_storm5a_08_15_turb.p = hyst_plot(FRCH_storm5a_08_15_Q, FRCH_storm5a_08_15_turb, "FRCH", "turb", "0815a")
+FRCH_storm5b_08_17_turb.p = hyst_plot(FRCH_storm5b_08_17_Q, FRCH_storm5b_08_17_turb, "FRCH", "turb", "0817b")
+FRCH_storm6a_08_19_turb.p = hyst_plot(FRCH_storm6a_08_19_Q, FRCH_storm6a_08_19_turb, "FRCH", "turb", "0819q")
+FRCH_storm6b_08_20_turb.p = hyst_plot(FRCH_storm6b_08_20_Q, FRCH_storm6b_08_20_turb, "FRCH", "turb", "0820b")
+FRCH_storm7_08_25_turb.p = hyst_plot(FRCH_storm7_08_25_Q, FRCH_storm7_08_25_turb, "FRCH", "turb", "0825")
+FRCH_storm8_08_27_turb.p = hyst_plot(FRCH_storm8_08_27_Q, FRCH_storm8_08_27_turb, "FRCH", "turb", "0827")
+
+# Multiplots of FRCH storms #
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+multiplot(
+          FRCH_storm2_07_27_NO3.p, FRCH_storm2_07_27_fDOM.p, FRCH_storm2_07_27_SPC.p, FRCH_storm2_07_27_turb.p,
+          FRCH_storm3_08_05_NO3.p, FRCH_storm3_08_05_fDOM.p, FRCH_storm3_08_05_SPC.p, FRCH_storm3_08_05_turb.p,
+          FRCH_storm4_08_08_NO3.p, FRCH_storm4_08_08_fDOM.p, FRCH_storm4_08_08_SPC.p, FRCH_storm4_08_08_turb.p,
+          FRCH_storm5a_08_15_NO3.p, FRCH_storm5a_08_15_fDOM.p, FRCH_storm5a_08_15_SPC.p, FRCH_storm5a_08_15_turb.p,
+          FRCH_storm5b_08_17_NO3.p, FRCH_storm5b_08_17_fDOM.p, FRCH_storm5b_08_17_SPC.p, FRCH_storm5b_08_17_turb.p,
+          FRCH_storm6a_08_19_NO3.p, FRCH_storm6a_08_19_fDOM.p, FRCH_storm6a_08_19_SPC.p, FRCH_storm6a_08_19_turb.p,
+          FRCH_storm6b_08_20_NO3.p, FRCH_storm6b_08_20_fDOM.p, FRCH_storm6b_08_20_SPC.p, FRCH_storm6b_08_20_turb.p,
+          FRCH_storm7_08_25_NO3.p, FRCH_storm7_08_25_fDOM.p, FRCH_storm7_08_25_SPC.p, FRCH_storm7_08_25_turb.p,
+          FRCH_storm8_08_27_NO3.p, FRCH_storm8_08_27_fDOM.p, FRCH_storm8_08_27_SPC.p, FRCH_storm8_08_27_turb.p,
+          cols = 7)
+
+# export pdf 20 x 30 #
+ggsave("FRCH_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "FRCH"),
+       width = 20, height = 30, units = "in")
+
+
+# plot CARI loops #
+# NO3
+CARI_storm1_05_16_NO3.p = hyst_plot(CARI_storm1_05_16_Q, CARI_storm1_05_16_NO3, "CARI", "NO3", "0516")
+CARI_storm2_06_01_NO3.p = hyst_plot(CARI_storm2_06_01_Q, CARI_storm2_06_01_NO3, "CARI", "NO3", "0601")
+CARI_storm3_06_19_NO3.p = hyst_plot(CARI_storm3_06_19_Q, CARI_storm3_06_19_NO3, "CARI", "NO3", "0619")
+CARI_storm4_07_24_NO3.p = hyst_plot(CARI_storm4_07_24_Q, CARI_storm4_07_24_NO3, "CARI", "NO3", "0724")
+CARI_storm5_07_27_NO3.p = hyst_plot(CARI_storm5_07_27_Q, CARI_storm5_07_27_NO3, "CARI", "NO3", "0727")
+CARI_storm6_08_08_NO3.p = hyst_plot(CARI_storm6_08_08_Q, CARI_storm6_08_08_NO3, "CARI", "NO3", "0808")
+CARI_storm7_08_15_NO3.p = hyst_plot(CARI_storm7_08_15_Q, CARI_storm7_08_15_NO3, "CARI", "NO3", "0815")
+CARI_storm8_08_20_NO3.p = hyst_plot(CARI_storm8_08_20_Q, CARI_storm8_08_20_NO3, "CARI", "NO3", "0820")
+CARI_storm9_08_23_NO3.p = hyst_plot(CARI_storm9_08_23_Q, CARI_storm9_08_23_NO3, "CARI", "NO3", "0823")
+CARI_storm10_08_27_NO3.p = hyst_plot(CARI_storm10_08_27_Q, CARI_storm10_08_27_NO3, "CARI", "NO3", "0827")
+
+# fDOM #
+CARI_storm1_05_16_fDOM.p = hyst_plot(CARI_storm1_05_16_Q, CARI_storm1_05_16_fDOM, "CARI", "fDOM", "0516")
+CARI_storm2_06_01_fDOM.p = hyst_plot(CARI_storm2_06_01_Q, CARI_storm2_06_01_fDOM, "CARI", "fDOM", "0601")
+CARI_storm3_06_19_fDOM.p = hyst_plot(CARI_storm3_06_19_Q, CARI_storm3_06_19_fDOM, "CARI", "fDOM", "0619")
+CARI_storm4_07_24_fDOM.p = hyst_plot(CARI_storm4_07_24_Q, CARI_storm4_07_24_fDOM, "CARI", "fDOM", "0724")
+CARI_storm5_07_27_fDOM.p = hyst_plot(CARI_storm5_07_27_Q, CARI_storm5_07_27_fDOM, "CARI", "fDOM", "0727")
+CARI_storm6_08_08_fDOM.p = hyst_plot(CARI_storm6_08_08_Q, CARI_storm6_08_08_fDOM, "CARI", "fDOM", "0808")
+CARI_storm7_08_15_fDOM.p = hyst_plot(CARI_storm7_08_15_Q, CARI_storm7_08_15_fDOM, "CARI", "fDOM", "0815")
+CARI_storm8_08_20_fDOM.p = hyst_plot(CARI_storm8_08_20_Q, CARI_storm8_08_20_fDOM, "CARI", "fDOM", "0820")
+CARI_storm9_08_23_fDOM.p = hyst_plot(CARI_storm9_08_23_Q, CARI_storm9_08_23_fDOM, "CARI", "fDOM", "0823")
+CARI_storm10_08_27_fDOM.p = hyst_plot(CARI_storm10_08_27_Q, CARI_storm10_08_27_fDOM, "CARI", "fDOM", "0827")
+
+# SPC #
+CARI_storm1_05_16_SPC.p = hyst_plot(CARI_storm1_05_16_Q, CARI_storm1_05_16_SPC, "CARI", "SPC", "0516")
+CARI_storm2_06_01_SPC.p = hyst_plot(CARI_storm2_06_01_Q, CARI_storm2_06_01_SPC, "CARI", "SPC", "0601")
+CARI_storm3_06_19_SPC.p = hyst_plot(CARI_storm3_06_19_Q, CARI_storm3_06_19_SPC, "CARI", "SPC", "0619")
+CARI_storm4_07_24_SPC.p = hyst_plot(CARI_storm4_07_24_Q, CARI_storm4_07_24_SPC, "CARI", "SPC", "0724")
+CARI_storm5_07_27_SPC.p = hyst_plot(CARI_storm5_07_27_Q, CARI_storm5_07_27_SPC, "CARI", "SPC", "0727")
+CARI_storm6_08_08_SPC.p = hyst_plot(CARI_storm6_08_08_Q, CARI_storm6_08_08_SPC, "CARI", "SPC", "0808")
+CARI_storm7_08_15_SPC.p = hyst_plot(CARI_storm7_08_15_Q, CARI_storm7_08_15_SPC, "CARI", "SPC", "0815")
+CARI_storm8_08_20_SPC.p = hyst_plot(CARI_storm8_08_20_Q, CARI_storm8_08_20_SPC, "CARI", "SPC", "0820")
+CARI_storm9_08_23_SPC.p = hyst_plot(CARI_storm9_08_23_Q, CARI_storm9_08_23_SPC, "CARI", "SPC", "0823")
+CARI_storm10_08_27_SPC.p = hyst_plot(CARI_storm10_08_27_Q, CARI_storm10_08_27_SPC, "CARI", "SPC", "0827")
+
+
+# Turb #
+CARI_storm1_05_16_turb.p = hyst_plot(CARI_storm1_05_16_Q, CARI_storm1_05_16_turb, "CARI", "turb", "0516")
+CARI_storm2_06_01_turb.p = hyst_plot(CARI_storm2_06_01_Q, CARI_storm2_06_01_turb, "CARI", "turb", "0601")
+CARI_storm3_06_19_turb.p = hyst_plot(CARI_storm3_06_19_Q, CARI_storm3_06_19_turb, "CARI", "turb", "0619")
+CARI_storm4_07_24_turb.p = hyst_plot(CARI_storm4_07_24_Q, CARI_storm4_07_24_turb, "CARI", "turb", "0724")
+CARI_storm5_07_27_turb.p = hyst_plot(CARI_storm5_07_27_Q, CARI_storm5_07_27_turb, "CARI", "turb", "0727")
+CARI_storm6_08_08_turb.p = hyst_plot(CARI_storm6_08_08_Q, CARI_storm6_08_08_turb, "CARI", "turb", "0808")
+CARI_storm7_08_15_turb.p = hyst_plot(CARI_storm7_08_15_Q, CARI_storm7_08_15_turb, "CARI", "turb", "0815")
+CARI_storm8_08_20_turb.p = hyst_plot(CARI_storm8_08_20_Q, CARI_storm8_08_20_turb, "CARI", "turb", "0820")
+CARI_storm9_08_23_turb.p = hyst_plot(CARI_storm9_08_23_Q, CARI_storm9_08_23_turb, "CARI", "turb", "0823")
+CARI_storm10_08_27_turb.p = hyst_plot(CARI_storm10_08_27_Q, CARI_storm10_08_27_turb, "CARI", "turb", "0827")
+
+multiplot(CARI_storm1_05_16_NO3.p, CARI_storm1_05_16_fDOM.p, CARI_storm1_05_16_SPC.p, CARI_storm1_05_16_turb.p,
+          CARI_storm2_06_01_NO3.p, CARI_storm2_06_01_fDOM.p, CARI_storm2_06_01_SPC.p, CARI_storm2_06_01_turb.p,
+          CARI_storm3_06_19_NO3.p, CARI_storm3_06_19_fDOM.p, CARI_storm3_06_19_SPC.p, CARI_storm3_06_19_turb.p,
+          CARI_storm4_07_24_NO3.p, CARI_storm4_07_24_fDOM.p, CARI_storm4_07_24_SPC.p, CARI_storm4_07_24_turb.p,
+          CARI_storm5_07_27_NO3.p, CARI_storm5_07_27_fDOM.p, CARI_storm5_07_27_SPC.p, CARI_storm5_07_27_turb.p,
+          CARI_storm6_08_08_NO3.p, CARI_storm6_08_08_fDOM.p, CARI_storm6_08_08_SPC.p, CARI_storm6_08_08_turb.p,
+          CARI_storm7_08_15_NO3.p, CARI_storm7_08_15_fDOM.p, CARI_storm7_08_15_SPC.p, CARI_storm7_08_15_turb.p,
+          CARI_storm8_08_20_NO3.p, CARI_storm8_08_20_fDOM.p, CARI_storm8_08_20_SPC.p, CARI_storm8_08_20_turb.p,
+          CARI_storm9_08_23_NO3.p, CARI_storm9_08_23_fDOM.p, CARI_storm9_08_23_SPC.p, CARI_storm9_08_23_turb.p,
+          CARI_storm10_08_27_NO3.p, CARI_storm10_08_27_fDOM.p, CARI_storm10_08_27_SPC.p, CARI_storm10_08_27_turb.p,
+          cols = 7)
+
+# export pdf 20 x 30 #
+ggsave("CARI_HI_Loops_2021.pdf",
+       path = here("plots", "HI_plots", "2021", "CARI"),
+       width = 20, height = 30, units = "in")
 
 

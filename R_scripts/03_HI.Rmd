@@ -16,6 +16,7 @@ options(tz="America/Anchorage")
 library(ggplot2)
 library(gridExtra)
 library(boot)
+library(reticulate)
 ```
 
 
@@ -10936,7 +10937,97 @@ write.csv(CARI.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_
 ```
 
 
+###################################################################################################################################################### 2021 ####################################################
+########################################################################################################
 
+### Load data to pandas 2021 
+```{python}
+# VAUL #
+VAUL_storm1b_07_27_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/VAUL/VAUL_storm1b_07_27_Q.csv")
+VAUL_storm1b_07_27_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/VAUL/VAUL_storm1b_07_27_NO3.csv")
+VAUL_storm1b_07_27_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/VAUL/VAUL_storm1b_07_27_fDOM.csv")
+VAUL_storm1b_07_27_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/VAUL/VAUL_storm1b_07_27_SPC.csv")
+VAUL_storm1b_07_27_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/VAUL/VAUL_storm1b_07_27_turb.csv")
+
+# VAUL_storm1b_07_27_Q = VAUL_storm1b_07_27_Q.dropna(subset=['datavalue'])
+# VAUL_storm1b_07_27_NO3 = VAUL_storm1b_07_27_NO3.dropna(subset=['datavalue'])
+# VAUL_storm1b_07_27_fDOM = VAUL_storm1b_07_27_fDOM.dropna(subset=['datavalue'])
+# VAUL_storm1b_07_27_SPC = VAUL_storm1b_07_27_SPC.dropna(subset=['datavalue'])
+# VAUL_storm1b_07_27_turb = VAUL_storm1b_07_27_turb.dropna(subset=['datavalue'])
+
+VAUL_storm2_08_05_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm2_08_05_Q.csv")
+VAUL_storm2_08_05_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm2_08_05_NO3.csv")
+VAUL_storm2_08_05_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm2_08_05_fDOM.csv")
+VAUL_storm2_08_05_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm2_08_05_SPC.csv")
+VAUL_storm2_08_05_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm2_08_05_turb.csv")
+
+VAUL_storm2_08_05_Q = VAUL_storm2_08_05_Q.dropna(subset=['datavalue'])
+VAUL_storm2_08_05_NO3 = VAUL_storm2_08_05_NO3.dropna(subset=['datavalue'])
+VAUL_storm2_08_05_fDOM = VAUL_storm2_08_05_fDOM.dropna(subset=['datavalue'])
+VAUL_storm2_08_05_SPC = VAUL_storm2_08_05_SPC.dropna(subset=['datavalue'])
+VAUL_storm2_08_05_turb = VAUL_storm2_08_05_turb.dropna(subset=['datavalue'])
+
+VAUL_storm3_08_08_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm3_08_08_Q.csv")
+VAUL_storm3_08_08_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm3_08_08_NO3.csv")
+VAUL_storm3_08_08_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm3_08_08_fDOM.csv")
+VAUL_storm3_08_08_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm3_08_08_SPC.csv")
+VAUL_storm3_08_08_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm3_08_08_turb.csv")
+
+VAUL_storm3_08_08_Q = VAUL_storm3_08_08_Q.dropna(subset=['datavalue'])
+VAUL_storm3_08_08_NO3 = VAUL_storm3_08_08_NO3.dropna(subset=['datavalue'])
+VAUL_storm3_08_08_fDOM = VAUL_storm3_08_08_fDOM.dropna(subset=['datavalue'])
+VAUL_storm3_08_08_SPC = VAUL_storm3_08_08_SPC.dropna(subset=['datavalue'])
+VAUL_storm3_08_08_turb = VAUL_storm3_08_08_turb.dropna(subset=['datavalue'])
+
+VAUL_storm4a_08_15_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4a_08_15_Q.csv")
+VAUL_storm4a_08_15_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4a_08_15_NO3.csv")
+VAUL_storm4a_08_15_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4a_08_15_fDOM.csv")
+VAUL_storm4a_08_15_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4a_08_15_SPC.csv")
+VAUL_storm4a_08_15_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4a_08_15_turb.csv")
+
+VAUL_storm4a_08_15_Q = VAUL_storm4a_08_15_Q.dropna(subset=['datavalue'])
+VAUL_storm4a_08_15_NO3 = VAUL_storm4a_08_15_NO3.dropna(subset=['datavalue'])
+VAUL_storm4a_08_15_fDOM = VAUL_storm4a_08_15_fDOM.dropna(subset=['datavalue'])
+VAUL_storm4a_08_15_SPC = VAUL_storm4a_08_15_SPC.dropna(subset=['datavalue'])
+VAUL_storm4a_08_15_turb = VAUL_storm4a_08_15_turb.dropna(subset=['datavalue'])
+
+VAUL_storm4b_08_20_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4b_08_20_Q.csv")
+VAUL_storm4b_08_20_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4b_08_20_NO3.csv")
+VAUL_storm4b_08_20_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4b_08_20_fDOM.csv")
+VAUL_storm4b_08_20_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4b_08_20_SPC.csv")
+VAUL_storm4b_08_20_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm4b_08_20_turb.csv")
+
+VAUL_storm4b_08_20_Q = VAUL_storm4b_08_20_Q.dropna(subset=['datavalue'])
+VAUL_storm4b_08_20_NO3 = VAUL_storm4b_08_20_NO3.dropna(subset=['datavalue'])
+VAUL_storm4b_08_20_fDOM = VAUL_storm4b_08_20_fDOM.dropna(subset=['datavalue'])
+VAUL_storm4b_08_20_SPC = VAUL_storm4b_08_20_SPC.dropna(subset=['datavalue'])
+VAUL_storm4b_08_20_turb = VAUL_storm4b_08_20_turb.dropna(subset=['datavalue'])
+
+VAUL_storm5a_08_23_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5a_08_23_Q.csv")
+VAUL_storm5a_08_23_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5a_08_23_NO3.csv")
+VAUL_storm5a_08_23_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5a_08_23_fDOM.csv")
+VAUL_storm5a_08_23_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5a_08_23_SPC.csv")
+VAUL_storm5a_08_23_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5a_08_23_turb.csv")
+
+VAUL_storm5a_08_23_Q = VAUL_storm5a_08_23_Q.dropna(subset=['datavalue'])
+VAUL_storm5a_08_23_NO3 = VAUL_storm5a_08_23_NO3.dropna(subset=['datavalue'])
+VAUL_storm5a_08_23_fDOM = VAUL_storm5a_08_23_fDOM.dropna(subset=['datavalue'])
+VAUL_storm5a_08_23_SPC = VAUL_storm5a_08_23_SPC.dropna(subset=['datavalue'])
+VAUL_storm5a_08_23_turb = VAUL_storm5a_08_23_turb.dropna(subset=['datavalue'])
+
+VAUL_storm5b_08_26_Q = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5b_08_26_Q.csv")
+VAUL_storm5b_08_26_NO3 = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5b_08_26_NO3.csv")
+VAUL_storm5b_08_26_fDOM = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5b_08_26_fDOM.csv")
+VAUL_storm5b_08_26_SPC = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5b_08_26_SPC.csv")
+VAUL_storm5b_08_26_turb = pd.read_csv("~/Documents/Storms/Storm_Events/2021/VAUL/VAUL_storm5b_08_26_turb.csv")
+
+VAUL_storm5b_08_26_Q = VAUL_storm5b_08_26_Q.dropna(subset=['datavalue'])
+VAUL_storm5b_08_26_NO3 = VAUL_storm5b_08_26_NO3.dropna(subset=['datavalue'])
+VAUL_storm5b_08_26_fDOM = VAUL_storm5b_08_26_fDOM.dropna(subset=['datavalue'])
+VAUL_storm5b_08_26_SPC = VAUL_storm5b_08_26_SPC.dropna(subset=['datavalue'])
+VAUL_storm5b_08_26_turb = VAUL_storm5b_08_26_turb.dropna(subset=['datavalue'])
+
+```
 
 
 
