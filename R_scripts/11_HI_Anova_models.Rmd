@@ -37,12 +37,12 @@ library(ggpubr)
 library(ggExtra)
 library(lubridate)
 library(lme4)
-library(MuMIn)
+# library(MuMIn)
 library(multcomp)
 library(ggpattern)
 library(emmeans)
 library(multcompView)
-install.packages("agricolae")
+
 ```
 
 # load in the data 
@@ -229,6 +229,20 @@ summary(SPC.CV.HI.mod)
 
 emmeans(SPC.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
+
+
+# getting the letter designation for significance 
+anova <- aov(meanHI ~ site.ID, data = HI_FI_turb)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+
 
 ```
 

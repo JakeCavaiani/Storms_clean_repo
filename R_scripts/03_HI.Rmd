@@ -4,9 +4,7 @@ author: "Jake Cavaiani"
 date: "8/29/2022"
 output: pdf_document
 ---
-
 ```{r setup, include=FALSE}
-setwd("~/Documents/Storms_clean_repo")
 knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 Sys.which("python")
@@ -16,7 +14,13 @@ options(tz="America/Anchorage")
 library(ggplot2)
 library(gridExtra)
 library(boot)
-library(reticulate)
+py_install("pandas")
+# virtualenv_create("r-reticulate")
+
+
+# RETICULATE_PYTHON = "lib/python3.8"
+# reticulate::py_config()
+# reticulate::py_install("pandas")
 ```
 
 
@@ -30,7 +34,20 @@ pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 datetime.date.today()
 quit()
+pandas()
+pandas.read
 ```
+
+```{python}
+import pandas
+import pandas as pd
+
+FRCH_storm2a_06_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_29_Q.csv")
+
+```
+
+
+
 ### Load data to pandas 2018
 ```{python}
 # FRCH #
@@ -39,7 +56,7 @@ quit()
 # FRCH_storm1_06_21_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_fDOM.csv")
 # FRCH_storm1_06_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_SPC.csv")
 # FRCH_storm1_06_21_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_turb.csv")
-
+pandas.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_29_Q.csv")
 FRCH_storm2a_06_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_29_Q.csv")
 FRCH_storm2a_06_29_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_29_NO3.csv")
 FRCH_storm2a_06_29_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_29_fDOM.csv")
@@ -126,6 +143,9 @@ FRCH_storm11b_09_24_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Even
 
 
 ```
+
+
+
 
 FRCH_storms
 ```{python}

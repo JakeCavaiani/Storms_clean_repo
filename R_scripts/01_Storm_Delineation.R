@@ -21772,8 +21772,314 @@ write.csv(CARI_storm10_08_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2
 
 
 
+##########################################################################################
+############################## 2022 ######################################################
+##########################################################################################
 
 
+# Load from local machine #
+Q.daily.2022 <- read.csv(here("Q", "2022", "Q.daily.2022.csv"))
+Q.2022 <- read.csv(here("Q", "2022", "Q_2022.csv"))
+
+Q.2022$datetimeAK <- ymd_hms(Q.2022$datetimeAK) # converting character to datetime
+Q.2022$datetimeAK <- force_tz(Q.2022$datetimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+
+# chem.2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
+# 
+# chem.2020 <- chem.2020[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", "SpCond.uScm.mn.adj",
+#                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab")]
+# 
+# chem.2020$datetimeAK <- ymd_hms(chem.2020$datetimeAK) # converting character to datetime
+# 
+# names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU", "nitrateuM")
+
+
+# Load in CARI data 
+
+CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
+
+# time zones are the bane of my existence
+# when I import the file that had AKDT time from the last repo it loads in as UTC 
+# but when I try and change it all over it gets all wonky so here is my horrible 
+# way to solve the issue
+# 
+CARI_2022 <- CARI_2022[c("site.ID.x", "DateTimeAK", "Discharge", "NO3", "fDOM", "SPC", "Turb")] # picking the columns I want 
+names(CARI_2022) <- c("site.ID", "DateTimeAK", "Discharge", "NO3", "fDOM", "SPC", "Turb") # renaming columns 
+CARI_2022$site.ID <- "CARI"
+
+CARI_2022$DateTimeAK <- ymd_hms(CARI_2022$DateTimeAK) # changing from character to datetime 
+CARI_2022$DateTimeAK <- force_tz(CARI_2022$DateTimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+
+CARI_Q <- CARI_2022[c("site.ID", "DateTimeAK", "Discharge")] # clipping out just Q 
+
+CARI_chem <- CARI_2022[c("site.ID", "DateTimeAK", "NO3", "fDOM", "SPC", "Turb")] # clipping out just chem 
+
+### ARE THE TIMES ON THE SAME TZ ###
+ggplot(CARI_2022) +
+  geom_line(aes(DateTimeAK, fDOM*5, color = "red")) +
+  geom_line(aes(DateTimeAK, Discharge)) +
+  xlim(as.POSIXct(c("2022-08-01 0:00:00","2022-08-15 23:45:00"))) # fDOM slighly lags behind Q which is what I would expect 
+
+
+CARI_2022$day = format(as.POSIXct(CARI_2022$DateTimeAK,format="%Y-%m-%d %H:%M:%S"),format="%Y-%m-%d")
+CARI_2022$day = as.POSIXct(CARI_2022$day, "%Y-%m-%d", tz="America/Anchorage")
+
+cari.final.discharge.2022 <- CARI_2022[c("site.ID", "DateTimeAK", "Discharge", "day")]
+
+CARI.daily.2022 = with(CARI_2022, tapply(Discharge, list(day, site.ID), mean))
+CARI.daily.2022 = as.data.frame(CARI.daily.2022)
+
+CARI.Q.2022 = as.data.frame(CARI.daily.2022$CARI)
+CARI.Q.2022$day = as.Date(rownames(CARI.daily.2022))
+names(CARI.Q.2022) = c("Discharge_Lsec", "day")
+
+### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
+# pivot long to get all the response variables in one column
+cari_2022_long <- CARI_2022 %>%
+  pivot_longer(
+    cols = NO3:Turb,
+    names_to = "response_var",
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) # converting to a long format so each response_var is within a single column
+
+ggplot(cari_2022_long, aes(x = DateTimeAK, y = concentration, color = site.ID)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(values=c("#3288BD")) +
+  facet_wrap(~response_var, scales = "free") +
+  theme_classic()
+
+# when you get the clean 2022 data this is where you should start # 
+
+# # subset data by site #
+# FRCH.2020 <-  subset(chem.2020, site.ID == "FRCH")
+# FRCH.2020 <- FRCH.2020[-c(12061:12290), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# 
+# MOOS.2020 <-  subset(chem.2020, site.ID == "MOOS")
+# MOOS.2020 <- MOOS.2020[-c(12191:12447), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# 
+# POKE.2020 <-  subset(chem.2020, site.ID == "POKE")
+# POKE.2020 <- POKE.2020[-c(12668:12967), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# 
+# VAUL.2020 <-  subset(chem.2020, site.ID == "VAUL")
+# VAUL.2020 <- VAUL.2020[-c(12527:12863), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# 
+# STRT.2020 <-  subset(chem.2020, site.ID == "STRT")
+# STRT.2020 <- STRT.2020[-c(11320:11571), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# 
+# DOD.2020 <- rbind(FRCH.2020, MOOS.2020, POKE.2020,
+#                   VAUL.2020, STRT.2020)
+# 
+# DOD.2020 <- full_join(DOD.2020, Q.2020) # merging chem and discharge data 
+# 
+# #write.csv(DOD.2020, "~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2020.csv")
+# 
+frch.final.discharge.2022 <- subset(Q.2022, site.ID == "FRCH")
+strt.final.discharge.2022 <- subset(Q.2022, site.ID == "STRT")
+poke.final.discharge.2022 <- subset(Q.2022, site.ID == "POKE")
+vaul.final.discharge.2022 <- subset(Q.2022, site.ID == "VAUL")
+moos.final.discharge.2022 <- subset(Q.2022, site.ID == "MOOS")
+ 
+
+# 
+# # join Q and chem data 
+# # FRCH #
+# FRCH = full_join(frch.final.discharge.2020, FRCH.2020)
+# # MOOS #
+# MOOS = full_join(moos.final.discharge.2020, MOOS.2020)
+# # STRT #
+# STRT = full_join(strt.final.discharge.2020, STRT.2020)
+# # POKE #
+# POKE = full_join(poke.final.discharge.2020, POKE.2020)
+# # VAUL #
+# VAUL = full_join(vaul.final.discharge.2020, VAUL.2020)
+# 
+# 
+ 
+frch.final.discharge.2022$MeanDischarge <- frch.final.discharge.2022$Q
+poke.final.discharge.2022$MeanDischarge <- poke.final.discharge.2022$Q
+vaul.final.discharge.2022$MeanDischarge <- vaul.final.discharge.2022$Q
+strt.final.discharge.2022$MeanDischarge <- strt.final.discharge.2022$Q
+moos.final.discharge.2022$MeanDischarge <- moos.final.discharge.2022$Q
+cari.final.discharge.2022$MeanDischarge <- cari.final.discharge.2022$Discharge
+
+### examine the recursive digital filter at .9, .925, .95 levels ###
+plot(frch.final.discharge.2022$MeanDischarge ~ frch.final.discharge.2022$datetimeAK, type = "l", xlab = "", ylab = "Q (L/sec)",
+     xlim =  as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0, 2000), col="blue")
+
+plot(poke.final.discharge.2022$MeanDischarge ~ poke.final.discharge.2022$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,2000), col="blue")
+
+plot(vaul.final.discharge.2022$MeanDischarge ~ vaul.final.discharge.2022$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,2000), col="blue")
+
+plot(strt.final.discharge.2022$MeanDischarge ~ strt.final.discharge.2022$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,3000), col="blue")
+
+plot(moos.final.discharge.2022$MeanDischarge ~ moos.final.discharge.2022$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,3000), col="blue")
+
+plot(cari.final.discharge.2022$MeanDischarge ~ cari.final.discharge.2022$DateTimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(0,2000), col="blue")
+
+
+# 
+# ### Hydrograph Separation ###
+# #
+any(is.na(frch.final.discharge.2022$MeanDischarge))
+FRCH_Q_bf = BaseflowSeparation(frch.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+any(is.na(strt.final.discharge.2022$MeanDischarge))
+STRT_Q_bf = BaseflowSeparation(strt.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+any(is.na(poke.final.discharge.2022$MeanDischarge))
+POKE_Q_bf = BaseflowSeparation(poke.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+any(is.na(vaul.final.discharge.2022$MeanDischarge))
+VAUL_Q_bf = BaseflowSeparation(vaul.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+any(is.na(moos.final.discharge.2022$MeanDischarge))
+MOOS_Q_bf = BaseflowSeparation(moos.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+any(is.na(cari.final.discharge.2022$Discharge))
+cari.final.discharge.2022 <- na.omit(cari.final.discharge.2022) # removed 16640 - 11766 
+CARI_Q_bf = BaseflowSeparation(cari.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
+
+
+# ##Deliniate storms in FRCH ##
+# 
+# # ID storms: Any events where Q reached 2X mean base flow 
+# # Pick starting points: manually select inflection pt when Q began to rise
+# # Pick ending points: manually select pt when Q reached pre-storm baseflow OR when another event occurred
+# 
+# 
+FRCH_bfQ_mn = mean(FRCH_Q_bf$bt)
+FRCH_bfQ_mn
+FRCH_bfQ_mn*2
+
+STRT_bfQ_mn = mean(STRT_Q_bf$bt)
+STRT_bfQ_mn
+STRT_bfQ_mn*2
+
+VAUL_bfQ_mn = mean(VAUL_Q_bf$bt)
+VAUL_bfQ_mn
+VAUL_bfQ_mn*2
+
+POKE_bfQ_mn = mean(POKE_Q_bf$bt)
+POKE_bfQ_mn
+POKE_bfQ_mn*2
+
+MOOS_bfQ_mn = mean(MOOS_Q_bf$bt)
+MOOS_bfQ_mn
+MOOS_bfQ_mn*2
+
+CARI_bfQ_mn = mean(CARI_Q_bf$bt)
+CARI_bfQ_mn
+CARI_bfQ_mn*2
+
+### Merge Discharge and Precip ###
+CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2022.final.csv"))
+CPCRW$datetimeAK <- force_tz(CPCRW$datetimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+
+frch.precip.discharge <- full_join(frch.final.discharge.2022, CPCRW) # merging precip data and discharge
+moos.precip.discharge <- full_join(moos.final.discharge.2022, CPCRW) # merging precip data and discharge
+poke.precip.discharge <- full_join(poke.final.discharge.2022, CPCRW) # merging precip data and discharge
+vaul.precip.discharge <- full_join(vaul.final.discharge.2022, CPCRW) # merging precip data and discharge
+strt.precip.discharge <- full_join(strt.final.discharge.2022, CPCRW) # merging precip data and discharge
+# cari.precip.discharge <- full_join(cari.final.discharge.2022, CPCRW) # merging precip data and discharge
+
+
+frch.precip.discharge <- frch.precip.discharge[order(frch.precip.discharge$datetimeAK),]
+moos.precip.discharge <- moos.precip.discharge[order(moos.precip.discharge$datetimeAK),]
+poke.precip.discharge <- poke.precip.discharge[order(poke.precip.discharge$datetimeAK),]
+vaul.precip.discharge <- vaul.precip.discharge[order(vaul.precip.discharge$datetimeAK),]
+strt.precip.discharge <- strt.precip.discharge[order(strt.precip.discharge$datetimeAK),]
+# cari.precip.discharge <- cari.precip.discharge[order(cari.precip.discharge$datetimeAK),]
+
+# making a uniform time series with 30 minute intervals and then I can sum precip by 24/48hour windows 
+ts <- seq(as.POSIXct("2022-04-01", tz = "America/Anchorage"),
+          as.POSIXct("2022-11-01", tz = "America/Anchorage"),
+          by = "30 min")
+head(ts)
+ts <- as.data.frame(ts)
+names(ts) <- c("datetimeAK")
+frch.precip.discharge <- left_join(ts, frch.precip.discharge, by = "datetimeAK")
+
+### Sum daily discharge ###
+frch.precip.discharge$twentyfour <- rollapplyr(frch.precip.discharge$mean, 48, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+frch.precip.discharge$fourtyeight <- rollapplyr(frch.precip.discharge$mean, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+
+# strt.precip.discharge$twentyfour <- rollapplyr(strt.precip.discharge$inst_rainfall_mm, 48, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# strt.precip.discharge$fourtyeight <- rollapplyr(strt.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# 
+# vaul.precip.discharge$twentyfour <- rollapplyr(vaul.precip.discharge$inst_rainfall_mm, 48, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# vaul.precip.discharge$fourtyeight <- rollapplyr(vaul.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# 
+# poke.precip.discharge$twentyfour <- rollapplyr(poke.precip.discharge$inst_rainfall_mm, 48, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# poke.precip.discharge$fourtyeight <- rollapplyr(poke.precip.discharge$inst_rainfall_mm, 96, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+# 
+# Greater than 5 #
+frch.five.twenty.four <- frch.precip.discharge[which(frch.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+frch.five.fourty.eight <- frch.precip.discharge[which(frch.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+# strt.five.twenty.four <- strt.precip.discharge[which(strt.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+# strt.five.fourty.eight <- strt.precip.discharge[which(strt.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+# 
+# vaul.five.twenty.four <- vaul.precip.discharge[which(vaul.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+# vaul.five.fourty.eight <- vaul.precip.discharge[which(vaul.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+# 
+# poke.five.twenty.four <- poke.precip.discharge[which(poke.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
+# poke.five.fourty.eight <- poke.precip.discharge[which(poke.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
+
+
+# Greater than 10 #
+frch.ten.twenty.four <- frch.precip.discharge[which(frch.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+frch.ten.fourty.eight <- frch.precip.discharge[which(frch.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+# strt.ten.twenty.four <- strt.precip.discharge[which(strt.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+# strt.ten.fourty.eight <- strt.precip.discharge[which(strt.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+# 
+# vaul.ten.twenty.four <- vaul.precip.discharge[which(vaul.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+# vaul.ten.fourty.eight <- vaul.precip.discharge[which(vaul.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+# 
+# poke.ten.twenty.four <- poke.precip.discharge[which(poke.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
+# poke.ten.fourty.eight <- poke.precip.discharge[which(poke.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
+
+# FRCH 
+plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
+     xlim = as.POSIXct(c("2022-05-01 0:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(10,0), 
+     axes=F, xlab="", ylab="")
+axis(side = 4)
+par(mfrow=c(1,1))
+abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
+abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
+par(new = T)
+plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
+     xlim = as.POSIXct(c("2022-05-01 0:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
+     ylim = c(10,0), 
+     axes=F, xlab="", ylab="")
+par(new = T)
+
+plot(frch.final.discharge.2022$MeanDischarge ~ frch.final.discharge.2022$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
+     xlim = as.POSIXct(c("2022-05-01 0:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"))
+abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
+abline(h=FRCH_bfQ_mn, col="red")
+
+# lines(FRCH.2020.chem$nitrateuM * 20 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="purple",
+#       xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+# lines(FRCH.2020.chem$fDOM.QSU * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="brown",
+#       xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+# lines(FRCH.2020.chem$SpCond.µS.cm * 10 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="red",
+#       xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
+# lines(FRCH.2020.chem$Turbidity.FNU * 60 ~ FRCH.2020.chem$DateTime, type="l", xlab="", ylab="", col="blue",
+#       xlim = as.POSIXct(c("2020-06-01 0:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
 
 
 

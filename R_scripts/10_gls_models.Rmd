@@ -48,7 +48,7 @@ library(ggpubr)
 library(ggExtra)
 library(lubridate)
 library(nlme)
-library(MuMIn)
+# library(MuMIn)
 library(multcomp)
 library(sjPlot)
 library(AICcmodavg)
@@ -59,6 +59,7 @@ library(ggpattern)
 library(grid)
 library(pBrackets)
 library(multcompView)
+library(lmerTest)
 ```
 
 
@@ -3235,9 +3236,15 @@ NO3.CV.mod <- lmer(CVconc ~ site.ID + (1|year), data = CV_NO3)
 plot(NO3.CV.mod)
 qqnorm(resid(NO3.CV.mod))
 summary(NO3.CV.mod)
-
+anova(NO3.CV.mod)
+summary(NO3.CV.mod, ddf)
 emmeans(NO3.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
+
 # add post hoc pairwise comparisons
+
+# ANOVA #
+anova <- aov(CVconc ~ site.ID, data = CV_NO3)
+summary(anova)
 ```
 
 ```{r}
@@ -3261,6 +3268,10 @@ qqnorm(resid(fDOM.CV.mod))
 summary(fDOM.CV.mod)
 
 emmeans(fDOM.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
+
+# ANOVA # 
+anova <- aov(CVconc ~ site.ID, data = CV_fDOM)
+summary(anova)
 
 
 ```
@@ -3300,6 +3311,10 @@ summary(SPC.CV.mod)
 
 emmeans(SPC.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
+# ANOVA # 
+anova <- aov(CVconc ~ site.ID, data = CV_SPC)
+summary(anova)
+
 
 ```
 
@@ -3325,6 +3340,10 @@ qqnorm(resid(turb.CV.mod))
 summary(turb.CV.mod)
 
 emmeans(turb.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
+
+# ANOVA # 
+anova <- aov(CVconc ~ site.ID, data = CV_turb)
+summary(anova)
 
 
 ```
@@ -3352,7 +3371,9 @@ TukeyHSD(turb.log, which = "site.ID")
 #CARI/VAUL
 
 # this is just because there is that errant point in 2018 for CARI so this probably isnt real as of 9/22
-
+# ANOVA # 
+anova <- aov(logCVconc ~ site.ID, data = CV_turb)
+summary(anova)
 ```
 
 

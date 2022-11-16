@@ -1,0 +1,151 @@
+---
+title: "16_RainGauge"
+output: html_document
+---
+
+This script reads in and plots Rain Gauge data at FRCH, STRT, VAUL, CARI, CRREL sites for 2021 from our HOBOs and POKE from LTER data ###
+
+Step 1: Import raw data from HOBOware # File path directory DoD Project->2021 AK Sensors-> Rain Gauge-> "site"
+Step 2: Plot data # HOBOware data comes in the form of cumulative precip....you have to put it in instanteous 15 minute intervals
+Step 3: output csv with Site, DateTime, and Precip
+
+
+# Import Libraries #
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(RColorBrewer)
+library(gridExtra)
+library(here)
+```
+
+```{r}
+CPCRW <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/CPCRW_CREEL_percip_2022.csv",
+                                    skip = 5)
+Eielson <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/Eielson_2022_Precip.csv", 
+                                skip = 6)
+Salcha_2022 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/USGS_Salcha_2022_precip.csv", 
+                                    skip = 26)
+```
+
+# CPCRW Caribou Peak 
+```{r}
+# PLOT data 
+ggplot(CPCRW) +
+  geom_line(aes(x = Time, y = CPCRW$`CPCRW Caribou Peak: TippingBucket_TOT mm CPEAK[mm]`)) +
+  xlab("Date") +
+  ylab("Cumulative Precipitation (mm)") +
+  ggtitle("CPCRW CARI Rain Gauge")
+
+```
+# CRRREL Main Met station 
+```{r}
+ggplot(CPCRW) +
+  geom_line(aes(x = Time, y = CPCRW$`CPCRW CRREL Main Met Station: TippingBucket_TOT mm  CRREL[mm]`)) +
+  xlab("Date") +
+  ylab("Cumulative Precipitation (mm)") +
+  ggtitle("CPCRW CRREL Rain Gauge")
+
+```
+
+```{r}
+ggplot() +
+  geom_line(data = CPCRW, aes(x = Time, y = CPCRW$`CPCRW Caribou Peak: TippingBucket_TOT mm CPEAK[mm]`), color = "blue") +
+  geom_line(data = CPCRW, aes(x = Time, y = CPCRW$`CPCRW CRREL Main Met Station: TippingBucket_TOT mm  CRREL[mm]`)) +
+  ggtitle("CPCRW/CRREL comparison Rain Gauge")
+
+```
+Caribou peak (blue) seems to record a lot more rain...in the past I have averaged between the two of these to get our "Poker" record 
+
+```{r}
+CPCRW$month <- format(as.Date(CPCRW$Time), "%m")
+
+CPCRW %>% 
+  group_by(month) %>% 
+  summarise(CRREL = sum(`CPCRW CRREL Main Met Station: TippingBucket_TOT mm  CRREL[mm]`),
+            CARI = sum(`CPCRW Caribou Peak: TippingBucket_TOT mm CPEAK[mm]`))
+
+# CRREL: 202.946
+# CARI: 279.91
+```
+```{r}
+names(CPCRW) <- c("datetimeAK", "CARI", "CRREL", "month")
+CPCRW$mean <- rowMeans(CPCRW[,c('CARI', 'CRREL')], na.rm=TRUE)
+
+write.csv(CPCRW, "~/Documents/Storms_clean_repo/Climate/Precip/CPCRW.RainGauge.2022.final.csv")
+
+```
+# Eielson #
+```{r}
+Eielson$Date_Time <-mdy_hms(Eielson$Date_Time) 
+Eielson$precip_accum_one_hour_set_1 <- as.numeric(Eielson$precip_accum_one_hour_set_1)
+
+# # turn into instantaneous precip
+# Eielson$inst_rainfall_mm = 0.2
+
+min<-cut(Eielson$Date_Time, breaks="15 min")
+Eielson.st <- as.data.frame(aggregate(precip_accum_one_hour_set_1 ~ min, data = Eielson, FUN=function(x) 
+  sum=sum(x)))
+Eielson.st$datetimeAK<-as.POSIXct(Eielson.st$min, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+Eielson.st$precip_accum_one_hour_set_1 <- Eielson.st$precip_accum_one_hour_set_1 * 25.4
+
+ggplot(Eielson.st) +
+  geom_line(aes(x = datetimeAK, y = precip_accum_one_hour_set_1)) +
+  xlab("Date") +
+  ylab("Cumulative Precipitation (mm)") +
+  ggtitle("CPCRW CARI Rain Gauge")
+
+```
+
+
+```{r}
+Eielson.st$month <- format(as.Date(Eielson.st$datetimeAK), "%m")
+
+Eielson.st %>% 
+  group_by(month) %>% 
+  summarise(Eielson = sum(precip_accum_one_hour_set_1))
+
+# 159.1818 # total 
+
+```
+
+
+# CRRREL Main Met station 
+```{r}
+Salcha_2022 <- Salcha_2022[-1, ]
+
+Salcha_2022$datetimeAK <- mdy_hm(Salcha_2022$datetime)
+names(Salcha_2022) <- c("Agency", "Site", "dt", "tz", "precip", "type", "datetimeAK")
+Salcha_2022$precip <- as.numeric(Salcha_2022$precip)
+
+# # turn into instantaneous precip
+# Eielson$inst_rainfall_mm = 0.2
+
+min<-cut(Salcha_2022$datetimeAK, breaks="15 min")
+Salcha.st <- as.data.frame(aggregate(precip ~ min, data = Salcha_2022, FUN=function(x) 
+  sum=sum(x)))
+Salcha.st$datetimeAK<-as.POSIXct(Salcha.st$min, "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+Salcha.st$precip <- Salcha.st$precip * 25.4
+
+
+ggplot(Salcha.st) +
+  geom_line(aes(x = datetimeAK, y = precip)) +
+  xlab("Date") +
+  ylab("Cumulative Precipitation (mm)") +
+  ggtitle("Salcha Rain Gauge")
+
+```
+
+```{r}
+Salcha.st$month <- format(as.Date(Salcha.st$datetimeAK), "%m")
+
+Salcha.st %>% 
+  group_by(month) %>% 
+  summarise(Salcha = sum(precip))
+
+# 159.1818 # total 
+```
