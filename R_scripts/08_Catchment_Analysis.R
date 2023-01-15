@@ -19,6 +19,7 @@ library(nlme)
 library(MuMIn)
 library(multcomp)
 library(here)
+library(dplyr)
 
 ###### CATCHMENT CHARACTERISTICS ####
 # Read in polygon data 
@@ -50,13 +51,13 @@ DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Pred
 # 
 AMC <- full_join(AMC, DOD_catchment)
 # 
-# write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 # 
 # 
-# AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 
 HI.median<- AMC %>% group_by(site.ID, response_var) %>%  
-  summarise_at(vars(Hyst_index), list(HI = median)) # takes the median by site response and year 
+  dplyr::summarise_at(vars(Hyst_index), list(HI = median)) # takes the median by site response and year 
 
 HI.median <- AMC %>% group_by(response_var,site.ID, year) %>%
   summarize(MedianHI = mean(Hyst_index),
@@ -264,6 +265,17 @@ a <- ggMarginal(HI_BETA_NO3.p, groupColour = TRUE, groupFill = TRUE)
 
 HI_FI_fDOM <- HI_FI_fDOM[-c(131, 190, 219,237), ]
 
+View(HI_FI_fDOM)
+
+HI_FI_fDOM <- HI_FI_fDOM %>% 
+  mutate(across(c(pf),
+                ~ifelse(pf == "medium", "Moderate", "High")))
+
+# CARI_2020 <- CARI_2020 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2020-06-17" & DateTimeAK <= "2020-09-30", NA, .)))
+
+
 HI_BETA_fDOM.p = 
     ggplot(HI_FI_fDOM, aes(Beta_index, Hyst_index)) + 
     geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
@@ -281,7 +293,14 @@ HI_BETA_fDOM.p =
           panel.grid.minor = element_blank(), 
           axis.line = element_line(colour = "black"), 
           text = element_text(size = 15),
-          legend.position = "none") 
+          legend.position = "none") +
+  guides(shape=guide_legend("Permafrost Extent"),
+         col=guide_legend("Catchment"))
+
+ggsave("fDOM_HI_BETA.pdf",
+       path = here("plots", "HI_BETA"),
+       width = 9, height = 9)
+
   
 b <- ggMarginal(HI_BETA_fDOM.p, groupColour = TRUE, groupFill = TRUE)
  
@@ -334,12 +353,11 @@ d <- ggMarginal(HI_BETA_turb.p, groupColour = TRUE, groupFill = TRUE)
 
 
 
- 
-ggarrange(b, a,
-          c,d, 
+ggarrange(b,a,
+          c,d,
           labels = c("A)", "B)",
-                     "C)", "D)"),
-          common.legend = TRUE)
+                     "C)", "D)"))
+
 ggsave("HI_BETA.pdf",
        path = here("plots", "HI_BETA"),
        width = 9, height = 9)
@@ -1411,6 +1429,279 @@ which(HI_FI_turb_VAUL_2021$Beta_ymin < 0 & HI_FI_turb_VAUL_2021$Beta_ymax > 0 & 
 
 
 
+# 2022 ####
+# FRCH #### 
+# NO3 
+HI_FI_NO3_FRCH_2022 <- subset(HI_FI_NO3, site.ID == "FRCH" & year == "2022")
+
+table(sign(HI_FI_NO3_FRCH_2022$Hyst_index))
+which(HI_FI_NO3_FRCH_2022$HI_ymin < 0 & HI_FI_NO3_FRCH_2022$HI_ymax > 0 & HI_FI_NO3_FRCH_2022$Hyst_index > 0)
+which(HI_FI_NO3_FRCH_2022$HI_ymin < 0 & HI_FI_NO3_FRCH_2022$HI_ymax > 0 & HI_FI_NO3_FRCH_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_FRCH_2022$Beta_index))
+which(HI_FI_NO3_FRCH_2022$Beta_ymin < 0 & HI_FI_NO3_FRCH_2022$Beta_ymax > 0 & HI_FI_NO3_FRCH_2022$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2022$Beta_ymin < 0 & HI_FI_NO3_FRCH_2022$Beta_ymax > 0 & HI_FI_NO3_FRCH_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_FRCH_2022 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2022")
+
+table(sign(HI_FI_fDOM_FRCH_2022$Hyst_index))
+which(HI_FI_fDOM_FRCH_2022$HI_ymin < 0 & HI_FI_fDOM_FRCH_2022$HI_ymax > 0 & HI_FI_fDOM_FRCH_2022$Hyst_index > 0)
+which(HI_FI_fDOM_FRCH_2022$HI_ymin < 0 & HI_FI_fDOM_FRCH_2022$HI_ymax > 0 & HI_FI_fDOM_FRCH_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_FRCH_2022$Beta_index))
+which(HI_FI_fDOM_FRCH_2022$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2022$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2022$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2022$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2022$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_FRCH_2022 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2022")
+
+table(sign(HI_FI_SPC_FRCH_2022$Hyst_index))
+which(HI_FI_SPC_FRCH_2022$HI_ymin < 0 & HI_FI_SPC_FRCH_2022$HI_ymax > 0 & HI_FI_SPC_FRCH_2022$Hyst_index > 0)
+which(HI_FI_SPC_FRCH_2022$HI_ymin < 0 & HI_FI_SPC_FRCH_2022$HI_ymax > 0 & HI_FI_SPC_FRCH_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2022$Beta_index))
+which(HI_FI_SPC_FRCH_2022$Beta_ymin < 0 & HI_FI_SPC_FRCH_2022$Beta_ymax > 0 & HI_FI_SPC_FRCH_2022$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2022$Beta_ymin < 0 & HI_FI_SPC_FRCH_2022$Beta_ymax > 0 & HI_FI_SPC_FRCH_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_FRCH_2022 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2022")
+
+table(sign(HI_FI_turb_FRCH_2022$Hyst_index))
+which(HI_FI_turb_FRCH_2022$HI_ymin < 0 & HI_FI_turb_FRCH_2022$HI_ymax > 0 & HI_FI_turb_FRCH_2022$Hyst_index > 0)
+which(HI_FI_turb_FRCH_2022$HI_ymin < 0 & HI_FI_turb_FRCH_2022$HI_ymax > 0 & HI_FI_turb_FRCH_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_FRCH_2022$Beta_index))
+which(HI_FI_turb_FRCH_2022$Beta_ymin < 0 & HI_FI_turb_FRCH_2022$Beta_ymax > 0 & HI_FI_turb_FRCH_2022$Beta_index > 0)
+which(HI_FI_turb_FRCH_2022$Beta_ymin < 0 & HI_FI_turb_FRCH_2022$Beta_ymax > 0 & HI_FI_turb_FRCH_2022$Beta_index < 0)
+
+# MOOS ####
+HI_FI_NO3_MOOS_2022 <- subset(HI_FI_NO3, site.ID == "MOOS" & year == "2022")
+
+table(sign(HI_FI_NO3_MOOS_2022$Hyst_index))
+which(HI_FI_NO3_MOOS_2022$HI_ymin < 0 & HI_FI_NO3_MOOS_2022$HI_ymax > 0 & HI_FI_NO3_MOOS_2022$Hyst_index > 0)
+which(HI_FI_NO3_MOOS_2022$HI_ymin < 0 & HI_FI_NO3_MOOS_2022$HI_ymax > 0 & HI_FI_NO3_MOOS_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_MOOS_2022$Beta_index))
+which(HI_FI_NO3_MOOS_2022$Beta_ymin < 0 & HI_FI_NO3_MOOS_2022$Beta_ymax > 0 & HI_FI_NO3_MOOS_2022$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2022$Beta_ymin < 0 & HI_FI_NO3_MOOS_2022$Beta_ymax > 0 & HI_FI_NO3_MOOS_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_MOOS_2022 <- subset(HI_FI_fDOM, site.ID == "MOOS" & year == "2022")
+
+table(sign(HI_FI_fDOM_MOOS_2022$Hyst_index))
+which(HI_FI_fDOM_MOOS_2022$HI_ymin < 0 & HI_FI_fDOM_MOOS_2022$HI_ymax > 0 & HI_FI_fDOM_MOOS_2022$Hyst_index > 0)
+which(HI_FI_fDOM_MOOS_2022$HI_ymin < 0 & HI_FI_fDOM_MOOS_2022$HI_ymax > 0 & HI_FI_fDOM_MOOS_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_MOOS_2022$Beta_index))
+which(HI_FI_fDOM_MOOS_2022$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2022$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2022$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2022$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2022$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_MOOS_2022 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2022")
+
+table(sign(HI_FI_SPC_MOOS_2022$Hyst_index))
+which(HI_FI_SPC_MOOS_2022$HI_ymin < 0 & HI_FI_SPC_MOOS_2022$HI_ymax > 0 & HI_FI_SPC_MOOS_2022$Hyst_index > 0)
+which(HI_FI_SPC_MOOS_2022$HI_ymin < 0 & HI_FI_SPC_MOOS_2022$HI_ymax > 0 & HI_FI_SPC_MOOS_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_MOOS_2022$Beta_index))
+which(HI_FI_SPC_MOOS_2022$Beta_ymin < 0 & HI_FI_SPC_MOOS_2022$Beta_ymax > 0 & HI_FI_SPC_MOOS_2022$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2022$Beta_ymin < 0 & HI_FI_SPC_MOOS_2022$Beta_ymax > 0 & HI_FI_SPC_MOOS_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_MOOS_2022 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2022")
+
+table(sign(HI_FI_turb_MOOS_2022$Hyst_index))
+which(HI_FI_turb_MOOS_2022$HI_ymin < 0 & HI_FI_turb_MOOS_2022$HI_ymax > 0 & HI_FI_turb_MOOS_2022$Hyst_index > 0)
+which(HI_FI_turb_MOOS_2022$HI_ymin < 0 & HI_FI_turb_MOOS_2022$HI_ymax > 0 & HI_FI_turb_MOOS_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_MOOS_2022$Beta_index))
+which(HI_FI_turb_MOOS_2022$Beta_ymin < 0 & HI_FI_turb_MOOS_2022$Beta_ymax > 0 & HI_FI_turb_MOOS_2022$Beta_index > 0)
+which(HI_FI_turb_MOOS_2022$Beta_ymin < 0 & HI_FI_turb_MOOS_2022$Beta_ymax > 0 & HI_FI_turb_MOOS_2022$Beta_index < 0)
+
+# CARI ####
+HI_FI_NO3_CARI_2022 <- subset(HI_FI_NO3, site.ID == "CARI" & year == "2022")
+
+table(sign(HI_FI_NO3_CARI_2022$Hyst_index))
+which(HI_FI_NO3_CARI_2022$HI_ymin < 0 & HI_FI_NO3_CARI_2022$HI_ymax > 0 & HI_FI_NO3_CARI_2022$Hyst_index > 0)
+which(HI_FI_NO3_CARI_2022$HI_ymin < 0 & HI_FI_NO3_CARI_2022$HI_ymax > 0 & HI_FI_NO3_CARI_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_CARI_2022$Beta_index))
+which(HI_FI_NO3_CARI_2022$Beta_ymin < 0 & HI_FI_NO3_CARI_2022$Beta_ymax > 0 & HI_FI_NO3_CARI_2022$Beta_index > 0)
+which(HI_FI_NO3_CARI_2022$Beta_ymin < 0 & HI_FI_NO3_CARI_2022$Beta_ymax > 0 & HI_FI_NO3_CARI_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_CARI_2022 <- subset(HI_FI_fDOM, site.ID == "CARI" & year == "2022")
+
+table(sign(HI_FI_fDOM_CARI_2022$Hyst_index))
+which(HI_FI_fDOM_CARI_2022$HI_ymin < 0 & HI_FI_fDOM_CARI_2022$HI_ymax > 0 & HI_FI_fDOM_CARI_2022$Hyst_index > 0)
+which(HI_FI_fDOM_CARI_2022$HI_ymin < 0 & HI_FI_fDOM_CARI_2022$HI_ymax > 0 & HI_FI_fDOM_CARI_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_CARI_2022$Beta_index))
+which(HI_FI_fDOM_CARI_2022$Beta_ymin < 0 & HI_FI_fDOM_CARI_2022$Beta_ymax > 0 & HI_FI_fDOM_CARI_2022$Beta_index > 0)
+which(HI_FI_fDOM_CARI_2022$Beta_ymin < 0 & HI_FI_fDOM_CARI_2022$Beta_ymax > 0 & HI_FI_fDOM_CARI_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_CARI_2022 <- subset(HI_FI_SPC, site.ID == "CARI" & year == "2022")
+
+table(sign(HI_FI_SPC_CARI_2022$Hyst_index))
+which(HI_FI_SPC_CARI_2022$HI_ymin < 0 & HI_FI_SPC_CARI_2022$HI_ymax > 0 & HI_FI_SPC_CARI_2022$Hyst_index > 0)
+which(HI_FI_SPC_CARI_2022$HI_ymin < 0 & HI_FI_SPC_CARI_2022$HI_ymax > 0 & HI_FI_SPC_CARI_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_CARI_2022$Beta_index))
+which(HI_FI_SPC_CARI_2022$Beta_ymin < 0 & HI_FI_SPC_CARI_2022$Beta_ymax > 0 & HI_FI_SPC_CARI_2022$Beta_index > 0)
+which(HI_FI_SPC_CARI_2022$Beta_ymin < 0 & HI_FI_SPC_CARI_2022$Beta_ymax > 0 & HI_FI_SPC_CARI_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_CARI_2022 <- subset(HI_FI_turb, site.ID == "CARI" & year == "2022")
+
+table(sign(HI_FI_turb_CARI_2022$Hyst_index))
+which(HI_FI_turb_CARI_2022$HI_ymin < 0 & HI_FI_turb_CARI_2022$HI_ymax > 0 & HI_FI_turb_CARI_2022$Hyst_index > 0)
+which(HI_FI_turb_CARI_2022$HI_ymin < 0 & HI_FI_turb_CARI_2022$HI_ymax > 0 & HI_FI_turb_CARI_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_CARI_2022$Beta_index))
+which(HI_FI_turb_CARI_2022$Beta_ymin < 0 & HI_FI_turb_CARI_2022$Beta_ymax > 0 & HI_FI_turb_CARI_2022$Beta_index > 0)
+which(HI_FI_turb_CARI_2022$Beta_ymin < 0 & HI_FI_turb_CARI_2022$Beta_ymax > 0 & HI_FI_turb_CARI_2022$Beta_index < 0)
+
+# POKE ####
+HI_FI_NO3_POKE_2022 <- subset(HI_FI_NO3, site.ID == "POKE" & year == "2022")
+
+table(sign(HI_FI_NO3_POKE_2022$Hyst_index))
+which(HI_FI_NO3_POKE_2022$HI_ymin < 0 & HI_FI_NO3_POKE_2022$HI_ymax > 0 & HI_FI_NO3_POKE_2022$Hyst_index > 0)
+which(HI_FI_NO3_POKE_2022$HI_ymin < 0 & HI_FI_NO3_POKE_2022$HI_ymax > 0 & HI_FI_NO3_POKE_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_POKE_2022$Beta_index))
+which(HI_FI_NO3_POKE_2022$Beta_ymin < 0 & HI_FI_NO3_POKE_2022$Beta_ymax > 0 & HI_FI_NO3_POKE_2022$Beta_index > 0)
+which(HI_FI_NO3_POKE_2022$Beta_ymin < 0 & HI_FI_NO3_POKE_2022$Beta_ymax > 0 & HI_FI_NO3_POKE_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_POKE_2022 <- subset(HI_FI_fDOM, site.ID == "POKE" & year == "2022")
+
+table(sign(HI_FI_fDOM_POKE_2022$Hyst_index))
+which(HI_FI_fDOM_POKE_2022$HI_ymin < 0 & HI_FI_fDOM_POKE_2022$HI_ymax > 0 & HI_FI_fDOM_POKE_2022$Hyst_index > 0)
+which(HI_FI_fDOM_POKE_2022$HI_ymin < 0 & HI_FI_fDOM_POKE_2022$HI_ymax > 0 & HI_FI_fDOM_POKE_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_POKE_2022$Beta_index))
+which(HI_FI_fDOM_POKE_2022$Beta_ymin < 0 & HI_FI_fDOM_POKE_2022$Beta_ymax > 0 & HI_FI_fDOM_POKE_2022$Beta_index > 0)
+which(HI_FI_fDOM_POKE_2022$Beta_ymin < 0 & HI_FI_fDOM_POKE_2022$Beta_ymax > 0 & HI_FI_fDOM_POKE_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_POKE_2022 <- subset(HI_FI_SPC, site.ID == "POKE" & year == "2022")
+
+table(sign(HI_FI_SPC_POKE_2022$Hyst_index))
+which(HI_FI_SPC_POKE_2022$HI_ymin < 0 & HI_FI_SPC_POKE_2022$HI_ymax > 0 & HI_FI_SPC_POKE_2022$Hyst_index > 0)
+which(HI_FI_SPC_POKE_2022$HI_ymin < 0 & HI_FI_SPC_POKE_2022$HI_ymax > 0 & HI_FI_SPC_POKE_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_POKE_2022$Beta_index))
+which(HI_FI_SPC_POKE_2022$Beta_ymin < 0 & HI_FI_SPC_POKE_2022$Beta_ymax > 0 & HI_FI_SPC_POKE_2022$Beta_index > 0)
+which(HI_FI_SPC_POKE_2022$Beta_ymin < 0 & HI_FI_SPC_POKE_2022$Beta_ymax > 0 & HI_FI_SPC_POKE_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_POKE_2022 <- subset(HI_FI_turb, site.ID == "POKE" & year == "2022")
+
+table(sign(HI_FI_turb_POKE_2022$Hyst_index))
+which(HI_FI_turb_POKE_2022$HI_ymin < 0 & HI_FI_turb_POKE_2022$HI_ymax > 0 & HI_FI_turb_POKE_2022$Hyst_index > 0)
+which(HI_FI_turb_POKE_2022$HI_ymin < 0 & HI_FI_turb_POKE_2022$HI_ymax > 0 & HI_FI_turb_POKE_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_POKE_2022$Beta_index))
+which(HI_FI_turb_POKE_2022$Beta_ymin < 0 & HI_FI_turb_POKE_2022$Beta_ymax > 0 & HI_FI_turb_POKE_2022$Beta_index > 0)
+which(HI_FI_turb_POKE_2022$Beta_ymin < 0 & HI_FI_turb_POKE_2022$Beta_ymax > 0 & HI_FI_turb_POKE_2022$Beta_index < 0)
+
+# STRT ####
+HI_FI_NO3_STRT_2022 <- subset(HI_FI_NO3, site.ID == "STRT" & year == "2022")
+
+table(sign(HI_FI_NO3_STRT_2022$Hyst_index))
+which(HI_FI_NO3_STRT_2022$HI_ymin < 0 & HI_FI_NO3_STRT_2022$HI_ymax > 0 & HI_FI_NO3_STRT_2022$Hyst_index > 0)
+which(HI_FI_NO3_STRT_2022$HI_ymin < 0 & HI_FI_NO3_STRT_2022$HI_ymax > 0 & HI_FI_NO3_STRT_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_STRT_2022$Beta_index))
+which(HI_FI_NO3_STRT_2022$Beta_ymin < 0 & HI_FI_NO3_STRT_2022$Beta_ymax > 0 & HI_FI_NO3_STRT_2022$Beta_index > 0)
+which(HI_FI_NO3_STRT_2022$Beta_ymin < 0 & HI_FI_NO3_STRT_2022$Beta_ymax > 0 & HI_FI_NO3_STRT_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_STRT_2022 <- subset(HI_FI_fDOM, site.ID == "STRT" & year == "2022")
+
+table(sign(HI_FI_fDOM_STRT_2022$Hyst_index))
+which(HI_FI_fDOM_STRT_2022$HI_ymin < 0 & HI_FI_fDOM_STRT_2022$HI_ymax > 0 & HI_FI_fDOM_STRT_2022$Hyst_index > 0)
+which(HI_FI_fDOM_STRT_2022$HI_ymin < 0 & HI_FI_fDOM_STRT_2022$HI_ymax > 0 & HI_FI_fDOM_STRT_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_STRT_2022$Beta_index))
+which(HI_FI_fDOM_STRT_2022$Beta_ymin < 0 & HI_FI_fDOM_STRT_2022$Beta_ymax > 0 & HI_FI_fDOM_STRT_2022$Beta_index > 0)
+which(HI_FI_fDOM_STRT_2022$Beta_ymin < 0 & HI_FI_fDOM_STRT_2022$Beta_ymax > 0 & HI_FI_fDOM_STRT_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_STRT_2022 <- subset(HI_FI_SPC, site.ID == "STRT" & year == "2022")
+
+table(sign(HI_FI_SPC_STRT_2022$Hyst_index))
+which(HI_FI_SPC_STRT_2022$HI_ymin < 0 & HI_FI_SPC_STRT_2022$HI_ymax > 0 & HI_FI_SPC_STRT_2022$Hyst_index > 0)
+which(HI_FI_SPC_STRT_2022$HI_ymin < 0 & HI_FI_SPC_STRT_2022$HI_ymax > 0 & HI_FI_SPC_STRT_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_STRT_2022$Beta_index))
+which(HI_FI_SPC_STRT_2022$Beta_ymin < 0 & HI_FI_SPC_STRT_2022$Beta_ymax > 0 & HI_FI_SPC_STRT_2022$Beta_index > 0)
+which(HI_FI_SPC_STRT_2022$Beta_ymin < 0 & HI_FI_SPC_STRT_2022$Beta_ymax > 0 & HI_FI_SPC_STRT_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_STRT_2022 <- subset(HI_FI_turb, site.ID == "STRT" & year == "2022")
+
+table(sign(HI_FI_turb_STRT_2022$Hyst_index))
+which(HI_FI_turb_STRT_2022$HI_ymin < 0 & HI_FI_turb_STRT_2022$HI_ymax > 0 & HI_FI_turb_STRT_2022$Hyst_index > 0)
+which(HI_FI_turb_STRT_2022$HI_ymin < 0 & HI_FI_turb_STRT_2022$HI_ymax > 0 & HI_FI_turb_STRT_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_STRT_2022$Beta_index))
+which(HI_FI_turb_STRT_2022$Beta_ymin < 0 & HI_FI_turb_STRT_2022$Beta_ymax > 0 & HI_FI_turb_STRT_2022$Beta_index > 0)
+which(HI_FI_turb_STRT_2022$Beta_ymin < 0 & HI_FI_turb_STRT_2022$Beta_ymax > 0 & HI_FI_turb_STRT_2022$Beta_index < 0)
+
+
+# VAUL ####
+HI_FI_NO3_VAUL_2022 <- subset(HI_FI_NO3, site.ID == "VAUL" & year == "2022")
+
+table(sign(HI_FI_NO3_VAUL_2022$Hyst_index))
+which(HI_FI_NO3_VAUL_2022$HI_ymin < 0 & HI_FI_NO3_VAUL_2022$HI_ymax > 0 & HI_FI_NO3_VAUL_2022$Hyst_index > 0)
+which(HI_FI_NO3_VAUL_2022$HI_ymin < 0 & HI_FI_NO3_VAUL_2022$HI_ymax > 0 & HI_FI_NO3_VAUL_2022$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_VAUL_2022$Beta_index))
+which(HI_FI_NO3_VAUL_2022$Beta_ymin < 0 & HI_FI_NO3_VAUL_2022$Beta_ymax > 0 & HI_FI_NO3_VAUL_2022$Beta_index > 0)
+which(HI_FI_NO3_VAUL_2022$Beta_ymin < 0 & HI_FI_NO3_VAUL_2022$Beta_ymax > 0 & HI_FI_NO3_VAUL_2022$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_VAUL_2022 <- subset(HI_FI_fDOM, site.ID == "VAUL" & year == "2022")
+
+table(sign(HI_FI_fDOM_VAUL_2022$Hyst_index))
+which(HI_FI_fDOM_VAUL_2022$HI_ymin < 0 & HI_FI_fDOM_VAUL_2022$HI_ymax > 0 & HI_FI_fDOM_VAUL_2022$Hyst_index > 0)
+which(HI_FI_fDOM_VAUL_2022$HI_ymin < 0 & HI_FI_fDOM_VAUL_2022$HI_ymax > 0 & HI_FI_fDOM_VAUL_2022$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_VAUL_2022$Beta_index))
+which(HI_FI_fDOM_VAUL_2022$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2022$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2022$Beta_index > 0)
+which(HI_FI_fDOM_VAUL_2022$Beta_ymin < 0 & HI_FI_fDOM_VAUL_2022$Beta_ymax > 0 & HI_FI_fDOM_VAUL_2022$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_VAUL_2022 <- subset(HI_FI_SPC, site.ID == "VAUL" & year == "2022")
+
+table(sign(HI_FI_SPC_VAUL_2022$Hyst_index))
+which(HI_FI_SPC_VAUL_2022$HI_ymin < 0 & HI_FI_SPC_VAUL_2022$HI_ymax > 0 & HI_FI_SPC_VAUL_2022$Hyst_index > 0)
+which(HI_FI_SPC_VAUL_2022$HI_ymin < 0 & HI_FI_SPC_VAUL_2022$HI_ymax > 0 & HI_FI_SPC_VAUL_2022$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_VAUL_2022$Beta_index))
+which(HI_FI_SPC_VAUL_2022$Beta_ymin < 0 & HI_FI_SPC_VAUL_2022$Beta_ymax > 0 & HI_FI_SPC_VAUL_2022$Beta_index > 0)
+which(HI_FI_SPC_VAUL_2022$Beta_ymin < 0 & HI_FI_SPC_VAUL_2022$Beta_ymax > 0 & HI_FI_SPC_VAUL_2022$Beta_index < 0)
+
+#turb
+HI_FI_turb_VAUL_2022 <- subset(HI_FI_turb, site.ID == "VAUL" & year == "2022")
+
+table(sign(HI_FI_turb_VAUL_2022$Hyst_index))
+which(HI_FI_turb_VAUL_2022$HI_ymin < 0 & HI_FI_turb_VAUL_2022$HI_ymax > 0 & HI_FI_turb_VAUL_2022$Hyst_index > 0)
+which(HI_FI_turb_VAUL_2022$HI_ymin < 0 & HI_FI_turb_VAUL_2022$HI_ymax > 0 & HI_FI_turb_VAUL_2022$Hyst_index < 0)
+
+table(sign(HI_FI_turb_VAUL_2022$Beta_index))
+which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index > 0)
+which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index < 0)
+
 
 
 
@@ -1939,14 +2230,20 @@ DOD_2020 <-  subset(DOD_2020, select=-c(X))
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
 names(DOD_2020)<- colNames # renaming columns 
 DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
+DOD_2022 <- read.csv(here("Q", "Q_chem", "DOD.2022.csv"))
+DOD_2022 <-  subset(DOD_2022, select=-c(X, ABS_254))
+DOD_2022$day <- as.Date(DOD_2022$datetimeAK)
+DOD_2022 <- DOD_2022[c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3",
+                       "Q", "day")]
 
 DOD_2018$year <- "2018"
 DOD_2019$year <- "2019"
 DOD_2020$year <- "2020"
 DOD_2021$year <- "2021"
+DOD_2022$year <- "2022"
 
 
-DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021)
+DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021, DOD_2022)
 
 # read in Caribou data 
 CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
@@ -1969,13 +2266,19 @@ CARI_2021 <-  subset(CARI_2021, select=-c(site.ID.y))
 names(CARI_2021)[names(CARI_2021) == 'site.ID.x'] <- 'site.ID'
 CARI_2021$site.ID <- "CARI"
 
+CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
+CARI_2022 <-  subset(CARI_2022, select=-c(site.ID.y))
+names(CARI_2022)[names(CARI_2022) == 'site.ID.x'] <- 'site.ID'
+CARI_2022$site.ID <- "CARI"
+
 
 CARI_2018$year <- "2018"
 CARI_2019$year <- "2019"
 CARI_2020$year <- "2020"
 CARI_2021$year <- "2021"
+CARI_2022$year <- "2022"
 
-CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021)
+CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
 CARI_chem$day <- as.character(CARI_chem$DateTimeAK)
 CARI_chem <- CARI_chem[c("DateTimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Discharge",
                          "day", "year")] # reorganizing column headers
@@ -2054,6 +2357,15 @@ chem_2018 <- subset(DOD_chem, year == "2018")
 chem_2019 <- subset(DOD_chem, year == "2019")
 chem_2020 <- subset(DOD_chem, year == "2020")
 chem_2021 <- subset(DOD_chem, year == "2021")
+chem_2022 <- subset(DOD_chem, year == "2022")
+
+# start and end dates for 2022 # 
+FRCH <- subset(DOD_2022, site.ID == "FRCH")
+MOOS <- subset(DOD_2022, site.ID == "MOOS")
+POKE <- subset(DOD_2022, site.ID == "POKE")
+VAUL <- subset(DOD_2022, site.ID == "VAUL")
+STRT <- subset(DOD_2022, site.ID == "STRT")
+
 
 # The common window for time since peak chena is day 35-142 so the dates are as follows:
 # these dates are in the Summart_statistics csv summary file 
@@ -2061,11 +2373,13 @@ chem_2021 <- subset(DOD_chem, year == "2021")
 # 2019 TPC: 5/12
 # 2020 TPC: 5/13
 # 2021 TPC: 5/8
+# 2022 TPC: 5/9
 
 chem_2018 <- subset(chem_2018, datetimeAK > "2018-06-27" & datetimeAK < "2018-10-12")
 chem_2019 <- subset(chem_2019, datetimeAK > "2019-06-16" & datetimeAK < "2019-10-01")
 chem_2020 <- subset(chem_2020, datetimeAK > "2020-06-17" & datetimeAK < "2020-09-30")
 chem_2021 <- subset(chem_2021, datetimeAK > "2021-06-12" & datetimeAK < "2021-09-27")
+chem_2022 <- subset(chem_2022, datetimeAK > "2022-06-13" & datetimeAK < "2022-09-28")
 
 # make a julian day columnn:
 chem_2018$julian <- yday(chem_2018$datetimeAK)
@@ -2084,8 +2398,12 @@ chem_2021$julian <- yday(chem_2021$datetimeAK)
 chem_2021$TSC <- chem_2021$julian-128 # TSC column
 chem_2021$day <- as.Date(chem_2021$datetimeAK)
 
+chem_2022$julian <- yday(chem_2022$datetimeAK)
+chem_2022$TSC <- chem_2022$julian-129 # TSC column
+chem_2022$day <- as.Date(chem_2022$datetimeAK)
+
 # combine them to be able to plot it 
-similar_chem_year <- rbind(chem_2018, chem_2019, chem_2020, chem_2021)
+similar_chem_year <- rbind(chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
 
 mean_daily <- similar_chem_year %>% 
   group_by(day, site.ID, year) %>% 
@@ -2113,12 +2431,12 @@ ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
 
 
 
-# CARI_year <- subset(similar_chem_year, site.ID == "CARI")
-# FRCH_year <- subset(similar_chem_year, site.ID == "FRCH")
-# MOOS_year <- subset(similar_chem_year, site.ID == "MOOS")
-# POKE_year <- subset(similar_chem_year, site.ID == "POKE")
-# STRT_year <- subset(similar_chem_year, site.ID == "STRT")
-# VAUL_year <- subset(similar_chem_year, site.ID == "VAUL")
+CARI_year <- subset(similar_chem_year, site.ID == "CARI")
+FRCH_year <- subset(similar_chem_year, site.ID == "FRCH")
+MOOS_year <- subset(similar_chem_year, site.ID == "MOOS")
+POKE_year <- subset(similar_chem_year, site.ID == "POKE")
+STRT_year <- subset(similar_chem_year, site.ID == "STRT")
+VAUL_year <- subset(similar_chem_year, site.ID == "VAUL")
 # 
 # similar_chem_year$day <- as.Date(similar_chem_year$datetimeAK)
 # 

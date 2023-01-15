@@ -1707,6 +1707,21 @@ VAUL:CARI
 VAUL:POKE
 VAUL:STRT
 
+*
+VAUL:CARI
+VAUL:FRCH
+VAUL:POKE
+VAUL:STRT
+VAUL:MOOS
+
+FRCH:MOOS
+FRCH:STRT
+
+MOOS:POKE
+MOOS:STRT
+
+
+
 ### fDOM ### 
 ```{r}
 ggplot(mean_daily_2020, aes(x = julian, y = dailyfDOM, color = site.ID)) +
@@ -2369,7 +2384,8 @@ plot(print(confint(site.ID.comp)))
 anova(NO3.mod.arma.1.1)
 
 ```
-VAUL:POKE
+FRCH:CARI
+STRT:CARI
 
 ### fDOM ### 
 ```{r}
@@ -2953,6 +2969,748 @@ CARI:MOOS
 VAUL:CARI
 VAUL:POKE
 
+# 2022 #
+```{r}
+mean_daily_2022 <- subset(mean_daily, year == "2022")
+mean_daily_2022$site.ID <- as.factor(mean_daily_2022$site.ID)
+
+ggplot(mean_daily_2022, aes(x = julian, y = dailyNO3, color = site.ID)) +
+  geom_line() +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~site.ID, scales = "free") +
+  theme_classic()
+
+no3.2022 <- ggplot(mean_daily_2022, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab(vn) +
+  theme_classic()
+
+varfixed <- varIdent(form = ~ 1 | site.ID)
+
+```
+
+# gls
+```{r}
+no3.mod.gls <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022)
+              
+```
+
+# diagnostic plots 
+```{r}
+plot(no3.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(no3.mod.gls, dailyNO3 ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(no3.mod.gls, ~resid(., type = "p"), abline = c(0,1))
+
+```
+looks good to me 
+
+# CorAR1 structure #
+```{r}
+no3.mod.gls <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corAR1(form = ~ julian|site.ID))
+```
+
+
+# ACF plot 
+```{r}
+Ear1<-residuals(no3.mod.gls, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2022$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+AR1 does not adequately handle temporal autocorrelation 
+
+# corARMA structure 
+```{r}
+NO3.mod.arma.1.1 <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(NO3.mod.arma.1.1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2022$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+lag at 4 
+
+# corARMA structure 
+```{r}
+NO3.mod.arma.1.2 <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 2))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(NO3.mod.arma.1.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2022$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+# corARMA structure 
+```{r}
+NO3.mod.arma.2.1 <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 1))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(NO3.mod.arma.1.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2022$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+# corARMA structure 
+```{r}
+NO3.mod.arma.2.2 <- gls(dailyNO3 ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 2))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(NO3.mod.arma.2.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2022$dailyNO3))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+# AIC 
+```{r}
+models <- list(NO3.mod.arma.1.1, NO3.mod.arma.1.2, NO3.mod.arma.2.1, NO3.mod.arma.2.2)
+aictab(cand.set = models) # NO3.mod.arma.1.2 is the best model
+```
+
+# generalized linear hypotheses
+```{r}
+site.ID.comp <- glht(NO3.mod.arma.1.2, linfct = mcp(site.ID = "Tukey"))
+summary(site.ID.comp)
+summary(NO3.mod.arma.1.1)
+intervals(NO3.mod.arma.1.1)
+plot(print(confint(site.ID.comp)))
+anova(NO3.mod.arma.1.1)
+
+```
+VAUL:CARI
+VAUL:FRCH
+VAUL:POKE
+MOOS:POKE
+MOOS:FRCH
+STRT:POKE
+
+F-value: 8.7808
+P-value: <0.0001
+
+
+### fDOM ### 
+```{r}
+mean_daily_2022 <- mean_daily_2022 %>%
+  mutate(across(c(dailyfDOM), 
+                ~ifelse(dailyfDOM < 0, NA, .)))
+
+mean_daily_2022 <- mean_daily_2022 %>%
+  mutate(across(c(dailyfDOM),
+                ~ifelse(site.ID == "FRCH" & dailyfDOM < 20, NA, .)))
+
+ggplot(mean_daily_2022, aes(x = julian, y = dailyfDOM, color = site.ID)) +
+  geom_line() +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~site.ID, scales = "free") +
+  theme_classic()
+
+fDOM.2022 <- ggplot(mean_daily_2022, aes(x = site.ID, y = dailyfDOM, fill = site.ID)) +
+  geom_boxplot() +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") +
+  theme_classic()
+```
+
+# gls
+```{r}
+fDOM.mod.gls <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022)
+            
+```
+
+# diagnostic plots 
+```{r}
+plot(fDOM.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(fDOM.mod.gls, dailyfDOM ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(fDOM.mod.gls, ~resid(., type = "p"), abline = c(0,1))
+
+```
+Variance is pretty different, lets do that first 
+
+```{r}
+fDOM.mod.gls <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               weights = varfixed,
+               data = mean_daily_2022)
+            
+```
+
+# diagnostic plots 
+```{r}
+plot(fDOM.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(fDOM.mod.gls, dailyfDOM ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(fDOM.mod.gls, ~resid(., type = "p"), abline = c(0,1))
+
+```
+lets log transform 
+
+# log transformed 
+```{r}
+mean_daily_2022$logDailyfDOM <- log(mean_daily_2022$dailyfDOM)
+
+fDOM.mod.gls.log <- gls(logDailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed)
+
+```
+  
+```{r}
+plot(fDOM.mod.gls.log, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(fDOM.mod.gls.log, dailyfDOM ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(fDOM.mod.gls.log, ~resid(., type = "p"), abline = c(0,1))
+
+```             
+lets use untransformed data here
+
+# corAR1 structure 
+```{r}
+fDOM.mod.ar1 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022,
+               weights = varfixed,
+               correlation = corAR1(form = ~ julian|site.ID))
+```
+
+
+# ACF plot 
+```{r}
+Ear1<-residuals(fDOM.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2022$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+AR1 is not adequately handling the temporal autocorrelation 
+
+# corARMA structure 
+```{r}
+fDOM.mod.arma.1.1 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(fDOM.mod.arma.1.1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2022$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# corARMA structure 
+```{r}
+fDOM.mod.arma.2.1 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 1))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(fDOM.mod.arma.2.1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2022$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+same as above
+
+# corARMA structure 
+```{r}
+fDOM.mod.arma.1.2 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 2))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(fDOM.mod.arma.1.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2022$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation in the later lags
+
+# corARMA structure 
+```{r}
+fDOM.mod.arma.2.2 <- gls(dailyfDOM ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 2))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(fDOM.mod.arma.2.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailyfDOM)
+Efulla<-vector(length = length(mean_daily_2022$dailyfDOM))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# AIC 
+```{r}
+models <- list(fDOM.mod.arma.1.1, fDOM.mod.arma.1.2, fDOM.mod.arma.2.1, fDOM.mod.arma.2.2)
+aictab(cand.set = models) # fDOM.mod.arma.1.2 is the best model
+```
+
+# generalized linear hypotheses
+```{r}
+site.ID.comp <- glht(fDOM.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
+summary(site.ID.comp)
+summary(fDOM.mod.arma.2.2)
+intervals(fDOM.mod.arma.2.2)
+plot(print(confint(site.ID.comp)))
+anova(fDOM.mod.arma.2.2)
+
+```
+MOOS:CARI
+MOOS:POKE
+MOOS:STRT
+
+VAUL:CARI
+VAUL:POKE
+VAUL:STRT
+
+
+### SPC ### 
+```{r}
+ggplot(mean_daily_2022, aes(x = julian, y = dailySPC, color = site.ID)) +
+  geom_line() +
+    scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~site.ID, scales = "free") +
+  theme_classic()
+
+spc.2022 <- ggplot(mean_daily_2022, aes(x = site.ID, y = dailySPC, fill = site.ID)) +
+  geom_boxplot() +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") + 
+  theme_classic()
+```
+
+# gls
+```{r}
+SPC.mod.gls <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022)
+
+```
+
+# diagnostic plots 
+```{r}
+plot(SPC.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(SPC.mod.gls, dailySPC ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(SPC.mod.gls, ~ resid(., type = "p"), abline = c(0,1))
+
+```
+those pesky variances are at it again
+
+```{r}
+SPC.mod.gls <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               weights = varfixed,
+               data = mean_daily_2022)
+
+```
+
+# diagnostic plots 
+```{r}
+plot(SPC.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(SPC.mod.gls, dailySPC ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(SPC.mod.gls, ~ resid(., type = "p"), abline = c(0,1))
+
+```
+much better
+
+# corAR1 structure 
+```{r}
+SPC.mod.ar1 <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corAR1(form = ~ julian|site.ID))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(SPC.mod.ar1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailySPC)
+Efulla<-vector(length = length(mean_daily_2022$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+AR1 is not adequately handling the temporal autocorrelation 
+
+# corARMA structure 
+```{r}
+SPC.mod.arma.1.1 <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(SPC.mod.arma.1.1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailySPC)
+Efulla<-vector(length = length(mean_daily_2022$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# corARMA structure 
+```{r}
+SPC.mod.arma.2.1 <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(SPC.mod.arma.2.1, type="normalized")
+I1<-!is.na(mean_daily_2022$dailySPC)
+Efulla<-vector(length = length(mean_daily_2022$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation
+
+# corARMA structure 
+```{r}
+SPC.mod.arma.1.2 <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 2))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(SPC.mod.arma.1.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailySPC)
+Efulla<-vector(length = length(mean_daily_2022$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# corARMA structure 
+```{r}
+SPC.mod.arma.2.2 <- gls(dailySPC ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               weights = varfixed,
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 2))
+
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(SPC.mod.arma.2.2, type="normalized")
+I1<-!is.na(mean_daily_2022$dailySPC)
+Efulla<-vector(length = length(mean_daily_2022$dailySPC))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation
+
+```{r}
+models <- list(SPC.mod.arma.1.1, SPC.mod.arma.2.2)
+aictab(cand.set = models) # SPC.mod.arma.2.2 is the best model
+```
+
+# generalized linear hypotheses
+```{r}
+site.ID.comp <- glht(SPC.mod.arma.1.1, linfct = mcp(site.ID = "Tukey"))
+summary(site.ID.comp)
+summary(SPC.mod.arma.1.1)
+plot(print(confint(site.ID.comp)))
+anova(SPC.mod.arma.1.1)
+
+```
+
+F-value: 0.06
+p-value: 0.9972
+DF:613, 6
+
+### Turb ### 
+```{r}
+ggplot(mean_daily_2022, aes(x = julian, y = dailyTurb, color = site.ID)) +
+  geom_line() +
+    scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  facet_wrap(~site.ID, scales = "free") +
+  theme_classic()
+
+turb.2022 <- ggplot(mean_daily_2021, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
+  geom_boxplot() +
+    scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  xlab("Site") +
+  ylab("") +
+  theme_classic()
+```
+
+# gls
+```{r}
+turb.mod.gls <- gls(dailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022)
+
+```
+
+# diagnostic plots 
+```{r}
+plot(turb.mod.gls, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(turb.mod.gls, dailyTurb ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(turb.mod.gls, ~resid(., type = "p"), abline = c(0,1))
+
+```
+lets log transform 
+
+```{r}
+mean_daily_2022$logDailyTurb <- log(mean_daily_2022$dailyTurb)
+
+turb.mod.gls.log <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022)
+
+```
+
+# diagnostic plots 
+```{r}
+plot(turb.mod.gls.log, resid(., type = "p") ~ fitted(.), abline = 0)
+
+plot(turb.mod.gls.log, logDailyTurb ~ fitted(.) | site.ID, abline = c(0,1))
+
+qqnorm(turb.mod.gls.log, ~resid(., type = "p"), abline = c(0,1))
+
+```
+lets go with this 
+
+# corAR1 structure 
+```{r}
+turb.mod.ar1.log <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corAR1(form = ~ julian|site.ID))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(turb.mod.ar1.log, type="normalized")
+I1<-!is.na(mean_daily_2022$logDailyTurb)
+Efulla<-vector(length = length(mean_daily_2022$logDailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+AR1 is not adequately handling the temporal autocorrelation 
+
+# corARMA structure 
+```{r}
+turb.mod.arma.1.1 <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(turb.mod.arma.1.1, type="normalized")
+I1<-!is.na(mean_daily_2022$logDailyTurb)
+Efulla<-vector(length = length(mean_daily_2022$logDailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# corARMA structure 
+```{r}
+turb.mod.arma.1.2 <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 1, q = 2))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(turb.mod.arma.1.2, type="normalized")
+I1<-!is.na(mean_daily_2022$logDailyTurb)
+Efulla<-vector(length = length(mean_daily_2022$logDailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation
+
+# corARMA structure 
+```{r}
+turb.mod.arma.2.1 <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 1))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(turb.mod.arma.2.1, type="normalized")
+I1<-!is.na(mean_daily_2022$logDailyTurb)
+Efulla<-vector(length = length(mean_daily_2022$logDailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# corARMA structure 
+```{r}
+turb.mod.arma.2.2 <- gls(logDailyTurb ~ site.ID, 
+               na.action = na.omit, 
+               data = mean_daily_2022, 
+               correlation = corARMA(form = ~ julian|site.ID, p = 2, q = 2))
+```
+
+# ACF plot 
+```{r}
+Ear1<-residuals(turb.mod.arma.2.2, type="normalized")
+I1<-!is.na(mean_daily_2022$logDailyTurb)
+Efulla<-vector(length = length(mean_daily_2022$logDailyTurb))
+Efulla<-NA
+Efulla[I1]<-Ear1
+acf(Efulla, na.action=na.pass)
+pacf(Efulla, na.action=na.pass)
+```
+Still autocorrelation 
+
+# AIC 
+```{r}
+models <- list(turb.mod.arma.1.1, turb.mod.arma.1.2, turb.mod.arma.2.1, turb.mod.arma.2.2)
+aictab(cand.set = models) # turb.mod.arma.2.2 is the best model
+```
+
+# generalized linear hypotheses
+```{r}
+site.ID.comp <- glht(turb.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
+summary(site.ID.comp)
+summary(turb.mod.arma.2.2)
+intervals(turb.mod.arma.2.2)
+plot(print(confint(site.ID.comp)))
+anova(turb.mod.arma.2.2)
+```
+DF:604
+F-Value: 7.97
+p-value: <0.0001
+
+VAUL:CARI
+VAUL:FRCH
+VAUL:MOOS
+VAUL:POKE
+VAUL:STRT
+
 
 ### PLOTS FOR THESIS ###
 
@@ -3273,6 +4031,10 @@ emmeans(fDOM.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 anova <- aov(CVconc ~ site.ID, data = CV_fDOM)
 summary(anova)
 
+CARI:MOOS
+CARI:POKE
+CARI:STRT
+CARI:VAUL
 
 ```
  normality isnt the best 
@@ -3315,7 +4077,12 @@ emmeans(SPC.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 anova <- aov(CVconc ~ site.ID, data = CV_SPC)
 summary(anova)
 
-
+CARI:POKE
+VAUL:CARI
+VAUL:FRCH
+VAUL:MOOS
+VAUL:POKE
+VAUL:STRT
 ```
 
 
@@ -3344,6 +4111,12 @@ emmeans(turb.CV.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # ANOVA # 
 anova <- aov(CVconc ~ site.ID, data = CV_turb)
 summary(anova)
+
+CARI:FRCH
+CARI:MOOS
+CARI:POKE
+CARI:STRT
+CARI:VAUL
 
 
 ```
@@ -3404,10 +4177,24 @@ supp.labs <- c(`dailyfDOM` = "CV-fDOM",
                `dailyNO3` = "CV-NO3-",
                `dailySPC` = "CV-SPC",
                `dailyTurb` = "CV-turbidity")
-ggplot(CV_mean_conc, aes(x = site.ID, y = CVconc, fill = site.ID)) +
-  geom_boxplot() +
+
+
+CV_mean_conc$PF <- NULL
+
+CV_mean_conc$PF <- ifelse(CV_mean_conc$site.ID == "VAUL"| CV_mean_conc$site.ID == "STRT",
+                       "High", "Moderate")
+
+CV_mean_conc$site.ID <- factor(CV_mean_conc$site.ID,     # Reorder factor levels
+                         c("CARI", "FRCH", "VAUL", "MOOS", "POKE", "STRT"))
+
+
+
+ggplot(CV_mean_conc, aes(x = site.ID, y = CVconc, pattern = PF, fill = site.ID)) +
+  geom_boxplot() + 
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
   scale_y_continuous(trans='log10') +
-  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Site") +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), "Site") +
   xlab("") +
   ylab("") +
   theme_classic() +
@@ -3417,7 +4204,7 @@ ggplot(CV_mean_conc, aes(x = site.ID, y = CVconc, fill = site.ID)) +
         axis.text.y = element_text(size = 15),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
-        legend.key.size = unit(2.0, 'cm'),
+        legend.position = "none",
         strip.text = element_text(size = 20))
 
 

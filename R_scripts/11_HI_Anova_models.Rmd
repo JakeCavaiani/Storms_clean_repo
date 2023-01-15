@@ -108,6 +108,8 @@ vn = expression(paste(N*O[3]^"-"))
 supp.labs <- c("fDOM","NO3-", "SPC", "Turbidity")
 names(supp.labs) <- c("fDOM", "NO3", "SPC", "turb")
 
+AMC_new <- AMC_new[-c(21,42,62,79,96), ] # removing absorbance for now
+
 AMC_new$facets = factor(AMC_new$response_var, labels = c(
     "fDOM",
     "NO3~^{-})",
@@ -118,6 +120,7 @@ my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbid
                            default = label_parsed)
 
 ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
+  geom_hline(yintercept= 0, linetype="dashed", color = "red")+
   geom_boxplot() +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
   scale_pattern_manual(values = c(High = "stripe", Moderate = "none"), "Permafrost") +
@@ -134,7 +137,7 @@ ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
         strip.text = element_text(size = 20)) 
 
 
-ggsave("HI_all_solutes.pdf",
+ggsave("HI_all_solutes.line.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 ```
@@ -288,6 +291,7 @@ print(cld)
 
 ```{r}
 ggplot(AMC_new, aes(x = site.ID, y = meanBETA, pattern = PF, fill = site.ID)) +
+  geom_hline(yintercept= 0, linetype="dashed", color = "red")+
   geom_boxplot() +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
   scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
@@ -634,6 +638,7 @@ ggplot(AMC_new, aes(x = site.ID, y = sdBETA, pattern = PF, fill = site.ID)) +
   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
   scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
   scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  scale_y_log10() +
   xlab("") +
   ylab("SD ß") +
   theme_classic() +

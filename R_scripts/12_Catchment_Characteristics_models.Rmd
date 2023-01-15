@@ -655,7 +655,7 @@ sdBETA.no3.deciduous <- lm(sdBETA ~ Deciduous.2010,
              data = NO3_data)
 
 models <- list(sdBETA.no3.slope, sdBETA.no3.burn, sdBETA.no3.deciduous)
-aictab(cand.set = models) # burn model is better but the AIC difference isnt greater than 2 so we would say according to our text that these models perform in the same way right?
+aictab(cand.set = models) # deciduous model is better but the AIC difference isnt greater than 2 so we would say according to our text that these models perform in the same way right?
 summary(sdBETA.no3.burn) # p-value: 0.00686
 summary(sdBETA.no3.slope) # p-value: 0.09170
 ```
@@ -664,10 +664,10 @@ summary(sdBETA.no3.slope) # p-value: 0.09170
 ```{r}
 vn = expression(paste("SD ß-"*N*O[3]^"-"))
 
-no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
+no3.sdbeta.deciduous <- ggplot(NO3_data, aes(x = Deciduous.2010, y = sdBETA)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
-  geom_errorbar(aes(x=pctburn_lg, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  geom_errorbar(aes(x=Deciduous.2010, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
   stat_poly_eq(formula = y~x,
                label.y = "top", label.x = "left",
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
@@ -684,7 +684,7 @@ no3.sdbeta.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = sdBETA)) +
         axis.title.y = element_text(size = 20),
         legend.key.size = unit(2.0, 'cm'),
         strip.text = element_text(size = 20)) +
-  xlab("Burn extent") +
+  xlab("% Deciduous") +
   ylab(vn) +
   theme(aspect.ratio = 1)
 
@@ -1616,8 +1616,8 @@ ggsave("sdBETA_Turb_burn.pdf",
 ### PLOTS FOR THESIS ###
 
 ```{r}
-ggarrange(no3.hi.burn, no3.beta.burn,
-          no3.sdhi.slope, no3.sdbeta.burn,
+ggarrange(no3.hi.burn, no3.sdhi.slope,
+          no3.beta.deciduous, no3.sdbeta.deciduous,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
            labels = c("A)", "B)", 
@@ -1628,8 +1628,8 @@ ggsave("no3_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
        width = 10, height = 10)
 
-ggarrange(fdom.hi.slope, fDOM.beta.slope,
-          fDOM.sdhi.burn,
+ggarrange(fdom.hi.slope, fDOM.sdhi.burn,
+          fDOM.beta.slope, fDOM.sdbeta.deciduous,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
            labels = c("A)", "B)", 
@@ -1640,8 +1640,8 @@ ggsave("fDOM_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
        width = 10, height = 10)
 
-ggarrange(spc.hi.slope, spc.beta.slope,
-          spc.sdbeta.burn,
+ggarrange(spc.hi.slope, NULL,
+          spc.beta.slope, spc.sdbeta.burn,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
            labels = c("A)", "B)", 
@@ -1652,10 +1652,12 @@ ggsave("SPC_characteristics.pdf",
        path = here("plots", "Catchment_characteristics"),
        width = 10, height = 10)
 
-ggarrange(turb.hi.burn, turb.sdbeta.slope,
+ggarrange(turb.hi.burn, turb.sdhi.deciduous,
+          turb.beta.deciduous, turb.sdbeta.slope,
            ncol = 2, nrow = 2,
            common.legend = TRUE,
-           labels = c("A)", "B)"), 
+           labels = c("A)", "B)",
+                      "C)", "D)"), 
         legend = "bottom")
 
 ggsave("turb_characteristics.pdf",

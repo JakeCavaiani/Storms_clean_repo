@@ -722,6 +722,175 @@ HI_FI <- left_join(HI_FI, antecedent_2021, by = c("site.ID", "storm.ID", "respon
 write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv")
 
 
+######################### 2022 ####
+# HI ####
+# calculate 95% bootstrap around median of Hyst. Indicies for each site and storm #
+
+median_cl_boot <- function(x, conf = 0.95) {
+  lconf <- (1 - conf)/2
+  uconf <- 1 - lconf
+  require(boot)
+  bmedian <- function(x, ind) median(x[ind])
+  bt <- boot(x, bmedian, 10000)
+  bb <- boot.ci(bt, conf = 0.95, type = "perc")
+  data.frame(y = median(x), ymin = quantile(bt$t, lconf), ymax = quantile(bt$t, 
+                                                                          uconf))
+}
+
+# FRCH #
+FRCH.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "FRCH", "FRCH.HI.df.csv"))
+
+# FRCH.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/FRCH/FRCH.HI.df.csv")
+
+storm.list = unique(FRCH.HI.df$storm.ID)
+FRCH.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(FRCH.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+FRCH.HI.boot$storm.ID = storm.list
+
+# MOOS #
+MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "MOOS", "MOOS.HI.df.csv"))
+
+# MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/MOOS/MOOS.HI.df.csv")
+
+storm.list = unique(MOOS.HI.df$storm.ID)
+MOOS.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(MOOS.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+MOOS.HI.boot$storm.ID = storm.list
+
+# CARI #
+CARI.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "CARI", "CARI.HI.df.csv"))
+
+# CARI.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/CARI/CARI.HI.df.csv")
+
+storm.list = unique(CARI.HI.df$storm.ID)
+CARI.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(CARI.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+CARI.HI.boot$storm.ID = storm.list
+
+# POKE #
+POKE.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "POKE", "POKE.HI.df.csv"))
+
+# POKE.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/POKE/POKE.HI.df.csv")
+
+storm.list = unique(POKE.HI.df$storm.ID)
+POKE.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(POKE.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+POKE.HI.boot$storm.ID = storm.list
+
+# VAUL #
+VAUL.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "VAUL", "VAUL.HI.df.csv"))
+
+# VAUL.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/VAUL/VAUL.HI.df.csv")
+
+storm.list = unique(VAUL.HI.df$storm.ID)
+VAUL.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(VAUL.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+VAUL.HI.boot$storm.ID = storm.list
+
+# STRT #
+STRT.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "STRT", "STRT.HI.df.csv"))
+
+# STRT.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.HI.df.csv")
+
+storm.list = unique(STRT.HI.df$storm.ID)
+STRT.HI.boot <- do.call(rbind.data.frame,
+                        lapply(storm.list, function(i){
+                          dat = subset(STRT.HI.df, storm.ID == i)
+                          median_cl_boot(dat$HI)
+                        }))
+STRT.HI.boot$storm.ID = storm.list
+
+
+# join data #
+
+FRCH.HI.boot$site.ID = "FRCH"
+MOOS.HI.boot$site.ID = "MOOS"
+CARI.HI.boot$site.ID = "CARI"
+POKE.HI.boot$site.ID = "POKE"
+VAUL.HI.boot$site.ID = "VAUL"
+STRT.HI.boot$site.ID = "STRT"
+
+HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot,
+           POKE.HI.boot, VAUL.HI.boot, STRT.HI.boot)
+
+HI = SALCHA.HI.boot
+
+HI = separate(HI, storm.ID, into=c("site.ID", "storm.ID", "month", "day", "response_var"), sep = "_")
+names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month", "day", "response_var")
+HI$year <- "2022"
+
+# all.FI.diff.results <- read.csv(here("Output_from_analysis", "05_FI", "all.FI.diff.results_2022.csv"))
+
+# # all.FI.diff.results = read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/05_FI/all.FI.diff.results_2021.csv", header = T, row.names = 1)
+# 
+# FI = subset(all.FI.diff.results, select=c("Flushing_index", "percCI_2.5", "percCI_97.5", "ID"))
+# FI$ID = as.character(FI$ID)
+# FI = separate(FI, ID, into=c("site.ID", "storm.ID", "month", "day", "response_var", NA), sep = "_")
+# names(FI) = c("Flush_index", "FI_ymin", "FI_ymax","site.ID", "storm.ID", "month", "day", "response_var")
+# 
+# HI$site.ID=NULL
+# HI = separate(HI, storm.ID, into=c("site.ID", "storm.ID", "month", "day", "response_var"), sep = "_")
+# names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month", "day", "response_var")
+# 
+# HI_FI = left_join(HI, FI, by=c("site.ID", "storm.ID", "response_var"))
+# HI_FI$year <- "2021"
+# #write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2021.csv")
+
+### BETA ####
+beta_2022 <- read.csv(here("Output_from_analysis", "06_BETA", "beta.2022.csv"))
+# beta_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2021.csv")
+beta_2022$year <- "2022"
+
+beta_2022 <- beta_2022 %>% 
+  filter(Parameter != "(Intercept)")
+
+names(beta_2022) = c("X1", "site.ID", "storm.ID","Parameter",
+                     "Beta_index", "SE", "CI", "Beta_ymin",
+                     "Beta_ymax", "t", "df", "p", "response_var",
+                     "year")
+
+
+### ANTECEDENT ####
+antecedent_2022 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.2022.csv"))
+antecedent_2022 <-  subset(antecedent_2022, select=-c(X))
+# antecedent_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
+# antecedent_2021 <- antecedent_2021[,-c(1)]
+
+antecedent_2022$date <- as.Date(antecedent_2022$doy, origin = "2022-01-01")
+origin_date <- as.Date("2022-05-13")
+antecedent_2022$TimeSinceChena <- julian(antecedent_2022$date, origin_date)
+
+names(antecedent_2022)[names(antecedent_2022) == "storm.num"] <- "storm.ID"
+names(antecedent_2022)[names(antecedent_2022) == "response"] <- "response_var"
+antecedent_2022$year <- as.character(antecedent_2022$year)
+# # merge ####
+# HI_FI = left_join(HI_FI, beta_2022, by=c("site.ID", "storm.ID", "response_var", "year"))
+# HI_FI <- left_join(HI_FI, antecedent_2022, by = c("site.ID", "storm.ID", "response_var", "year"))
+# 
+# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv")
+
+# merge ####
+HI_BETA = left_join(HI, beta_2022, by=c("site.ID", "storm.ID", "response_var", "year"))
+HI_BETA_AMC_2022 <- left_join(HI_BETA, antecedent_2022, by = c("site.ID", "storm.ID", "response_var", "year"))
+
+write.csv(HI_BETA_AMC_2022, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv")
+
+
 #### ALL YEARS #######
 
 ### Input values that werent run properly in the script when generating antecedent moisture conditions
@@ -751,7 +920,47 @@ AMC_2020 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_F
 AMC_2021 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv", 
                                   col_types = cols(date = col_date(format = "%m/%d/%Y")))
 AMC_2021 <- AMC_2021[,-c(16)]
-AMC <- rbind(AMC_2018, AMC_2019, AMC_2020, AMC_2021)
+names(AMC_2021)[names(AMC_2021) == 'X1_1'] <- 'X1'
+
+AMC_2021 <- AMC_2021[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
+                       "storm.ID", "month.x", "day.x", "response_var", "Flush_index",
+                       "FI_ymin", "FI_ymax", "month.y", "day.y", "year",
+                       "X1",  "Parameter", "Beta_index", "SE", "CI", 
+                       "Beta_ymin", "Beta_ymax", "t", "df", "p",
+                       "HI", "precip", "temp", "precip.week", "precip.month",
+                       "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy",
+                       "burn", "pf", "date", "TimeSinceChena")]
+
+AMC_2022 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv", 
+                     col_types = cols(date = col_date(format = "%m/%d/%Y")))
+
+# this is all to make up for the analysis i didnt do to get this out quickly
+names(AMC_2022)[names(AMC_2022) == 'month'] <- 'month.x'
+names(AMC_2022)[names(AMC_2022) == 'day'] <- 'day.x'
+
+AMC_2022$month.y <- AMC_2022$month.x
+AMC_2022$day.y <- AMC_2022$day.x
+AMC_2022$Flush_index <- NA
+AMC_2022$FI_ymin <- NA
+AMC_2022$FI_ymax <- NA
+AMC_2022$temp.week <- NA
+AMC_2022$TOTAL.TIME <- NA
+AMC_2022$Intensity <- NA
+AMC_2022$burn <- NA
+AMC_2022$pf <- NA
+
+
+AMC_2022 <- AMC_2022[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
+                       "storm.ID", "month.x", "day.x", "response_var", "Flush_index",
+                       "FI_ymin", "FI_ymax", "month.y", "day.y", "year",
+                       "X1",  "Parameter", "Beta_index", "SE", "CI", 
+                       "Beta_ymin", "Beta_ymax", "t", "df", "p",
+                       "HI", "precip", "temp", "precip.week", "precip.month",
+                       "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy",
+                       "burn", "pf", "date", "TimeSinceChena")]
+
+
+AMC <- rbind(AMC_2018, AMC_2019, AMC_2020, AMC_2021, AMC_2022)
 
 # CHECK FOR OUTLIERS #
 ggplot(AMC, aes(x = date, y = Beta_index)) +

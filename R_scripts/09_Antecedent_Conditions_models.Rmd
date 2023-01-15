@@ -478,15 +478,36 @@ fDOM_hi <- Plot_1 +
   geom_vline(xintercept = 0,
              colour = "grey80",
              linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Precipitation Month", 
+                             "Precipitation Week",
+                             "Storm Precipitation"))
+  # theme_bw() +
+  # ggtitle("HI-fDOM") +
+  # theme(axis.text.x=element_text(size=15), 
+  #       axis.text.y = element_blank(),
+  #       axis.title.x = element_text(size = 20),
+  #       axis.title.y = element_text(size = 20),
+  #       legend.position = "none",
+  #       plot.title = element_text(size = 20))
+  
+fDOM_hi <- Plot_1 + 
+  xlab("") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Precipitation Month", 
+                             "Precipitation Week",
+                             "Storm Precipitation")) +
   theme_bw() +
   ggtitle("HI-fDOM") +
   theme(axis.text.x=element_text(size=15), 
-        axis.text.y = element_blank(),
+        axis.text.y = element_text(size = 15),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20),
         legend.position = "none",
-        plot.title = element_text(size = 20))
-  
+        plot.title = element_text(size=20))
 
 ggsave("HI_fDOM.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -647,6 +668,7 @@ STRT.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSince
 vif(STRT.model)
 plot(STRT.model)
 summary(STRT.model)
+
 ```
 
 ```{r}
@@ -1642,7 +1664,8 @@ ggsave("BETA_turb.pdf",
 
 # plots for thesis # 
 ```{r}
-ggarrange(no3_hi, fDOM_hi,
+library(ggpubr)
+ggarrange(fDOM_hi,no3_hi,
           SPC_hi, turb_hi,
           ncol = 2, nrow = 2,
           common.legend = TRUE,
@@ -1656,7 +1679,7 @@ ggsave("HIs.pdf",
        path = here("plots", "Coefficient_Plots"),
        width = 12, height = 12)
 
-ggarrange(no3_beta, fDOM_beta,
+ggarrange(fDOM_beta, no3_beta, 
           SPC_beta, turb_beta,
           ncol = 2, nrow = 2,
           common.legend = TRUE,
