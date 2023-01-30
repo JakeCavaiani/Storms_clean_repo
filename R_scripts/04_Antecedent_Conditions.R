@@ -49,6 +49,10 @@ library(ggpubr)
 library(dataRetrieval)
 setwd("~/Documents/Storms_clean_repo")
 # Import data #
+# 2015
+FRCH_HI_doy_df_2015 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2015", "FRCH","FRCH.HI.df.doy.csv"))
+MOOS_HI_doy_df_2015 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2015", "MOOS","MOOS.HI.df.doy.csv"))
+
 # 2018
 FRCH_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "FRCH","FRCH.HI.df.doy.csv"))
 MOOS_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "MOOS","MOOS.HI.df.doy.csv"))
@@ -114,6 +118,8 @@ VAUL_HI_doy_df_2022 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022",
 CARI_HI_doy_df_2022 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2022", "CARI","CARI.HI.df.doy.csv"))
 
 
+HI.dat_2015 <- rbind(FRCH_HI_doy_df_2015, MOOS_HI_doy_df_2015)
+HI.dat_2015$year <- "2015"
 
 
 HI.dat_2018 <- rbind(FRCH_HI_doy_df_2018, MOOS_HI_doy_df_2018, CARI_HI_doy_df_2018)
@@ -135,7 +141,7 @@ HI.dat_2022$year <- "2022"
 
 
 #HI.dat <- HI.dat_2018
-HI.dat <- rbind(HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
+HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 #write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
 #HI.dat <- read_csv("~/Documents/Storms/Output_from_analysis/HI.dat.csv")
@@ -285,6 +291,7 @@ HI.mean.precip.response <- HI.dat %>% group_by(site.ID, year, storm.num, respons
 
 ### USGS pulled data ###
 # Peak stream flow for the Chena River
+# 2015 -05-12
 # 2018 -05-22
 # 2019-08-17
 # 2020 - 2020-05-12
@@ -292,6 +299,498 @@ HI.mean.precip.response <- HI.dat %>% group_by(site.ID, year, storm.num, respons
 ##############################################################################################################
 #################################### Antecedent conditions #####################################################################
 ##############################################################################################################
+
+########################################## 2015 ########################################
+### Import climate ###
+CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2015.final.csv"))
+CPCRW$datetimeAK <- force_tz(CPCRW$datetimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
+
+# this needs to be updated to include 2015 data
+airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
+airtempmean$datetimeAK <- airtempmean$date_timeAK
+airtempmean$datetimeAK <- as.POSIXct(airtempmean$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+
+### FRCH ####
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 287),
+                          rep("storm2", 331),
+                          rep("storm3", 383),
+                          rep("storm4", 299),
+                          rep("storm5a", 173),
+                          rep("storm5b", 275),
+                          rep("storm6a", 295),
+                          rep("storm6b", 135),
+                          rep("storm6c", 864),
+                          rep("storm7", 240))
+
+FRCH_storms$datetimeAK <- as.POSIXct(FRCH_storms$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+FRCH.2015.storms.1<- left_join(FRCH_storms, CPCRW, by = "datetimeAK")
+FRCH.2015.storms.1<- left_join(FRCH.2015.storms.1, airtempmean, by = "datetimeAK")
+
+names(FRCH.2015.storms.1)[names(FRCH.2015.storms.1) == ''] <- 'x'
+
+FRCH.2015.per.storm.1 <- FRCH.2015.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(mean), list(precip = sum), na.rm = TRUE)
+
+temp <- FRCH.2015.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+FRCH.2015.per.storm.1$temp <- temp$temp
+
+
+# Reading in chem data to join with the antecedent moisture condition data 
+DOD.2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv")) 
+DOD.2015 <- DOD.2015[c("datetimeAK", "Site", "fDOM.QSU.T.turb.col", "SpCond.uScm.adj",
+                       "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+names(DOD.2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+
+
+# summing up week/month/threemonth antecedent precip
+DOD.2015$datetimeAK <- ymd_hms(DOD.2015$datetimeAK) # converting character to datetime
+DOD.2015$datetimeAK <- force_tz(DOD.2015$datetimeAK, "America/Anchorage") # converting character to datetime
+
+DOD.2015 <- left_join(DOD.2015, CPCRW, by = "datetimeAK")
+
+FRCH.2015 <- subset(DOD.2015, site.ID == "FRCH")
+MOOS.2015 <- subset(DOD.2015, site.ID == "MOOS")
+
+
+#making a uniform time series with 15 minute intervals and then I can sum precip by 24/48hour windows 
+ts <- seq(as.POSIXct("2015-05-01", tz = "America/Anchorage"),
+          as.POSIXct("2015-10-31", tz = "America/Anchorage"),
+          by = "15 min")
+head(ts)
+ts <- as.data.frame(ts)
+names(ts) <- c("datetimeAK")
+FRCH.2015 <- left_join(ts, FRCH.2015, by = "datetimeAK")
+FRCH.2015 <- left_join(FRCH.2015, airtempmean, by = "datetimeAK")
+
+
+FRCH.2015$week <- rollapplyr(FRCH.2015$mean, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2015$month <- rollapplyr(FRCH.2015$mean, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2015$ThreeMonth <- rollapplyr(FRCH.2015$mean, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+FRCH.2015$temp.week <- rollapplyr(FRCH.2015$airtemp_100.1000cm_mean.x, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+# joining with storms
+FRCH.2015.storms.1 <- FRCH.2015.storms.1[,-c(1,3:9,11:20)]
+
+# joining with storms 
+FRCH.2015.1 <- left_join(FRCH.2015.storms.1, FRCH.2015, by = c("datetimeAK")) # week month and 3 month precip totals 
+
+FRCH.2015.per.storm.2 <- FRCH.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+FRCH.2015.per.storm.3 <- FRCH.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+FRCH.2015.per.storm.4 <- FRCH.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+# FRCH.2022.per.storm.5 <- FRCH.2022.1 %>% group_by(storm.num) %>% 
+#   summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping one week mean temperature leading up to a storm 
+
+HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2015" & site.ID == "FRCH" & response == "NO3")
+HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2015" & site.ID == "FRCH" & response == "fDOM")
+HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2015" & site.ID == "FRCH" & response == "SPC")
+HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2015" & site.ID == "FRCH" & response == "turb")
+HI.mean.precip.frch.abs <- subset(HI.mean.precip.response, year == "2015" & site.ID == "FRCH" & response == "abs")
+
+# NO3
+HI.frch.no3.2015 <- left_join(HI.mean.precip.frch.NO3, FRCH.2015.per.storm.1, by = "storm.num")
+HI.frch.no3.2015 <- left_join(HI.frch.no3.2015, FRCH.2015.per.storm.2, by = "storm.num")
+HI.frch.no3.2015 <- left_join(HI.frch.no3.2015, FRCH.2015.per.storm.3, by = "storm.num")
+HI.frch.no3.2015 <- left_join(HI.frch.no3.2015, FRCH.2015.per.storm.4, by = "storm.num")
+#HI.frch.no3.2015 <- left_join(HI.frch.no3.2015, FRCH.2015.per.storm.5, by = "storm.num")
+
+frch.lm.no3 <- lm(HI.frch.no3.2015$HI ~ HI.frch.no3.2015$precip) # model one with just total precip
+frch.lm.no3.2 <- lm(HI.frch.no3.2015$HI ~ HI.frch.no3.2015$precip.week) # model one with just total precip
+frch.lm.no3.3 <- lm(HI.frch.no3.2015$HI ~ HI.frch.no3.2015$precip.month) # model one with just total precip
+frch.lm.no3.4 <- lm(HI.frch.no3.2015$HI ~ HI.frch.no3.2015$ThreeMonth) # model one with just total precip
+
+# fDOM #
+HI.frch.fDOM.2015 <- left_join(HI.mean.precip.frch.fDOM, FRCH.2015.per.storm.1, by = "storm.num")
+HI.frch.fDOM.2015 <- left_join(HI.frch.fDOM.2015, FRCH.2015.per.storm.2, by = "storm.num")
+HI.frch.fDOM.2015 <- left_join(HI.frch.fDOM.2015, FRCH.2015.per.storm.3, by = "storm.num")
+HI.frch.fDOM.2015 <- left_join(HI.frch.fDOM.2015, FRCH.2015.per.storm.4, by = "storm.num")
+#HI.frch.fDOM.2021 <- left_join(HI.frch.fDOM.2021, FRCH.2021.per.storm.5, by = "storm.num")
+
+frch.lm.fDOM <- lm(HI.frch.fDOM.2015$HI ~ HI.frch.fDOM.2015$precip) # model one with just total precip
+frch.lm.fDOM.2 <- lm(HI.frch.fDOM.2015$HI ~ HI.frch.fDOM.2015$precip.week) # model one with just total precip
+frch.lm.fDOM.3 <- lm(HI.frch.fDOM.2015$HI ~ HI.frch.fDOM.2015$precip.month) # model one with just total precip
+frch.lm.fDOM.4 <- lm(HI.frch.fDOM.2015$HI ~ HI.frch.fDOM.2015$ThreeMonth) # model one with just total precip
+#frch.lm.fDOM.5 <- lm(HI.frch.fDOM.2022$HI ~ HI.frch.fDOM.2022$temp.week) # model one with just total precip
+
+# SPC #
+HI.frch.SPC.2015 <- left_join(HI.mean.precip.frch.SPC, FRCH.2015.per.storm.1, by = "storm.num")
+HI.frch.SPC.2015 <- left_join(HI.frch.SPC.2015, FRCH.2015.per.storm.2, by = "storm.num")
+HI.frch.SPC.2015 <- left_join(HI.frch.SPC.2015, FRCH.2015.per.storm.3, by = "storm.num")
+HI.frch.SPC.2015 <- left_join(HI.frch.SPC.2015, FRCH.2015.per.storm.4, by = "storm.num")
+#HI.frch.SPC.2021 <- left_join(HI.frch.SPC.2021, FRCH.2021.per.storm.5, by = "storm.num")
+
+frch.lm.SPC <- lm(HI.frch.SPC.2015$HI ~ HI.frch.SPC.2015$precip) # model one with just total precip
+frch.lm.SPC.2 <- lm(HI.frch.SPC.2015$HI ~ HI.frch.SPC.2015$precip.week) # model one with just total precip
+frch.lm.SPC.3 <- lm(HI.frch.SPC.2015$HI ~ HI.frch.SPC.2015$precip.month) # model one with just total precip
+frch.lm.SPC.4 <- lm(HI.frch.SPC.2015$HI ~ HI.frch.SPC.2015$ThreeMonth) # model one with just total precip
+#frch.lm.SPC.5 <- lm(HI.frch.SPC.2022$HI ~ HI.frch.SPC.2022$temp.week) # model one with just total precip
+
+
+# turb #
+HI.frch.turb.2015 <- left_join(HI.mean.precip.frch.turb, FRCH.2015.per.storm.1, by = "storm.num")
+HI.frch.turb.2015 <- left_join(HI.frch.turb.2015, FRCH.2015.per.storm.2, by = "storm.num")
+HI.frch.turb.2015 <- left_join(HI.frch.turb.2015, FRCH.2015.per.storm.3, by = "storm.num")
+HI.frch.turb.2015 <- left_join(HI.frch.turb.2015, FRCH.2015.per.storm.4, by = "storm.num")
+#HI.frch.turb.2021 <- left_join(HI.frch.turb.2021, FRCH.2021.per.storm.5, by = "storm.num")
+
+frch.lm.turb <- lm(HI.frch.turb.2015$HI ~ HI.frch.turb.2015$precip) # model one with just total precip
+frch.lm.turb.2 <- lm(HI.frch.turb.2015$HI ~ HI.frch.turb.2015$precip.week) # model one with just total precip
+frch.lm.turb.3 <- lm(HI.frch.turb.2015$HI ~ HI.frch.turb.2015$precip.month) # model one with just total precip
+frch.lm.turb.4 <- lm(HI.frch.turb.2015$HI ~ HI.frch.turb.2015$ThreeMonth) # model one with just total precip
+#frch.lm.turb.5 <- lm(HI.frch.turb.2022$HI ~ HI.frch.turb.2022$temp.week) # model one with just total precip
+
+
+# abs #
+HI.frch.abs.2015 <- left_join(HI.mean.precip.frch.abs, FRCH.2015.per.storm.1, by = "storm.num")
+HI.frch.abs.2015 <- left_join(HI.frch.abs.2015, FRCH.2015.per.storm.2, by = "storm.num")
+HI.frch.abs.2015 <- left_join(HI.frch.abs.2015, FRCH.2015.per.storm.3, by = "storm.num")
+HI.frch.abs.2015 <- left_join(HI.frch.abs.2015, FRCH.2015.per.storm.4, by = "storm.num")
+#HI.frch.abs.2021 <- left_join(HI.frch.abs.2021, FRCH.2021.per.storm.5, by = "storm.num")
+
+frch.lm.abs <- lm(HI.frch.abs.2015$HI ~ HI.frch.abs.2015$precip) # model one with just total precip
+frch.lm.abs.2 <- lm(HI.frch.abs.2015$HI ~ HI.frch.abs.2015$precip.week) # model one with just total precip
+frch.lm.abs.3 <- lm(HI.frch.abs.2015$HI ~ HI.frch.abs.2015$precip.month) # model one with just total precip
+frch.lm.abs.4 <- lm(HI.frch.abs.2015$HI ~ HI.frch.abs.2015$ThreeMonth) # model one with just total precip
+#frch.lm.abs.5 <- lm(HI.frch.turb.2022$HI ~ HI.frch.turb.2022$temp.week) # model one with just total precip
+
+# this would be for intensity but we are not doing this right now if just comparing to the DOD stuff
+# sum.time <- FRCH.2018.storms.1 %>%
+#   mutate(grp=data.table::rleid(storm.num))%>%
+#   group_by(grp) %>%
+#   summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+#                                                          min(DateTime),units="hour"))%>%
+#   group_by(storm.num) %>%
+#   summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column for each individual storm and then I can generate an intensity metric which would be TotalPrecip/duration of event
+# 
+# HI.frch.fDOM.2.2018 <- left_join(HI.frch.fDOM.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.fDOM.2.2018$TOTAL.TIME <- as.numeric(HI.frch.fDOM.2.2018$TOTAL.TIME)
+# HI.frch.fDOM.2.2018$Intensity <- HI.frch.fDOM.2.2018$precip/HI.frch.fDOM.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.fDOM.2 <- lm(HI.frch.fDOM.2.2018$HI ~ HI.frch.fDOM.2.2018$precip + HI.frch.fDOM.2.2018$Intensity) # model one with total precip and intensity 
+# 
+# br <- HI.frch.fDOM.2.2018 %>%
+#   ggplot(aes(x=Intensity, 
+#              y=HI)) +
+#   geom_point() +
+#   geom_smooth(method = "lm") +
+#   stat_poly_eq(formula = frch.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                parse = TRUE) +
+#   ggtitle("FRCH fDOM") +
+#   xlab("Intensity (mm/hr)") +
+#   ylab("HI-Solute Storage") +
+#   theme_classic() # plot model 
+# 
+# HI.frch.SPC.2.2018 <- left_join(HI.frch.SPC.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.SPC.2.2018$TOTAL.TIME <- as.numeric(HI.frch.SPC.2.2018$TOTAL.TIME)
+# HI.frch.SPC.2.2018$Intensity <- HI.frch.SPC.2.2018$precip/HI.frch.SPC.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.SPC.2 <- lm(HI.frch.SPC.2.2018$HI ~ HI.frch.SPC.2.2018$precip + HI.frch.SPC.2.2018$Intensity) # model one with total precip and intensity 
+# 
+# HI.frch.turb.2.2018 <- left_join(HI.frch.turb.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.turb.2.2018$TOTAL.TIME <- as.numeric(HI.frch.turb.2.2018$TOTAL.TIME)
+# HI.frch.turb.2.2018$Intensity <- HI.frch.turb.2.2018$precip/HI.frch.turb.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.turb.2 <- lm(HI.frch.turb.2.2018$HI ~ HI.frch.turb.2.2018$precip + HI.frch.turb.2.2018$Intensity) # model one with total precip and intensity 
+
+# day of year # SEASONALITY
+FRCH.2015.1$day <- julian(FRCH.2015.1$datetimeAK, origin = as.POSIXct('2015-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+FRCH.2015.1$day <- as.numeric(FRCH.2015.1$day)
+
+FRCH.2015.per.storm.5 <- FRCH.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.frch.fDOM.2.2015 <- left_join(HI.frch.fDOM.2015, FRCH.2015.per.storm.5, by = "storm.num")
+
+frch.lm.fDOM.5 <- lm(HI.frch.fDOM.2.2015$HI ~ HI.frch.fDOM.2.2015$doy)
+
+# HI.salcha.fDOM.2.2021 %>%
+#   ggplot(aes(x=doy, 
+#              y=HI)) +
+#   geom_point() +
+#   geom_smooth(method = "lm") +
+#   stat_poly_eq(formula = salcha.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                parse = TRUE) +
+#   ggtitle("SALCHA fDOM") +
+#   xlab("Day of year") +
+#   ylab("HI-Solute Storage") +
+#   theme_classic() # plot model 
+
+HI.frch.SPC.2.2015 <- left_join(HI.frch.SPC.2015, FRCH.2015.per.storm.5, by = "storm.num")
+frch.lm.SPC.5 <- lm(HI.frch.SPC.2.2015$HI ~ HI.frch.SPC.2.2015$doy)
+
+HI.frch.turb.2.2015 <- left_join(HI.frch.turb.2015, FRCH.2015.per.storm.5, by = "storm.num")
+frch.lm.turb.5 <- lm(HI.frch.turb.2.2015$HI ~ HI.frch.turb.2.2015$doy)
+
+
+HI.frch.no3.2.2015 <- left_join(HI.frch.no3.2015, FRCH.2015.per.storm.5, by = "storm.num")
+frch.lm.no3.5 <- lm(HI.frch.no3.2.2015$HI ~ HI.frch.no3.2.2015$doy)
+
+HI.frch.abs.2.2015 <- left_join(HI.frch.abs.2015, FRCH.2015.per.storm.5, by = "storm.num")
+frch.lm.abs.5 <- lm(HI.frch.turb.2.2015$HI ~ HI.frch.turb.2.2015$doy)
+
+
+
+HI.frch.2015 <- rbind(HI.frch.no3.2.2015, HI.frch.fDOM.2.2015, HI.frch.SPC.2.2015, HI.frch.turb.2.2015, HI.frch.abs.2.2015) # merging all responses together
+
+
+HI.frch.2015$date <- as.Date(HI.frch.2015$doy, origin = "2015-01-01")
+origin_date <- as.Date("2015-05-12")
+HI.frch.2015$TimeSinceChena <- julian(HI.frch.2015$date, origin_date)
+
+
+write.csv(HI.frch.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.frch.2015.csv")
+
+### MOOS ####
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 383),
+                          rep("storm2", 575),
+                          rep("storm3a", 131),
+                          rep("storm3b", 479),
+                          rep("storm4", 191),
+                          rep("storm5", 455),
+                          rep("storm6", 176))
+
+MOOS_storms$datetimeAK <- as.POSIXct(MOOS_storms$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+MOOS.2015.storms.1<- left_join(MOOS_storms, CPCRW, by = "datetimeAK")
+MOOS.2015.storms.1<- left_join(MOOS.2015.storms.1, airtempmean, by = "datetimeAK")
+
+names(MOOS.2015.storms.1)[names(MOOS.2015.storms.1) == ''] <- 'x'
+
+MOOS.2015.per.storm.1 <- MOOS.2015.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(mean), list(precip = sum), na.rm = TRUE)
+
+temp <- MOOS.2015.storms.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(airtemp_100.1000cm_mean), list(temp = mean), na.rm = TRUE) # finding the mean temperature for each storm event 
+
+MOOS.2015.per.storm.1$temp <- temp$temp
+
+#making a uniform time series with 15 minute intervals and then I can sum precip by 24/48hour windows 
+ts <- seq(as.POSIXct("2015-05-01", tz = "America/Anchorage"),
+          as.POSIXct("2015-10-31", tz = "America/Anchorage"),
+          by = "15 min")
+head(ts)
+ts <- as.data.frame(ts)
+names(ts) <- c("datetimeAK")
+MOOS.2015 <- left_join(ts, MOOS.2015, by = "datetimeAK")
+MOOS.2015 <- left_join(MOOS.2015, airtempmean, by = "datetimeAK")
+
+
+MOOS.2015$week <- rollapplyr(MOOS.2015$mean, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2015$month <- rollapplyr(MOOS.2015$mean, 2688, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2015$ThreeMonth <- rollapplyr(MOOS.2015$mean, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
+MOOS.2015$temp.week <- rollapplyr(MOOS.2015$airtemp_100.1000cm_mean.x, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
+
+# joining with storms
+MOOS.2015.storms.1 <- MOOS.2015.storms.1[,-c(1,3:9,11:20)]
+
+# joining with storms 
+MOOS.2015.1 <- left_join(MOOS.2015.storms.1, MOOS.2015, by = c("datetimeAK")) # week month and 3 month precip totals 
+
+MOOS.2015.per.storm.2 <- MOOS.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
+MOOS.2015.per.storm.3 <- MOOS.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(month), list(precip.month = first), na.rm = TRUE) # groouping monthly precip leading up to a storm 
+MOOS.2015.per.storm.4 <- MOOS.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(ThreeMonth), list(ThreeMonth = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+# MOOS.2022.per.storm.5 <- MOOS.2022.1 %>% group_by(storm.num) %>% 
+#   summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping one week mean temperature leading up to a storm 
+
+HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2015" & site.ID == "MOOS" & response == "NO3")
+HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2015" & site.ID == "MOOS" & response == "fDOM")
+HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2015" & site.ID == "MOOS" & response == "SPC")
+HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2015" & site.ID == "MOOS" & response == "turb")
+HI.mean.precip.moos.abs <- subset(HI.mean.precip.response, year == "2015" & site.ID == "MOOS" & response == "abs")
+
+# NO3
+HI.moos.no3.2015 <- left_join(HI.mean.precip.moos.NO3, MOOS.2015.per.storm.1, by = "storm.num")
+HI.moos.no3.2015 <- left_join(HI.moos.no3.2015, MOOS.2015.per.storm.2, by = "storm.num")
+HI.moos.no3.2015 <- left_join(HI.moos.no3.2015, MOOS.2015.per.storm.3, by = "storm.num")
+HI.moos.no3.2015 <- left_join(HI.moos.no3.2015, MOOS.2015.per.storm.4, by = "storm.num")
+#HI.moos.no3.2015 <- left_join(HI.moos.no3.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.no3 <- lm(HI.moos.no3.2015$HI ~ HI.moos.no3.2015$precip) # model one with just total precip
+moos.lm.no3.2 <- lm(HI.moos.no3.2015$HI ~ HI.moos.no3.2015$precip.week) # model one with just total precip
+moos.lm.no3.3 <- lm(HI.moos.no3.2015$HI ~ HI.moos.no3.2015$precip.month) # model one with just total precip
+moos.lm.no3.4 <- lm(HI.moos.no3.2015$HI ~ HI.moos.no3.2015$ThreeMonth) # model one with just total precip
+
+# fDOM #
+HI.moos.fDOM.2015 <- left_join(HI.mean.precip.moos.fDOM, MOOS.2015.per.storm.1, by = "storm.num")
+HI.moos.fDOM.2015 <- left_join(HI.moos.fDOM.2015, MOOS.2015.per.storm.2, by = "storm.num")
+HI.moos.fDOM.2015 <- left_join(HI.moos.fDOM.2015, MOOS.2015.per.storm.3, by = "storm.num")
+HI.moos.fDOM.2015 <- left_join(HI.moos.fDOM.2015, MOOS.2015.per.storm.4, by = "storm.num")
+#HI.moos.fDOM.2015 <- left_join(HI.moos.fDOM.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.fDOM <- lm(HI.moos.fDOM.2015$HI ~ HI.moos.fDOM.2015$precip) # model one with just total precip
+moos.lm.fDOM.2 <- lm(HI.moos.fDOM.2015$HI ~ HI.moos.fDOM.2015$precip.week) # model one with just total precip
+moos.lm.fDOM.3 <- lm(HI.moos.fDOM.2015$HI ~ HI.moos.fDOM.2015$precip.month) # model one with just total precip
+moos.lm.fDOM.4 <- lm(HI.moos.fDOM.2015$HI ~ HI.moos.fDOM.2015$ThreeMonth) # model one with just total precip
+#moos.lm.fDOM.5 <- lm(HI.moos.fDOM.2015$HI ~ HI.moos.fDOM.2015$temp.week) # model one with just total precip
+
+# SPC #
+HI.moos.SPC.2015 <- left_join(HI.mean.precip.moos.SPC, MOOS.2015.per.storm.1, by = "storm.num")
+HI.moos.SPC.2015 <- left_join(HI.moos.SPC.2015, MOOS.2015.per.storm.2, by = "storm.num")
+HI.moos.SPC.2015 <- left_join(HI.moos.SPC.2015, MOOS.2015.per.storm.3, by = "storm.num")
+HI.moos.SPC.2015 <- left_join(HI.moos.SPC.2015, MOOS.2015.per.storm.4, by = "storm.num")
+#HI.moos.SPC.2015 <- left_join(HI.moos.SPC.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.SPC <- lm(HI.moos.SPC.2015$HI ~ HI.moos.SPC.2015$precip) # model one with just total precip
+moos.lm.SPC.2 <- lm(HI.moos.SPC.2015$HI ~ HI.moos.SPC.2015$precip.week) # model one with just total precip
+moos.lm.SPC.3 <- lm(HI.moos.SPC.2015$HI ~ HI.moos.SPC.2015$precip.month) # model one with just total precip
+moos.lm.SPC.4 <- lm(HI.moos.SPC.2015$HI ~ HI.moos.SPC.2015$ThreeMonth) # model one with just total precip
+#moos.lm.SPC.5 <- lm(HI.moos.SPC.2015$HI ~ HI.moos.SPC.2015$temp.week) # model one with just total precip
+
+
+# turb #
+HI.moos.turb.2015 <- left_join(HI.mean.precip.moos.turb, MOOS.2015.per.storm.1, by = "storm.num")
+HI.moos.turb.2015 <- left_join(HI.moos.turb.2015, MOOS.2015.per.storm.2, by = "storm.num")
+HI.moos.turb.2015 <- left_join(HI.moos.turb.2015, MOOS.2015.per.storm.3, by = "storm.num")
+HI.moos.turb.2015 <- left_join(HI.moos.turb.2015, MOOS.2015.per.storm.4, by = "storm.num")
+#HI.moos.turb.2015 <- left_join(HI.moos.turb.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.turb <- lm(HI.moos.turb.2015$HI ~ HI.moos.turb.2015$precip) # model one with just total precip
+moos.lm.turb.2 <- lm(HI.moos.turb.2015$HI ~ HI.moos.turb.2015$precip.week) # model one with just total precip
+moos.lm.turb.3 <- lm(HI.moos.turb.2015$HI ~ HI.moos.turb.2015$precip.month) # model one with just total precip
+moos.lm.turb.4 <- lm(HI.moos.turb.2015$HI ~ HI.moos.turb.2015$ThreeMonth) # model one with just total precip
+#moos.lm.turb.5 <- lm(HI.moos.turb.2015$HI ~ HI.moos.turb.2015$temp.week) # model one with just total precip
+
+
+# abs #
+HI.moos.abs.2015 <- left_join(HI.mean.precip.moos.abs, MOOS.2015.per.storm.1, by = "storm.num")
+HI.moos.abs.2015 <- left_join(HI.moos.abs.2015, MOOS.2015.per.storm.2, by = "storm.num")
+HI.moos.abs.2015 <- left_join(HI.moos.abs.2015, MOOS.2015.per.storm.3, by = "storm.num")
+HI.moos.abs.2015 <- left_join(HI.moos.abs.2015, MOOS.2015.per.storm.4, by = "storm.num")
+#HI.moos.abs.2015 <- left_join(HI.moos.abs.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.abs <- lm(HI.moos.abs.2015$HI ~ HI.moos.abs.2015$precip) # model one with just total precip
+moos.lm.abs.2 <- lm(HI.moos.abs.2015$HI ~ HI.moos.abs.2015$precip.week) # model one with just total precip
+moos.lm.abs.3 <- lm(HI.moos.abs.2015$HI ~ HI.moos.abs.2015$precip.month) # model one with just total precip
+moos.lm.abs.4 <- lm(HI.moos.abs.2015$HI ~ HI.moos.abs.2015$ThreeMonth) # model one with just total precip
+#moos.lm.abs.5 <- lm(HI.moos.abs.2015$HI ~ HI.moos.abs.2015$temp.week) # model one with just total precip
+
+# this would be for intensity but we are not doing this right now if just comparing to the DOD stuff
+# sum.time <- FRCH.2018.storms.1 %>%
+#   mutate(grp=data.table::rleid(storm.num))%>%
+#   group_by(grp) %>%
+#   summarise(storm.num=max(storm.num),TOTAL.TIME=difftime(max(DateTime),
+#                                                          min(DateTime),units="hour"))%>%
+#   group_by(storm.num) %>%
+#   summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column for each individual storm and then I can generate an intensity metric which would be TotalPrecip/duration of event
+# 
+# HI.frch.fDOM.2.2018 <- left_join(HI.frch.fDOM.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.fDOM.2.2018$TOTAL.TIME <- as.numeric(HI.frch.fDOM.2.2018$TOTAL.TIME)
+# HI.frch.fDOM.2.2018$Intensity <- HI.frch.fDOM.2.2018$precip/HI.frch.fDOM.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.fDOM.2 <- lm(HI.frch.fDOM.2.2018$HI ~ HI.frch.fDOM.2.2018$precip + HI.frch.fDOM.2.2018$Intensity) # model one with total precip and intensity 
+# 
+# br <- HI.frch.fDOM.2.2018 %>%
+#   ggplot(aes(x=Intensity, 
+#              y=HI)) +
+#   geom_point() +
+#   geom_smooth(method = "lm") +
+#   stat_poly_eq(formula = frch.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                parse = TRUE) +
+#   ggtitle("FRCH fDOM") +
+#   xlab("Intensity (mm/hr)") +
+#   ylab("HI-Solute Storage") +
+#   theme_classic() # plot model 
+# 
+# HI.frch.SPC.2.2018 <- left_join(HI.frch.SPC.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.SPC.2.2018$TOTAL.TIME <- as.numeric(HI.frch.SPC.2.2018$TOTAL.TIME)
+# HI.frch.SPC.2.2018$Intensity <- HI.frch.SPC.2.2018$precip/HI.frch.SPC.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.SPC.2 <- lm(HI.frch.SPC.2.2018$HI ~ HI.frch.SPC.2.2018$precip + HI.frch.SPC.2.2018$Intensity) # model one with total precip and intensity 
+# 
+# HI.frch.turb.2.2018 <- left_join(HI.frch.turb.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+# HI.frch.turb.2.2018$TOTAL.TIME <- as.numeric(HI.frch.turb.2.2018$TOTAL.TIME)
+# HI.frch.turb.2.2018$Intensity <- HI.frch.turb.2.2018$precip/HI.frch.turb.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+# 
+# frch.lm.turb.2 <- lm(HI.frch.turb.2.2018$HI ~ HI.frch.turb.2.2018$precip + HI.frch.turb.2.2018$Intensity) # model one with total precip and intensity 
+
+# day of year # SEASONALITY
+MOOS.2015.1$day <- julian(MOOS.2015.1$datetimeAK, origin = as.POSIXct('2015-01-01', tz = 'America/Anchorage')) # making a fractional day column 
+MOOS.2015.1$day <- as.numeric(MOOS.2015.1$day)
+
+MOOS.2015.per.storm.5 <- MOOS.2015.1 %>% group_by(storm.num) %>% 
+  summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
+
+HI.moos.fDOM.2.2015 <- left_join(HI.moos.fDOM.2015, MOOS.2015.per.storm.5, by = "storm.num")
+
+moos.lm.fDOM.5 <- lm(HI.moos.fDOM.2.2015$HI ~ HI.moos.fDOM.2.2015$doy)
+
+# HI.salcha.fDOM.2.2021 %>%
+#   ggplot(aes(x=doy, 
+#              y=HI)) +
+#   geom_point() +
+#   geom_smooth(method = "lm") +
+#   stat_poly_eq(formula = salcha.formula, 
+#                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+#                parse = TRUE) +
+#   ggtitle("SALCHA fDOM") +
+#   xlab("Day of year") +
+#   ylab("HI-Solute Storage") +
+#   theme_classic() # plot model 
+
+HI.moos.SPC.2.2015 <- left_join(HI.moos.SPC.2015, MOOS.2015.per.storm.5, by = "storm.num")
+moos.lm.SPC.5 <- lm(HI.moos.SPC.2.2015$HI ~ HI.moos.SPC.2.2015$doy)
+
+HI.moos.turb.2.2015 <- left_join(HI.moos.turb.2015, MOOS.2015.per.storm.5, by = "storm.num")
+moos.lm.turb.5 <- lm(HI.moos.turb.2.2015$HI ~ HI.moos.turb.2.2015$doy)
+
+
+HI.moos.no3.2.2015 <- left_join(HI.moos.no3.2015, MOOS.2015.per.storm.5, by = "storm.num")
+moos.lm.no3.5 <- lm(HI.moos.no3.2.2015$HI ~ HI.moos.no3.2.2015$doy)
+
+HI.moos.abs.2.2015 <- left_join(HI.moos.abs.2015, MOOS.2015.per.storm.5, by = "storm.num")
+moos.lm.abs.5 <- lm(HI.moos.turb.2.2015$HI ~ HI.moos.turb.2.2015$doy)
+
+
+
+HI.moos.2015 <- rbind(HI.moos.no3.2.2015, HI.moos.fDOM.2.2015, HI.moos.SPC.2.2015, HI.moos.turb.2.2015, HI.moos.abs.2.2015) # merging all responses together
+
+
+HI.moos.2015$date <- as.Date(HI.moos.2015$doy, origin = "2015-01-01")
+origin_date <- as.Date("2015-05-12")
+HI.moos.2015$TimeSinceChena <- julian(HI.moos.2015$date, origin_date)
+
+
+write.csv(HI.moos.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.moos.2015.csv")
+
+
+# all sites 
+HI.2015 <- rbind(HI.frch.2015, HI.moos.2015) # bind all 2015 together
+
+write.csv(HI.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.2015.csv")
+
+
+
 
 ######################################## 2018 #####################################################################
 ## Step 1) Read in list of all sites storms and filter by site

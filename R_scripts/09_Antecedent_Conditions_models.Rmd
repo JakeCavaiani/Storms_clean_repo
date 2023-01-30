@@ -66,6 +66,27 @@ colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month"
 
 names(AMC)<- colNames # renaming columns 
 
+# making sure that every year has the same pf extnet and burn extent 
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(pf),
+                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "high", "medium")))
+
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(burn),
+                       ~ifelse(site.ID == "FRCH" | site.ID == "VAUL" | site.ID == "CARI", "unburned", "burned")))
+
+# making sure the 2022 intensity column in filled in 
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(Intensity),
+                       ~ifelse(year == "2022", 1, .)))
+
+
+# removing outliers identified in 08_catchment_analysis
+# 2018 #
+# 2019 #
+# 2020 #
+# Moos storm 2_2020
+
 
 ##subsetting by solute 
 # NO3 #
@@ -101,7 +122,9 @@ HI_FI_turb = subset(AMC, response_var == "turb")
 ``` {r}
 #### Correlation 
 NO3_data <- HI_FI_NO3[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-NO3_data <- na.omit(NO3_data) # 244 to 236 rows 
+
+
+NO3_data <- na.omit(NO3_data) # 267 to 258 rows 
 
 ggpairs(NO3_data,
         columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
@@ -313,7 +336,7 @@ ggsave("HI_NO3.pdf",
 ``` {r}
 # correlation 
 fDOM_data <- HI_FI_fDOM[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-fDOM_data <- na.omit(fDOM_data) # 244 to 236 rows 
+fDOM_data <- na.omit(fDOM_data) # 273 to 273 rows 
 
 HI_FI_fDOM$logHI <- log(abs(HI_FI_fDOM$Hyst_index))
 
@@ -518,7 +541,7 @@ ggsave("HI_fDOM.pdf",
 ``` {r}
 # correlation 
 SPC_data <- HI_FI_SPC[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-SPC_data <- na.omit(SPC_data) # 244 to 236 rows 
+SPC_data <- na.omit(SPC_data) # 271 to 268 rows 
 
 HI_FI_SPC$logHI <- log(abs(HI_FI_SPC$Hyst_index))
 
@@ -708,7 +731,7 @@ ggsave("HI_SPC.pdf",
 ``` {r}
 # correlation 
 turb_data <- HI_FI_turb[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-turb_data <- na.omit(turb_data) # 244 to 236 rows 
+turb_data <- na.omit(turb_data) # 276 to 273 rows 
 
 HI_FI_turb$logHI <- log(abs(HI_FI_turb$Hyst_index))
 
@@ -898,7 +921,7 @@ ggsave("HI_turb.pdf",
 ``` {r}
 #### Correlation 
 NO3_data <- HI_FI_NO3[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-NO3_data <- na.omit(NO3_data) # 244 to 236 rows 
+NO3_data <- na.omit(NO3_data) # 267 to 247 rows 
 
 HI_FI_NO3$logBETA <- log(abs(HI_FI_NO3$Beta_index))
 
@@ -1059,10 +1082,10 @@ plot(STRT.model.log)
 ```{r}
 Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
            CARI.model, POKE.model, 
-           VAUL.model, STRT.model, scale = TRUE,
+           VAUL.model, STRT.model, 
+           scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
-  xlim(-1.2, 1.2)
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
 
 vn = expression(paste(ß*-N*O[3]^"-"))
 no3_beta <- Plot_1 + 
@@ -1087,13 +1110,15 @@ theme(axis.text.x=element_text(size=15),
 ggsave("BETA_NO3.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
        width = 7, height = 7)
+
+
 ```
 
 ### fDOM ###
 ``` {r}
 # correlation 
 fDOM_data <- HI_FI_fDOM[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-fDOM_data <- na.omit(fDOM_data) # 244 to 236 rows 
+fDOM_data <- na.omit(fDOM_data) # 273 to 264 rows 
 
 HI_FI_fDOM$logBETA <- log(abs(HI_FI_fDOM$Beta_index))
 
@@ -1233,8 +1258,7 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
-  xlim(-1.5, 1.5)
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
 
 fDOM_beta <- Plot_1 + 
   xlab("") + ylab("") +
@@ -1260,7 +1284,7 @@ ggsave("BETA_fDOM.pdf",
 ``` {r}
 # correlation 
 SPC_data <- HI_FI_SPC[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-SPC_data <- na.omit(SPC_data) # 244 to 236 rows 
+SPC_data <- na.omit(SPC_data) # 271 to 259 rows 
 
 HI_FI_SPC$logBETA <- log(abs(HI_FI_SPC$Beta_index))
 ggpairs(SPC_data,
@@ -1426,8 +1450,7 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
-  xlim(-1, 1.5)
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
 
 SPC_beta <- Plot_1 + 
   xlab("Coefficient estimate") + ylab("") +
@@ -1457,7 +1480,7 @@ ggsave("BETA_SPC.pdf",
 ``` {r}
 # correlation 
 turb_data <- HI_FI_turb[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
-turb_data <- na.omit(turb_data) # 244 to 236 rows 
+turb_data <- na.omit(turb_data) # 276 to 266 rows 
 
 HI_FI_turb$logBETA <- log(abs(HI_FI_turb$Beta_index))
 
@@ -1638,8 +1661,7 @@ Plot_1 <- plot_summs(MOOS.model, FRCH.model,
            CARI.model, POKE.model, 
            VAUL.model, STRT.model, scale = TRUE,
            model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
-  xlim(-0.75, 1)
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
 
 turb_beta <- Plot_1 + 
   xlab("Coefficient estimate") + ylab("") +

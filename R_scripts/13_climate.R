@@ -482,7 +482,7 @@ ggsave("~/Documents/Storms/Harms_general/Climate.pdf", width = 6, height = 6, de
 # 
 
 #### SNOTEL DATA # This is what I am using in my thesis as of 10/7/22 ####
-precip_file_list <- list.files(path= here("Climate", "SWE_Precip/"),
+precip_file_list <- list.files(path="~/Documents/Storms_clean_repo/Climate/SWE_Precip/",
                                   recursive=F,
                                   full.names=TRUE) # reading in individual storms by site 
 
@@ -493,7 +493,7 @@ precip <-do.call("rbind", lapply(precip_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 # rain 
-rain <- read.csv(here("Climate", "Fairbanks_Precip_Snow.csv"), skip = 5, header = T)
+rain <- read.csv("~/Documents/Storms_clean_repo/Climate/Precip/Fairbanks_Precip_Snow.csv", skip = 5, header = T)
 rain <- rain[c("Date", "Precipitation..in.")]
 rain$Date <- mdy(rain$Date) # converting the date column from character to date format
 
@@ -508,29 +508,29 @@ rain.sum <- rain %>%
   dplyr::summarise(rain = sum(rain.mm, na.rm = TRUE)) # totaling by year and snow/rain 
 
 rain.sum <- rain.sum %>%
-  mutate(across(c(rain),
+  dplyr::mutate(across(c(rain),
                 ~ifelse(month == "1"| month == "2" | month == "3" |
                           month == "4" | month == "11"| month == "12", NA, .))) # removing any rain precip that would occur during the winter months
 
 rain.sum$MONTH <- NA
 
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "5", "May", .)))
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "6", "June", .)))
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "7", "July", .)))
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "8", "August", .)))
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "9", "September", .)))
 rain.sum <- rain.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "10", "October", .)))
 
 rain.sum$MONTH <- factor(rain.sum$MONTH,                 # Relevel group factor
@@ -610,26 +610,26 @@ climate.sum$MONTH <- NA
 climate.sum <- climate.sum[-1,]
 
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "1", "Snow Water Equivalent", .)))
 
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "5", "May", .)))
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "6", "June", .)))
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "7", "July", .)))
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "8", "August", .)))
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "9", "September", .)))
 climate.sum <- climate.sum %>% 
-  mutate(across(c(MONTH),
+  dplyr::mutate(across(c(MONTH),
                 ~ifelse(month == "10", "October", .)))
 
 climate.sum$MONTH <- factor(climate.sum$MONTH,                 # Relevel group factor

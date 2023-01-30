@@ -33,6 +33,512 @@ library(wesanderson)
 library(ggpubr)
 library(dataRetrieval)
 
+########################################### 2015 ##########################################
+storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS/", 
+                                   recursive=F, 
+                                   pattern=".csv", 
+                                   full.names=TRUE)
+
+storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
+                                        read.csv, 
+                                        stringsAsFactors=FALSE, 
+                                        header=T, row.names=1))
+
+storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
+names(storm_list_beta) = storm_file_list_beta
+
+for(i in 1:length(storm_list_beta)){
+  storm_list_beta[[i]][["valuedatetime"]] = as.POSIXct(storm_list_beta[[i]][["valuedatetime"]],
+                                                       "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+} # changing character format into datetime 
+
+#  organize storm data by site and solute 
+FRCH_storm_list_beta = storm_list_beta[c(1:60)] #60
+MOOS_storm_list_beta = storm_list_beta[c(61:102)] #42
+
+FRCH_NO3_storm_list_beta = FRCH_storm_list_beta[c(grep("NO3", names(FRCH_storm_list_beta)))]
+FRCH_fDOM_storm_list_beta = FRCH_storm_list_beta[c(grep("fDOM", names(FRCH_storm_list_beta)))]
+FRCH_SpCond_storm_list_beta = FRCH_storm_list_beta[c(grep("SPC", names(FRCH_storm_list_beta)))]
+FRCH_turb_storm_list_beta = FRCH_storm_list_beta[c(grep("turb", names(FRCH_storm_list_beta)))]
+FRCH_abs_storm_list_beta = FRCH_storm_list_beta[c(grep("abs", names(FRCH_storm_list_beta)))]
+FRCH_Q_storm_list_beta = FRCH_storm_list_beta[c(grep("Q", names(FRCH_storm_list_beta)))]
+
+MOOS_NO3_storm_list_beta = MOOS_storm_list_beta[c(grep("NO3", names(MOOS_storm_list_beta)))]
+MOOS_fDOM_storm_list_beta = MOOS_storm_list_beta[c(grep("fDOM", names(MOOS_storm_list_beta)))]
+MOOS_SpCond_storm_list_beta = MOOS_storm_list_beta[c(grep("SPC", names(MOOS_storm_list_beta)))]
+MOOS_turb_storm_list_beta = MOOS_storm_list_beta[c(grep("turb", names(MOOS_storm_list_beta)))]
+MOOS_abs_storm_list_beta = MOOS_storm_list_beta[c(grep("abs", names(MOOS_storm_list_beta)))]
+MOOS_Q_storm_list_beta = MOOS_storm_list_beta[c(grep("Q", names(MOOS_storm_list_beta)))]
+
+
+# normalize Q data 
+# FRCH
+for(i in 1:length(FRCH_Q_storm_list_beta)){
+  FRCH_Q_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (FRCH_Q_storm_list_beta[[i]][["datavalue"]]-min(FRCH_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(FRCH_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(FRCH_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+# MOOS
+for(i in 1:length(MOOS_Q_storm_list_beta)){
+  MOOS_Q_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (MOOS_Q_storm_list_beta[[i]][["datavalue"]]-min(MOOS_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(MOOS_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(MOOS_Q_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+# normalize solute data 
+# 
+#NO3
+for(i in 1:length(FRCH_NO3_storm_list_beta)){
+  FRCH_NO3_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (FRCH_NO3_storm_list_beta[[i]][["datavalue"]]-min(FRCH_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(FRCH_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(FRCH_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+for(i in 1:length(MOOS_NO3_storm_list_beta)){
+  MOOS_NO3_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (MOOS_NO3_storm_list_beta[[i]][["datavalue"]]-min(MOOS_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(MOOS_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(MOOS_NO3_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+
+#fDOM
+for(i in 1:length(FRCH_fDOM_storm_list_beta)){
+  FRCH_fDOM_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (FRCH_fDOM_storm_list_beta[[i]][["datavalue"]]-min(FRCH_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(FRCH_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(FRCH_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+for(i in 1:length(MOOS_fDOM_storm_list_beta)){
+  MOOS_fDOM_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (MOOS_fDOM_storm_list_beta[[i]][["datavalue"]]-min(MOOS_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(MOOS_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(MOOS_fDOM_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+
+
+#SPC
+for(i in 1:length(FRCH_SpCond_storm_list_beta)){
+  FRCH_SpCond_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (FRCH_SpCond_storm_list_beta[[i]][["datavalue"]]-min(FRCH_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(FRCH_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(FRCH_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+for(i in 1:length(MOOS_SpCond_storm_list_beta)){
+  MOOS_SpCond_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (MOOS_SpCond_storm_list_beta[[i]][["datavalue"]]-min(MOOS_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(MOOS_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(MOOS_SpCond_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+
+#Turb
+for(i in 1:length(FRCH_turb_storm_list_beta)){
+  FRCH_turb_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (FRCH_turb_storm_list_beta[[i]][["datavalue"]]-min(FRCH_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(FRCH_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(FRCH_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+for(i in 1:length(MOOS_turb_storm_list_beta)){
+  MOOS_turb_storm_list_beta[[i]][["datavalue.norm"]] = 
+    (MOOS_turb_storm_list_beta[[i]][["datavalue"]]-min(MOOS_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T))/
+    (max(MOOS_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T)-min(MOOS_turb_storm_list_beta[[i]][["datavalue"]], na.rm=T))
+}
+
+###### NO3  #######
+
+FRCH_NO3_storm <- map2_df(FRCH_Q_storm_list_beta, FRCH_NO3_storm_list_beta, inner_join, by = "valuedatetime")
+MOOS_NO3_storm <- map2_df(MOOS_Q_storm_list_beta, MOOS_NO3_storm_list_beta, inner_join, by = "valuedatetime")
+
+FRCH_NO3_storm$storm.ID = c(rep("storm1", 287),
+                            rep("storm2", 331),
+                            rep("storm3", 383),
+                            rep("storm4", 299),
+                            rep("storm5a", 173),
+                            rep("storm5b", 283),
+                            rep("storm6a", 295),
+                            rep("storm6b", 135),
+                            rep("storm6c", 864),
+                            rep("storm7", 240)) # maybe this last one is not an extra 8
+
+
+names(FRCH_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
+FRCH_NO3_storm$site.ID <- "FRCH"
+
+cols <- c("NO3.norm","Q.norm")
+FRCH_NO3_storm[cols] <- log(FRCH_NO3_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+
+FRCH_NO3_storm <- FRCH_NO3_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+FRCH_NO3_storm_ascending <- filter(FRCH_NO3_storm, limb == "ascending")
+
+FRCH_NO3_storm_ascending <- FRCH_NO3_storm_ascending[is.finite(FRCH_NO3_storm_ascending$Q.norm) & is.finite(FRCH_NO3_storm_ascending$NO3.norm), ]
+
+beta.all.no3 <- FRCH_NO3_storm_ascending %>% group_by(storm.ID) %>% 
+  dplyr::summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
+
+# MOOS # 
+MOOS_NO3_storm$storm.ID = c(rep("storm1", 383),
+                             rep("storm2", 575),
+                             rep("storm3a", 133),
+                             rep("storm3b", 477),
+                             rep("storm4", 191),
+                             rep("storm5", 455),
+                             rep("storm6", 178))
+
+names(MOOS_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
+MOOS_NO3_storm$site.ID <- "MOOS"
+
+MOOS_NO3_storm[cols] <- log(MOOS_NO3_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+MOOS_NO3_storm <- MOOS_NO3_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+MOOS_NO3_storm_ascending <- filter(MOOS_NO3_storm, limb == "ascending")
+
+MOOS_NO3_storm_ascending <- MOOS_NO3_storm_ascending[is.finite(MOOS_NO3_storm_ascending$Q.norm) & is.finite(MOOS_NO3_storm_ascending$NO3.norm), ]
+
+beta.all.no3.moos.with.all <- MOOS_NO3_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
+
+
+# ALL # 
+
+FRCH_NO3_storm_ascending$DateTime <- as.POSIXct(FRCH_NO3_storm_ascending$DateTime, 
+                                                "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+MOOS_NO3_storm_ascending$DateTime <- as.POSIXct(MOOS_NO3_storm_ascending$DateTime, 
+                                                "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+All_NO3_storm <- rbind(FRCH_NO3_storm_ascending, MOOS_NO3_storm_ascending)
+                       
+
+beta.all.no3 <- All_NO3_storm %>% group_by(storm.ID, site.ID) %>% 
+  summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
+
+
+beta.all.no3$response_var <- "NO3"
+
+all.2015.ci.no3 <- All_NO3_storm %>% 
+  group_by(site.ID, storm.ID) %>% 
+  group_modify(~ parameters::model_parameters(stats::lm(NO3.norm ~ Q.norm, data = .x)))
+
+all.2015.ci.no3$response_var <- "NO3"
+
+
+##### fDOM #####
+FRCH_fDOM_storm <- map2_df(FRCH_Q_storm_list_beta, FRCH_fDOM_storm_list_beta, inner_join, by = "valuedatetime")
+MOOS_fDOM_storm <- map2_df(MOOS_Q_storm_list_beta, MOOS_fDOM_storm_list_beta, inner_join, by = "valuedatetime")
+
+FRCH_fDOM_storm$storm.ID = c(rep("storm1", 287),
+                             rep("storm2", 331),
+                             rep("storm3", 383),
+                             rep("storm4", 299),
+                             rep("storm5a", 173),
+                             rep("storm5b", 283),
+                             rep("storm6a", 295),
+                             rep("storm6b", 135),
+                             rep("storm6c", 864),
+                             rep("storm7", 240))
+
+names(FRCH_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
+FRCH_fDOM_storm$site.ID <- "FRCH"
+
+cols <- c("fDOM.norm","Q.norm")
+FRCH_fDOM_storm[cols] <- log(FRCH_fDOM_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+FRCH_fDOM_storm <- FRCH_fDOM_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+FRCH_fDOM_storm_ascending <- filter(FRCH_fDOM_storm, limb == "ascending")
+
+FRCH_fDOM_storm_ascending <- FRCH_fDOM_storm_ascending[is.finite(FRCH_fDOM_storm_ascending$Q.norm) & is.finite(FRCH_fDOM_storm_ascending$fDOM.norm), ]
+
+beta.all.fDOM <- FRCH_fDOM_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
+
+# MOOS # 
+MOOS_fDOM_storm$storm.ID = c(rep("storm1", 383),
+                             rep("storm2", 575),
+                             rep("storm3a", 133),
+                             rep("storm3b", 477),
+                             rep("storm4", 191),
+                             rep("storm5", 455),
+                             rep("storm6", 178))
+
+names(MOOS_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
+MOOS_fDOM_storm$site.ID <- "MOOS"
+
+MOOS_fDOM_storm[cols] <- log(MOOS_fDOM_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+MOOS_fDOM_storm <- MOOS_fDOM_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+MOOS_fDOM_storm_ascending <- filter(MOOS_fDOM_storm, limb == "ascending")
+
+MOOS_fDOM_storm_ascending <- MOOS_fDOM_storm_ascending[is.finite(MOOS_fDOM_storm_ascending$Q.norm) & is.finite(MOOS_fDOM_storm_ascending$fDOM.norm), ]
+
+beta.all.fDOM.moos.with.all <- MOOS_fDOM_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
+
+# ALL # 
+FRCH_fDOM_storm_ascending$DateTime <- as.POSIXct(FRCH_fDOM_storm_ascending$DateTime, 
+                                                 "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+MOOS_fDOM_storm_ascending$DateTime <- as.POSIXct(MOOS_fDOM_storm_ascending$DateTime, 
+                                                 "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+All_fDOM_storm <- rbind(FRCH_fDOM_storm_ascending, MOOS_fDOM_storm_ascending)
+                        
+
+beta.all.fdom <- All_fDOM_storm %>% group_by(storm.ID, site.ID) %>% 
+  summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
+
+
+beta.all.fdom$response_var <- "fDOM"
+
+all.2015.ci.fDOM <- All_fDOM_storm %>% 
+  group_by(site.ID, storm.ID) %>% 
+  group_modify(~ parameters::model_parameters(stats::lm(fDOM.norm ~ Q.norm, data = .x)))
+
+all.2015.ci.fDOM$response_var <- "fDOM"
+
+
+##### SPC #####
+FRCH_SPC_storm <- map2_df(FRCH_Q_storm_list_beta, FRCH_SpCond_storm_list_beta, inner_join, by = "valuedatetime")
+MOOS_SPC_storm <- map2_df(MOOS_Q_storm_list_beta, MOOS_SpCond_storm_list_beta, inner_join, by = "valuedatetime")
+
+FRCH_SPC_storm$storm.ID = c(rep("storm1", 287),
+                            rep("storm2", 331),
+                            rep("storm3", 383),
+                            rep("storm4", 299),
+                            rep("storm5a", 173),
+                            rep("storm5b", 283),
+                            rep("storm6a", 295),
+                            rep("storm6b", 135),
+                            rep("storm6c", 864),
+                            rep("storm7", 240))
+
+names(FRCH_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
+FRCH_SPC_storm$site.ID <- "FRCH"
+
+cols <- c("SPC.norm","Q.norm")
+FRCH_SPC_storm[cols] <- log(FRCH_SPC_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+FRCH_SPC_storm <- FRCH_SPC_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+FRCH_SPC_storm_ascending <- filter(FRCH_SPC_storm, limb == "ascending")
+
+FRCH_SPC_storm_ascending <- FRCH_SPC_storm_ascending[is.finite(FRCH_SPC_storm_ascending$Q.norm) & is.finite(FRCH_SPC_storm_ascending$SPC.norm), ]
+
+beta.all.SPC <- FRCH_SPC_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
+
+# MOOS # 
+MOOS_SPC_storm$storm.ID = c(rep("storm1", 383),
+                            rep("storm2", 575),
+                            rep("storm3a", 133),
+                            rep("storm3b", 477),
+                            rep("storm4", 191),
+                            rep("storm5", 455),
+                            rep("storm6", 178))
+
+names(MOOS_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
+MOOS_SPC_storm$site.ID <- "MOOS"
+
+MOOS_SPC_storm[cols] <- log(MOOS_SPC_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+MOOS_SPC_storm <- MOOS_SPC_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+MOOS_SPC_storm_ascending <- filter(MOOS_SPC_storm, limb == "ascending")
+
+MOOS_SPC_storm_ascending <- MOOS_SPC_storm_ascending[is.finite(MOOS_SPC_storm_ascending$Q.norm) & is.finite(MOOS_SPC_storm_ascending$SPC.norm), ]
+
+beta.all.SPC.moos.with.all <- MOOS_SPC_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
+
+
+# ALL # 
+FRCH_SPC_storm_ascending$DateTime <- as.POSIXct(FRCH_SPC_storm_ascending$DateTime, 
+                                                "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+MOOS_SPC_storm_ascending$DateTime <- as.POSIXct(MOOS_SPC_storm_ascending$DateTime, 
+                                                "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+
+All_SPC_storm <- rbind(FRCH_SPC_storm_ascending, MOOS_SPC_storm_ascending)
+                       
+
+
+beta.all.SPC <- All_SPC_storm %>% group_by(storm.ID, site.ID) %>% 
+  summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
+
+
+beta.all.SPC$response_var <- "SPC"
+
+all.2015.ci.SPC <- All_SPC_storm %>% 
+  group_by(site.ID, storm.ID) %>% 
+  group_modify(~ parameters::model_parameters(stats::lm(SPC.norm ~ Q.norm, data = .x)))
+
+all.2015.ci.SPC$response_var <- "SPC"
+
+
+##### Turb #####
+FRCH_turb_storm <- map2_df(FRCH_Q_storm_list_beta, FRCH_turb_storm_list_beta, inner_join, by = "valuedatetime")
+MOOS_turb_storm <- map2_df(MOOS_Q_storm_list_beta, MOOS_turb_storm_list_beta, inner_join, by = "valuedatetime")
+
+FRCH_turb_storm$storm.ID = c(rep("storm1", 287),
+                             rep("storm2", 331),
+                             rep("storm3", 383),
+                             rep("storm4", 299),
+                             rep("storm5a", 173),
+                             rep("storm5b", 283),
+                             rep("storm6a", 295),
+                             rep("storm6b", 135),
+                             rep("storm6c", 864),
+                             rep("storm7", 240))
+
+names(FRCH_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
+FRCH_turb_storm$site.ID <- "FRCH"
+
+cols <- c("turb.norm","Q.norm")
+FRCH_turb_storm[cols] <- log(FRCH_turb_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+FRCH_turb_storm <- FRCH_turb_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+FRCH_turb_storm_ascending <- filter(FRCH_turb_storm, limb == "ascending")
+
+FRCH_turb_storm_ascending <- FRCH_turb_storm_ascending[is.finite(FRCH_turb_storm_ascending$Q.norm) & is.finite(FRCH_turb_storm_ascending$turb.norm), ]
+
+beta.all.turb <- FRCH_turb_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
+
+# MOOS # 
+MOOS_turb_storm$storm.ID = c(rep("storm1", 383),
+                             rep("storm2", 575),
+                             rep("storm3a", 133),
+                             rep("storm3b", 477),
+                             rep("storm4", 191),
+                             rep("storm5", 455),
+                             rep("storm6", 178))
+
+names(MOOS_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
+MOOS_turb_storm$site.ID <- "MOOS"
+
+MOOS_turb_storm[cols] <- log(MOOS_turb_storm[cols]) # making concentrations and Q log transformed
+
+slope <- function(x, y){
+  mean_x <- mean(x)
+  mean_y <- mean(y)
+  nom <- sum((x - mean_x)*(y-mean_y))
+  denom <- sum((x - mean_x)^2)
+  m <- nom / denom
+  return(m)
+}
+MOOS_turb_storm <- MOOS_turb_storm %>% group_by(storm.ID) %>% 
+  mutate(limb = ifelse(DateTime < DateTime[which.max(Q.norm)], "ascending", "descending"))
+
+MOOS_turb_storm_ascending <- filter(MOOS_turb_storm, limb == "ascending")
+
+MOOS_turb_storm_ascending <- MOOS_turb_storm_ascending[is.finite(MOOS_turb_storm_ascending$Q.norm) & is.finite(MOOS_turb_storm_ascending$turb.norm), ]
+
+beta.all.turb.moos.with.all <- MOOS_turb_storm_ascending %>% group_by(storm.ID) %>% 
+  summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
+
+
+# ALL # 
+FRCH_turb_storm_ascending$DateTime <- as.POSIXct(FRCH_turb_storm_ascending$DateTime, 
+                                                 "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+MOOS_turb_storm_ascending$DateTime <- as.POSIXct(MOOS_turb_storm_ascending$DateTime, 
+                                                 "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
+
+All_turb_storm<- rbind(FRCH_turb_storm_ascending, MOOS_turb_storm_ascending)
+                       
+
+beta.all.turb <- All_turb_storm %>% group_by(storm.ID, site.ID) %>% 
+  summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
+
+
+beta.all.turb$response_var <- "turb"
+
+all.2015.ci.turb <- All_turb_storm %>% 
+  group_by(site.ID, storm.ID) %>% 
+  group_modify(~ parameters::model_parameters(stats::lm(turb.norm ~ Q.norm, data = .x)))
+
+all.2015.ci.turb$response_var <- "turb"
+
+
+beta.all.2015 <- rbind(all.2015.ci.no3, all.2015.ci.fDOM,
+                       all.2015.ci.SPC, all.2015.ci.turb)
+
+beta.all.2015 <- beta.all.2015 %>%
+  dplyr::mutate(across(c(Coefficient), 
+                ~ifelse(Coefficient > 20, NA, .))) # remove outliers 
+
+
+write.csv(beta.all.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2015.csv")
+
+beta.all.2015 <- beta.all.2015 %>% 
+  filter(Parameter != "(Intercept)")
+
 ########################################## 2018 ##########################################################
 storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI/", 
                                    recursive=F, 

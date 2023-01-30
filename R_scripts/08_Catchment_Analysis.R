@@ -197,6 +197,17 @@ ggsave("BETA_NDVI.pdf",
 
 
 ###### HI_BETA PLOTS ####
+library(dataRetrieval)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(RColorBrewer)
+library(gridExtra)
+library(here)
+library(tidyverse)
+library(zoo)
+
 # Load in Antecedent moisture conditions dataframe
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
@@ -214,8 +225,14 @@ colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month"
               "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "pf", 
               "date", "TimeSinceChena")
 
-names(AMC)<- colNames # renaming columns 
+names(AMC)<- colNames # renaming columns
 
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(pf),
+                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "high", "medium")))
+
+
+vn = expression(paste(N*O[3]^"-"))
 ##subsetting by solute 
 # NO3 #
 HI_FI_NO3 = subset(AMC, response_var == "NO3")
@@ -225,6 +242,192 @@ HI_FI_fDOM = subset(AMC, response_var == "fDOM")
 HI_FI_SPC = subset(AMC, response_var == "SPC")
 # turb #
 HI_FI_turb = subset(AMC, response_var == "turb")
+
+### Outlier check ### By site
+
+# SPC
+MOOS_SPC = subset(HI_FI_SPC, site.ID == "MOOS")
+
+ggplot(MOOS_SPC, aes(Beta_index, Hyst_index)) +
+  geom_point(aes(colour = factor(year)), size = 2.5) 
+
+### 2015 Test ###
+HI_FI_NO3_2015 = subset(HI_FI_NO3, year == "2015")
+
+ggplot(HI_FI_NO3_2015, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle(vn)+ 
+  ylab("") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  labs(
+    colour = "Catchment",
+    shape = "PF Extent")
+
+HI_FI_fDOM_2015 = subset(HI_FI_fDOM, year == "2015")
+
+ggplot(HI_FI_fDOM_2015, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("fDOM")+ 
+  ylab("HI") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  guides(shape=guide_legend("Permafrost Extent"),
+         col=guide_legend("Catchment"))
+
+HI_FI_SPC_2015 = subset(HI_FI_SPC, year == "2015")
+
+
+ggplot(HI_FI_SPC_2015, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("SPC")+ 
+  ylab("HI") +
+  xlab("ß") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") 
+
+HI_FI_turb_2015 = subset(HI_FI_turb, year == "2015")
+
+ggplot(HI_FI_turb_2015, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + 
+  xlim(-1.5, 1.5) +
+  ggtitle("Turbidity")+ 
+  ylab("") +
+  xlab("ß") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") 
+
+### 2022 Test ###
+HI_FI_NO3_2022 = subset(HI_FI_NO3, year == "2022")
+
+ggplot(HI_FI_NO3_2022, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle(vn)+ 
+  ylab("") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  labs(
+    colour = "Catchment",
+    shape = "PF Extent")
+
+HI_FI_fDOM_2022 = subset(HI_FI_fDOM, year == "2022")
+
+ggplot(HI_FI_fDOM_2022, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("fDOM")+ 
+  ylab("HI") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  guides(shape=guide_legend("Permafrost Extent"),
+         col=guide_legend("Catchment"))
+
+HI_FI_SPC_2022 = subset(HI_FI_SPC, year == "2022")
+
+ 
+ggplot(HI_FI_SPC_2022, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("SPC")+ 
+  ylab("HI") +
+  xlab("ß") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") 
+
+HI_FI_turb_2022 = subset(HI_FI_turb, year == "2022")
+
+ggplot(HI_FI_turb_2022, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Permafrost Extent") + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + 
+  xlim(-1.5, 1.5) +
+  ggtitle("Turbidity")+ 
+  ylab("") +
+  xlab("ß") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") 
+
+
 
 #### PLOTS ####
 
@@ -2195,6 +2398,142 @@ range(my_dat$datetimeAK, na.rm=T)
 my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
+# 2022 ####
+EXO_processed <- read_csv("~/Documents/DoD_2022/EXO_data/from_internal_harddrive/processed/EXO.processed.csv")
+CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
+
+POKE_2022 <- subset(EXO_processed, site.ID == "POKE")
+STRT_2022 <- subset(EXO_processed, site.ID == "STRT")
+VAUL_2022 <- subset(EXO_processed, site.ID == "VAUL")
+MOOS_2022 <- subset(EXO_processed, site.ID == "MOOS")
+FRCH_2022 <- subset(EXO_processed, site.ID == "FRCH")
+
+CARI_2022$DateTimeAK <- ymd_hms(CARI_2022$DateTimeAK)
+
+# CARI_2021 <- CARI_2021 %>% # common window 
+#   mutate(across(c(DateTimeAK), 
+#                 ~ifelse(DateTimeAK >= "2021-06-12" & DateTimeAK <= "2021-09-27", NA, .)))
+
+CARI_2022 <- CARI_2022[-c(13419:16640),]  # removing not within the common window
+CARI_2022 <- CARI_2022[-c(1:3295),]  # removing not within the common window
+
+POKE_2022$datetimeAK <- lubridate::round_date(POKE_2022$datetimeAK, "15 minutes")
+POKE_2022 <- POKE_2022[!duplicated(POKE_2022$datetimeAK), ]
+
+STRT_2022$datetimeAK <- lubridate::round_date(STRT_2022$datetimeAK, "15 minutes")
+STRT_2022 <- STRT_2022[!duplicated(STRT_2022$datetimeAK), ]
+
+VAUL_2022$datetimeAK <- lubridate::round_date(VAUL_2022$datetimeAK, "15 minutes")
+VAUL_2022 <- VAUL_2022[!duplicated(VAUL_2022$datetimeAK), ]
+
+MOOS_2022$datetimeAK <- lubridate::round_date(MOOS_2022$datetimeAK, "15 minutes")
+MOOS_2022 <- MOOS_2022[!duplicated(MOOS_2022$datetimeAK), ]
+
+FRCH_2022$datetimeAK <- lubridate::round_date(FRCH_2022$datetimeAK, "15 minutes")
+FRCH_2022 <- FRCH_2022[!duplicated(FRCH_2022$datetimeAK), ]
+
+#plot
+ggplot(FRCH_2022, aes(x = datetimeAK, y = FRCH_2022$fDOM.QSU)) +
+  geom_point()
+
+
+# POKE
+POKE_2022$DOY <- yday(POKE_2022$datetimeAK)
+POKE_fDOM <- POKE_2022[,-c(1:6,8:22) ]
+POKE_SPC <- POKE_2022[,-c(1:13,15:22) ]
+POKE_turb <- POKE_2022[,-c(1:15, 17:22) ]
+
+# STRT
+STRT_2022$DOY <- yday(STRT_2022$datetimeAK)
+STRT_fDOM <- STRT_2022[,-c(1:6,8:22) ]
+STRT_SPC <- STRT_2022[,-c(1:13,15:22) ]
+STRT_turb <- STRT_2022[,-c(1:15, 17:22) ]
+
+# VAUL
+VAUL_2022$DOY <- yday(VAUL_2022$datetimeAK)
+VAUL_fDOM <- VAUL_2022[,-c(1:6,8:22) ]
+VAUL_SPC <- VAUL_2022[,-c(1:13,15:22) ]
+VAUL_turb <- VAUL_2022[,-c(1:15, 17:22) ]
+
+#  MOOS
+MOOS_2022$DOY <- yday(MOOS_2022$datetimeAK)
+MOOS_fDOM <- MOOS_2022[,-c(1:6,8:22) ]
+MOOS_SPC <- MOOS_2022[,-c(1:13,15:22) ]
+MOOS_turb <- MOOS_2022[,-c(1:15, 17:22) ]
+
+#  FRCH
+FRCH_2022$DOY <- yday(FRCH_2022$datetimeAK)
+FRCH_fDOM <- FRCH_2022[,-c(1:6,8:22) ]
+FRCH_SPC <- FRCH_2022[,-c(1:13,15:22) ]
+FRCH_turb <- FRCH_2022[,-c(1:15, 17:22) ]
+
+#  CARI
+CARI_2022$DOY <- yday(CARI_2022$DateTimeAK)
+CARI_fDOM <- CARI_2022[c("fDOM", "DateTimeAK", "DOY")]
+CARI_SPC <- CARI_2022[c("SPC", "DateTimeAK", "DOY")]
+CARI_turb <- CARI_2022[c("Turb", "DateTimeAK", "DOY")]
+CARI_no3 <- CARI_2022[c("NO3", "DateTimeAK", "DOY")]
+
+ggplot(CARI_2022, aes(x = DateTimeAK, y = CARI_2022$fDOM)) +
+  geom_point()
+
+# identifying gaps 
+my_dat = data.frame(DateTimeAK = na.omit(CARI_no3$DateTimeAK))
+my_dat$DateTimeAK = sort(my_dat$DateTimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, DateTimeAK[-1] - DateTimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$DateTimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
+
+# identifying gaps 
+my_dat = data.frame(datetimeAK = na.omit(FRCH_fDOM$datetimeAK))
+my_dat$datetimeAK = sort(my_dat$datetimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, datetimeAK[-1] - datetimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$datetimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
+# nitrate 
+FRCH_SUNA <- read_csv("~/Documents/DoD_2022/SUNA_processed/FRCH_SUNA_means_detailed_clean.csv")
+MOOS_SUNA <- read_csv("~/Documents/DoD_2022/SUNA_processed/MOOS_SUNA_means_detailed_clean.csv")
+POKE_SUNA <- read_csv("~/Documents/DoD_2022/SUNA_processed/POKE_SUNA_means_detailed_clean.csv")
+STRT_SUNA <- read_csv("~/Documents/DoD_2022/SUNA_processed/STRT_SUNA_means_detailed_clean.csv")
+VAUL_SUNA <- read_csv("~/Documents/DoD_2022/SUNA_processed/VAUL_SUNA_means_detailed_clean.csv")
+
+ggplot(VAUL_SUNA, aes(x = datetimeAK, y = VAUL_SUNA$nitrateuM.mn)) +
+  geom_point()
+
+
+# POKE
+POKE_NO3 <- POKE_SUNA[,-c(3:27) ]
+
+# STRT
+STRT_NO3 <- STRT_SUNA[,-c(3:27) ]
+
+# VAUL
+VAUL_NO3 <- VAUL_SUNA[,-c(3:27) ]
+
+# MOOS
+MOOS_NO3 <- MOOS_SUNA[,-c(3:27) ]
+
+# FRCH
+FRCH_NO3 <- FRCH_SUNA[,-c(3:27) ]
+
+# identifying gaps 
+my_dat = data.frame(datetimeAK = na.omit(VAUL_NO3$datetimeAK))
+my_dat$datetimeAK = sort(my_dat$datetimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, datetimeAK[-1] - datetimeAK[-nrow(my_dat)]))
+gap_threshold <- 720 # 12 hours in minutes
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$datetimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
 # Duration 
 AMC <- read.csv("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv")
 
@@ -2648,5 +2987,150 @@ plot(turb)
 
 
 #mean_daily <- na.omit(mean_daily)
+
+
+############################### TIME SERIES PLOT - THESIS ###############################################
+# read in daily chemistry data
+
+chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
+chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
+chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
+
+chem_2019 <- chem_2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                       "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2019$datetimeAK <- ymd_hms(chem_2019$datetimeAK)
+chem_2019$year <- format(chem_2019$datetimeAK, format = "%Y")
+
+chem_2020 <- chem_2020[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2020$datetimeAK <- ymd_hms(chem_2020$datetimeAK)
+chem_2020$year <- format(chem_2020$datetimeAK, format = "%Y")
+
+chem_2021 <- chem_2021[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2021$datetimeAK <- ymd_hms(chem_2021$datetimeAK)
+chem_2021$year <- format(chem_2021$datetimeAK, format = "%Y")
+
+chem_2022 <- chem_2022[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2022$datetimeAK <- ymd_hms(chem_2022$datetimeAK)
+chem_2022$year <- format(chem_2022$datetimeAK, format = "%Y")
+
+
+DOD_chem <- rbind(chem_2019, chem_2020, chem_2021, chem_2022)
+DOD_chem$julian <- yday(DOD_chem$datetimeAK)
+DOD_chem$day <- as.Date(DOD_chem$datetimeAK)
+
+names(DOD_chem) <- c("datetimeAK", "site.ID", "fDOM", "SPC",
+                     "Turb", "NO3", "ABS_254", "year", "julian", "day")
+
+mean_daily <- DOD_chem %>% 
+  group_by(day, site.ID, year) %>% 
+  summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
+            dailyNO3 = mean(NO3, na.rm = TRUE),
+            dailySPC = mean(SPC, na.rm = TRUE),
+            dailyTurb = mean(Turb, na.rm = TRUE),
+            julian = as.numeric(julian))
+
+mean_daily <- mean_daily %>%
+  group_by(day, site.ID) %>%
+  slice(which.min(day)) # making sure I just take the first value for the daily mean since it gives the same mean value for each 15minute interval so I just want one
+
+mean_daily_long <- mean_daily %>%
+  pivot_longer(
+    cols = starts_with("daily"),
+    names_to = "response_var",
+    values_to = "concentration"
+  ) # converting to a long format so each response_var is within a single column
+
+
+# mean_daily <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
+
+
+
+Q_daily_2019 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2019/Q.daily.2019.csv")
+Q_daily_2020 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2020/Q.daily.2020.csv")
+Q_daily_2021 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2021/Q.daily.2021.csv")
+Q_daily_2022 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2022/Q.daily.2022.csv")
+
+Q_DOD <- rbind(Q_daily_2019, Q_daily_2020, Q_daily_2021, Q_daily_2022)
+names(Q_DOD) <- c("site.ID", "day", "dailyQ")
+
+mean_daily <- full_join(Q_DOD, mean_daily, by = c("site.ID", "day"))
+mean_daily$datetimeAK <- ymd(mean_daily$day)
+
+mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
+
+mean_daily$year <- as.character(mean_daily$year)
+
+# mean_daily$Burn <- NA
+# 
+# # mean_daily <- mean_daily %>% 
+# #   mutate(across(c(Burn),
+#                 ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
+# 
+# mean_daily$PF <- NA
+# 
+# mean_daily <- mean_daily %>% 
+#   mutate(across(c(PF),
+#                 ~ifelse(site.ID == "VAUL" | site.ID == "STRT", "High", "Moderate")))
+
+#extracting year from datetime so there arent NAs
+mean_daily$year <- as.character(format(mean_daily$datetimeAK, "%Y"))
+which(is.na(mean_daily$year))
+mean_daily <- mean_daily[-c(2922,2933),]
+
+
+#making a julian day column so there arent NAs
+mean_daily$julian <-  yday(mean_daily$datetimeAK)
+
+# cleaning up bottom of df with empty site values
+which(is.na(mean_daily$site.ID))
+mean_daily <- mean_daily[-c(2980:2992),]
+
+
+mean_daily <- mean_daily[c("site.ID", "day", "year", "dailyQ",
+                           "dailyfDOM", "dailyNO3", "dailySPC", "dailyTurb",
+                           "julian", "datetimeAK")] # reorganizing columns
+
+
+vn = expression(paste(N*O[3]^"-"))
+
+mean_daily_long <- mean_daily %>%
+  pivot_longer(
+    cols = starts_with("daily"),
+    names_to = "response_var",
+    names_prefix = "wk",
+    values_to = "concentration") # converting to a long format so each response_var is within a single column
+
+mean_daily_long$response_var = factor(mean_daily_long$response_var, 
+                                      levels=c('dailyQ', 'dailyNO3', 'dailyfDOM', 'dailySPC', 'dailyTurb'))
+
+ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
+  geom_line(size = 0.5) +
+  scale_color_manual(values=c("#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A", "#3288BD")) +
+  facet_grid(response_var~year, scales = "free") +
+  theme_classic() +
+  theme(strip.text.x = element_text(size = 20),
+        strip.text.y = element_text(size = 20),
+        axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_blank())
+
+# facet_grid(response_var~year, scales = "free") +
+
+
+
+
+
+
+
+
+
+
+
+
 
 
