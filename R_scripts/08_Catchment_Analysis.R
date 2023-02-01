@@ -439,7 +439,7 @@ HI_BETA_NO3.p =
   ggplot(HI_FI_NO3, aes(Beta_index, Hyst_index)) + 
   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_point(aes(colour = factor(site.ID), shape = PF), size = 2.5) +
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
   theme_bw() +
@@ -672,6 +672,98 @@ which(HI_FI_turb$Beta_ymin < 0 & HI_FI_turb$Beta_ymax > 0 & HI_FI_turb$Beta_inde
 
 
 # by site and year  ####
+# 2015  ####
+# FRCH ####
+# NO3
+HI_FI_NO3_FRCH_2015 <- subset(HI_FI_NO3, site.ID == "FRCH" & year == "2015")
+
+table(sign(HI_FI_NO3_FRCH_2015$Hyst_index))
+which(HI_FI_NO3_FRCH_2015$HI_ymin < 0 & HI_FI_NO3_FRCH_2015$HI_ymax > 0 & HI_FI_NO3_FRCH_2015$Hyst_index > 0)
+which(HI_FI_NO3_FRCH_2015$HI_ymin < 0 & HI_FI_NO3_FRCH_2015$HI_ymax > 0 & HI_FI_NO3_FRCH_2015$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_FRCH_2015$Beta_index))
+which(HI_FI_NO3_FRCH_2015$Beta_ymin < 0 & HI_FI_NO3_FRCH_2015$Beta_ymax > 0 & HI_FI_NO3_FRCH_2015$Beta_index > 0)
+which(HI_FI_NO3_FRCH_2015$Beta_ymin < 0 & HI_FI_NO3_FRCH_2015$Beta_ymax > 0 & HI_FI_NO3_FRCH_2015$Beta_index < 0)
+
+# fDOM
+HI_FI_fDOM_FRCH_2015 <- subset(HI_FI_fDOM, site.ID == "FRCH" & year == "2015")
+
+table(sign(HI_FI_fDOM_FRCH_2015$Hyst_index))
+which(HI_FI_fDOM_FRCH_2015$HI_ymin < 0 & HI_FI_fDOM_FRCH_2015$HI_ymax > 0 & HI_FI_fDOM_FRCH_2015$Hyst_index > 0)
+which(HI_FI_fDOM_FRCH_2015$HI_ymin < 0 & HI_FI_fDOM_FRCH_2015$HI_ymax > 0 & HI_FI_fDOM_FRCH_2015$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_FRCH_2015$Beta_index))
+which(HI_FI_fDOM_FRCH_2015$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2015$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2015$Beta_index > 0)
+which(HI_FI_fDOM_FRCH_2015$Beta_ymin < 0 & HI_FI_fDOM_FRCH_2015$Beta_ymax > 0 & HI_FI_fDOM_FRCH_2015$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_FRCH_2015 <- subset(HI_FI_SPC, site.ID == "FRCH" & year == "2015")
+
+table(sign(HI_FI_SPC_FRCH_2015$Hyst_index))
+which(HI_FI_SPC_FRCH_2015$HI_ymin < 0 & HI_FI_SPC_FRCH_2015$HI_ymax > 0 & HI_FI_SPC_FRCH_2015$Hyst_index > 0)
+which(HI_FI_SPC_FRCH_2015$HI_ymin < 0 & HI_FI_SPC_FRCH_2015$HI_ymax > 0 & HI_FI_SPC_FRCH_2015$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_FRCH_2015$Beta_index))
+which(HI_FI_SPC_FRCH_2015$Beta_ymin < 0 & HI_FI_SPC_FRCH_2015$Beta_ymax > 0 & HI_FI_SPC_FRCH_2015$Beta_index > 0)
+which(HI_FI_SPC_FRCH_2015$Beta_ymin < 0 & HI_FI_SPC_FRCH_2015$Beta_ymax > 0 & HI_FI_SPC_FRCH_2015$Beta_index < 0)
+
+#turb
+HI_FI_turb_FRCH_2015 <- subset(HI_FI_turb, site.ID == "FRCH" & year == "2015")
+
+table(sign(HI_FI_turb_FRCH_2015$Hyst_index))
+which(HI_FI_turb_FRCH_2015$HI_ymin < 0 & HI_FI_turb_FRCH_2015$HI_ymax > 0 & HI_FI_turb_FRCH_2015$Hyst_index > 0)
+which(HI_FI_turb_FRCH_2015$HI_ymin < 0 & HI_FI_turb_FRCH_2015$HI_ymax > 0 & HI_FI_turb_FRCH_2015$Hyst_index < 0)
+
+table(sign(HI_FI_turb_FRCH_2015$Beta_index))
+which(HI_FI_turb_FRCH_2015$Beta_ymin < 0 & HI_FI_turb_FRCH_2015$Beta_ymax > 0 & HI_FI_turb_FRCH_2015$Beta_index > 0)
+which(HI_FI_turb_FRCH_2015$Beta_ymin < 0 & HI_FI_turb_FRCH_2015$Beta_ymax > 0 & HI_FI_turb_FRCH_2015$Beta_index < 0)
+
+# MOOS ####
+# NO3 
+HI_FI_NO3_MOOS_2015 <- subset(HI_FI_NO3, site.ID == "MOOS" & year == "2015")
+
+table(sign(HI_FI_NO3_MOOS_2015$Hyst_index))
+which(HI_FI_NO3_MOOS_2015$HI_ymin < 0 & HI_FI_NO3_MOOS_2015$HI_ymax > 0 & HI_FI_NO3_MOOS_2015$Hyst_index > 0)
+which(HI_FI_NO3_MOOS_2015$HI_ymin < 0 & HI_FI_NO3_MOOS_2015$HI_ymax > 0 & HI_FI_NO3_MOOS_2015$Hyst_index < 0)
+
+table(sign(HI_FI_NO3_MOOS_2015$Beta_index))
+which(HI_FI_NO3_MOOS_2015$Beta_ymin < 0 & HI_FI_NO3_MOOS_2015$Beta_ymax > 0 & HI_FI_NO3_MOOS_2015$Beta_index > 0)
+which(HI_FI_NO3_MOOS_2015$Beta_ymin < 0 & HI_FI_NO3_MOOS_2015$Beta_ymax > 0 & HI_FI_NO3_MOOS_2015$Beta_index < 0)
+
+
+#fDOM 
+HI_FI_fDOM_MOOS_2015 <- subset(HI_FI_fDOM, site.ID == "MOOS" & year == "2015")
+
+table(sign(HI_FI_fDOM_MOOS_2015$Hyst_index))
+which(HI_FI_fDOM_MOOS_2015$HI_ymin < 0 & HI_FI_fDOM_MOOS_2015$HI_ymax > 0 & HI_FI_fDOM_MOOS_2015$Hyst_index > 0)
+which(HI_FI_fDOM_MOOS_2015$HI_ymin < 0 & HI_FI_fDOM_MOOS_2015$HI_ymax > 0 & HI_FI_fDOM_MOOS_2015$Hyst_index < 0)
+
+table(sign(HI_FI_fDOM_MOOS_2015$Beta_index))
+which(HI_FI_fDOM_MOOS_2015$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2015$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2015$Beta_index > 0)
+which(HI_FI_fDOM_MOOS_2015$Beta_ymin < 0 & HI_FI_fDOM_MOOS_2015$Beta_ymax > 0 & HI_FI_fDOM_MOOS_2015$Beta_index < 0)
+
+#SPC
+HI_FI_SPC_MOOS_2015 <- subset(HI_FI_SPC, site.ID == "MOOS" & year == "2015")
+
+table(sign(HI_FI_SPC_MOOS_2015$Hyst_index))
+which(HI_FI_SPC_MOOS_2015$HI_ymin < 0 & HI_FI_SPC_MOOS_2015$HI_ymax > 0 & HI_FI_SPC_MOOS_2015$Hyst_index > 0)
+which(HI_FI_SPC_MOOS_2015$HI_ymin < 0 & HI_FI_SPC_MOOS_2015$HI_ymax > 0 & HI_FI_SPC_MOOS_2015$Hyst_index < 0)
+
+table(sign(HI_FI_SPC_MOOS_2015$Beta_index))
+which(HI_FI_SPC_MOOS_2015$Beta_ymin < 0 & HI_FI_SPC_MOOS_2015$Beta_ymax > 0 & HI_FI_SPC_MOOS_2015$Beta_index > 0)
+which(HI_FI_SPC_MOOS_2015$Beta_ymin < 0 & HI_FI_SPC_MOOS_2015$Beta_ymax > 0 & HI_FI_SPC_MOOS_2015$Beta_index < 0)
+
+#turb
+HI_FI_turb_MOOS_2015 <- subset(HI_FI_turb, site.ID == "MOOS" & year == "2015")
+
+table(sign(HI_FI_turb_MOOS_2015$Hyst_index))
+which(HI_FI_turb_MOOS_2015$HI_ymin < 0 & HI_FI_turb_MOOS_2015$HI_ymax > 0 & HI_FI_turb_MOOS_2015$Hyst_index > 0)
+which(HI_FI_turb_MOOS_2015$HI_ymin < 0 & HI_FI_turb_MOOS_2015$HI_ymax > 0 & HI_FI_turb_MOOS_2015$Hyst_index < 0)
+
+table(sign(HI_FI_turb_MOOS_2015$Beta_index))
+which(HI_FI_turb_MOOS_2015$Beta_ymin < 0 & HI_FI_turb_MOOS_2015$Beta_ymax > 0 & HI_FI_turb_MOOS_2015$Beta_index > 0)
+which(HI_FI_turb_MOOS_2015$Beta_ymin < 0 & HI_FI_turb_MOOS_2015$Beta_ymax > 0 & HI_FI_turb_MOOS_2015$Beta_index < 0)
+
 
 # 2018  ####
 # FRCH ####
@@ -1921,6 +2013,52 @@ which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & 
 
 
 # Figuring out how many days are missing from the record  ####
+# 2015 ####
+chem.2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"), na.strings = "NA")
+
+chem.2015 <- chem.2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
+                         "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+
+chem.2015$datetimeAK <- ymd_hms(chem.2015$datetimeAK) # converting character to datetime
+chem.2015$datetimeAK <- force_tz(chem.2015$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem.2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+
+FRCH.2015 <-  subset(chem.2015, site.ID == "FRCH")
+FRCH.2015 <- FRCH.2015[-c(12519:12849), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+MOOS.2015 <-  subset(chem.2015, site.ID == "MOOS")
+MOOS.2015 <- MOOS.2015[-c(12540:12796), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+
+#plot
+ggplot(MOOS.2015, aes(x = datetimeAK, y = MOOS.2015$NO3)) +
+  geom_point()
+
+#  FRCH
+FRCH.2015$DOY <- yday(FRCH.2015$datetimeAK)
+FRCH_fDOM <- FRCH.2015[c("datetimeAK", "fDOM")]
+FRCH_SPC <- FRCH.2015[c("datetimeAK", "SPC")]
+FRCH_turb <- FRCH.2015[c("datetimeAK", "Turb")]
+FRCH_NO3 <- FRCH.2015[c("datetimeAK", "NO3")]
+
+#  MOOS
+MOOS.2015$DOY <- yday(MOOS.2015$datetimeAK)
+MOOS_fDOM <- MOOS.2015[c("datetimeAK", "fDOM")]
+MOOS_SPC <- MOOS.2015[c("datetimeAK", "SPC")]
+MOOS_turb <- MOOS.2015[c("datetimeAK", "Turb")]
+MOOS_NO3 <- MOOS.2015[c("datetimeAK", "NO3")]
+
+# identifying gaps 
+my_dat = data.frame(datetimeAK = na.omit(FRCH_NO3$datetimeAK))
+my_dat$datetimeAK = sort(my_dat$datetimeAK, decreasing = F)
+my_dat$gap <- c(NA, with(my_dat, datetimeAK[-1] - datetimeAK[-nrow(my_dat)]))
+gap_threshold <- 43200 # 12 hours in seconds
+my_dat$over_thresh <- my_dat$gap > gap_threshold
+range(my_dat$datetimeAK, na.rm=T)
+my_dat[which(my_dat$over_thresh==T)-1,]
+my_dat[my_dat$over_thresh==T,]
+
+
 # 2018 ####
 MOOS_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_MOOS_final_formatted.csv"))
 FRCH_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_FRCH_final_formatted.csv"))
@@ -2560,29 +2698,98 @@ mean_duration_site <- AMC %>%
 
 
 #### MEAN SOLUTE CONCENTRATIONS ####
-DOD_2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
-DOD_2019 <- read.csv(here("Q", "Q_chem", "DOD.2019.csv"))
-DOD_2019 <-  subset(DOD_2019, select=-c(X))
-DOD_2020 <- read.csv(here("Q", "Q_chem", "DOD.2020.csv"))
-DOD_2020 <-  subset(DOD_2020, select=-c(X))
+chem_2015 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
+chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
+chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
+chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
+chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
 
-colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
-names(DOD_2020)<- colNames # renaming columns 
-DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
-DOD_2022 <- read.csv(here("Q", "Q_chem", "DOD.2022.csv"))
-DOD_2022 <-  subset(DOD_2022, select=-c(X, ABS_254))
-DOD_2022$day <- as.Date(DOD_2022$datetimeAK)
-DOD_2022 <- DOD_2022[c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3",
-                       "Q", "day")]
+#
+chem_2015 <- chem_2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
+                         "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
 
-DOD_2018$year <- "2018"
-DOD_2019$year <- "2019"
-DOD_2020$year <- "2020"
-DOD_2021$year <- "2021"
-DOD_2022$year <- "2022"
+chem_2015$datetimeAK <- ymd_hms(chem_2015$datetimeAK) # converting character to datetime
+chem_2015$datetimeAK <- force_tz(chem_2015$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem_2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2015$year <- format(chem_2015$datetimeAK, format = "%Y")
+
+#
+chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
+                         "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
+                         "nitrateuM.mn", "abs254.adj.mn")] # reading in the only columns I want
+
+chem_2018$datetimeAK <- ymd_hms(chem_2018$datetimeAK) # converting character to datetime
+chem_2018$datetimeAK <- force_tz(chem_2018$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem_2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2018$year <- format(chem_2018$datetimeAK, format = "%Y")
+
+#
+chem_2019 <- chem_2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2019$datetimeAK <- ymd_hms(chem_2019$datetimeAK)
+chem_2019$datetimeAK <- force_tz(chem_2019$datetimeAK, "America/Anchorage") # converting character to datetime
+names(chem_2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2019$year <- format(chem_2019$datetimeAK, format = "%Y")
+
+#
+chem_2020 <- chem_2020[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2020$datetimeAK <- ymd_hms(chem_2020$datetimeAK)
+chem_2020$datetimeAK <- force_tz(chem_2020$datetimeAK, "America/Anchorage") # converting character to datetime
+names(chem_2020) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2020$year <- format(chem_2020$datetimeAK, format = "%Y")
+
+#
+chem_2021 <- chem_2021[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2021$datetimeAK <- ymd_hms(chem_2021$datetimeAK)
+chem_2021$datetimeAK <- force_tz(chem_2021$datetimeAK, "America/Anchorage") # converting character to datetime
+names(chem_2021) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2021$year <- format(chem_2021$datetimeAK, format = "%Y")
+
+#
+chem_2022 <- chem_2022[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2022$datetimeAK <- ymd_hms(chem_2022$datetimeAK)
+chem_2022$datetimeAK <- force_tz(chem_2022$datetimeAK, "America/Anchorage") # converting character to datetime
+names(chem_2022) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+chem_2022$year <- format(chem_2022$datetimeAK, format = "%Y")
 
 
-DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021, DOD_2022)
+DOD_chem <- rbind(chem_2015, chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
+DOD_chem$julian <- yday(DOD_chem$datetimeAK)
+DOD_chem$day <- as.character(DOD_chem$datetimeAK)
+
+
+
+
+
+# DOD_2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
+# DOD_2019 <- read.csv(here("Q", "Q_chem", "DOD.2019.csv"))
+# DOD_2019 <-  subset(DOD_2019, select=-c(X))
+# DOD_2020 <- read.csv(here("Q", "Q_chem", "DOD.2020.csv"))
+# DOD_2020 <-  subset(DOD_2020, select=-c(X))
+# 
+# colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
+# names(DOD_2020)<- colNames # renaming columns 
+# DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
+# DOD_2022 <- read.csv(here("Q", "Q_chem", "DOD.2022.csv"))
+# DOD_2022 <-  subset(DOD_2022, select=-c(X, ABS_254))
+# DOD_2022$day <- as.Date(DOD_2022$datetimeAK)
+# DOD_2022 <- DOD_2022[c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3",
+#                        "Q", "day")]
+# 
+# DOD_2018$year <- "2018"
+# DOD_2019$year <- "2019"
+# DOD_2020$year <- "2020"
+# DOD_2021$year <- "2021"
+# DOD_2022$year <- "2022"
+# 
+# 
+# DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021, DOD_2022)
 
 # read in Caribou data 
 CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
@@ -2646,7 +2853,9 @@ names(CARI_chem)<- colNames # renaming columns
 CARI_chem$datetimeAK <- ymd_hms(CARI_chem$datetimeAK)
 DOD_chem$datetimeAK <- ymd_hms(DOD_chem$datetimeAK)
 
-DOD_chem <- rbind(DOD_chem, CARI_chem)
+DOD_chem <- full_join(DOD_chem, CARI_chem, by = c("datetimeAK", "site.ID", "fDOM",
+                                                  "SPC", "Turb", "NO3", "year",
+                                                  "day"))
 DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
 DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 
@@ -2675,11 +2884,21 @@ DOD_chem <- DOD_chem %>%
   mutate(across(c(fDOM), 
                 ~ifelse(year == 2021 & fDOM < 1, NA, .)))
 
+DOD_chem <- DOD_chem %>%
+  mutate(across(c(site.ID), 
+                ~ifelse(site.ID == "C2" | site.ID == "C3" | site.ID == "CRBU" |
+                        site.ID == "EM" | site.ID == "EPSCoR" | site.ID == "EPSCOR" |
+                        site.ID == "Evan" | site.ID == "Fox well" | site.ID == "N Fork Chena" |
+                        site.ID == "Nitgeo" | site.ID == "SALCHA" | site.ID == "STD"|
+                        site.ID == "SUNA leaf" | site.ID == "Sycamore" | site.ID == "VAUL upwell lake"|
+                        site.ID == "NA" | site.ID == "Salcha", NA, .))) # removing all sites that arent the DOD sites 
+
+DOD_chem <- DOD_chem[-c(401196:408943), ] # removing the bottom of the df that has no datetime associated with chems
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
      pivot_longer(
-       cols = fDOM:NO3,
+       cols = fDOM:ABS_254,
        names_to = "response_var",
        values_to = "concentration",
        values_drop_na = TRUE) # converting to a long format so each response_var is within a single column
@@ -2692,6 +2911,7 @@ ggplot(chem.long, aes(x = julian, y = concentration, color = site.ID)) +
 
 # Filtering by year to compare concentrations across years 
 
+chem_2015 <- subset(DOD_chem, year == "2015")
 chem_2018 <- subset(DOD_chem, year == "2018")
 chem_2019 <- subset(DOD_chem, year == "2019")
 chem_2020 <- subset(DOD_chem, year == "2020")
@@ -2699,21 +2919,23 @@ chem_2021 <- subset(DOD_chem, year == "2021")
 chem_2022 <- subset(DOD_chem, year == "2022")
 
 # start and end dates for 2022 # 
-FRCH <- subset(DOD_2022, site.ID == "FRCH")
-MOOS <- subset(DOD_2022, site.ID == "MOOS")
-POKE <- subset(DOD_2022, site.ID == "POKE")
-VAUL <- subset(DOD_2022, site.ID == "VAUL")
-STRT <- subset(DOD_2022, site.ID == "STRT")
+# FRCH <- subset(DOD_2022, site.ID == "FRCH")
+# MOOS <- subset(DOD_2022, site.ID == "MOOS")
+# POKE <- subset(DOD_2022, site.ID == "POKE")
+# VAUL <- subset(DOD_2022, site.ID == "VAUL")
+# STRT <- subset(DOD_2022, site.ID == "STRT")
 
 
 # The common window for time since peak chena is day 35-142 so the dates are as follows:
 # these dates are in the Summart_statistics csv summary file 
+# 2015 TPC: 5/12
 # 2018 TPC: 5/23
 # 2019 TPC: 5/12
 # 2020 TPC: 5/13
 # 2021 TPC: 5/8
 # 2022 TPC: 5/9
 
+chem_2015 <- subset(chem_2015, datetimeAK > "2015-06-27" & datetimeAK < "2015-10-11")
 chem_2018 <- subset(chem_2018, datetimeAK > "2018-06-27" & datetimeAK < "2018-10-12")
 chem_2019 <- subset(chem_2019, datetimeAK > "2019-06-16" & datetimeAK < "2019-10-01")
 chem_2020 <- subset(chem_2020, datetimeAK > "2020-06-17" & datetimeAK < "2020-09-30")
@@ -2721,6 +2943,10 @@ chem_2021 <- subset(chem_2021, datetimeAK > "2021-06-12" & datetimeAK < "2021-09
 chem_2022 <- subset(chem_2022, datetimeAK > "2022-06-13" & datetimeAK < "2022-09-28")
 
 # make a julian day columnn:
+chem_2015$julian <- yday(chem_2015$datetimeAK)
+chem_2015$TSC <- chem_2015$julian-142 # TSC column
+chem_2015$day <- as.Date(chem_2015$datetimeAK)
+
 chem_2018$julian <- yday(chem_2018$datetimeAK)
 chem_2018$TSC <- chem_2018$julian-143 # TSC column
 chem_2018$day <- as.Date(chem_2018$datetimeAK)
@@ -2742,7 +2968,7 @@ chem_2022$TSC <- chem_2022$julian-129 # TSC column
 chem_2022$day <- as.Date(chem_2022$datetimeAK)
 
 # combine them to be able to plot it 
-similar_chem_year <- rbind(chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
+similar_chem_year <- rbind(chem_2015, chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
 
 mean_daily <- similar_chem_year %>% 
   group_by(day, site.ID, year) %>% 
@@ -2750,6 +2976,7 @@ mean_daily <- similar_chem_year %>%
             dailyNO3 = mean(NO3, na.rm = TRUE),
             dailySPC = mean(SPC, na.rm = TRUE),
             dailyTurb = mean(Turb, na.rm = TRUE),
+            dailyABS = mean(ABS_254, na.rm = TRUE),
             julian = as.numeric(julian))
 
 mean_daily <- mean_daily %>%
@@ -3125,7 +3352,8 @@ ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
 
 
 
-
+# 2015 # 
+chem_2015 <- read_csv("processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
 
 
 
