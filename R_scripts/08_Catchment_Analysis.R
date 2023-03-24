@@ -222,14 +222,14 @@ colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month"
               "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
               "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
               "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
-              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "pf", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
               "date", "TimeSinceChena")
 
 names(AMC)<- colNames # renaming columns
 
 AMC <- AMC %>% 
-  dplyr::mutate(across(c(pf),
-                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "high", "medium")))
+  dplyr::mutate(across(c(PF),
+                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "High", "Moderate")))
 
 
 vn = expression(paste(N*O[3]^"-"))
@@ -431,6 +431,12 @@ ggplot(HI_FI_turb_2022, aes(Beta_index, Hyst_index)) +
 
 #### PLOTS ####
 
+# 2018-2022 # 
+HI_FI_NO3 <- subset(HI_FI_NO3, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_fDOM <- subset(HI_FI_fDOM, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_SPC <- subset(HI_FI_SPC, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_turb <- subset(HI_FI_turb, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+
 # plots 
 # NO3
 vn = expression(paste(N*O[3]^"-"))
@@ -483,7 +489,7 @@ HI_BETA_fDOM.p =
     ggplot(HI_FI_fDOM, aes(Beta_index, Hyst_index)) + 
     geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
     geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-    geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+    geom_point(aes(colour = factor(site.ID), shape = PF), size = 2.5) +
     geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
     scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
     theme_bw() +
@@ -513,7 +519,7 @@ HI_BETA_SPC.p =
   ggplot(HI_FI_SPC, aes(Beta_index, Hyst_index)) + 
   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_point(aes(colour = factor(site.ID), shape = PF), size = 2.5) +
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
   theme_bw() +
@@ -536,7 +542,7 @@ HI_BETA_turb.p =
   ggplot(HI_FI_turb, aes(Beta_index, Hyst_index)) + 
   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
+  geom_point(aes(colour = factor(site.ID), shape = PF), size = 2.5) +
   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Permafrost Extent") + 
   theme_bw() +
@@ -3217,15 +3223,19 @@ plot(turb)
 
 
 ############################### TIME SERIES PLOT - THESIS ###############################################
-# read in daily chemistry data
-
+chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
 chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
 chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
 chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
 chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
 
+chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+chem_2018$datetimeAK <- ymd_hms(chem_2018$datetimeAK)
+chem_2018$year <- format(chem_2018$datetimeAK, format = "%Y")
+
 chem_2019 <- chem_2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
-                       "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
 chem_2019$datetimeAK <- ymd_hms(chem_2019$datetimeAK)
 chem_2019$year <- format(chem_2019$datetimeAK, format = "%Y")
 
@@ -3245,98 +3255,104 @@ chem_2022$datetimeAK <- ymd_hms(chem_2022$datetimeAK)
 chem_2022$year <- format(chem_2022$datetimeAK, format = "%Y")
 
 
-DOD_chem <- rbind(chem_2019, chem_2020, chem_2021, chem_2022)
+DOD_chem <- rbind(chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
 DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 DOD_chem$day <- as.Date(DOD_chem$datetimeAK)
 
 names(DOD_chem) <- c("datetimeAK", "site.ID", "fDOM", "SPC",
                      "Turb", "NO3", "ABS_254", "year", "julian", "day")
 
-mean_daily <- DOD_chem %>% 
-  group_by(day, site.ID, year) %>% 
-  summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
-            dailyNO3 = mean(NO3, na.rm = TRUE),
-            dailySPC = mean(SPC, na.rm = TRUE),
-            dailyTurb = mean(Turb, na.rm = TRUE),
-            julian = as.numeric(julian))
-
-mean_daily <- mean_daily %>%
-  group_by(day, site.ID) %>%
-  slice(which.min(day)) # making sure I just take the first value for the daily mean since it gives the same mean value for each 15minute interval so I just want one
-
-mean_daily_long <- mean_daily %>%
-  pivot_longer(
-    cols = starts_with("daily"),
-    names_to = "response_var",
-    values_to = "concentration"
-  ) # converting to a long format so each response_var is within a single column
-
-
-# mean_daily <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
-
-
-
+# MERGE IN DISCHARGE # 
+Q_daily_2018 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2018/Q.daily.2018.csv")
 Q_daily_2019 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2019/Q.daily.2019.csv")
 Q_daily_2020 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2020/Q.daily.2020.csv")
 Q_daily_2021 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2021/Q.daily.2021.csv")
 Q_daily_2022 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2022/Q.daily.2022.csv")
 
-Q_DOD <- rbind(Q_daily_2019, Q_daily_2020, Q_daily_2021, Q_daily_2022)
+Q_DOD <- rbind(Q_daily_2018, Q_daily_2019, Q_daily_2020, Q_daily_2021, Q_daily_2022)
 names(Q_DOD) <- c("site.ID", "day", "dailyQ")
 
-mean_daily <- full_join(Q_DOD, mean_daily, by = c("site.ID", "day"))
-mean_daily$datetimeAK <- ymd(mean_daily$day)
+chem_Q <- full_join(Q_DOD, DOD_chem, by = c("site.ID", "day"))
 
-mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
+chem_Q <- chem_Q[c("site.ID", "datetimeAK", "day",
+                   "fDOM", "SPC", "Turb", "NO3", "ABS_254", "dailyQ",
+                   "year", "julian")]
 
-mean_daily$year <- as.character(mean_daily$year)
+mean_daily_DOD <- chem_Q %>% 
+  group_by(day, site.ID, year) %>% 
+  summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
+            dailyNO3 = mean(NO3, na.rm = TRUE),
+            dailySPC = mean(SPC, na.rm = TRUE),
+            dailyTurb = mean(Turb, na.rm = TRUE),
+            dailyQ = as.numeric(dailyQ, na.rm = TRUE),
+            julian = as.numeric(julian),
+            year = as.character(year))
 
-# mean_daily$Burn <- NA
-# 
-# # mean_daily <- mean_daily %>% 
-# #   mutate(across(c(Burn),
-#                 ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
-# 
-# mean_daily$PF <- NA
-# 
-# mean_daily <- mean_daily %>% 
-#   mutate(across(c(PF),
-#                 ~ifelse(site.ID == "VAUL" | site.ID == "STRT", "High", "Moderate")))
-
-#extracting year from datetime so there arent NAs
-mean_daily$year <- as.character(format(mean_daily$datetimeAK, "%Y"))
-which(is.na(mean_daily$year))
-mean_daily <- mean_daily[-c(2922,2933),]
+mean_daily_DOD <- mean_daily_DOD %>%
+  group_by(day, site.ID) %>%
+  slice(which.min(day)) # making sure I just take the first value for the daily mean since it gives the same mean value for each 15minute interval so I just want one
 
 
-#making a julian day column so there arent NAs
-mean_daily$julian <-  yday(mean_daily$datetimeAK)
+# CARI # 
+CARI_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/NEON_Q_WaterQuality2018.csv")
+CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
+CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
+CARI_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/NEON_Q_WaterQuality2021.csv")
+CARI_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/NEON_Q_WaterQuality2022.csv")
 
-# cleaning up bottom of df with empty site values
-which(is.na(mean_daily$site.ID))
-mean_daily <- mean_daily[-c(2980:2992),]
+CARI_total <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
+
+CARI_total$DateTimeAK <- ymd_hms(CARI_total$DateTimeAK)
+CARI_total$julian <- yday(CARI_total$DateTimeAK)
+CARI_total$day <- as.Date(CARI_total$DateTimeAK)
+CARI_total$year <- format(CARI_total$DateTimeAK,'%Y')
+
+CARI_total <- CARI_total[c("site.ID.x", "DateTimeAK", "day", 
+                           "fDOM", "SPC", "Turb", "NO3", "Discharge", "year", "julian")]
+
+names(CARI_total) <- c("site.ID", "datetimeAK", "day",
+                       "fDOM", "SPC", "Turb", "NO3", "dailyQ",
+                       "year", "julian")
 
 
-mean_daily <- mean_daily[c("site.ID", "day", "year", "dailyQ",
-                           "dailyfDOM", "dailyNO3", "dailySPC", "dailyTurb",
-                           "julian", "datetimeAK")] # reorganizing columns
+mean_daily_CARI <- CARI_total %>% 
+  group_by(day, site.ID, year) %>% 
+  summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
+            dailyNO3 = mean(NO3, na.rm = TRUE),
+            dailySPC = mean(SPC, na.rm = TRUE),
+            dailyTurb = mean(Turb, na.rm = TRUE),
+            dailyQ = as.numeric(dailyQ, na.rm = TRUE),
+            julian = as.numeric(julian),
+            year = as.character(year))
+
+mean_daily_CARI <- mean_daily_CARI %>%
+  group_by(day, site.ID) %>%
+  slice(which.min(day)) # making sure I just take the first value for the daily mean since it gives the same mean value for each 15minute interval so I just want one
+
+mean_daily_CARI$site.ID <- "CARI"
+
+mean_daily_total <- full_join(mean_daily_DOD, mean_daily_CARI)
+mean_daily_total <- mean_daily_total[order(mean_daily_total$day),]
+
+mean_daily_total$julian <- yday(mean_daily_total$day)
+mean_daily_total$year <- format(mean_daily_total$day,'%Y')
 
 
-vn = expression(paste(N*O[3]^"-"))
-
-mean_daily_long <- mean_daily %>%
+chem_total_long <- mean_daily_total %>%
   pivot_longer(
-    cols = starts_with("daily"),
+    cols = dailyfDOM:dailyQ,
     names_to = "response_var",
-    names_prefix = "wk",
-    values_to = "concentration") # converting to a long format so each response_var is within a single column
+    values_to = "concentration",
+    values_drop_na = TRUE
+  ) 
 
-mean_daily_long$response_var = factor(mean_daily_long$response_var, 
+
+chem_total_long$response_var = factor(chem_total_long$response_var, 
                                       levels=c('dailyQ', 'dailyNO3', 'dailyfDOM', 'dailySPC', 'dailyTurb'))
 
-ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
+ggplot(chem_total_long, aes(x = julian, y = concentration, color = site.ID)) +
   geom_line(size = 0.5) +
-  scale_color_manual(values=c("#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A", "#3288BD")) +
+  scale_color_manual(values=c("#3288BD", "#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A", "#3288BD")) +
   facet_grid(response_var~year, scales = "free") +
   theme_classic() +
   theme(strip.text.x = element_text(size = 20),
@@ -3346,15 +3362,1057 @@ ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
         axis.title.x = element_text(size = 20),
         axis.title.y = element_blank())
 
-# facet_grid(response_var~year, scales = "free") +
 
 
 
 
 
-# 2015 # 
-chem_2015 <- read_csv("processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
+###########################################################################################
 
+############################### Storm Precip/Total Q for each storm ###############################################
+library(dataRetrieval)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(RColorBrewer)
+library(gridExtra)
+library(here)
+library(tidyverse)
+library(zoo)
+library(wesanderson)
+
+
+# Load in Antecedent moisture conditions dataframe
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
+
+colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
+              "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
+              "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+              "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
+              "date", "TimeSinceChena")
+
+names(AMC)<- colNames # renaming columns
+
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(PF),
+                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "High", "Moderate")))
+
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(burn),
+                       ~ifelse(site.ID == "STRT" | site.ID == "MOOS" | site.ID == "POKE", "Burned", "Unburned")))
+
+
+# Box-plots of storm ppt by year # 
+# 2019 - 2022 # 
+
+AMC <- AMC %>% 
+  subset(year == "2019" | year == "2020" | year == "2021" | year == "2022")
+# only Poker
+AMC.POKE <- AMC %>% 
+  subset(site.ID == "POKE")
+AMC.POKE <- AMC.POKE %>% 
+  subset(month < 10 & month > 5)
+
+ggplot(AMC.POKE, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year))) + 
+  geom_boxplot() +
+  xlab("") +
+  ylab("Precipitation per storm event (mm)") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_classic() +
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_text(size=30), 
+        axis.text.y = element_text(size = 30),
+        axis.title.x = element_text(size = 35),
+        axis.title.y = element_text(size = 32)) +
+  annotate("text", x = 1, y=60, size = 7.5, label= "n = 13", col = "#1B9E77") +
+  annotate("text", x = 2, y=60, size = 7.5, label= "n = 25", col = "#D95F02") +
+  annotate("text", x = 3, y=60, size = 7.5, label= "n = 10", col = "#7570B3") +
+  annotate("text", x = 4, y=60, size = 7.5, label= "n = 4", col = "#E7298A")
+
+
+display.brewer.pal(n = 8, name = 'Dark2')
+brewer.pal(n = 8, name = "Dark2")
+
+ggplot(AMC, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year))) + 
+  geom_boxplot() +
+  xlab("Year") +
+  ylab("Precipitation per storm event (mm)") +
+  scale_fill_brewer(palette = "Dark2") +
+  theme_classic() +
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_text(size=20), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 25),
+        axis.title.y = element_text(size = 22)) +
+  annotate("text", x = 1, y=60, size = 7.5, label= "n = 82", col = "#1B9E77") +
+  annotate("text", x = 2, y=60, size = 7.5, label= "n = 101", col = "#D95F02") +
+  annotate("text", x = 3, y=60, size = 7.5, label= "n = 53", col = "#7570B3") +
+  annotate("text", x = 4, y=60, size = 7.5, label= "n = 27", col = "#E7298A")
+
+ggplot(AMC, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year))) + 
+  geom_boxplot() +
+  xlab("Year") +
+  ylab("Precipitation per storm event (mm)") +
+  scale_fill_brewer(palette = "Dark2") +
+  scale_y_continuous(trans='log10') +
+  theme_classic() +
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 18))
+
+
+
+# cumulative Q for storms each site*year # 
+### 2018 ####
+### FRCH ###
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE) # reading in individual storms by site 
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 142),
+                          rep("storm10", 689),
+                          rep("storm11a", 91),
+                          rep("storm11b", 256),
+                          rep("storm2a", 208),
+                          rep("storm2b", 156),
+                          rep("storm3", 196),
+                          rep("storm4a", 88),
+                          rep("storm4b", 153),
+                          rep("storm5", 331),
+                          rep("storm6", 303),
+                          rep("storm7", 129),
+                          rep("storm8a", 79),
+                          rep("storm8b", 95),
+                          rep("storm9", 99)) # naming each storm by the number of storm 
+
+FRCH_storms <- FRCH_storms[c("DateTime", "Site", "fDOM.QSU", "SpCond.uScm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(FRCH_storms)<- colNames # renaming columns
+
+### MOOS ###
+# MOOS # 
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 58),
+                          rep("storm10", 432),
+                          rep("storm11a", 90),
+                          rep("storm11b", 9),
+                          rep("storm12", 294),
+                          rep("storm2a", 74),
+                          rep("storm2b", 146),
+                          rep("storm2c", 182),
+                          rep("storm3", 198),
+                          
+                          rep("storm5", 282),
+                          rep("storm6", 333),
+                          rep("storm7", 176),
+                          rep("storm8a", 78),
+                          rep("storm8b", 100),
+                          rep("storm9", 106))
+
+MOOS_storms <- MOOS_storms[c("DateTime", "Site", "fDOM.QSU", "SpCond.uScm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(MOOS_storms)<- colNames # renaming columns
+
+# merge 2018 # 
+Q.sum.2018 <- rbind(FRCH_storms, MOOS_storms)
+Q.sum.2018$year <- 2018
+
+
+### 2019 ####
+### FRCH ###
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 993),
+                          rep("storm10a", 121),
+                          rep("storm10b", 95),
+                          rep("storm10c", 207),
+                          rep("storm11", 479),
+                          rep("storm12a", 183),
+                          rep("storm12b", 67),
+                          rep("storm12c", 511),
+                          rep("storm12d", 99),
+                          rep("storm12e", 127),
+                          rep("storm13", 391),
+                          rep("storm14", 631),
+                          rep("storm2", 165),
+                          rep("storm3", 201),
+                          rep("storm4", 193),
+                          rep("storm5", 133),
+                          rep("storm6", 289),
+                          rep("storm7", 133),
+                          rep("storm8", 105),
+                          rep("storm9a", 61),
+                          rep("storm9b", 149))
+
+FRCH_storms <- FRCH_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(FRCH_storms)<- colNames # renaming columns
+
+### MOOS ###
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 702),
+                          rep("storm3", 250),
+                          rep("storm4", 228),
+                          rep("storm5", 266),
+                          rep("storm6a", 114),
+                          rep("storm6b", 95),
+                          rep("storm6c", 223),
+                          rep("storm6d", 479),
+                          rep("storm7a", 166),
+                          rep("storm7b", 84),
+                          rep("storm7c", 430),
+                          rep("storm8", 174),
+                          rep("storm9", 530))
+
+MOOS_storms <- MOOS_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(MOOS_storms)<- colNames # renaming columns
+
+### POKE ###
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
+POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+POKE_storms$storm.num = c(rep("storm1", 103),
+                          rep("storm2", 91),
+                          rep("storm3", 147),
+                          rep("storm4", 115),
+                          rep("storm5a", 87),
+                          rep("storm5b", 239),
+                          rep("storm5c", 111),
+                          rep("storm5d", 99),
+                          rep("storm6a", 51),
+                          rep("storm6b", 231),
+                          rep("storm7", 235),
+                          rep("storm8", 95),
+                          rep("storm9", 211))
+
+POKE_storms <- POKE_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(POKE_storms)<- colNames # renaming columns
+
+### VAUL ###
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="VAUL", 
+                                  full.names=TRUE)
+
+VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+VAUL_storms$storm.num = c(rep("storm1", 191),
+                          rep("storm2", 207),
+                          rep("storm3", 191),
+                          rep("storm4a", 83),
+                          rep("storm4b", 211),
+                          rep("storm4c", 707),
+                          rep("storm5", 275),
+                          rep("storm6", 263),
+                          rep("storm7", 107),
+                          rep("storm8a", 167),
+                          rep("storm8b", 223),
+                          rep("storm8c", 479))
+
+VAUL_storms <- VAUL_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(VAUL_storms)<- colNames # renaming columns
+
+### STRT ###
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="STRT", 
+                                  full.names=TRUE)
+
+STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+STRT_storms$storm.num = c(rep("storm1", 638),
+                          rep("storm2", 274),
+                          rep("storm3a", 1035),
+                          rep("storm3b", 286),
+                          rep("storm3c", 174),
+                          rep("storm4", 466),
+                          rep("storm5", 98),
+                          rep("storm6", 246),
+                          rep("storm7", 246),
+                          rep("storm7b", 266),
+                          rep("storm7c", 258))
+
+STRT_storms <- STRT_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(STRT_storms)<- colNames # renaming columns
+
+### CARI ###
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="CARI", 
+                                  full.names=TRUE)
+
+CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+CARI_storms$storm.num = c(rep("storm1", 371),
+                          rep("storm2", 143),
+                          rep("storm3", 104),
+                          rep("storm4", 147),
+                          rep("storm5", 135),
+                          rep("storm6a", 83),
+                          rep("storm6b", 235),
+                          rep("storm6c", 465),
+                          rep("storm6d", 135),
+                          rep("storm7a", 51),
+                          rep("storm7b", 219),
+                          rep("storm8", 267))
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "Discharge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "MeanDischarge", "storm.num")
+
+names(CARI_storms)<- colNames # renaming columns
+
+CARI_storms$ABS_254 <- NA
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Discharge", "storm.num")]
+
+
+
+# merge 2019 # 
+Q.sum.2019 <- rbind(FRCH_storms, MOOS_storms,
+                    POKE_storms, VAUL_storms,
+                    STRT_storms, CARI_storms)
+
+Q.sum.2019$year <- 2019
+
+
+
+### 2020 ####
+### FRCH ###
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 487),
+                          rep("storm10a", 255),
+                          rep("storm10b", 439),
+                          rep("storm11", 91),
+                          rep("storm12", 67),
+                          rep("storm13", 211),
+                          rep("storm2", 123),
+                          rep("storm3a", 163),
+                          rep("storm3b", 435),
+                          rep("storm3c", 159),
+                          rep("storm4a", 187),
+                          rep("storm4b", 203),
+                          rep("storm5", 59),
+                          rep("storm6", 103),
+                          rep("storm7", 339),
+                          rep("storm8", 383),
+                          rep("storm9a", 139),
+                          rep("storm9b", 286))
+
+FRCH_storms <- FRCH_storms[c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(FRCH_storms)<- colNames # renaming columns
+
+### MOOS ###
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 723),
+                          rep("storm2", 327),
+                          rep("storm3", 129),
+                          rep("storm4", 321),
+                          rep("storm5", 252),
+                          rep("storm6a", 108),
+                          rep("storm6b", 288),
+                          rep("storm7a", 276),
+                          rep("storm7b", 186),
+                          rep("storm8", 195),
+                          rep("storm9", 405))
+
+MOOS_storms <- MOOS_storms[c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(MOOS_storms)<- colNames # renaming columns
+
+### POKE ###
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
+POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+POKE_storms$storm.num = c(rep("storm1", 95),
+                          rep("storm10", 99),
+                          rep("storm11", 199),
+                          rep("storm12", 307),
+                          rep("storm13", 87),
+                          rep("storm14", 383),
+                          rep("storm15", 335),
+                          rep("storm16", 95),
+                          rep("storm17", 119),
+                          rep("storm18", 95),
+                          rep("storm19", 135),
+                          rep("storm2", 87),
+                          rep("storm20", 139),
+                          rep("storm21", 227),
+                          rep("storm22a", 107),
+                          rep("storm22b", 212),
+                          rep("storm3", 119),
+                          rep("storm4a", 98),
+                          rep("storm4b", 95),
+                          rep("storm4c", 159),
+                          rep("storm5", 219),
+                          rep("storm6", 95),
+                          rep("storm7", 127),
+                          rep("storm8", 135),
+                          rep("storm9", 263))
+
+POKE_storms <- POKE_storms[c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(POKE_storms)<- colNames # renaming columns
+
+### VAUL ###
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="VAUL", 
+                                  full.names=TRUE)
+
+VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+VAUL_storms$storm.num = c(rep("storm10", 195),
+                          rep("storm11", 399),
+                          rep("storm12", 171),
+                          rep("storm13", 222),
+                          rep("storm14", 211),
+                          rep("storm1a", 111),
+                          rep("storm1b", 234),
+                          rep("storm1c", 406),
+                          rep("storm2", 214),
+                          rep("storm3", 342),
+                          rep("storm4", 318),
+                          rep("storm5", 230),
+                          rep("storm6a", 107),
+                          rep("storm6b", 511),
+                          rep("storm7", 283),
+                          rep("storm8", 91),
+                          rep("storm9", 91))
+
+VAUL_storms <- VAUL_storms[c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(VAUL_storms)<- colNames # renaming columns
+
+### STRT ###
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="STRT", 
+                                  full.names=TRUE)
+
+STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+STRT_storms$storm.num = c(rep("storm10", 246),
+                          rep("storm1a", 103),
+                          rep("storm1b", 161),
+                          rep("storm1c", 105),
+                          rep("storm1d", 86),
+                          rep("storm1e", 476),
+                          rep("storm2", 166),
+                          rep("storm3", 386),
+                          rep("storm4a", 140),
+                          rep("storm4b", 322),
+                          rep("storm5", 250),
+                          rep("storm6", 122),
+                          rep("storm7a", 98),
+                          rep("storm7b", 95),
+                          rep("storm8", 82),
+                          rep("storm9a", 294),
+                          rep("storm9b", 134),
+                          rep("storm9c", 482))
+
+STRT_storms <- STRT_storms[c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm",
+                             "Turbidity.FNU", "nitrateuM", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(STRT_storms)<- colNames # renaming columns
+
+### CARI ###
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="CARI", 
+                                  full.names=TRUE)
+
+CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+CARI_storms$storm.num = c(rep("storm1", 239),
+                          rep("storm2a", 103),
+                          rep("storm2b", 95),
+                          rep("storm2c", 155),
+                          rep("storm3", 305),
+                          rep("storm4", 155),
+                          rep("storm5", 219),
+                          rep("storm6", 183),
+                          rep("storm7", 307),
+                          rep("storm8a", 111),
+                          rep("storm8b", 491),
+                          rep("storm9", 99))
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "Discharge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "MeanDischarge", "storm.num")
+
+names(CARI_storms)<- colNames # renaming columns
+
+CARI_storms$ABS_254 <- NA
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+
+
+# merge 2020 # 
+Q.sum.2020 <- rbind(FRCH_storms, MOOS_storms,
+                    POKE_storms, VAUL_storms,
+                    STRT_storms, CARI_storms)
+
+Q.sum.2020$year <- 2020
+
+### 2021 ####
+### FRCH ###
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(
+  rep("storm2", 304),
+  rep("storm3", 208),
+  rep("storm4", 224),
+  rep("storm5a", 184),
+  rep("storm5b", 260),
+  rep("storm6a", 112),
+  rep("storm6b", 312),
+  rep("storm7", 140),
+  rep("storm8", 468))
+
+FRCH_storms <- FRCH_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(FRCH_storms)<- colNames # renaming columns
+
+### MOOS ###
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 191),
+                          rep("storm2", 251),
+                          rep("storm3a", 115),
+                          rep("storm3b", 359),
+                          rep("storm4a", 167),
+                          rep("storm4b", 247),
+                          rep("storm5a", 91),
+                          rep("storm5b", 191),
+                          rep("storm6", 127),
+                          rep("storm7", 259))
+
+MOOS_storms <- MOOS_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(MOOS_storms)<- colNames # renaming columns
+
+### POKE ###
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
+POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+POKE_storms$storm.num = c(rep("storm1", 235),
+                          rep("storm2", 191),
+                          rep("storm3", 167),
+                          rep("storm4", 191),
+                          rep("storm5", 367),
+                          rep("storm6", 159),
+                          rep("storm7a", 451),
+                          rep("storm7b", 263),
+                          rep("storm7c", 99),
+                          rep("storm7d", 147))
+
+
+POKE_storms <- POKE_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(POKE_storms)<- colNames # renaming columns
+
+### VAUL ###
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="VAUL", 
+                                  full.names=TRUE)
+
+VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+VAUL_storms$storm.num = c(
+  rep("storm1b", 267),
+  
+  rep("storm3", 667),
+  rep("storm4a", 427),
+  rep("storm4b", 319),
+  rep("storm5a", 331),
+  rep("storm5b", 383))
+
+VAUL_storms <- VAUL_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                              "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(VAUL_storms)<- colNames # renaming columns
+
+### STRT ###
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="STRT", 
+                                  full.names=TRUE)
+
+STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+STRT_storms$storm.num = c(rep("storm1a", 191),
+                          rep("storm1b", 255),
+                          rep("storm2a", 95),
+                          rep("storm2b", 211),
+                          rep("storm3", 127))
+
+STRT_storms <- STRT_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(STRT_storms)<- colNames # renaming columns
+
+### CARI ###
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+                                  recursive=F, 
+                                  pattern="CARI", 
+                                  full.names=TRUE)
+
+CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+CARI_storms$storm.num = c(rep("storm1", 167),
+                          rep("storm2", 139),
+                          rep("storm3", 159),
+                          rep("storm4", 127),
+                          rep("storm5", 395),
+                          rep("storm6", 395),
+                          rep("storm7", 447),
+                          rep("storm8", 323),
+                          rep("storm9", 107),
+                          rep("storm10", 243))
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "Discharge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "MeanDischarge", "storm.num")
+
+names(CARI_storms)<- colNames # renaming columns
+
+CARI_storms$ABS_254 <- NA
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+
+
+# merge 2021 # 
+Q.sum.2021 <- rbind(FRCH_storms, MOOS_storms,
+                    POKE_storms, VAUL_storms,
+                    STRT_storms, CARI_storms)
+
+Q.sum.2021$year <- 2021
+
+### 2022 ####
+### FRCH ###
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="FRCH", 
+                                  full.names=TRUE)
+
+FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+FRCH_storms$storm.num = c(rep("storm1", 219),
+                          rep("storm2", 235),
+                          rep("storm3", 223),
+                          rep("storm4", 167))
+
+FRCH_storms <- FRCH_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Q", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(FRCH_storms)<- colNames # renaming columns
+
+### MOOS ###
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="MOOS", 
+                                  full.names=TRUE)
+
+MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+MOOS_storms$storm.num = c(rep("storm1", 199),
+                          rep("storm2a", 71),
+                          rep("storm2b", 151),
+                          rep("storm3", 99),
+                          rep("storm4", 215))
+
+MOOS_storms <- MOOS_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Q", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(MOOS_storms)<- colNames # renaming columns
+
+### POKE ###
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
+POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+POKE_storms$storm.num = c(rep("storm1", 139),
+                          rep("storm2", 119),
+                          rep("storm3", 95),
+                          rep("storm4", 187))
+
+
+POKE_storms <- POKE_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Q", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(POKE_storms)<- colNames # renaming columns
+
+### VAUL ###
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="VAUL", 
+                                  full.names=TRUE)
+
+VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+VAUL_storms$storm.num = c(rep("storm1", 127),
+                          rep("storm2", 763))
+
+VAUL_storms <- VAUL_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Q", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(VAUL_storms)<- colNames # renaming columns
+
+### STRT ###
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="STRT", 
+                                  full.names=TRUE)
+
+STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+STRT_storms$storm.num = c(rep("storm1", 103),
+                          rep("storm2", 191),
+                          rep("storm3", 107))
+
+STRT_storms <- STRT_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "Q", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "ABS_254", "MeanDischarge", "storm.num")
+
+names(STRT_storms)<- colNames # renaming columns
+
+### CARI ###
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+                                  recursive=F, 
+                                  pattern="CARI", 
+                                  full.names=TRUE)
+
+CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
+                                     read.csv, 
+                                     check.names = FALSE,
+                                     stringsAsFactors=FALSE, 
+                                     header=T, blank.lines.skip = TRUE, fill=TRUE))
+
+CARI_storms$storm.num = c(rep("storm1", 231),
+                          rep("storm2", 190),
+                          rep("storm3", 204),
+                          rep("storm4a", 119),
+                          rep("storm4b", 167),
+                          rep("storm5", 379),
+                          rep("storm6", 91),
+                          rep("storm7", 191),
+                          rep("storm8", 103))
+
+CARI_storms <- CARI_storms[c("DateTimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "Discharge", "storm.num")]
+
+colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", 
+              "NO3", "MeanDischarge", "storm.num")
+
+names(CARI_storms)<- colNames # renaming columns
+
+CARI_storms$ABS_254 <- NA
+
+CARI_storms <- CARI_storms[c("datetimeAK", "site.ID", "fDOM", "SPC",
+                             "Turb", "NO3", "ABS_254", "MeanDischarge", "storm.num")]
+
+
+
+# merge 2022 # 
+Q.sum.2022 <- rbind(FRCH_storms, MOOS_storms,
+                    POKE_storms, VAUL_storms,
+                    STRT_storms, CARI_storms)
+
+Q.sum.2022$year <- 2022
+
+# 
+# merge all years #
+
+Q.sum <- rbind(Q.sum.2018, Q.sum.2019,
+               Q.sum.2020, Q.sum.2021,
+               Q.sum.2022)
+
+Q.sum.site.year <- Q.sum %>% 
+  group_by(site.ID, year) %>% 
+  dplyr::summarise(Q = sum(MeanDischarge, na.rm = TRUE)) # totaling by year and snow/rain 
+
+Q.sum.site.year <- na.omit(Q.sum.site.year)
+
+ggplot(Q.sum.site.year, aes(x = site.ID, y = Q, color = as.character(site.ID))) + 
+  geom_point() +
+  xlab("") +
+  ylab("Total Discharge per year (L/s)") +
+  facet_wrap(~year) +
+  scale_color_manual(values=c("#3288BD","#FF7F00","#A6761D","#6A3D9A", "#66C2A5","#E7298A"), "Site") +
+  scale_y_continuous(trans='log10') +
+  theme_classic() +
+  theme(legend.position = "right") +
+  theme(axis.text.x=element_text(angle = 90, vjust = 0.5, hjust=1, size = 15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 18))
 
 
 

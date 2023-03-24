@@ -327,7 +327,8 @@ CV.all <- CV.all %>%
 
 # scaling data # 
 # all years in one 
-CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+# CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")] <- lapply(CV.all[c("Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI")], function(x) c(scale(x)))
+
 
 # Adding scaled data for the deciduous cover from Neal data  
 CV.all$Deciduous.2010 <- NA
@@ -1670,7 +1671,61 @@ ggsave("turb_characteristics.pdf",
 
 
 
+### FOR TKH for presentations and other data ###
+```{r}
+# Adding raw data for the deciduous cover from Neal data  
+CV.all$Deciduous.2010 <- NA
 
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "VAUL", 20.6,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "CARI", 22.5,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "STRT", 16.9,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "MOOS", 21.6,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "FRCH", 29.6,.)))
+
+CV.all <- CV.all %>% 
+  mutate(across(c(Deciduous.2010),
+                ~ifelse(site.ID == "POKE", 27.3,.)))
+
+CV_all_NO3 = subset(CV.all, response_var == "NO3")
+
+NO3_data<- CV_all_NO3[,c("site.ID", "n", "meanHI", "meanBETA", "sdHI", "sdBETA", "Slope", "fireyear_lg", "pctburn_lg", "areaburn_lg", "PF", "NDVI", "Deciduous.2010", "Deciduous.2020", "CatBurn", "CatPF", "seHI", "seBETA")]
+
+# PLOT #
+
+no3.beta.deciduous.tkh <- ggplot(NO3_data, aes(x = Deciduous.2010, y = meanBETA)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, color = "black") +
+  geom_errorbar(aes(x=Deciduous.2010, ymin=meanBETA-seBETA, ymax=meanBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
+  stat_poly_eq(formula = y~x,
+               label.y = "top", label.x = "left",
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
+               parse = TRUE, size = 5.5) +
+  theme_classic() +
+  theme(axis.text.x=element_text(size=20), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.key.size = unit(2.0, 'cm'),
+        strip.text = element_text(size = 20)) +
+  xlab("% Deciduous") +
+  ylab(vn) +
+  theme(aspect.ratio = 1)
+
+```
 
 
 

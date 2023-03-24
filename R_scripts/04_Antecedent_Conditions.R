@@ -73,7 +73,7 @@ POKE_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019",
 STRT_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "STRT","STRT.HI.df.doy.csv"))
 VAUL_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "VAUL","VAUL.HI.df.doy.csv"))
 CARI_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI","CARI.HI.df.doy.csv"))
-STRT_HI_doy_df_2019[c(1701:1900), 7] <- "storm7c"
+STRT_HI_doy_df_2019[c(2251:2500), 7] <- "storm7c"
 
 
 # FRCH_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.doy.csv")
@@ -106,7 +106,7 @@ FRCH_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021",
 MOOS_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "MOOS","MOOS.HI.df.doy.csv"))
 POKE_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "POKE","POKE.HI.df.doy.csv"))
 STRT_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "STRT","STRT.HI.df.doy.csv"))
-#VAUL_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "VAUL","VAUL.HI.df.doy.csv"))
+VAUL_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "VAUL","VAUL.HI.df.doy.csv"))
 CARI_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "CARI","CARI.HI.df.doy.csv"))
 
 # 2022
@@ -129,20 +129,23 @@ HI.dat_2019 <- rbind(FRCH_HI_doy_df_2019, MOOS_HI_doy_df_2019, POKE_HI_doy_df_20
                      STRT_HI_doy_df_2019, VAUL_HI_doy_df_2019, CARI_HI_doy_df_2019)
 HI.dat_2019$year <- "2019"
 
-HI.dat_2020 <- rbind(FRCH_HI_doy_df_2020, MOOS_HI_doy_df_2020, POKE_HI_doy_df_2020, STRT_HI_doy_df_2020, VAUL_HI_doy_df_2020, CARI_HI_doy_df_2020)
+HI.dat_2020 <- rbind(FRCH_HI_doy_df_2020, MOOS_HI_doy_df_2020, POKE_HI_doy_df_2020, 
+                     STRT_HI_doy_df_2020, VAUL_HI_doy_df_2020, CARI_HI_doy_df_2020)
 HI.dat_2020$year <- "2020"
 
-HI.dat_2021 <- rbind(FRCH_HI_doy_df_2021, MOOS_HI_doy_df_2021, POKE_HI_doy_df_2021, STRT_HI_doy_df_2021, CARI_HI_doy_df_2021) #VAUL_HI_doy_df_2020)
+HI.dat_2021 <- rbind(FRCH_HI_doy_df_2021, MOOS_HI_doy_df_2021, POKE_HI_doy_df_2021, 
+                     STRT_HI_doy_df_2021, VAUL_HI_doy_df_2021, CARI_HI_doy_df_2021) 
 HI.dat_2021$year <- "2021"
 
-HI.dat_2022 <- rbind(FRCH_HI_doy_df_2022, MOOS_HI_doy_df_2022, POKE_HI_doy_df_2022, STRT_HI_doy_df_2022, VAUL_HI_doy_df_2022, CARI_HI_doy_df_2022)
+HI.dat_2022 <- rbind(FRCH_HI_doy_df_2022, MOOS_HI_doy_df_2022, POKE_HI_doy_df_2022, 
+                     STRT_HI_doy_df_2022, VAUL_HI_doy_df_2022, CARI_HI_doy_df_2022)
 HI.dat_2022$year <- "2022"
 
 
 
 #HI.dat <- HI.dat_2018
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
-#write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
+# write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
 #HI.dat <- read_csv("~/Documents/Storms/Output_from_analysis/HI.dat.csv")
 
@@ -291,11 +294,11 @@ HI.mean.precip.response <- HI.dat %>% group_by(site.ID, year, storm.num, respons
 
 ### USGS pulled data ###
 # Peak stream flow for the Chena River
-# 2015 -05-12
-# 2018 -05-22
+# 2015-05-12
+# 2018-05-22
 # 2019-08-17
-# 2020 - 2020-05-12
-#2021 - 2021-05-12
+# 2020-05-12
+#2021-05-12
 ##############################################################################################################
 #################################### Antecedent conditions #####################################################################
 ##############################################################################################################
@@ -810,29 +813,32 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-FRCH_storms$storm.num = c(
-                          rep("storm10", 1379),
-                          rep("storm11a", 155),
-                          rep("storm11b", 486),
-                          rep("storm2a", 500),
-                          rep("storm2b", 344),
-                          rep("storm3", 393),
-                          rep("storm4a", 177),
-                          rep("storm4b", 734),
-                          rep("storm5", 662),
-                          rep("storm6", 605),
-                          rep("storm7", 213),
-                          rep("storm8a", 159),
-                          rep("storm8b", 191),
-                          rep("storm9", 196)) # naming each storm by the number of storm 
+FRCH_storms$storm.num = c(rep("storm1", 142),
+                          rep("storm10", 689),
+                          rep("storm11a", 91),
+                          rep("storm11b", 256),
+                          rep("storm2a", 208),
+                          rep("storm2b", 156),
+                          rep("storm3", 196),
+                          rep("storm4a", 88),
+                          rep("storm4b", 153),
+                          rep("storm5", 331),
+                          rep("storm6", 303),
+                          rep("storm7", 129),
+                          rep("storm8a", 79),
+                          rep("storm8b", 95),
+                          rep("storm9", 99)) # naming each storm by the number of storm 
 
 #write_csv(FRCH_storms, "~/Desktop/FRCH_2018_test_beta.csv")
 
 # Read in precip data 
 POKE_RainGauge_2018 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2018.csv"))
 # POKE_RainGauge_2018 <- read_csv("~/Documents/DoD_2018_Jake/RainGauge/POKE.RainGauge.2018.csv") # Reading in rain gauge data in 
+POKE_RainGauge_2018$DateTime <- ymd_hms(POKE_RainGauge_2018$DateTime)
+
 attributes(POKE_RainGauge_2018$DateTime)$tzone <- 'America/Anchorage' # converting to AK time 
 airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
+airtempmean$date_timeAK <- ymd_hms(airtempmean$date_timeAK)
 # airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 attributes(airtempmean$date_timeAK)$tzone <- 'America/Anchorage'
 names(airtempmean)[2] <- "DateTime"
@@ -851,15 +857,20 @@ temp <- FRCH.2018.storms.1 %>% group_by(storm.num) %>%
 FRCH.2018.per.storm.1$temp <- temp$temp
 
 # Reading in chem data to join with the antecedent moisture condition data 
-chem.2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
+DOD.2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv")) 
+DOD.2018 <- DOD.2018[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
 
-# chem.2018 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2018.csv", 
-#                       col_types = cols(NO3 = col_double()))
+names(DOD.2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
 
-FRCH.2018 <-  subset(chem.2018, site.ID == "FRCH")
+DOD.2018$datetimeAK <- ymd_hms(DOD.2018$datetimeAK) # converting character to datetime
+DOD.2018$datetimeAK <- force_tz(DOD.2018$datetimeAK, "America/Anchorage") # converting character to datetime
+
+
+FRCH.2018 <-  subset(DOD.2018, site.ID == "FRCH")
 
 # summing up week/month/threemonth antecedent precip
-FRCH.2018$DateTime <- as.POSIXct(FRCH.2018$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+FRCH.2018$DateTime <- as.POSIXct(FRCH.2018$datetimeAK)
 FRCH.2018 <- left_join(FRCH.2018, POKE_RainGauge_2018, by = "DateTime")
 FRCH.2018 <- left_join(FRCH.2018, airtempmean, by = "DateTime")
 FRCH.2018$week <- rollapplyr(FRCH.2018$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -883,6 +894,7 @@ HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2018" & site
 HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2018" & site.ID == "FRCH" & response == "fDOM")
 HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2018" & site.ID == "FRCH" & response == "SPC")
 HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2018" & site.ID == "FRCH" & response == "turb")
+HI.mean.precip.frch.abs <- subset(HI.mean.precip.response, year == "2018" & site.ID == "FRCH" & response == "abs")
 
 HI.frch.no3.2018 <- left_join(HI.mean.precip.frch.NO3, FRCH.2018.per.storm.1, by = "storm.num")
 HI.frch.no3.2018 <- left_join(HI.frch.no3.2018, FRCH.2018.per.storm.1, by = "storm.num")
@@ -1323,7 +1335,27 @@ bx <- HI.frch.turb.2.2018 %>%
   ylab("HI-Solute Storage") +
   theme_classic() # plot model 
 
-HI.frch.2018 <- rbind(HI.frch.no3.2.2018, HI.frch.fDOM.2.2018, HI.frch.SPC.2.2018, HI.frch.turb.2.2018) # merging all responses together 
+# abs #
+HI.frch.abs.2018 <- left_join(HI.mean.precip.frch.abs, FRCH.2018.per.storm.1, by = "storm.num")
+HI.frch.abs.2018 <- left_join(HI.frch.abs.2018, FRCH.2018.per.storm.2, by = "storm.num")
+HI.frch.abs.2018 <- left_join(HI.frch.abs.2018, FRCH.2018.per.storm.3, by = "storm.num")
+HI.frch.abs.2018 <- left_join(HI.frch.abs.2018, FRCH.2018.per.storm.4, by = "storm.num")
+HI.frch.abs.2018 <- left_join(HI.frch.abs.2018, FRCH.2018.per.storm.5, by = "storm.num")
+
+frch.lm.abs <- lm(HI.frch.abs.2018$HI ~ HI.frch.abs.2018$precip) # model one with just total precip
+frch.lm.abs.2 <- lm(HI.frch.abs.2018$HI ~ HI.frch.abs.2018$precip.week) # model one with just total precip
+frch.lm.abs.3 <- lm(HI.frch.abs.2018$HI ~ HI.frch.abs.2018$precip.month) # model one with just total precip
+frch.lm.abs.4 <- lm(HI.frch.abs.2018$HI ~ HI.frch.abs.2018$ThreeMonth) # model one with just total precip
+frch.lm.abs.5 <- lm(HI.frch.turb.2018$HI ~ HI.frch.turb.2018$temp.week) # model one with just total precip
+
+HI.frch.abs.2.2018 <- left_join(HI.frch.abs.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.abs.2.2018$TOTAL.TIME <- as.numeric(HI.frch.abs.2.2018$TOTAL.TIME)
+HI.frch.abs.2.2018$Intensity <- HI.frch.abs.2.2018$precip/HI.frch.abs.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.frch.2018 <- rbind(HI.frch.no3.2.2018, HI.frch.fDOM.2.2018, 
+                      HI.frch.SPC.2.2018, HI.frch.turb.2.2018,
+                      HI.frch.abs.2018) # merging all responses together 
 HI.frch.2018$burn <- "unburned" # adding a burn column
 HI.frch.2018$pf <- "medium" # adding a pf column
 HI.frch.2018$site.ID <- "FRCH"
@@ -1342,22 +1374,22 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-MOOS_storms$storm.num = c(rep("storm1", 116),
-                          rep("storm10", 642),
-                          rep("storm11a", 179),
-                          rep("storm11b", 71),
-                          rep("storm12", 584),
-                          rep("storm2a", 148),
-                          rep("storm2b", 291),
-                          rep("storm2c", 363),
-                          rep("storm3", 459),
+MOOS_storms$storm.num = c(rep("storm1", 58),
+                          rep("storm10", 432),
+                          rep("storm11a", 90),
+                          rep("storm11b", 9),
+                          rep("storm12", 294),
+                          rep("storm2a", 74),
+                          rep("storm2b", 146),
+                          rep("storm2c", 182),
+                          rep("storm3", 198),
                           
-                          rep("storm5", 563),
-                          rep("storm6", 663),
-                          rep("storm7", 255),
-                          rep("storm8a", 155),
-                          rep("storm8b", 195),
-                          rep("storm9", 211))
+                          rep("storm5", 282),
+                          rep("storm6", 333),
+                          rep("storm7", 176),
+                          rep("storm8a", 78),
+                          rep("storm8b", 100),
+                          rep("storm9", 106))
 
 MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
 MOOS.2018.storms.1<- left_join(MOOS_storms, POKE_RainGauge_2018, by = "DateTime")
@@ -1374,9 +1406,9 @@ temp <- MOOS.2018.storms.1 %>% group_by(storm.num) %>%
 MOOS.2018.per.storm.1$temp <- temp$temp
 
 
-MOOS.2018 <-  subset(chem.2018, site.ID == "MOOS")
+MOOS.2018 <-  subset(DOD.2018, site.ID == "MOOS")
 
-MOOS.2018$DateTime <- as.POSIXct(MOOS.2018$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+MOOS.2018$DateTime <- as.POSIXct(MOOS.2018$datetimeAK)
 MOOS.2018 <- left_join(MOOS.2018, POKE_RainGauge_2018, by = "DateTime")
 MOOS.2018 <- left_join(MOOS.2018, airtempmean, by = "DateTime")
 MOOS.2018$week <- rollapplyr(MOOS.2018$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -1399,6 +1431,7 @@ HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2018" & site
 HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2018" & site.ID == "MOOS" & response == "fDOM")
 HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2018" & site.ID == "MOOS" & response == "SPC")
 HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2018" & site.ID == "MOOS" & response == "turb")
+HI.mean.precip.moos.abs <- subset(HI.mean.precip.response, year == "2018" & site.ID == "MOOS" & response == "abs")
 
 HI.moos.no3.2018 <- left_join(HI.mean.precip.moos.NO3, MOOS.2018.per.storm.1, by = "storm.num")
 HI.moos.no3.2018 <- left_join(HI.moos.no3.2018, MOOS.2018.per.storm.2, by = "storm.num")
@@ -1811,7 +1844,26 @@ ax <- HI.moos.turb.2.2018 %>%
   ylab("HI-Solute Storage") +
   theme_classic() # plot model 
 
-HI.moos.2018 <- rbind(HI.moos.no3.2.2018, HI.moos.fDOM.2.2018, HI.moos.SPC.2.2018, HI.moos.turb.2.2018) # merging all responses together 
+# abs #
+HI.moos.abs.2018 <- left_join(HI.mean.precip.moos.abs, MOOS.2018.per.storm.1, by = "storm.num")
+HI.moos.abs.2018 <- left_join(HI.moos.abs.2018, MOOS.2018.per.storm.2, by = "storm.num")
+HI.moos.abs.2018 <- left_join(HI.moos.abs.2018, MOOS.2018.per.storm.3, by = "storm.num")
+HI.moos.abs.2018 <- left_join(HI.moos.abs.2018, MOOS.2018.per.storm.4, by = "storm.num")
+HI.moos.abs.2018 <- left_join(HI.moos.abs.2018, MOOS.2018.per.storm.5, by = "storm.num")
+
+moos.lm.abs <- lm(HI.moos.abs.2018$HI ~ HI.moos.abs.2018$precip) # model one with just total precip
+moos.lm.abs.2 <- lm(HI.moos.abs.2018$HI ~ HI.moos.abs.2018$precip.week) # model one with just total precip
+moos.lm.abs.3 <- lm(HI.moos.abs.2018$HI ~ HI.moos.abs.2018$precip.month) # model one with just total precip
+moos.lm.abs.4 <- lm(HI.moos.abs.2018$HI ~ HI.moos.abs.2018$ThreeMonth) # model one with just total precip
+moos.lm.abs.5 <- lm(HI.moos.abs.2018$HI ~ HI.moos.abs.2018$temp) # model one with just total precip
+
+HI.moos.abs.2.2018 <- left_join(HI.moos.abs.2018, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.abs.2.2018$TOTAL.TIME <- as.numeric(HI.moos.abs.2.2018$TOTAL.TIME)
+HI.moos.abs.2.2018$Intensity <- HI.moos.abs.2.2018$precip/HI.moos.abs.2.2018$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.moos.2018 <- rbind(HI.moos.no3.2.2018, HI.moos.fDOM.2.2018, HI.moos.SPC.2.2018, 
+                      HI.moos.turb.2.2018, HI.moos.abs.2.2018) # merging all responses together 
 HI.moos.2018$burn <- "burned" # adding a burn column
 HI.moos.2018$pf <- "medium" # adding a pf column
 
@@ -1830,21 +1882,22 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-CARI_storms$storm.num = c(
-                          rep("storm10", 248),
+CARI_storms$storm.num = c(rep("storm1", 317),
+                          rep("storm10", 254),
                           rep("storm11", 215),
-                          rep("storm12a", 418),
-                          rep("storm12b", 517),
-                          
-                          rep("storm3", 24),
-                         
+                          rep("storm12a", 419),
+                          rep("storm12b", 519),
+                          rep("storm2", 181),
+                          rep("storm3", 121),
+                          rep("storm4a", 85),
+                          rep("storm4b", 181),
                           rep("storm5a", 77),
                           rep("storm5b", 121),
                           rep("storm5c", 575),
-                          rep("storm6", 644),
-                          
+                          rep("storm6", 650),
+                          rep("storm7", 155),
                           rep("storm8", 191),
-                          rep("storm9", 359))
+                          rep("storm9", 367))
 
 CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
 CARI.2018.storms.1<- left_join(CARI_storms, POKE_RainGauge_2018, by = "DateTime")
@@ -2298,7 +2351,7 @@ HI.2018$date <- as.Date(HI.2018$doy, origin = "2018-01-01")
 origin_date <- as.Date("2018-05-22")
 HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 
-#write.csv(HI.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
+# write.csv(HI.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
 
 
 
@@ -2317,11 +2370,17 @@ airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
 # VAUL_RainGauge_2019 <- read_csv("~/Documents/DoD_2019/RainGauge/VAUL.RainGauge.2019.csv")
 # airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 
-# convert to AK time 
-attributes(FRCH_RainGauge_2019$Datetime)$tzone <- 'America/Anchorage'
-attributes(POKE_RainGauge_2019$DateTime)$tzone <- 'America/Anchorage'
-attributes(VAUL_RainGauge_2019$DateTime)$tzone <- 'America/Anchorage'
-attributes(airtempmean$date_timeAK)$tzone <- 'America/Anchorage'
+# convert to datetime 
+FRCH_RainGauge_2019$Datetime <- ymd_hms(FRCH_RainGauge_2019$Datetime)
+POKE_RainGauge_2019$DateTime <- ymd_hms(POKE_RainGauge_2019$DateTime)
+VAUL_RainGauge_2019$DateTime <- ymd_hms(VAUL_RainGauge_2019$DateTime)
+airtempmean$date_timeAK <- ymd_hms(airtempmean$date_timeAK)
+
+# force to AK time 
+FRCH_RainGauge_2019$Datetime <- force_tz(FRCH_RainGauge_2019$Datetime, "America/Anchorage") # converting character to datetime
+POKE_RainGauge_2019$DateTime <- force_tz(POKE_RainGauge_2019$DateTime, "America/Anchorage") # converting character to datetime
+VAUL_RainGauge_2019$DateTime <- force_tz(VAUL_RainGauge_2019$DateTime, "America/Anchorage") # converting character to datetime
+airtempmean$date_timeAK <- force_tz(airtempmean$date_timeAK, "America/Anchorage") # converting character to datetime
 names(airtempmean)[2] <- "DateTime"
 
 # round to nearest 15 min 
@@ -2343,7 +2402,7 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
 
 MOOS_storms$storm.num = c(rep("storm1", 702),
                           rep("storm3", 250),
-                          rep("storm4", 256),
+                          rep("storm4", 228),
                           rep("storm5", 266),
                           rep("storm6a", 114),
                           rep("storm6b", 95),
@@ -2370,11 +2429,20 @@ temp <- MOOS.2019.storms.1 %>% group_by(storm.num) %>%
 MOOS.2019.per.storm.1$temp <- temp$temp
 
 # Reading in chem data to join with the antecedent moisture condition data 
-chem.2019 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2019.csv", 
-                      col_types = cols(NO3 = col_double()))
+# Reading in chem data to join with the antecedent moisture condition data 
+DOD.2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv")) 
+DOD.2019 <- DOD.2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                       "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
 
-MOOS.2019 <-  subset(chem.2019, site.ID == "MOOS")
-MOOS.2019$DateTime <- as.POSIXct(MOOS.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+names(DOD.2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+
+DOD.2019$datetimeAK <- ymd_hms(DOD.2019$datetimeAK) # converting character to datetime
+DOD.2019$datetimeAK <- force_tz(DOD.2019$datetimeAK, "America/Anchorage") # converting character to datetime
+
+
+MOOS.2019 <-  subset(DOD.2019, site.ID == "MOOS")
+
+MOOS.2019$DateTime <- as.POSIXct(MOOS.2019$datetimeAK)
 MOOS.2019 <- left_join(MOOS.2019, FRCH_RainGauge_2019, by = "DateTime")
 MOOS.2019 <- left_join(MOOS.2019, airtempmean, by = "DateTime")
 MOOS.2019$week <- rollapplyr(MOOS.2019$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -2397,6 +2465,7 @@ HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2019" & site
 HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "fDOM")
 HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "SPC")
 HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "turb")
+HI.mean.precip.moos.abs <- subset(HI.mean.precip.response, year == "2019" & site.ID == "MOOS" & response == "abs")
 
 HI.moos.no3.2019 <- left_join(HI.mean.precip.moos.NO3, MOOS.2019.per.storm.1, by = "storm.num")
 HI.moos.no3.2019 <- left_join(HI.moos.no3.2019, MOOS.2019.per.storm.2, by = "storm.num")
@@ -2796,7 +2865,27 @@ ax <- HI.moos.turb.2.2019 %>%
   ylab("HI-Solute Storage") +
   theme_classic() # plot model 
 
-HI.moos.2019 <- rbind(HI.moos.no3.2.2019, HI.moos.fDOM.2.2019, HI.moos.SPC.2.2019, HI.moos.turb.2.2019) # merging all responses together 
+# abs #
+HI.moos.abs.2019 <- left_join(HI.mean.precip.moos.abs, MOOS.2019.per.storm.1, by = "storm.num")
+HI.moos.abs.2019 <- left_join(HI.moos.abs.2019, MOOS.2019.per.storm.2, by = "storm.num")
+HI.moos.abs.2019 <- left_join(HI.moos.abs.2019, MOOS.2019.per.storm.3, by = "storm.num")
+HI.moos.abs.2019 <- left_join(HI.moos.abs.2019, MOOS.2019.per.storm.4, by = "storm.num")
+HI.moos.abs.2019 <- left_join(HI.moos.abs.2019, MOOS.2019.per.storm.5, by = "storm.num")
+
+moos.lm.abs <- lm(HI.moos.abs.2019$HI ~ HI.moos.abs.2019$precip) # model one with just total precip
+moos.lm.abs.2 <- lm(HI.moos.abs.2019$HI ~ HI.moos.abs.2019$precip.week) # model one with just total precip
+moos.lm.abs.3 <- lm(HI.moos.abs.2019$HI ~ HI.moos.abs.2019$precip.month) # model one with just total precip
+moos.lm.abs.4 <- lm(HI.moos.abs.2019$HI ~ HI.moos.abs.2019$ThreeMonth) # model one with just total precip
+moos.lm.abs.5 <- lm(HI.moos.abs.2019$HI ~ HI.moos.abs.2019$temp) # model one with just total precip
+
+HI.moos.abs.2.2019 <- left_join(HI.moos.abs.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.abs.2.2019$TOTAL.TIME <- as.numeric(HI.moos.abs.2.2019$TOTAL.TIME)
+HI.moos.abs.2.2019$Intensity <- HI.moos.abs.2.2019$precip/HI.moos.abs.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.moos.2019 <- rbind(HI.moos.no3.2.2019, HI.moos.fDOM.2.2019,
+                      HI.moos.SPC.2.2019, HI.moos.turb.2.2019,
+                      HI.moos.abs.2.2019) # merging all responses together 
 HI.moos.2019$burn <- "burned" # adding a burn column
 HI.moos.2019$pf <- "medium" # adding a pf column
 
@@ -2804,7 +2893,7 @@ write.csv(HI.moos.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_A
 
 
 # FRCH # 
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
@@ -2830,13 +2919,14 @@ FRCH_storms$storm.num = c(rep("storm1", 993),
                           rep("storm2", 165),
                           rep("storm3", 201),
                           rep("storm4", 193),
-                          rep("storm5", 229),
-                          rep("storm6", 257),
+                          rep("storm5", 133),
+                          rep("storm6", 289),
                           rep("storm7", 133),
                           rep("storm8", 105),
                           rep("storm9a", 61),
                           rep("storm9b", 149))
-FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+
+FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime) 
 FRCH.2019.storms.1<- left_join(FRCH_storms, FRCH_RainGauge_2019, by = "DateTime")
 FRCH.2019.storms.1<- left_join(FRCH.2019.storms.1, airtempmean, by = "DateTime")
 
@@ -2850,7 +2940,7 @@ temp <- FRCH.2019.storms.1 %>% group_by(storm.num) %>%
 
 FRCH.2019.per.storm.1$temp <- temp$temp
 
-FRCH.2019 <-  subset(chem.2019, site.ID == "FRCH")
+FRCH.2019 <-  subset(DOD.2019, site.ID == "FRCH")
 FRCH.2019$DateTime <- as.POSIXct(FRCH.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 FRCH.2019 <- left_join(FRCH.2019, FRCH_RainGauge_2019, by = "DateTime")
 FRCH.2019 <- left_join(FRCH.2019, airtempmean, by = "DateTime")
@@ -2874,6 +2964,7 @@ HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2019" & site
 HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "fDOM")
 HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "SPC")
 HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "turb")
+HI.mean.precip.frch.abs <- subset(HI.mean.precip.response, year == "2019" & site.ID == "FRCH" & response == "abs")
 
 HI.frch.no3.2019 <- left_join(HI.mean.precip.frch.NO3, FRCH.2019.per.storm.1, by = "storm.num")
 HI.frch.no3.2019 <- left_join(HI.frch.no3.2019, FRCH.2019.per.storm.1, by = "storm.num")
@@ -3272,7 +3363,27 @@ bx <- HI.frch.turb.2.2019 %>%
   ylab("HI-Solute Storage") +
   theme_classic() # plot model 
 
-HI.frch.2019 <- rbind(HI.frch.no3.2.2019, HI.frch.fDOM.2.2019, HI.frch.SPC.2.2019, HI.frch.turb.2.2019) # merging all responses together 
+# abs #
+HI.frch.abs.2019 <- left_join(HI.mean.precip.frch.abs, FRCH.2019.per.storm.1, by = "storm.num")
+HI.frch.abs.2019 <- left_join(HI.frch.abs.2019, FRCH.2019.per.storm.2, by = "storm.num")
+HI.frch.abs.2019 <- left_join(HI.frch.abs.2019, FRCH.2019.per.storm.3, by = "storm.num")
+HI.frch.abs.2019 <- left_join(HI.frch.abs.2019, FRCH.2019.per.storm.4, by = "storm.num")
+HI.frch.abs.2019 <- left_join(HI.frch.abs.2019, FRCH.2019.per.storm.5, by = "storm.num")
+
+frch.lm.abs <- lm(HI.frch.abs.2019$HI ~ HI.frch.abs.2019$precip) # model one with just total precip
+frch.lm.abs.2 <- lm(HI.frch.abs.2019$HI ~ HI.frch.abs.2019$precip.week) # model one with just total precip
+frch.lm.abs.3 <- lm(HI.frch.abs.2019$HI ~ HI.frch.abs.2019$precip.month) # model one with just total precip
+frch.lm.abs.4 <- lm(HI.frch.abs.2019$HI ~ HI.frch.abs.2019$ThreeMonth) # model one with just total precip
+frch.lm.abs.5 <- lm(HI.frch.turb.2019$HI ~ HI.frch.turb.2019$temp.week) # model one with just total precip
+
+HI.frch.abs.2.2019 <- left_join(HI.frch.abs.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.abs.2.2019$TOTAL.TIME <- as.numeric(HI.frch.abs.2.2019$TOTAL.TIME)
+HI.frch.abs.2.2019$Intensity <- HI.frch.abs.2.2019$precip/HI.frch.abs.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.frch.2019 <- rbind(HI.frch.no3.2.2019, HI.frch.fDOM.2.2019, 
+                      HI.frch.SPC.2.2019, HI.frch.turb.2.2019,
+                      HI.frch.abs.2.2019) # merging all responses together 
 HI.frch.2019$burn <- "unburned" # adding a burn column
 HI.frch.2019$pf <- "medium" # adding a pf column
 
@@ -3280,7 +3391,7 @@ write.csv(HI.frch.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_A
 
 
 # POKE # 
-POKEstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
                                   full.names=TRUE)
@@ -3300,12 +3411,12 @@ POKE_storms$storm.num = c(rep("storm1", 103),
                           rep("storm5c", 111),
                           rep("storm5d", 99),
                           rep("storm6a", 51),
-                          rep("storm6b", 227),
-                          rep("storm7", 267),
+                          rep("storm6b", 231),
+                          rep("storm7", 235),
                           rep("storm8", 95),
                           rep("storm9", 211))
 
-POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime) 
 POKE.2019.storms.1<- left_join(POKE_storms, POKE_RainGauge_2019, by = "DateTime")
 POKE.2019.storms.1<- left_join(POKE.2019.storms.1, airtempmean, by = "DateTime")
 
@@ -3319,7 +3430,7 @@ temp <- POKE.2019.storms.1 %>% group_by(storm.num) %>%
 
 POKE.2019.per.storm.1$temp <- temp$temp
 
-POKE.2019 <-  subset(chem.2019, site.ID == "POKE")
+POKE.2019 <-  subset(DOD.2019, site.ID == "POKE")
 POKE.2019$DateTime <- as.POSIXct(POKE.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 POKE.2019 <- left_join(POKE.2019, POKE_RainGauge_2019, by = "DateTime")
 POKE.2019 <- left_join(POKE.2019, airtempmean, by = "DateTime")
@@ -3343,6 +3454,7 @@ HI.mean.precip.poke.NO3 <- subset(HI.mean.precip.response, year == "2019" & site
 HI.mean.precip.poke.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "fDOM")
 HI.mean.precip.poke.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "SPC")
 HI.mean.precip.poke.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "turb")
+HI.mean.precip.poke.abs <- subset(HI.mean.precip.response, year == "2019" & site.ID == "POKE" & response == "abs")
 
 HI.poke.no3.2019 <- left_join(HI.mean.precip.poke.NO3, POKE.2019.per.storm.1, by = "storm.num")
 HI.poke.no3.2019 <- left_join(HI.poke.no3.2019, POKE.2019.per.storm.2, by = "storm.num")
@@ -3741,14 +3853,34 @@ px <- HI.poke.turb.2.2019 %>%
 #plot_grid(pa,pb,pc,pd,pe,pf,pg,ph,pi,pj,pk,pl,pm,pn,po,pp,pq,pr,ps,pt,pu,pv,pw,px,
 #  ncol = 4)
 
-HI.poke.2019 <- rbind(HI.poke.no3.2.2019, HI.poke.fDOM.2.2019, HI.poke.SPC.2.2019, HI.poke.turb.2.2019) # merging all responses together 
+# abs #
+HI.poke.abs.2019 <- left_join(HI.mean.precip.poke.abs, POKE.2019.per.storm.1, by = "storm.num")
+HI.poke.abs.2019 <- left_join(HI.poke.abs.2019, POKE.2019.per.storm.2, by = "storm.num")
+HI.poke.abs.2019 <- left_join(HI.poke.abs.2019, POKE.2019.per.storm.3, by = "storm.num")
+HI.poke.abs.2019 <- left_join(HI.poke.abs.2019, POKE.2019.per.storm.4, by = "storm.num")
+HI.poke.abs.2019 <- left_join(HI.poke.abs.2019, POKE.2019.per.storm.5, by = "storm.num")
+
+poke.lm.abs <- lm(HI.poke.abs.2019$HI ~ HI.poke.abs.2019$precip) # model one with just total precip
+poke.lm.abs.2 <- lm(HI.poke.abs.2019$HI ~ HI.poke.abs.2019$precip.week) # model one with just total precip
+poke.lm.abs.3 <- lm(HI.poke.abs.2019$HI ~ HI.poke.abs.2019$precip.month) # model one with just total precip
+poke.lm.abs.4 <- lm(HI.poke.abs.2019$HI ~ HI.poke.abs.2019$ThreeMonth) # model one with just total precip
+poke.lm.abs.5 <- lm(HI.poke.turb.2019$HI ~ HI.poke.turb.2019$temp.week) # model one with just total precip
+
+HI.poke.abs.2.2019 <- left_join(HI.poke.abs.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.abs.2.2019$TOTAL.TIME <- as.numeric(HI.poke.abs.2.2019$TOTAL.TIME)
+HI.poke.abs.2.2019$Intensity <- HI.poke.abs.2.2019$precip/HI.poke.abs.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.poke.2019 <- rbind(HI.poke.no3.2.2019, HI.poke.fDOM.2.2019, 
+                      HI.poke.SPC.2.2019, HI.poke.turb.2.2019,
+                      HI.poke.abs.2.2019) # merging all responses together 
 HI.poke.2019$burn <- "burned" # adding a burn column
 HI.poke.2019$pf <- "medium" # adding a pf column
 
 write.csv(HI.poke.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.poke.2019.csv")
 
 # VAUL # 
-VAULstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
@@ -3763,7 +3895,7 @@ VAUL_storms$storm.num = c(rep("storm1", 191),
                           rep("storm2", 207),
                           rep("storm3", 191),
                           rep("storm4a", 83),
-                          rep("storm4b", 219),
+                          rep("storm4b", 211),
                           rep("storm4c", 707),
                           rep("storm5", 275),
                           rep("storm6", 263),
@@ -3772,7 +3904,7 @@ VAUL_storms$storm.num = c(rep("storm1", 191),
                           rep("storm8b", 223),
                           rep("storm8c", 479))
 
-VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
 VAUL.2019.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2019, by = "DateTime")
 VAUL.2019.storms.1<- left_join(VAUL.2019.storms.1, airtempmean, by = "DateTime")
 
@@ -3786,7 +3918,7 @@ temp <- VAUL.2019.storms.1 %>% group_by(storm.num) %>%
 
 VAUL.2019.per.storm.1$temp <- temp$temp
 
-VAUL.2019 <-  subset(chem.2019, site.ID == "VAUL")
+VAUL.2019 <-  subset(DOD.2019, site.ID == "VAUL")
 VAUL.2019$DateTime <- as.POSIXct(VAUL.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 VAUL.2019 <- left_join(VAUL.2019, VAUL_RainGauge_2019, by = "DateTime")
 VAUL.2019 <- left_join(VAUL.2019, airtempmean, by = "DateTime")
@@ -3810,6 +3942,7 @@ HI.mean.precip.vaul.NO3 <- subset(HI.mean.precip.response, year == "2019" & site
 HI.mean.precip.vaul.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "fDOM")
 HI.mean.precip.vaul.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "SPC")
 HI.mean.precip.vaul.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "turb")
+HI.mean.precip.vaul.abs <- subset(HI.mean.precip.response, year == "2019" & site.ID == "VAUL" & response == "abs")
 
 HI.vaul.no3.2019 <- left_join(HI.mean.precip.vaul.NO3, VAUL.2019.per.storm.1, by = "storm.num")
 HI.vaul.no3.2019 <- left_join(HI.vaul.no3.2019, VAUL.2019.per.storm.2, by = "storm.num")
@@ -4208,7 +4341,27 @@ vx <- HI.vaul.turb.2.2019 %>%
 #plot_grid(va,vb,vc,vd,ve,vf,vg,vh,vi,vj,vk,vl,vm,vn,vo,vp,vq,vr,vs,vt,vu,vv,vw,vx,
 #        ncol = 4)
 
-HI.vaul.2019 <- rbind(HI.vaul.no3.2.2019, HI.vaul.fDOM.2.2019, HI.vaul.SPC.2.2019, HI.vaul.turb.2.2019) # merging all responses together 
+# abs #
+HI.vaul.abs.2019 <- left_join(HI.mean.precip.vaul.abs, VAUL.2019.per.storm.1, by = "storm.num")
+HI.vaul.abs.2019 <- left_join(HI.vaul.abs.2019, VAUL.2019.per.storm.2, by = "storm.num")
+HI.vaul.abs.2019 <- left_join(HI.vaul.abs.2019, VAUL.2019.per.storm.3, by = "storm.num")
+HI.vaul.abs.2019 <- left_join(HI.vaul.abs.2019, VAUL.2019.per.storm.4, by = "storm.num")
+HI.vaul.abs.2019 <- left_join(HI.vaul.abs.2019, VAUL.2019.per.storm.5, by = "storm.num")
+
+vaul.lm.abs <- lm(HI.vaul.abs.2019$HI ~ HI.vaul.abs.2019$precip) # model one with just total precip
+vaul.lm.abs.2 <- lm(HI.vaul.abs.2019$HI ~ HI.vaul.abs.2019$precip.week) # model one with just total precip
+vaul.lm.abs.3 <- lm(HI.vaul.abs.2019$HI ~ HI.vaul.abs.2019$precip.month) # model one with just total precip
+vaul.lm.abs.4 <- lm(HI.vaul.abs.2019$HI ~ HI.vaul.abs.2019$ThreeMonth) # model one with just total precip
+vaul.lm.abs.5 <- lm(HI.vaul.turb.2019$HI ~ HI.vaul.turb.2019$temp.week) # model one with just total precip
+
+HI.vaul.abs.2.2019 <- left_join(HI.vaul.abs.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.abs.2.2019$TOTAL.TIME <- as.numeric(HI.vaul.abs.2.2019$TOTAL.TIME)
+HI.vaul.abs.2.2019$Intensity <- HI.vaul.abs.2.2019$precip/HI.vaul.abs.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.vaul.2019 <- rbind(HI.vaul.no3.2.2019, HI.vaul.fDOM.2.2019, 
+                      HI.vaul.SPC.2.2019, HI.vaul.turb.2.2019,
+                      HI.vaul.abs.2.2019) # merging all responses together 
 HI.vaul.2019$burn <- "unburned" # adding a burn column
 HI.vaul.2019$pf <- "high" # adding a pf column
 
@@ -4216,7 +4369,7 @@ write.csv(HI.vaul.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_A
 
 
 # STRT # 
-STRTstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
@@ -4235,11 +4388,11 @@ STRT_storms$storm.num = c(rep("storm1", 638),
                           rep("storm4", 466),
                           rep("storm5", 98),
                           rep("storm6", 246),
-                          rep("storm7", 218),
+                          rep("storm7", 246),
                           rep("storm7b", 266),
                           rep("storm7c", 258))
 
-STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime) 
 STRT.2019.storms.1<- left_join(STRT_storms, FRCH_RainGauge_2019, by = "DateTime")
 STRT.2019.storms.1<- left_join(STRT.2019.storms.1, airtempmean, by = "DateTime")
 
@@ -4253,7 +4406,7 @@ temp <- STRT.2019.storms.1 %>% group_by(storm.num) %>%
 
 STRT.2019.per.storm.1$temp <- temp$temp
 
-STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
+STRT.2019 <-  subset(DOD.2019, site.ID == "STRT")
 STRT.2019$DateTime <- as.POSIXct(STRT.2019$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 
 STRT.2019 <- left_join(STRT.2019, FRCH_RainGauge_2019, by = "DateTime")
@@ -4280,6 +4433,7 @@ HI.mean.precip.strt.NO3 <- subset(HI.mean.precip.response, year == "2019" & site
 HI.mean.precip.strt.fDOM <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "fDOM")
 HI.mean.precip.strt.SPC <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "SPC")
 HI.mean.precip.strt.turb <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "turb")
+HI.mean.precip.strt.abs <- subset(HI.mean.precip.response, year == "2019" & site.ID == "STRT" & response == "abs")
 
 HI.strt.no3.2019 <- left_join(HI.mean.precip.strt.NO3, STRT.2019.per.storm.1, by = "storm.num")
 HI.strt.no3.2019 <- left_join(HI.strt.no3.2019, STRT.2019.per.storm.2, by = "storm.num")
@@ -4680,7 +4834,38 @@ sx <- HI.strt.turb.2.2019 %>%
 #plot_grid(sa,sb,sc,sd,se,sf,sg,sh,si,sj,sk,sl,sm,sn,so,sp,sq,sr,ss,st,su,sv,sw,sx,
 #          ncol = 4)
 
-HI.strt.2019 <- rbind(HI.strt.no3.2.2019, HI.strt.fDOM.2.2019, HI.strt.SPC.2.2019, HI.strt.turb.2.2019) # merging all responses together 
+# abs #
+HI.strt.abs.2019 <- left_join(HI.mean.precip.strt.abs, STRT.2019.per.storm.1, by = "storm.num")
+HI.strt.abs.2019 <- left_join(HI.strt.abs.2019, STRT.2019.per.storm.2, by = "storm.num")
+HI.strt.abs.2019 <- left_join(HI.strt.abs.2019, STRT.2019.per.storm.3, by = "storm.num")
+HI.strt.abs.2019 <- left_join(HI.strt.abs.2019, STRT.2019.per.storm.4, by = "storm.num")
+HI.strt.abs.2019 <- left_join(HI.strt.abs.2019, STRT.2019.per.storm.5, by = "storm.num")
+
+strt.lm.abs <- lm(HI.strt.abs.2019$HI ~ HI.strt.abs.2019$precip) # model one with just total precip
+strt.lm.abs.2 <- lm(HI.strt.abs.2019$HI ~ HI.strt.abs.2019$precip.week) # model one with just total precip
+strt.lm.abs.3 <- lm(HI.strt.abs.2019$HI ~ HI.strt.abs.2019$precip.month) # model one with just total precip
+strt.lm.abs.4 <- lm(HI.strt.abs.2019$HI ~ HI.strt.abs.2019$ThreeMonth) # model one with just total precip
+strt.lm.abs.5 <- lm(HI.strt.turb.2019$HI ~ HI.strt.turb.2019$temp.week) # model one with just total precip
+
+HI.strt.abs.2.2019 <- left_join(HI.strt.abs.2019, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.abs.2.2019$TOTAL.TIME <- as.numeric(HI.strt.abs.2.2019$TOTAL.TIME)
+HI.strt.abs.2.2019$Intensity <- HI.strt.abs.2.2019$precip/HI.strt.abs.2.2019$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+HI.strt.no3.2.2019 <- HI.strt.no3.2.2019[c("site.ID", "year", "storm.num", "response",
+                                           "HI", "precip", "temp", "precip.week",
+                                           "precip.month", "ThreeMonth", "temp.week",
+                                           "TOTAL.TIME", "Intensity", "doy")] # reordering
+
+HI.strt.abs.2.2019$temp.week <- NA
+HI.strt.abs.2.2019 <- HI.strt.abs.2.2019[c("site.ID", "year", "storm.num", "response",
+                                           "HI", "precip", "temp", "precip.week",
+                                           "precip.month", "ThreeMonth", "temp.week",
+                                           "TOTAL.TIME", "Intensity", "doy")] # reordering
+
+HI.strt.2019 <- rbind(HI.strt.no3.2.2019, HI.strt.fDOM.2.2019,
+                      HI.strt.SPC.2.2019, HI.strt.turb.2.2019,
+                      HI.strt.abs.2.2019)
+                      
 HI.strt.2019$burn <- "burned" # adding a burn column
 HI.strt.2019$pf <- "high" # adding a pf column
 
@@ -4688,7 +4873,7 @@ write.csv(HI.strt.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_A
 
 
 # CARI # 
-CARIstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2019/All_Sites/", 
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
@@ -4701,15 +4886,15 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
 
 CARI_storms$storm.num = c(rep("storm1", 371),
                           rep("storm2", 143),
-                          rep("storm3", 72),
-                          rep("storm4", 0),
+                          rep("storm3", 104),
+                          rep("storm4", 147),
                           rep("storm5", 135),
                           rep("storm6a", 83),
                           rep("storm6b", 235),
-                          rep("storm6c", 426),
+                          rep("storm6c", 465),
                           rep("storm6d", 135),
                           rep("storm7a", 51),
-                          rep("storm7b", 217),
+                          rep("storm7b", 219),
                           rep("storm8", 267))
 
 CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
@@ -4728,7 +4913,7 @@ CARI.2019.per.storm.1$temp <- temp$temp
 
 
 CARI.2019 <- CARI_storms
-CARI.2019 <- CARI.2019[,-c(1,10)]
+CARI.2019 <- CARI.2019[,-c(1,3)]
 CARI.2019$DateTime <- as.POSIXct(CARI.2019$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 CARI.2019 <- left_join(CARI.2019, POKE_RainGauge_2019, by = "DateTime")
 CARI.2019 <- left_join(CARI.2019, airtempmean, by = "DateTime")
@@ -4737,7 +4922,8 @@ CARI.2019$month <- rollapplyr(CARI.2019$inst_rainfall_mm, 2688, sum, na.rm = TRU
 CARI.2019$ThreeMonth <- rollapplyr(CARI.2019$inst_rainfall_mm, 8064, sum, na.rm = TRUE, fill = NA, partial = TRUE)
 CARI.2019$temp.week <- rollapplyr(CARI.2019$airtemp_100.1000cm_mean, 672, mean, na.rm = TRUE, fill = NA, partial = TRUE)
 
-CARI.2019.1 <- left_join(CARI.2019.storms.1, CARI.2019, by = "DateTime") # week month and 3 month precip totals 
+CARI.2019.1 <- CARI.2019
+# CARI.2019.1 <- left_join(CARI.2019.storms.1, CARI.2019, by = "DateTime") # week month and 3 month precip totals 
 
 CARI.2019.per.storm.2 <- CARI.2019.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
@@ -5159,7 +5345,8 @@ HI.cari.2019$pf <- "medium" # adding a pf column
 write.csv(HI.cari.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.cari.2019.csv")
 
 
-HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, HI.vaul.2019, HI.strt.2019, HI.cari.2019) # bind all 2019 together
+HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, 
+                 HI.vaul.2019, HI.strt.2019, HI.cari.2019) # bind all 2019 together
 
 # add time since peak  Q in chena #
 HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
@@ -5167,19 +5354,6 @@ origin_date <- as.Date("2019-05-12")
 HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
 
 write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ######################################## 2020 ####
@@ -5198,12 +5372,20 @@ airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
 # airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 names(airtempmean)[2] <- "DateTime"
 
-# convert to AK time 
-attributes(FRCH_RainGauge_2020$DateTime)$tzone <- 'America/Anchorage'
-attributes(POKE_RainGauge_2020$DateTime)$tzone <- 'America/Anchorage'
-attributes(VAUL_RainGauge_2020$DateTime)$tzone <- 'America/Anchorage'
-attributes(STRT_RainGauge_2020$DateTime)$tzone <- 'America/Anchorage'
-attributes(airtempmean$DateTime)$tzone <- 'America/Anchorage'
+# convert to date time 
+FRCH_RainGauge_2020$DateTime <- ymd_hms(FRCH_RainGauge_2020$DateTime) # converting character to datetime
+POKE_RainGauge_2020$DateTime <- ymd_hms(POKE_RainGauge_2020$DateTime) # converting character to datetime
+VAUL_RainGauge_2020$DateTime <- ymd_hms(VAUL_RainGauge_2020$DateTime) # converting character to datetime
+STRT_RainGauge_2020$DateTime <- ymd_hms(STRT_RainGauge_2020$DateTime) # converting character to datetime
+airtempmean$DateTime <- ymd_hms(airtempmean$DateTime ) # converting character to datetime
+
+# Force to AK time 
+FRCH_RainGauge_2020$DateTime <- force_tz(FRCH_RainGauge_2020$DateTime, "America/Anchorage") # converting character to datetime
+POKE_RainGauge_2020$DateTime <- force_tz(POKE_RainGauge_2020$DateTime, "America/Anchorage") # converting character to datetime
+VAUL_RainGauge_2020$DateTime <- force_tz(VAUL_RainGauge_2020$DateTime, "America/Anchorage") # converting character to datetime
+STRT_RainGauge_2020$DateTime <- force_tz(STRT_RainGauge_2020$DateTime, "America/Anchorage") # converting character to datetime
+airtempmean$DateTime <- force_tz(airtempmean$DateTime, "America/Anchorage") # converting character to datetime
+
 # round to nearest 15 min 
 FRCH_RainGauge_2020$DateTime <- lubridate::floor_date(FRCH_RainGauge_2020$DateTime, "15 minutes")
 POKE_RainGauge_2020$DateTime <- lubridate::floor_date(POKE_RainGauge_2020$DateTime, "15 minutes")
@@ -5222,7 +5404,7 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-MOOS_storms$storm.num = c(rep("storm1", 691),
+MOOS_storms$storm.num = c(rep("storm1", 723),
                           rep("storm2", 327),
                           rep("storm3", 129),
                           rep("storm4", 321),
@@ -5234,7 +5416,7 @@ MOOS_storms$storm.num = c(rep("storm1", 691),
                           rep("storm8", 195),
                           rep("storm9", 405))
 
-MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime) 
 MOOS.2020.storms.1<- left_join(MOOS_storms, FRCH_RainGauge_2020, by = "DateTime")
 MOOS.2020.storms.1<- left_join(MOOS.2020.storms.1, airtempmean, by = "DateTime")
 
@@ -5250,12 +5432,20 @@ temp <- MOOS.2020.storms.1 %>% group_by(storm.num) %>%
 MOOS.2020.per.storm.1$temp <- temp$temp
 
 
-chem.2020 <- read_csv("~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2020.csv")
+chem.2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
+
+chem.2020 <- chem.2020[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+
+chem.2020$datetimeAK <- ymd_hms(chem.2020$datetimeAK) # converting character to datetime
+chem.2020$datetimeAK <- force_tz(chem.2020$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem.2020) <- c("datetimeAK", "site.ID", "fDOM.QSU", "SpCond.µS.cm", "Turbidity.FNU", "nitrateuM", "ABS_254")
 
 MOOS.2020 <-  subset(chem.2020, site.ID == "MOOS")
 
 
-MOOS.2020$DateTime <- as.POSIXct(MOOS.2020$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+MOOS.2020$DateTime <- as.POSIXct(MOOS.2020$datetimeAK)
 MOOS.2020 <- left_join(MOOS.2020, FRCH_RainGauge_2020, by = "DateTime")
 MOOS.2020 <- left_join(MOOS.2020, airtempmean, by = "DateTime")
 MOOS.2020$week <- rollapplyr(MOOS.2020$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -5278,6 +5468,7 @@ HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2020" & site
 HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2020" & site.ID == "MOOS" & response == "fDOM")
 HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2020" & site.ID == "MOOS" & response == "SPC")
 HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2020" & site.ID == "MOOS" & response == "turb")
+HI.mean.precip.moos.abs <- subset(HI.mean.precip.response, year == "2020" & site.ID == "MOOS" & response == "abs")
 
 HI.moos.no3.2020 <- left_join(HI.mean.precip.moos.NO3, MOOS.2020.per.storm.1, by = "storm.num")
 HI.moos.no3.2020 <- left_join(HI.moos.no3.2020, MOOS.2020.per.storm.2, by = "storm.num")
@@ -5679,8 +5870,28 @@ www <- HI.moos.turb.2.2020 %>%
 #plot_grid(aaa,bbb,ccc,ddd,eee,fff,ggg,hhh,iii,jjj,kkk,lll,mmm,nnn,ooo,ppp,qqq,rrr,sss,ttt,uuu,utb,vvv,www,
 #          ncol = 4)
 
+# abs #
+HI.moos.abs.2020 <- left_join(HI.mean.precip.moos.abs, MOOS.2020.per.storm.1, by = "storm.num")
+HI.moos.abs.2020 <- left_join(HI.moos.abs.2020, MOOS.2020.per.storm.2, by = "storm.num")
+HI.moos.abs.2020 <- left_join(HI.moos.abs.2020, MOOS.2020.per.storm.3, by = "storm.num")
+HI.moos.abs.2020 <- left_join(HI.moos.abs.2020, MOOS.2020.per.storm.4, by = "storm.num")
+HI.moos.abs.2020 <- left_join(HI.moos.abs.2020, MOOS.2020.per.storm.5, by = "storm.num")
 
-HI.moos.2020 <- rbind(HI.moos.no3.2.2020, HI.moos.fDOM.2.2020, HI.moos.SPC.2.2020, HI.moos.turb.2.2020) # merging all responses together 
+moos.lm.abs <- lm(HI.moos.abs.2020$HI ~ HI.moos.abs.2020$precip) # model one with just total precip
+moos.lm.abs.2 <- lm(HI.moos.abs.2020$HI ~ HI.moos.abs.2020$precip.week) # model one with just total precip
+moos.lm.abs.3 <- lm(HI.moos.abs.2020$HI ~ HI.moos.abs.2020$precip.month) # model one with just total precip
+moos.lm.abs.4 <- lm(HI.moos.abs.2020$HI ~ HI.moos.abs.2020$ThreeMonth) # model one with just total precip
+moos.lm.abs.5 <- lm(HI.moos.abs.2020$HI ~ HI.moos.abs.2020$temp) # model one with just total precip
+
+HI.moos.abs.2.2020 <- left_join(HI.moos.abs.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.moos.abs.2.2020$TOTAL.TIME <- as.numeric(HI.moos.abs.2.2020$TOTAL.TIME)
+HI.moos.abs.2.2020$Intensity <- HI.moos.abs.2.2020$precip/HI.moos.abs.2.2020$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+
+HI.moos.2020 <- rbind(HI.moos.no3.2.2020, HI.moos.fDOM.2.2020, 
+                      HI.moos.SPC.2.2020, HI.moos.turb.2.2020,
+                      HI.moos.abs.2.2020) # merging all responses together 
 HI.moos.2020$burn <- "burned" # adding a burn column
 HI.moos.2020$pf <- "medium" # adding a pf column
 
@@ -5710,14 +5921,14 @@ FRCH_storms$storm.num = c(rep("storm1", 487),
                           rep("storm3c", 159),
                           rep("storm4a", 187),
                           rep("storm4b", 203),
-                          rep("storm5", 62),
+                          rep("storm5", 59),
                           rep("storm6", 103),
                           rep("storm7", 339),
                           rep("storm8", 383),
                           rep("storm9a", 139),
-                          rep("storm9b", 289))
+                          rep("storm9b", 286))
 
-FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime) 
 FRCH.2020.storms.1<- left_join(FRCH_storms, FRCH_RainGauge_2020, by = "DateTime")
 FRCH.2020.storms.1<- left_join(FRCH.2020.storms.1, airtempmean, by = "DateTime")
 
@@ -5734,7 +5945,7 @@ FRCH.2020.per.storm.1$temp <- temp$temp
 FRCH.2020 <-  subset(chem.2020, site.ID == "FRCH")
 
 
-FRCH.2020$DateTime <- as.POSIXct(FRCH.2020$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+FRCH.2020$DateTime <- as.POSIXct(FRCH.2020$datetimeAK)
 FRCH.2020 <- left_join(FRCH.2020, FRCH_RainGauge_2020, by = "DateTime")
 FRCH.2020 <- left_join(FRCH.2020, airtempmean, by = "DateTime")
 FRCH.2020$week <- rollapplyr(FRCH.2020$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -5757,6 +5968,7 @@ HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2020" & site
 HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2020" & site.ID == "FRCH" & response == "fDOM")
 HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2020" & site.ID == "FRCH" & response == "SPC")
 HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2020" & site.ID == "FRCH" & response == "turb")
+HI.mean.precip.frch.abs <- subset(HI.mean.precip.response, year == "2020" & site.ID == "FRCH" & response == "abs")
 
 HI.frch.no3.2020 <- left_join(HI.mean.precip.frch.NO3, FRCH.2020.per.storm.1, by = "storm.num")
 HI.frch.no3.2020 <- left_join(HI.frch.no3.2020, FRCH.2020.per.storm.2, by = "storm.num")
@@ -6157,7 +6369,28 @@ bww <- HI.frch.turb.2.2020 %>%
 #plot_grid(baa,bab,bcc,bdd,bee,bff,bgg,bhh,bii,bjj,bkk,bll,bmm,bnn,boo,bpp,bqq,brr,bss,bt,buu,btb,bvv,bww,
 #          ncol = 4)
 
-HI.frch.2020 <- rbind(HI.frch.no3.2.2020, HI.frch.fDOM.2.2020, HI.frch.SPC.2.2020, HI.frch.turb.2.2020) # merging all responses together 
+# abs #
+HI.frch.abs.2020 <- left_join(HI.mean.precip.frch.abs, FRCH.2020.per.storm.1, by = "storm.num")
+HI.frch.abs.2020 <- left_join(HI.frch.abs.2020, FRCH.2020.per.storm.2, by = "storm.num")
+HI.frch.abs.2020 <- left_join(HI.frch.abs.2020, FRCH.2020.per.storm.3, by = "storm.num")
+HI.frch.abs.2020 <- left_join(HI.frch.abs.2020, FRCH.2020.per.storm.4, by = "storm.num")
+HI.frch.abs.2020 <- left_join(HI.frch.abs.2020, FRCH.2020.per.storm.5, by = "storm.num")
+
+frch.lm.abs <- lm(HI.frch.abs.2020$HI ~ HI.frch.abs.2020$precip) # model one with just total precip
+frch.lm.abs.2 <- lm(HI.frch.abs.2020$HI ~ HI.frch.abs.2020$precip.week) # model one with just total precip
+frch.lm.abs.3 <- lm(HI.frch.abs.2020$HI ~ HI.frch.abs.2020$precip.month) # model one with just total precip
+frch.lm.abs.4 <- lm(HI.frch.abs.2020$HI ~ HI.frch.abs.2020$ThreeMonth) # model one with just total precip
+frch.lm.abs.5 <- lm(HI.frch.abs.2020$HI ~ HI.frch.abs.2020$temp) # model one with just total precip
+
+HI.frch.abs.2.2020 <- left_join(HI.frch.abs.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.abs.2.2020$TOTAL.TIME <- as.numeric(HI.frch.abs.2.2020$TOTAL.TIME)
+HI.frch.abs.2.2020$Intensity <- HI.frch.abs.2.2020$precip/HI.frch.abs.2.2020$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+
+HI.frch.2020 <- rbind(HI.frch.no3.2.2020, HI.frch.fDOM.2.2020,
+                      HI.frch.SPC.2.2020, HI.frch.turb.2.2020,
+                      HI.frch.abs.2.2020) # merging all responses together 
 HI.frch.2020$burn <- "unburned" # adding a burn column
 HI.frch.2020$pf <- "medium" # adding a pf column
 
@@ -6188,10 +6421,10 @@ POKE_storms$storm.num = c(rep("storm1", 95),
                           rep("storm19", 135),
                           rep("storm2", 87),
                           rep("storm20", 139),
-                          rep("storm21", 219),
+                          rep("storm21", 227),
                           rep("storm22a", 107),
-                          rep("storm22b", 208),
-                          rep("storm3", 120),
+                          rep("storm22b", 212),
+                          rep("storm3", 119),
                           rep("storm4a", 98),
                           rep("storm4b", 95),
                           rep("storm4c", 159),
@@ -6201,7 +6434,7 @@ POKE_storms$storm.num = c(rep("storm1", 95),
                           rep("storm8", 135),
                           rep("storm9", 263))
 
-POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime) 
 POKE.2020.storms.1<- left_join(POKE_storms, POKE_RainGauge_2020, by = "DateTime")
 POKE.2020.storms.1<- left_join(POKE.2020.storms.1, airtempmean, by = "DateTime")
 
@@ -6218,7 +6451,7 @@ POKE.2020.per.storm.1$temp <- temp$temp
 POKE.2020 <-  subset(chem.2020, site.ID == "POKE")
 
 
-POKE.2020$DateTime <- as.POSIXct(POKE.2020$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+POKE.2020$DateTime <- as.POSIXct(POKE.2020$datetimeAK)
 POKE.2020 <- left_join(POKE.2020, POKE_RainGauge_2020, by = "DateTime")
 POKE.2020 <- left_join(POKE.2020, airtempmean, by = "DateTime")
 POKE.2020$week <- rollapplyr(POKE.2020$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -6241,6 +6474,7 @@ HI.mean.precip.poke.NO3 <- subset(HI.mean.precip.response, year == "2020" & site
 HI.mean.precip.poke.fDOM <- subset(HI.mean.precip.response, year == "2020" & site.ID == "POKE" & response == "fDOM")
 HI.mean.precip.poke.SPC <- subset(HI.mean.precip.response, year == "2020" & site.ID == "POKE" & response == "SPC")
 HI.mean.precip.poke.turb <- subset(HI.mean.precip.response, year == "2020" & site.ID == "POKE" & response == "turb")
+HI.mean.precip.poke.abs <- subset(HI.mean.precip.response, year == "2020" & site.ID == "POKE" & response == "abs")
 
 HI.poke.no3.2020 <- left_join(HI.mean.precip.poke.NO3, POKE.2020.per.storm.1, by = "storm.num")
 HI.poke.no3.2020 <- left_join(HI.poke.no3.2020, POKE.2020.per.storm.2, by = "storm.num")
@@ -6638,7 +6872,27 @@ ppx <- HI.poke.turb.2.2020 %>%
 #plot_grid(ppa,ppb,ppc,ppd,ppe,ppf,ppg,pph,ppq,ppr,ppu,ppv,
 #        ncol = 4)
 
-HI.poke.2020 <- rbind(HI.poke.no3.2.2020, HI.poke.fDOM.2.2020, HI.poke.SPC.2.2020, HI.poke.turb.2.2020) # merging all responses together 
+# abs #
+HI.poke.abs.2020 <- left_join(HI.mean.precip.frch.abs, POKE.2020.per.storm.1, by = "storm.num")
+HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.2, by = "storm.num")
+HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.3, by = "storm.num")
+HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.4, by = "storm.num")
+HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.5, by = "storm.num")
+
+poke.lm.abs <- lm(HI.poke.abs.2020$HI ~ HI.poke.abs.2020$precip) # model one with just total precip
+poke.lm.abs.2 <- lm(HI.poke.abs.2020$HI ~ HI.poke.abs.2020$precip.week) # model one with just total precip
+poke.lm.abs.3 <- lm(HI.poke.abs.2020$HI ~ HI.poke.abs.2020$precip.month) # model one with just total precip
+poke.lm.abs.4 <- lm(HI.poke.abs.2020$HI ~ HI.poke.abs.2020$ThreeMonth) # model one with just total precip
+poke.lm.abs.5 <- lm(HI.poke.abs.2020$HI ~ HI.poke.abs.2020$temp) # model one with just total precip
+
+HI.poke.abs.2.2020 <- left_join(HI.poke.abs.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.abs.2.2020$TOTAL.TIME <- as.numeric(HI.poke.abs.2.2020$TOTAL.TIME)
+HI.poke.abs.2.2020$Intensity <- HI.poke.abs.2.2020$precip/HI.poke.abs.2.2020$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.poke.2020 <- rbind(HI.poke.no3.2.2020, HI.poke.fDOM.2.2020, 
+                      HI.poke.SPC.2.2020, HI.poke.turb.2.2020,
+                      HI.poke.abs.2.2020) # merging all responses together 
 HI.poke.2020$burn <- "burned" # adding a burn column
 HI.poke.2020$pf <- "medium" # adding a pf column
 
@@ -6657,24 +6911,24 @@ VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 VAUL_storms$storm.num = c(rep("storm10", 195),
-                          rep("storm11", 400),
+                          rep("storm11", 399),
                           rep("storm12", 171),
-                          rep("storm13", 319),
+                          rep("storm13", 222),
                           rep("storm14", 211),
                           rep("storm1a", 111),
                           rep("storm1b", 234),
                           rep("storm1c", 406),
-                          rep("storm2", 182),
-                          rep("storm3", 310),
+                          rep("storm2", 214),
+                          rep("storm3", 342),
                           rep("storm4", 318),
-                          rep("storm5", 198),
+                          rep("storm5", 230),
                           rep("storm6a", 107),
                           rep("storm6b", 511),
-                          rep("storm7", 284),
+                          rep("storm7", 283),
                           rep("storm8", 91),
                           rep("storm9", 91))
 
-VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
 VAUL.2020.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2020, by = "DateTime")
 VAUL.2020.storms.1<- left_join(VAUL.2020.storms.1, airtempmean, by = "DateTime")
 
@@ -6691,7 +6945,7 @@ VAUL.2020.per.storm.1$temp <- temp$temp
 VAUL.2020 <-  subset(chem.2020, site.ID == "VAUL")
 
 
-VAUL.2020$DateTime <- as.POSIXct(VAUL.2020$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+VAUL.2020$DateTime <- as.POSIXct(VAUL.2020$datetimeAK)
 VAUL.2020 <- left_join(VAUL.2020, VAUL_RainGauge_2020, by = "DateTime")
 VAUL.2020 <- left_join(VAUL.2020, airtempmean, by = "DateTime")
 VAUL.2020$week <- rollapplyr(VAUL.2020$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -6714,6 +6968,7 @@ HI.mean.precip.vaul.NO3 <- subset(HI.mean.precip.response, year == "2020" & site
 HI.mean.precip.vaul.fDOM <- subset(HI.mean.precip.response, year == "2020" & site.ID == "VAUL" & response == "fDOM")
 HI.mean.precip.vaul.SPC <- subset(HI.mean.precip.response, year == "2020" & site.ID == "VAUL" & response == "SPC")
 HI.mean.precip.vaul.turb <- subset(HI.mean.precip.response, year == "2020" & site.ID == "VAUL" & response == "turb")
+HI.mean.precip.vaul.abs <- subset(HI.mean.precip.response, year == "2020" & site.ID == "VAUL" & response == "abs")
 
 HI.vaul.no3.2020 <- left_join(HI.mean.precip.vaul.NO3, VAUL.2020.per.storm.1, by = "storm.num")
 HI.vaul.no3.2020 <- left_join(HI.vaul.no3.2020, VAUL.2020.per.storm.2, by = "storm.num")
@@ -7110,7 +7365,27 @@ dww <- HI.vaul.turb.2.2020 %>%
 #plot_grid(daa,dbb,dcc,dcd,dee,dff,dgg,dhh,dii,djj,dkk,dll,dmm,dnn,doo,dpp,dqq,drr,dss,dtt, duu,dtb,dvv,dww,
 #          ncol = 4)
 
-HI.vaul.2020 <- rbind(HI.vaul.no3.2.2020, HI.vaul.fDOM.2.2020, HI.vaul.SPC.2.2020, HI.vaul.turb.2.2020) # merging all responses together 
+# abs #
+HI.vaul.abs.2020 <- left_join(HI.mean.precip.vaul.abs, VAUL.2020.per.storm.1, by = "storm.num")
+HI.vaul.abs.2020 <- left_join(HI.vaul.abs.2020, VAUL.2020.per.storm.2, by = "storm.num")
+HI.vaul.abs.2020 <- left_join(HI.vaul.abs.2020, VAUL.2020.per.storm.3, by = "storm.num")
+HI.vaul.abs.2020 <- left_join(HI.vaul.abs.2020, VAUL.2020.per.storm.4, by = "storm.num")
+HI.vaul.abs.2020 <- left_join(HI.vaul.abs.2020, VAUL.2020.per.storm.5, by = "storm.num")
+
+vaul.lm.abs <- lm(HI.vaul.abs.2020$HI ~ HI.vaul.abs.2020$precip) # model one with just total precip
+vaul.lm.abs.2 <- lm(HI.vaul.abs.2020$HI ~ HI.vaul.abs.2020$precip.week) # model one with just total precip
+vaul.lm.abs.3 <- lm(HI.vaul.abs.2020$HI ~ HI.vaul.abs.2020$precip.month) # model one with just total precip
+vaul.lm.abs.4 <- lm(HI.vaul.abs.2020$HI ~ HI.vaul.abs.2020$ThreeMonth) # model one with just total precip
+vaul.lm.abs.5 <- lm(HI.vaul.abs.2020$HI ~ HI.vaul.abs.2020$temp) # model one with just total precip
+
+HI.vaul.abs.2.2020 <- left_join(HI.vaul.abs.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.abs.2.2020$TOTAL.TIME <- as.numeric(HI.vaul.abs.2.2020$TOTAL.TIME)
+HI.vaul.abs.2.2020$Intensity <- HI.vaul.abs.2.2020$precip/HI.vaul.abs.2.2020$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.vaul.2020 <- rbind(HI.vaul.no3.2.2020, HI.vaul.fDOM.2.2020,
+                      HI.vaul.SPC.2.2020, HI.vaul.turb.2.2020,
+                      HI.vaul.abs.2.2020) # merging all responses together 
 HI.vaul.2020$burn <- "unburned" # adding a burn column
 HI.vaul.2020$pf <- "high" # adding a pf column
 
@@ -7128,26 +7403,26 @@ STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-STRT_storms$storm.num = c(rep("storm10", 247),
-                          rep("storm1a", 108),
-                          rep("storm1b", 162),
-                          rep("storm1c", 106),
-                          rep("storm1d", 87),
-                          rep("storm1e", 445),
-                          rep("storm2", 167),
-                          rep("storm3", 387),
-                          rep("storm4a", 141),
-                          rep("storm4b", 323),
-                          rep("storm5", 239),
-                          rep("storm6", 123),
-                          rep("storm7a", 99),
-                          rep("storm7b", 96),
-                          rep("storm8", 83),
-                          rep("storm9a", 295),
-                          rep("storm9b", 135),
-                          rep("storm9c", 483))
+STRT_storms$storm.num = c(rep("storm10", 246),
+                          rep("storm1a", 103),
+                          rep("storm1b", 161),
+                          rep("storm1c", 105),
+                          rep("storm1d", 86),
+                          rep("storm1e", 476),
+                          rep("storm2", 166),
+                          rep("storm3", 386),
+                          rep("storm4a", 140),
+                          rep("storm4b", 322),
+                          rep("storm5", 250),
+                          rep("storm6", 122),
+                          rep("storm7a", 98),
+                          rep("storm7b", 95),
+                          rep("storm8", 82),
+                          rep("storm9a", 294),
+                          rep("storm9b", 134),
+                          rep("storm9c", 482))
 
-STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime) 
 STRT.2020.storms.1<- left_join(STRT_storms, STRT_RainGauge_2020, by = "DateTime")
 STRT.2020.storms.1<- left_join(STRT.2020.storms.1, airtempmean, by = "DateTime")
 
@@ -7165,7 +7440,7 @@ STRT.2020.per.storm.1$temp <- temp$temp
 STRT.2020 <-  subset(chem.2020, site.ID == "STRT")
 
 
-STRT.2020$DateTime <- as.POSIXct(STRT.2020$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+STRT.2020$DateTime <- as.POSIXct(STRT.2020$datetimeAK)
 STRT.2020 <- left_join(STRT.2020, STRT_RainGauge_2020, by = "DateTime")
 STRT.2020 <- left_join(STRT.2020, airtempmean, by = "DateTime")
 STRT.2020$week <- rollapplyr(STRT.2020$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -7188,6 +7463,7 @@ HI.mean.precip.strt.NO3 <- subset(HI.mean.precip.response, year == "2020" & site
 HI.mean.precip.strt.fDOM <- subset(HI.mean.precip.response, year == "2020" & site.ID == "STRT" & response == "fDOM")
 HI.mean.precip.strt.SPC <- subset(HI.mean.precip.response, year == "2020" & site.ID == "STRT" & response == "SPC")
 HI.mean.precip.strt.turb <- subset(HI.mean.precip.response, year == "2020" & site.ID == "STRT" & response == "turb")
+HI.mean.precip.strt.abs <- subset(HI.mean.precip.response, year == "2020" & site.ID == "STRT" & response == "abs")
 
 HI.strt.no3.2020 <- left_join(HI.mean.precip.strt.NO3, STRT.2020.per.storm.1, by = "storm.num")
 HI.strt.no3.2020 <- left_join(HI.strt.no3.2020, STRT.2020.per.storm.2, by = "storm.num")
@@ -7595,7 +7871,28 @@ eww <- HI.strt.turb.2.2020 %>%
 #plot_grid(eaa,ebb,ecc,edd,ede,eff,egg,ehh,eii,ejj,ekk,ell,emm,enn,eoo,epp,eqq,err,ess,ett,euu,etb,evv,eww,
 #          ncol = 4)
 
-HI.strt.2020 <- rbind(HI.strt.no3.2.2020, HI.strt.fDOM.2.2020, HI.strt.SPC.2.2020, HI.strt.turb.2.2020) # merging all responses together 
+# abs #
+HI.strt.abs.2020 <- left_join(HI.mean.precip.strt.abs, STRT.2020.per.storm.1, by = "storm.num")
+HI.strt.abs.2020 <- left_join(HI.strt.abs.2020, STRT.2020.per.storm.2, by = "storm.num")
+HI.strt.abs.2020 <- left_join(HI.strt.abs.2020, STRT.2020.per.storm.3, by = "storm.num")
+HI.strt.abs.2020 <- left_join(HI.strt.abs.2020, STRT.2020.per.storm.4, by = "storm.num")
+HI.strt.abs.2020 <- left_join(HI.strt.abs.2020, STRT.2020.per.storm.5, by = "storm.num")
+
+strt.lm.abs <- lm(HI.strt.abs.2020$HI ~ HI.strt.abs.2020$precip) # model one with just total precip
+strt.lm.abs.2 <- lm(HI.strt.abs.2020$HI ~ HI.strt.abs.2020$precip.week) # model one with just total precip
+strt.lm.abs.3 <- lm(HI.strt.abs.2020$HI ~ HI.strt.abs.2020$precip.month) # model one with just total precip
+strt.lm.abs.4 <- lm(HI.strt.abs.2020$HI ~ HI.strt.abs.2020$ThreeMonth) # model one with just total precip
+strt.lm.abs.5 <- lm(HI.strt.abs.2020$HI ~ HI.strt.abs.2020$temp) # model one with just total precip
+
+HI.strt.abs.2.2020 <- left_join(HI.strt.abs.2020, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.abs.2.2020$TOTAL.TIME <- as.numeric(HI.strt.abs.2.2020$TOTAL.TIME)
+HI.strt.abs.2.2020$Intensity <- HI.strt.abs.2.2020$precip/HI.strt.abs.2.2020$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+
+HI.strt.2020 <- rbind(HI.strt.no3.2.2020, HI.strt.fDOM.2.2020,
+                      HI.strt.SPC.2.2020, HI.strt.turb.2.2020,
+                      HI.strt.abs.2.2020) # merging all responses together 
 HI.strt.2020$burn <- "burned" # adding a burn column
 HI.strt.2020$pf <- "high" # adding a pf column
 
@@ -8100,13 +8397,20 @@ STRT_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/ST
 
 airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
 
-# names(airtempmean)[2] <- "DateTime"
 
-# convert to AK time 
-attributes(POKE_RainGauge_2021$DateTime)$tzone <- 'America/Anchorage'
-attributes(VAUL_RainGauge_2021$DateTime)$tzone <- 'America/Anchorage'
-attributes(STRT_RainGauge_2021$DateTime)$tzone <- 'America/Anchorage'
-attributes(airtempmean$DateTime)$tzone <- 'America/Anchorage'
+
+# convert to date time 
+POKE_RainGauge_2021$DateTime <- ymd_hms(POKE_RainGauge_2021$DateTime) # converting character to datetime
+VAUL_RainGauge_2021$DateTime <- ymd_hms(VAUL_RainGauge_2021$DateTime) # converting character to datetime
+STRT_RainGauge_2021$DateTime <- ymd_hms(STRT_RainGauge_2021$DateTime) # converting character to datetime
+airtempmean$date_timeAK <- ymd_hms(airtempmean$date_timeAK ) # converting character to datetime
+names(airtempmean)[2] <- "DateTime"
+
+# Force to AK time 
+POKE_RainGauge_2021$DateTime <- force_tz(POKE_RainGauge_2021$DateTime, "America/Anchorage") # converting character to datetime
+VAUL_RainGauge_2021$DateTime <- force_tz(VAUL_RainGauge_2021$DateTime, "America/Anchorage") # converting character to datetime
+STRT_RainGauge_2021$DateTime <- force_tz(STRT_RainGauge_2021$DateTime, "America/Anchorage") # converting character to datetime
+airtempmean$DateTime <- force_tz(airtempmean$DateTime, "America/Anchorage") # converting character to datetime
 
 # round to nearest 15 min 
 POKE_RainGauge_2021$DateTime <- lubridate::floor_date(POKE_RainGauge_2021$DateTime, "15 minutes")
@@ -8114,7 +8418,7 @@ VAUL_RainGauge_2021$DateTime <- lubridate::floor_date(VAUL_RainGauge_2021$DateTi
 STRT_RainGauge_2021$DateTime <- lubridate::floor_date(STRT_RainGauge_2021$DateTime, "15 minutes")
 
 # MOOS #### 
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
@@ -8125,19 +8429,19 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-MOOS_storms$storm.num = c(rep("storm1", 575),
-                          rep("storm2", 755),
-                          rep("storm3a", 347),
-                          rep("storm3b", 1079),
-                          rep("storm4a", 503),
-                          rep("storm4b", 743),
-                          rep("storm5a", 371),
-                          rep("storm5b", 575),
-                          rep("storm6", 383),
-                          rep("storm7", 779))
+MOOS_storms$storm.num = c(rep("storm1", 191),
+                          rep("storm2", 251),
+                          rep("storm3a", 115),
+                          rep("storm3b", 359),
+                          rep("storm4a", 167),
+                          rep("storm4b", 247),
+                          rep("storm5a", 91),
+                          rep("storm5b", 191),
+                          rep("storm6", 127),
+                          rep("storm7", 259))
 
 
-MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime) 
 MOOS.2021.storms.1<- left_join(MOOS_storms, STRT_RainGauge_2021, by = "DateTime")
 MOOS.2021.storms.1<- left_join(MOOS.2021.storms.1, airtempmean, by = "DateTime")
 
@@ -8151,8 +8455,20 @@ temp <- MOOS.2021.storms.1 %>% group_by(storm.num) %>%
 
 MOOS.2021.per.storm.1$temp <- temp$temp
 
-MOOS.2021 <- read.csv("~/Documents/Storms/Q_Chem/MOOS/MOOS_chem_2021.csv")
-MOOS.2021$DateTime <- as.POSIXct(MOOS.2021$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
+chem.2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
+
+chem.2021 <- chem.2021[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+
+chem.2021$datetimeAK <- ymd_hms(chem.2021$datetimeAK) # converting character to datetime
+chem.2021$datetimeAK <- force_tz(chem.2021$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem.2021) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+
+
+MOOS.2021 <-  subset(chem.2021, site.ID == "MOOS")
+MOOS.2021$DateTime <- MOOS.2021$datetimeAK
+MOOS.2021$DateTime <- as.POSIXct(MOOS.2021$DateTime, tz = "America/Anchorage")
 MOOS.2021 <- left_join(MOOS.2021, STRT_RainGauge_2021, by = "DateTime")
 MOOS.2021 <- left_join(MOOS.2021, airtempmean, by = "DateTime")
 MOOS.2021$week <- rollapplyr(MOOS.2021$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -8171,71 +8487,10 @@ MOOS.2021.per.storm.4 <- MOOS.2021.1 %>% group_by(storm.num) %>%
 MOOS.2021.per.storm.5 <- MOOS.2021.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(temp.week), list(temp.week = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
 
-HI.mean.precip.moos.NO3 <- subset(HI.mean.precip.response, year == "2021" & site.ID == "MOOS" & response == "NO3")
 HI.mean.precip.moos.fDOM <- subset(HI.mean.precip.response, year == "2021" & site.ID == "MOOS" & response == "fDOM")
 HI.mean.precip.moos.SPC <- subset(HI.mean.precip.response, year == "2021" & site.ID == "MOOS" & response == "SPC")
 HI.mean.precip.moos.turb <- subset(HI.mean.precip.response, year == "2021" & site.ID == "MOOS" & response == "turb")
-
-HI.moos.no3.2021 <- left_join(HI.mean.precip.moos.NO3, MOOS.2021.per.storm.1, by = "storm.num")
-HI.moos.no3.2021 <- left_join(HI.moos.no3.2021, MOOS.2021.per.storm.2, by = "storm.num")
-HI.moos.no3.2021 <- left_join(HI.moos.no3.2021, MOOS.2021.per.storm.3, by = "storm.num")
-HI.moos.no3.2021 <- left_join(HI.moos.no3.2021, MOOS.2021.per.storm.4, by = "storm.num")
-HI.moos.no3.2021 <- left_join(HI.moos.no3.2021, MOOS.2021.per.storm.5, by = "storm.num")
-
-moos.lm.no3 <- lm(HI.moos.no3.2021$HI ~ HI.moos.no3.2021$precip) # model one with just total precip
-moos.lm.no3 <- lm(HI.moos.no3.2021$HI ~ HI.moos.no3.2021$precip.week) # model one with just total precip
-moos.lm.no3 <- lm(HI.moos.no3.2021$HI ~ HI.moos.no3.2021$precip.month) # model one with just total precip
-moos.lm.no3 <- lm(HI.moos.no3.2021$HI ~ HI.moos.no3.2021$ThreeMonth) # model one with just total precip
-
-moos.formula <- y ~ x
-
-aaa <- HI.moos.no3.2021 %>%
-  ggplot(aes(x=precip, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("Precip") +
-  ylab("HI-Solute Storage") # plot model 
-
-bbb <- HI.moos.no3.2021 %>%
-  ggplot(aes(x=precip.week, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("one-week Precip") +
-  ylab("HI-Solute Storage") # plot model 
-
-ccc <- HI.moos.no3.2021 %>%
-  ggplot(aes(x=precip.month, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("one-month Precip") +
-  ylab("HI-Solute Storage") # plot model 
-
-ddd <- HI.moos.no3.2021 %>%
-  ggplot(aes(x=ThreeMonth, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("three-month Precip") +
-  ylab("HI-Solute Storage") # plot model 
+HI.mean.precip.moos.abs <- subset(HI.mean.precip.response, year == "2021" & site.ID == "MOOS" & response == "abs")
 
 HI.moos.fDOM.2021 <- left_join(HI.mean.precip.moos.fDOM, MOOS.2021.per.storm.1, by = "storm.num")
 HI.moos.fDOM.2021 <- left_join(HI.moos.fDOM.2021, MOOS.2021.per.storm.2, by = "storm.num")
@@ -8428,24 +8683,6 @@ sum.time <- MOOS.2021.storms.1 %>%
   group_by(storm.num) %>%
   summarise(TOTAL.TIME=sum(TOTAL.TIME)) # creating a total time column
 
-HI.moos.no3.2.2021 <- left_join(HI.moos.no3.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
-HI.moos.no3.2.2021$TOTAL.TIME <- as.numeric(HI.moos.no3.2.2021$TOTAL.TIME)
-HI.moos.no3.2.2021$Intensity <- HI.moos.no3.2.2021$precip/HI.moos.no3.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
-
-moos.lm.no3.2 <- lm(HI.moos.no3.2.2021$HI ~ HI.moos.no3.2.2021$precip + HI.moos.no3.2.2021$Intensity) # model one with total precip and intensity 
-
-qqq <- HI.moos.no3.2.2021 %>%
-  ggplot(aes(x=Intensity, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("Intensity (mm/hr)") +
-  ylab("HI-Solute Storage") +
-  theme_classic() # plot model 
 
 HI.moos.fDOM.2.2021 <- left_join(HI.moos.fDOM.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
 HI.moos.fDOM.2.2021$TOTAL.TIME <- as.numeric(HI.moos.fDOM.2.2021$TOTAL.TIME)
@@ -8509,21 +8746,7 @@ MOOS.2021.1$day <- julian(MOOS.2021.1$DateTime, origin = "2021-01-01", tz = 'Ame
 MOOS.2021.1$day <- as.numeric(MOOS.2021.1$day)
 MOOS.2021.per.storm.5 <- MOOS.2021.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(day), list(doy = first), na.rm = TRUE) # grouping 3 month precip leading up to a storm 
-HI.moos.no3.2.2021 <- left_join(HI.moos.no3.2.2021, MOOS.2021.per.storm.5, by = "storm.num")
-moos.lm.no3.5 <- lm(HI.moos.no3.2.2021$HI ~ HI.moos.no3.2.2021$doy)
 
-uuu <- HI.moos.no3.2.2021 %>%
-  ggplot(aes(x=doy, 
-             y=HI)) +
-  geom_point() +
-  geom_smooth(method = "lm") +
-  stat_poly_eq(formula = moos.formula, 
-               aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-               parse = TRUE) +
-  ggtitle("MOOS NO3") +
-  xlab("Day of year") +
-  ylab("HI-Solute Storage") +
-  theme_classic() # plot model 
 
 HI.moos.fDOM.2.2021 <- left_join(HI.moos.fDOM.2.2021, MOOS.2021.per.storm.5, by = "storm.num")
 moos.lm.fDOM.5 <- lm(HI.moos.fDOM.2.2021$HI ~ HI.moos.fDOM.2.2021$doy)
@@ -8577,14 +8800,14 @@ www <- HI.moos.turb.2.2021 %>%
 #          ncol = 4)
 
 
-HI.moos.2021 <- rbind(HI.moos.no3.2.2021, HI.moos.fDOM.2.2021, HI.moos.SPC.2.2021, HI.moos.turb.2.2021) # merging all responses together 
+HI.moos.2021 <- rbind(HI.moos.fDOM.2.2021, HI.moos.SPC.2.2021, HI.moos.turb.2.2021) # merging all responses together 
 HI.moos.2021$burn <- "unburned" # adding a burn column
 HI.moos.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.moos.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.moos.2021.csv")
+write.csv(HI.moos.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.moos.2021.csv")
 
 # FRCH ####
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
@@ -8595,18 +8818,18 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-FRCH_storms$storm.num = c(rep("storm1", 892),
-                          rep("storm2", 1228),
-                          rep("storm3", 940),
-                          rep("storm4", 988),
-                          rep("storm5a", 868),
-                          rep("storm5b", 1096),
-                          rep("storm6a", 652),
-                          rep("storm6b", 1252),
-                          rep("storm7", 736),
-                          rep("storm8", 1720))
+FRCH_storms$storm.num = c(
+                          rep("storm2", 304),
+                          rep("storm3", 208),
+                          rep("storm4", 224),
+                          rep("storm5a", 184),
+                          rep("storm5b", 260),
+                          rep("storm6a", 112),
+                          rep("storm6b", 312),
+                          rep("storm7", 140),
+                          rep("storm8", 468))
 
-FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime) 
 FRCH.2021.storms.1<- left_join(FRCH_storms, STRT_RainGauge_2021, by = "DateTime")
 FRCH.2021.storms.1<- left_join(FRCH.2021.storms.1, airtempmean, by = "DateTime")
 
@@ -8620,9 +8843,9 @@ temp <- FRCH.2021.storms.1 %>% group_by(storm.num) %>%
 
 FRCH.2021.per.storm.1$temp <- temp$temp
 
-FRCH.2021 <- read_csv("~/Documents/Storms/Q_Chem/FRCH/FRCH_chem_2021.csv", 
-                      col_types = cols(MeanDischarge = col_double()))
-attributes(FRCH.2021$DateTime)$tzone <- 'America/Anchorage'
+FRCH.2021 <- subset(chem.2021, site.ID == "FRCH")
+FRCH.2021$DateTime <- FRCH.2021$datetimeAK
+FRCH.2021$DateTime <- ymd_hms(FRCH.2021$DateTime)
 FRCH.2021 <- left_join(FRCH.2021, STRT_RainGauge_2021, by = "DateTime")
 FRCH.2021 <- left_join(FRCH.2021, airtempmean, by = "DateTime")
 FRCH.2021$week <- rollapplyr(FRCH.2021$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -8645,6 +8868,7 @@ HI.mean.precip.frch.NO3 <- subset(HI.mean.precip.response, year == "2021" & site
 HI.mean.precip.frch.fDOM <- subset(HI.mean.precip.response, year == "2021" & site.ID == "FRCH" & response == "fDOM")
 HI.mean.precip.frch.SPC <- subset(HI.mean.precip.response, year == "2021" & site.ID == "FRCH" & response == "SPC")
 HI.mean.precip.frch.turb <- subset(HI.mean.precip.response, year == "2021" & site.ID == "FRCH" & response == "turb")
+HI.mean.precip.frch.abs <- subset(HI.mean.precip.response, year == "2021" & site.ID == "FRCH" & response == "abs")
 
 HI.frch.no3.2021 <- left_join(HI.mean.precip.frch.NO3, FRCH.2021.per.storm.1, by = "storm.num")
 HI.frch.no3.2021 <- left_join(HI.frch.no3.2021, FRCH.2021.per.storm.2, by = "storm.num")
@@ -9047,14 +9271,34 @@ bww <- HI.frch.turb.2.2021 %>%
 #plot_grid(baa,bab,bcc,bdd,bee,bff,bgg,bhh,bii,bjj,bkk,bll,bmm,bnn,boo,bpp,bqq,brr,bss,bt,buu,btb,bvv,bww,
 #          ncol = 4)
 
-HI.frch.2021 <- rbind(HI.frch.no3.2.2021, HI.frch.fDOM.2.2021, HI.frch.SPC.2.2021, HI.frch.turb.2.2021) # merging all responses together 
+# abs #
+HI.frch.abs.2021 <- left_join(HI.mean.precip.frch.abs, FRCH.2021.per.storm.1, by = "storm.num")
+HI.frch.abs.2021 <- left_join(HI.frch.abs.2021, FRCH.2021.per.storm.2, by = "storm.num")
+HI.frch.abs.2021 <- left_join(HI.frch.abs.2021, FRCH.2021.per.storm.3, by = "storm.num")
+HI.frch.abs.2021 <- left_join(HI.frch.abs.2021, FRCH.2021.per.storm.4, by = "storm.num")
+HI.frch.abs.2021 <- left_join(HI.frch.abs.2021, FRCH.2021.per.storm.5, by = "storm.num")
+
+frch.lm.abs <- lm(HI.frch.abs.2021$HI ~ HI.frch.abs.2021$precip) # model one with just total precip
+frch.lm.abs.2 <- lm(HI.frch.abs.2021$HI ~ HI.frch.abs.2021$precip.week) # model one with just total precip
+frch.lm.abs.3 <- lm(HI.frch.abs.2021$HI ~ HI.frch.abs.2021$precip.month) # model one with just total precip
+frch.lm.abs.4 <- lm(HI.frch.abs.2021$HI ~ HI.frch.abs.2021$ThreeMonth) # model one with just total precip
+frch.lm.abs.5 <- lm(HI.frch.abs.2021$HI ~ HI.frch.abs.2021$temp) # model one with just total precip
+
+HI.frch.abs.2.2021 <- left_join(HI.frch.abs.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.frch.abs.2.2021$TOTAL.TIME <- as.numeric(HI.frch.abs.2.2021$TOTAL.TIME)
+HI.frch.abs.2.2021$Intensity <- HI.frch.abs.2.2021$precip/HI.frch.abs.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.frch.2021 <- rbind(HI.frch.no3.2.2021, HI.frch.fDOM.2.2021, 
+                      HI.frch.SPC.2.2021, HI.frch.turb.2.2021,
+                      HI.frch.abs.2.2021) # merging all responses together 
 HI.frch.2021$burn <- "unburned" # adding a burn column
 HI.frch.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.frch.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.frch.2021.csv")
+write.csv(HI.frch.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.frch.2021.csv")
 
 # POKE #### 
-POKEstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
                                   full.names=TRUE)
@@ -9068,16 +9312,16 @@ POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list,
 POKE_storms$storm.num = c(rep("storm1", 235),
                           rep("storm2", 191),
                           rep("storm3", 167),
-                          rep("storm4", 575),
-                          rep("storm5", 1106),
-                          rep("storm6", 479),
-                          rep("storm7a", 1355),
-                          rep("storm7b", 791),
-                          rep("storm7c", 299),
-                          rep("storm7d", 443))
+                          rep("storm4", 191),
+                          rep("storm5", 367),
+                          rep("storm6", 159),
+                          rep("storm7a", 451),
+                          rep("storm7b", 263),
+                          rep("storm7c", 99),
+                          rep("storm7d", 147))
 
 
-POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+POKE_storms$DateTime <- as.POSIXct(POKE_storms$DateTime) 
 POKE.2021.storms.1<- left_join(POKE_storms, POKE_RainGauge_2021, by = "DateTime")
 POKE.2021.storms.1<- left_join(POKE.2021.storms.1, airtempmean, by = "DateTime")
 
@@ -9091,8 +9335,9 @@ temp <- POKE.2021.storms.1 %>% group_by(storm.num) %>%
 
 POKE.2021.per.storm.1$temp <- temp$temp
 
-POKE.2021 <- read_csv("~/Documents/Storms/Q_Chem/POKE/POKE_chem_2021.csv")
-attributes(POKE.2021$DateTime)$tzone <- 'America/Anchorage'
+POKE.2021 <- subset(chem.2021, site.ID == "POKE")
+POKE.2021$DateTime <- POKE.2021$datetimeAK
+POKE.2021$DateTime <- ymd_hms(POKE.2021$DateTime)
 POKE.2021 <- left_join(POKE.2021, POKE_RainGauge_2021, by = "DateTime")
 POKE.2021 <- left_join(POKE.2021, airtempmean, by = "DateTime")
 POKE.2021$week <- rollapplyr(POKE.2021$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -9115,6 +9360,7 @@ HI.mean.precip.poke.NO3 <- subset(HI.mean.precip.response, year == "2021" & site
 HI.mean.precip.poke.fDOM <- subset(HI.mean.precip.response, year == "2021" & site.ID == "POKE" & response == "fDOM")
 HI.mean.precip.poke.SPC <- subset(HI.mean.precip.response, year == "2021" & site.ID == "POKE" & response == "SPC")
 HI.mean.precip.poke.turb <- subset(HI.mean.precip.response, year == "2021" & site.ID == "POKE" & response == "turb")
+HI.mean.precip.poke.abs <- subset(HI.mean.precip.response, year == "2021" & site.ID == "POKE" & response == "abs")
 
 HI.poke.no3.2021 <- left_join(HI.mean.precip.poke.NO3, POKE.2021.per.storm.1, by = "storm.num")
 HI.poke.no3.2021 <- left_join(HI.poke.no3.2021, POKE.2021.per.storm.2, by = "storm.num")
@@ -9369,7 +9615,7 @@ HI.poke.no3.2.2021 <- left_join(HI.poke.no3.2021, sum.time, by = "storm.num") # 
 HI.poke.no3.2.2021$TOTAL.TIME <- as.numeric(HI.poke.no3.2.2021$TOTAL.TIME)
 HI.poke.no3.2.2021$Intensity <- HI.poke.no3.2.2021$precip/HI.poke.no3.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
 
-poke.lm.no3.2 <- lm(HI.poke.no3.2.2020$HI ~ HI.poke.no3.2.2020$precip + HI.poke.no3.2.2020$Intensity) # model one with total precip and intensity 
+poke.lm.no3.2 <- lm(HI.poke.no3.2.2021$HI ~ HI.poke.no3.2.2021$precip + HI.poke.no3.2.2021$Intensity) # model one with total precip and intensity 
 
 ppq <- HI.poke.no3.2.2021 %>%
   ggplot(aes(x=Intensity, 
@@ -9513,14 +9759,34 @@ ppx <- HI.poke.turb.2.2021 %>%
 #plot_grid(ppa,ppb,ppc,ppd,ppe,ppf,ppg,pph,ppq,ppr,ppu,ppv,
 #        ncol = 4)
 
-HI.poke.2021 <- rbind(HI.poke.no3.2.2021, HI.poke.fDOM.2.2021, HI.poke.SPC.2.2021, HI.poke.turb.2.2021) # merging all responses together 
+# abs #
+HI.poke.abs.2021 <- left_join(HI.mean.precip.poke.abs, POKE.2021.per.storm.1, by = "storm.num")
+HI.poke.abs.2021 <- left_join(HI.poke.abs.2021, POKE.2021.per.storm.2, by = "storm.num")
+HI.poke.abs.2021 <- left_join(HI.poke.abs.2021, POKE.2021.per.storm.3, by = "storm.num")
+HI.poke.abs.2021 <- left_join(HI.poke.abs.2021, POKE.2021.per.storm.4, by = "storm.num")
+HI.poke.abs.2021 <- left_join(HI.poke.abs.2021, POKE.2021.per.storm.5, by = "storm.num")
+
+poke.lm.abs <- lm(HI.poke.abs.2021$HI ~ HI.poke.abs.2021$precip) # model one with just total precip
+poke.lm.abs.2 <- lm(HI.poke.abs.2021$HI ~ HI.poke.abs.2021$precip.week) # model one with just total precip
+poke.lm.abs.3 <- lm(HI.poke.abs.2021$HI ~ HI.poke.abs.2021$precip.month) # model one with just total precip
+poke.lm.abs.4 <- lm(HI.poke.abs.2021$HI ~ HI.poke.abs.2021$ThreeMonth) # model one with just total precip
+poke.lm.abs.5 <- lm(HI.poke.abs.2021$HI ~ HI.poke.abs.2021$temp) # model one with just total precip
+
+HI.poke.abs.2.2021 <- left_join(HI.poke.abs.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.poke.abs.2.2021$TOTAL.TIME <- as.numeric(HI.poke.abs.2.2021$TOTAL.TIME)
+HI.poke.abs.2.2021$Intensity <- HI.poke.abs.2.2021$precip/HI.poke.abs.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.poke.2021 <- rbind(HI.poke.no3.2.2021, HI.poke.fDOM.2.2021,
+                      HI.poke.SPC.2.2021, HI.poke.turb.2.2021,
+                      HI.poke.abs.2.2021) # merging all responses together 
 HI.poke.2021$burn <- "burned" # adding a burn column
 HI.poke.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.poke.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.poke.2021.csv")
+write.csv(HI.poke.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.poke.2021.csv")
 
 # VAUL #### 
-VAULstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
@@ -9531,17 +9797,17 @@ VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-VAUL_storms$storm.num = c(rep("storm1a", 1127),
-                          rep("storm1b", 1379),
-                          rep("storm2", 203),
-                          rep("storm3", 2004),
-                          rep("storm4a", 1283),
-                          rep("storm4b", 959),
-                          rep("storm5a", 996),
-                          rep("storm5b", 1151))
+VAUL_storms$storm.num = c(
+                          rep("storm1b", 267),
+                          
+                          rep("storm3", 667),
+                          rep("storm4a", 427),
+                          rep("storm4b", 319),
+                          rep("storm5a", 331),
+                          rep("storm5b", 383))
 
 
-VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
 VAUL.2021.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2021, by = "DateTime")
 VAUL.2021.storms.1<- left_join(VAUL.2021.storms.1, airtempmean, by = "DateTime")
 
@@ -9555,9 +9821,9 @@ temp <- VAUL.2021.storms.1 %>% group_by(storm.num) %>%
 
 VAUL.2021.per.storm.1$temp <- temp$temp
 
-VAUL.2021 <- read_csv("~/Documents/Storms/Q_Chem/VAUL/VAUL_chem_2021.csv", 
-                      col_types = cols(MeanDischarge = col_double()))
-attributes(VAUL.2021$DateTime)$tzone <- 'America/Anchorage'
+VAUL.2021 <- subset(chem.2021, site.ID == "VAUL")
+VAUL.2021$DateTime <- VAUL.2021$datetimeAK
+VAUL.2021$DateTime <- ymd_hms(VAUL.2021$DateTime)
 VAUL.2021 <- left_join(VAUL.2021, VAUL_RainGauge_2021, by = "DateTime")
 VAUL.2021 <- left_join(VAUL.2021, airtempmean, by = "DateTime")
 VAUL.2021$week <- rollapplyr(VAUL.2021$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -9580,6 +9846,7 @@ HI.mean.precip.vaul.NO3 <- subset(HI.mean.precip.response, year == "2021" & site
 HI.mean.precip.vaul.fDOM <- subset(HI.mean.precip.response, year == "2021" & site.ID == "VAUL" & response == "fDOM")
 HI.mean.precip.vaul.SPC <- subset(HI.mean.precip.response, year == "2021" & site.ID == "VAUL" & response == "SPC")
 HI.mean.precip.vaul.turb <- subset(HI.mean.precip.response, year == "2021" & site.ID == "VAUL" & response == "turb")
+HI.mean.precip.vaul.abs <- subset(HI.mean.precip.response, year == "2021" & site.ID == "VAUL" & response == "abs")
 
 HI.vaul.no3.2021 <- left_join(HI.mean.precip.vaul.NO3, VAUL.2021.per.storm.1, by = "storm.num")
 HI.vaul.no3.2021 <- left_join(HI.vaul.no3.2021, VAUL.2021.per.storm.2, by = "storm.num")
@@ -9976,14 +10243,34 @@ dww <- HI.vaul.turb.2.2021 %>%
 #plot_grid(daa,dbb,dcc,dcd,dee,dff,dgg,dhh,dii,djj,dkk,dll,dmm,dnn,doo,dpp,dqq,drr,dss,dtt, duu,dtb,dvv,dww,
 #          ncol = 4)
 
-HI.vaul.2021 <- rbind(HI.vaul.no3.2.2021, HI.vaul.fDOM.2.2021, HI.vaul.SPC.2.2021, HI.vaul.turb.2.2021) # merging all responses together 
+# abs #
+HI.vaul.abs.2021 <- left_join(HI.mean.precip.vaul.abs, VAUL.2021.per.storm.1, by = "storm.num")
+HI.vaul.abs.2021 <- left_join(HI.vaul.abs.2021, VAUL.2021.per.storm.2, by = "storm.num")
+HI.vaul.abs.2021 <- left_join(HI.vaul.abs.2021, VAUL.2021.per.storm.3, by = "storm.num")
+HI.vaul.abs.2021 <- left_join(HI.vaul.abs.2021, VAUL.2021.per.storm.4, by = "storm.num")
+HI.vaul.abs.2021 <- left_join(HI.vaul.abs.2021, VAUL.2021.per.storm.5, by = "storm.num")
+
+vaul.lm.abs <- lm(HI.vaul.abs.2021$HI ~ HI.vaul.abs.2021$precip) # model one with just total precip
+vaul.lm.abs.2 <- lm(HI.vaul.abs.2021$HI ~ HI.vaul.abs.2021$precip.week) # model one with just total precip
+vaul.lm.abs.3 <- lm(HI.vaul.abs.2021$HI ~ HI.vaul.abs.2021$precip.month) # model one with just total precip
+vaul.lm.abs.4 <- lm(HI.vaul.abs.2021$HI ~ HI.vaul.abs.2021$ThreeMonth) # model one with just total precip
+vaul.lm.abs.5 <- lm(HI.vaul.abs.2021$HI ~ HI.vaul.abs.2021$temp) # model one with just total precip
+
+HI.vaul.abs.2.2021 <- left_join(HI.vaul.abs.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.vaul.abs.2.2021$TOTAL.TIME <- as.numeric(HI.vaul.abs.2.2021$TOTAL.TIME)
+HI.vaul.abs.2.2021$Intensity <- HI.vaul.abs.2.2021$precip/HI.vaul.abs.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.vaul.2021 <- rbind(HI.vaul.no3.2.2021, HI.vaul.fDOM.2.2021,
+                      HI.vaul.SPC.2.2021, HI.vaul.turb.2.2021,
+                      HI.vaul.abs.2.2021) # merging all responses together 
 HI.vaul.2021$burn <- "unburned" # adding a burn column
 HI.vaul.2021$pf <- "high" # adding a pf column
 
-write.csv(HI.vaul.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.vaul.2021.csv")
+write.csv(HI.vaul.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.vaul.2021.csv")
 
 # STRT #### 
-STRTstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
@@ -9994,14 +10281,14 @@ STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-STRT_storms$storm.num = c(rep("storm1a", 661),
-                          rep("storm1b", 853),
-                          rep("storm2a", 373),
-                          rep("storm2b", 721),
-                          rep("storm3", 469))
+STRT_storms$storm.num = c(rep("storm1a", 191),
+                          rep("storm1b", 255),
+                          rep("storm2a", 95),
+                          rep("storm2b", 211),
+                          rep("storm3", 127))
 
 
-STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
+STRT_storms$DateTime <- as.POSIXct(STRT_storms$DateTime) 
 STRT.2021.storms.1<- left_join(STRT_storms, STRT_RainGauge_2021, by = "DateTime")
 STRT.2021.storms.1<- left_join(STRT.2021.storms.1, airtempmean, by = "DateTime")
 
@@ -10016,8 +10303,9 @@ temp <- STRT.2021.storms.1 %>% group_by(storm.num) %>%
 STRT.2021.per.storm.1$temp <- temp$temp
 
 
-STRT.2021 <- read_csv("~/Documents/Storms/Q_Chem/STRT/STRT_chem_2021.csv")
-attributes(STRT.2021$DateTime)$tzone <- 'America/Anchorage'
+STRT.2021 <- subset(chem.2021, site.ID == "STRT")
+STRT.2021$DateTime <- STRT.2021$datetimeAK
+STRT.2021$DateTime <- ymd_hms(STRT.2021$DateTime)
 STRT.2021 <- left_join(STRT.2021, STRT_RainGauge_2021, by = "DateTime")
 STRT.2021 <- left_join(STRT.2021, airtempmean, by = "DateTime")
 STRT.2021$week <- rollapplyr(STRT.2021$inst_rainfall_mm, 672, sum, na.rm = TRUE, fill = NA, partial = TRUE)
@@ -10040,6 +10328,7 @@ HI.mean.precip.strt.NO3 <- subset(HI.mean.precip.response, year == "2021" & site
 HI.mean.precip.strt.fDOM <- subset(HI.mean.precip.response, year == "2021" & site.ID == "STRT" & response == "fDOM")
 HI.mean.precip.strt.SPC <- subset(HI.mean.precip.response, year == "2021" & site.ID == "STRT" & response == "SPC")
 HI.mean.precip.strt.turb <- subset(HI.mean.precip.response, year == "2021" & site.ID == "STRT" & response == "turb")
+HI.mean.precip.strt.abs <- subset(HI.mean.precip.response, year == "2021" & site.ID == "STRT" & response == "abs")
 
 HI.strt.no3.2021 <- left_join(HI.mean.precip.strt.NO3, STRT.2021.per.storm.1, by = "storm.num")
 HI.strt.no3.2021 <- left_join(HI.strt.no3.2021, STRT.2021.per.storm.2, by = "storm.num")
@@ -10313,7 +10602,7 @@ HI.strt.fDOM.2.2021 <- left_join(HI.strt.fDOM.2021, sum.time, by = "storm.num") 
 HI.strt.fDOM.2.2021$TOTAL.TIME <- as.numeric(HI.strt.fDOM.2.2021$TOTAL.TIME)
 HI.strt.fDOM.2.2021$Intensity <- HI.strt.fDOM.2.2021$precip/HI.strt.fDOM.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
 
-strt.lm.fDOM.2 <- lm(HI.strt.fDOM.2.2020$HI ~ HI.strt.fDOM.2.2020$precip + HI.strt.fDOM.2.2020$Intensity) # model one with total precip and intensity 
+strt.lm.fDOM.2 <- lm(HI.strt.fDOM.2.2021$HI ~ HI.strt.fDOM.2.2021$precip + HI.strt.fDOM.2.2021$Intensity) # model one with total precip and intensity 
 
 err <- HI.strt.fDOM.2.2021 %>%
   ggplot(aes(x=Intensity, 
@@ -10438,14 +10727,34 @@ eww <- HI.strt.turb.2.2021 %>%
 #plot_grid(eaa,ebb,ecc,edd,ede,eff,egg,ehh,eii,ejj,ekk,ell,emm,enn,eoo,epp,eqq,err,ess,ett,euu,etb,evv,eww,
 #          ncol = 4)
 
-HI.strt.2021 <- rbind(HI.strt.no3.2.2021, HI.strt.fDOM.2.2021, HI.strt.SPC.2.2021, HI.strt.turb.2.2021) # merging all responses together 
+# abs #
+HI.strt.abs.2021 <- left_join(HI.mean.precip.strt.abs, STRT.2021.per.storm.1, by = "storm.num")
+HI.strt.abs.2021 <- left_join(HI.strt.abs.2021, STRT.2021.per.storm.2, by = "storm.num")
+HI.strt.abs.2021 <- left_join(HI.strt.abs.2021, STRT.2021.per.storm.3, by = "storm.num")
+HI.strt.abs.2021 <- left_join(HI.strt.abs.2021, STRT.2021.per.storm.4, by = "storm.num")
+HI.strt.abs.2021 <- left_join(HI.strt.abs.2021, STRT.2021.per.storm.5, by = "storm.num")
+
+strt.lm.abs <- lm(HI.strt.abs.2021$HI ~ HI.strt.abs.2021$precip) # model one with just total precip
+strt.lm.abs.2 <- lm(HI.strt.abs.2021$HI ~ HI.strt.abs.2021$precip.week) # model one with just total precip
+strt.lm.abs.3 <- lm(HI.strt.abs.2021$HI ~ HI.strt.abs.2021$precip.month) # model one with just total precip
+strt.lm.abs.4 <- lm(HI.strt.abs.2021$HI ~ HI.strt.abs.2021$ThreeMonth) # model one with just total precip
+strt.lm.abs.5 <- lm(HI.strt.abs.2021$HI ~ HI.strt.abs.2021$temp) # model one with just total precip
+
+HI.strt.abs.2.2021 <- left_join(HI.strt.abs.2021, sum.time, by = "storm.num") # merging total time per storm event and the HI per storm 
+HI.strt.abs.2.2021$TOTAL.TIME <- as.numeric(HI.strt.abs.2.2021$TOTAL.TIME)
+HI.strt.abs.2.2021$Intensity <- HI.strt.abs.2.2021$precip/HI.strt.abs.2.2021$TOTAL.TIME # Intensity is total precip for individual storm divided by total time so we get mm/hr
+
+
+HI.strt.2021 <- rbind(HI.strt.no3.2.2021, HI.strt.fDOM.2.2021, 
+                      HI.strt.SPC.2.2021, HI.strt.turb.2.2021,
+                      HI.strt.abs.2.2021) # merging all responses together 
 HI.strt.2021$burn <- "burned" # adding a burn column
 HI.strt.2021$pf <- "high" # adding a pf column
 
-write.csv(HI.strt.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.strt.2021.csv")
+write.csv(HI.strt.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.strt.2021.csv")
 
 # CARI ####
-CARIstorm_file_list <- list.files(path="~/Documents/Storms/Storm_Events/2021/All_Sites/", 
+CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
@@ -10456,16 +10765,16 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-CARI_storms$storm.num = c(rep("storm1", 2519),
-                          rep("storm2", 2099),
-                          rep("storm3", 2399),
-                          rep("storm4", 1919),
-                          rep("storm5", 5939),
-                          rep("storm6", 5916),
-                          rep("storm7", 6566),
-                          rep("storm8", 4859),
-                          rep("storm9", 1619),
-                          rep("storm10", 3659))
+CARI_storms$storm.num = c(rep("storm1", 167),
+                          rep("storm2", 139),
+                          rep("storm3", 159),
+                          rep("storm4", 127),
+                          rep("storm5", 395),
+                          rep("storm6", 395),
+                          rep("storm7", 447),
+                          rep("storm8", 323),
+                          rep("storm9", 107),
+                          rep("storm10", 243))
 
 
 CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
@@ -10483,7 +10792,7 @@ temp <- CARI.2021.storms.1 %>% group_by(storm.num) %>%
 CARI.2021.per.storm.1$temp <- temp$temp
 
 CARI.2021 <- CARI_storms
-CARI.2021 <- CARI.2021[,-c(1,10)]
+CARI.2021 <- CARI.2021[,-c(1,3)]
 CARI.2021$DateTime <- as.POSIXct(CARI.2021$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M")
 CARI.2021 <- left_join(CARI.2021, POKE_RainGauge_2021, by = "DateTime")
 CARI.2021 <- left_join(CARI.2021, airtempmean, by = "DateTime")
@@ -10492,7 +10801,8 @@ CARI.2021$month <- rollapplyr(CARI.2021$inst_rainfall_mm, 40320, sum, na.rm = TR
 CARI.2021$ThreeMonth <- rollapplyr(CARI.2021$inst_rainfall_mm, 120960, sum, na.rm = TRUE, fill = NA, partial = TRUE)
 CARI.2021$temp.week <- rollapplyr(CARI.2021$airtemp_100.1000cm_mean, 10080, mean, na.rm = TRUE, fill = NA, partial = TRUE)
 
-CARI.2021.1 <- left_join(CARI.2021.storms.1, CARI.2021, by = "DateTime") # week month and 3 month precip totals 
+CARI.2021.1 <- CARI.2021
+# CARI.2021.1 <- left_join(CARI.2021.storms.1, CARI.2021, by = "DateTime") # week month and 3 month precip totals 
 
 CARI.2021.per.storm.2 <- CARI.2021.1 %>% group_by(storm.num) %>% 
   summarise_at(vars(week), list(precip.week = first), na.rm = TRUE) # grouping weekly precip leading up to storm event
@@ -10911,40 +11221,24 @@ HI.cari.2021 <- rbind(HI.cari.no3.2.2021, HI.cari.fDOM.2.2021, HI.cari.SPC.2.202
 HI.cari.2021$burn <- "burned" # adding a burn column
 HI.cari.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.cari.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.cari.2021.csv")
+write.csv(HI.cari.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.cari.2021.csv")
 
-HI.cari.2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.cari.2021.csv")
-HI.cari.2021 <- HI.cari.2021[,-1]
-HI.frch.2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.frch.2021.csv")
-HI.frch.2021 <- HI.frch.2021[,-1]
-HI.moos.2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.moos.2021.csv")
-HI.moos.2021 <- HI.moos.2021[,-1]
-HI.poke.2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.poke.2021.csv")
-HI.poke.2021 <- HI.poke.2021[,-1]
-HI.strt.2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.strt.2021.csv")
-HI.strt.2021 <- HI.strt.2021[,-1]
+HI.cari.2021 <- HI.cari.2021[c("site.ID", "year", "storm.num", "response",
+                               "HI", "precip", "temp", "precip.week", "precip.month",
+                               "ThreeMonth", "temp.week", "TOTAL.TIME", 
+                               "Intensity", "doy", "burn", "pf")]
 
-HI.2021 <- rbind(HI.moos.2021, HI.frch.2021, HI.poke.2021, HI.vaul.2021, HI.strt.2021, HI.cari.2021) # bind all 2019 together
-write.csv(HI.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI.2021.csv")
-
-HI_moos_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI.moos.2021.csv")
-HI_poke_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI.poke.2021.csv")
-HI_strt_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI.strt.2021.csv")
-HI_vaul_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/2021/HI.vaul.2021.csv")
-HI_frch_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI.frch.2021.csv")
-HI_cari_2021 <- read.csv("Output_from_analysis/06_HI_fire_permafrost_script/HI.cari.2021.csv")
-HI_cari_2021 <- HI_cari_2021[, c(1, 4, 5, 2, 6, 7,8,9,10,11,12,13,3,14,15,16,17)]
-
-HI.2021 <- rbind(HI_moos_2021, HI_frch_2021, HI_poke_2021, HI_vaul_2021, HI_strt_2021, HI_cari_2021) # bind all 2019 together
-write.csv(HI.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/All_years/HI.2021.csv")
+HI.2021 <- rbind(HI.moos.2021, HI.frch.2021,
+                 HI.vaul.2021, HI.strt.2021,
+                 HI.poke.2021, HI.cari.2021)
+                  # bind all 2021 together
 
 # add time since peak  Q in chena #
-HI.2021 <- read_csv("~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/All_years/HI.2021.csv")
 HI.2021$date <- as.Date(HI.2021$doy, origin = "2021-01-01")
 origin_date <- as.Date("2021-05-12")
 HI.2021$TimeSinceChena <- julian(HI.2021$date, origin_date)
 
-write.csv(HI.2021, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_antecedent_conditions/All_years/HI.2021.csv")
+write.csv(HI.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
 
 
 ####################################### 2022 ############################################################

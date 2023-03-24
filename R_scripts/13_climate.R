@@ -127,7 +127,7 @@ snow.c = snow[snow$value > 0,]
 #plot(snow.c$value ~ snow.c$dateAK)
 
 #### set date limits for study period #
-yr.limit = 2022 # this should be the year AFTER your study
+yr.limit = 2023 # this should be the year AFTER your study
 yr.of = 2017 # this should be the year OF your study
 #### air temp #
 
@@ -562,6 +562,11 @@ rain.sum[297,3] <- 52.831
 rain.sum[298,3] <- 0.507
 rain.sum[308,3] <- 54.611
 rain.sum[319,3] <- 25.657
+rain.sum[365,3] <- 27.6861
+rain.sum[367,3] <- 12.9541
+rain.sum[368,3] <- 35.3061
+rain.sum[369,3] <- 36.8301
+
 
 
 # snow 
@@ -658,11 +663,36 @@ ggsave("total_precip_snotel.pdf",
        path = here("Climate"),
        width = 7, height = 7)
 
+#### summary stats ####
+# mean annual
+climate.sum.year <- climate.sum %>% 
+  group_by(year) %>% 
+  dplyr::summarise(precip = sum(precip, na.rm = TRUE)) # totaling by year and snow/rain 
+mean(climate.sum.year$precip) # 327.7288
+
+# summer rain 
+summer.rain <- rain.sum %>% 
+  subset(rain.sum$month == 6 | rain.sum$month == 7 | rain.sum$month == 8)
+  
+
+summer.sum <- summer.rain %>% 
+  group_by(year) %>% 
+  dplyr::summarise(rain = sum(rain, na.rm = TRUE)) # totaling by year and snow/rain 
+mean(summer.sum$rain) # 149.0737
+
+# winter snow  
+winter.snow <- climate.sum %>% 
+  subset(climate.sum$response_var == "snow")
+mean(winter.snow$precip) # 112.2548
+
+112.2548/327.7288 # 34% How much of precip is rain 
 
 
-
-
-
+#
+which(summer.sum$rain > 159)
+# 2019 - 202.6920
+# 2020 - 191.0080
+# 2021 - 175.5140
 
 
 

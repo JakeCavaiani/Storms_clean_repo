@@ -60,6 +60,7 @@ library(grid)
 library(pBrackets)
 library(multcompView)
 library(lmerTest)
+library(patchwork)
 ```
 
 
@@ -4358,8 +4359,177 @@ VAUL:STRT
 #        path = here("plots", "Chems_year"),
 #        width = 15, height = 10)
 
+# I might adjust them to this style - 02/21/2023
+mean_daily_new <- mean_daily_new %>% 
+  dplyr::mutate(across(c(Burn),
+                       ~ifelse(site.ID == "STRT" | site.ID == "MOOS" | site.ID == "POKE", "Burned", "Unburned")))
 
-# THESE ARE THE ONES THAT I AM USING 
+vn = expression(paste(N*O[3]^"-"*(μM)))
+# NO3 #
+# 2015 #
+plot.2015 <- mean_daily_new %>% 
+filter(datetimeAK < "2016-01-01" & datetimeAK > "2015-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#FF7F00", "#A6761D")) +
+  xlab("") +
+  ylab(vn) +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2015") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        strip.text = element_text(size = 20))
+# 2018 #
+plot.2018 <- mean_daily_new %>% 
+filter(datetimeAK < "2019-01-01" & datetimeAK > "2018-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D")) +
+  xlab("") +
+  ylab(vn) +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2018") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_blank(),
+        legend.position = "none",
+        strip.text = element_text(size = 20))
+# 2019 #
+plot.2019 <- mean_daily_new %>% 
+filter(datetimeAK < "2020-01-01" & datetimeAK > "2019-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab(vn) +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2019") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        strip.text = element_text(size = 20)) +
+  theme(axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank(), 
+        axis.title.y=element_blank()) + 
+  theme(axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.title.x=element_blank())
+# 2020 #
+plot.2020 <- mean_daily_new %>% 
+filter(datetimeAK < "2021-01-01" & datetimeAK > "2020-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab(vn) +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2020") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        strip.text = element_text(size = 20))
+
+# 2021 #
+plot.2021 <- mean_daily_new %>% 
+filter(datetimeAK < "2021-01-01" & datetimeAK > "2020-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("") +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2021") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_blank(),
+        axis.ticks.y=element_blank(), 
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_blank(),
+        legend.position = "none",
+        strip.text = element_text(size = 20))
+
+# 2022 #
+plot.2022 <- mean_daily_new %>% 
+filter(datetimeAK < "2022-01-01" & datetimeAK > "2021-01-01") %>%
+ggplot(aes(x = site.ID, y = dailyNO3, pattern = PF, fill = site.ID)) +
+  facet_wrap(~year, nrow = 2, dir = "v") + 
+  geom_boxplot() +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) + 
+  scale_pattern_manual(values = c(High = "stripe", Moderate = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
+  xlab("") +
+  ylab("") +
+  facet_grid(. ~ Burn , space="free_x", scales="free_x", switch="x") +
+  theme_classic() +
+  theme(strip.placement = "outside",
+        strip.background = element_rect(fill=NA, colour="grey50"),
+        panel.spacing.x=unit(0,"cm")) +
+  ggtitle("2022") +
+  theme(plot.title = element_text(hjust = 1)) +
+  theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust=1),
+        axis.text.y = element_blank(),
+        axis.ticks.y=element_blank(), 
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_blank(),
+        legend.position = "none",
+        strip.text = element_text(size = 20))
+
+
+
+no3.plot <- plot_layout(plot.2015 + plot.2018 + plot.2019 +
+            plot.2020 + plot.2021 + plot.2022, 
+            nrow = 2, ncol = 3)
+
+
+# THESE ARE THE ONES THAT I PRINTED IN MY LATEST DRAFT TO TKH -02/10/2023
 vn = expression(paste(N*O[3]^"-"*(μM)))
 
 mean_daily_new <- mean_daily
