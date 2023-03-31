@@ -1715,12 +1715,12 @@ no3.beta.deciduous.tkh <- ggplot(NO3_data, aes(x = Deciduous.2010, y = meanBETA)
                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
                parse = TRUE, size = 5.5) +
   theme_classic() +
-  theme(axis.text.x=element_text(size=20), 
-        axis.text.y = element_text(size = 20),
-        axis.title.x = element_text(size = 20),
-        axis.title.y = element_text(size = 20),
+  theme(axis.text.x=element_text(size=30), 
+        axis.text.y = element_text(size = 30),
+        axis.title.x = element_text(size = 30),
+        axis.title.y = element_text(size = 30),
         legend.key.size = unit(2.0, 'cm'),
-        strip.text = element_text(size = 20)) +
+        strip.text = element_text(size = 30)) +
   xlab("% Deciduous") +
   ylab(vn) +
   theme(aspect.ratio = 1)
