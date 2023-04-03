@@ -54,7 +54,9 @@ AMC <- full_join(AMC, DOD_catchment)
 write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 # 
 # 
-AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
+
+# AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 
 HI.median<- AMC %>% group_by(site.ID, response_var) %>%  
   dplyr::summarise_at(vars(Hyst_index), list(HI = median)) # takes the median by site response and year 
@@ -2704,12 +2706,19 @@ mean_duration_site <- AMC %>%
 
 
 #### MEAN SOLUTE CONCENTRATIONS ####
-chem_2015 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
-chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
-chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
-chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
-chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
-chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
+chem_2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"))
+chem_2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"))
+chem_2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"))
+chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
+chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
+chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
+
+# chem_2015 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
+# chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
+# chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
+# chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+# chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
+# chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
 
 #
 chem_2015 <- chem_2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
@@ -3223,11 +3232,19 @@ plot(turb)
 
 
 ############################### TIME SERIES PLOT - THESIS ###############################################
-chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
-chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
-chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
-chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
-chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
+chem_2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"))
+chem_2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"))
+chem_2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"))
+chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
+chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
+chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
+
+
+# chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
+# chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
+# chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
+# chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
+# chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
 
 chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
@@ -3294,11 +3311,17 @@ mean_daily_DOD <- mean_daily_DOD %>%
 
 
 # CARI # 
-CARI_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/NEON_Q_WaterQuality2018.csv")
-CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
-CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
-CARI_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/NEON_Q_WaterQuality2021.csv")
-CARI_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/NEON_Q_WaterQuality2022.csv")
+CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
+CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
+CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
+CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
+CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
+
+# CARI_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/NEON_Q_WaterQuality2018.csv")
+# CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
+# CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
+# CARI_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/NEON_Q_WaterQuality2021.csv")
+# CARI_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/NEON_Q_WaterQuality2022.csv")
 
 CARI_total <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
 

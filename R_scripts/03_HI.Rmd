@@ -4,6 +4,13 @@ author: "Jake Cavaiani"
 date: "8/29/2022"
 output: pdf_document
 ---
+The purpose of this script is generate HI for each storm for each constituent
+Input: Storm csv's
+Step 1) import individual storm csv's
+Step 2) Run it through the HI function
+Step 3) Export HI csv's for each site for each year
+Output: HI csv's for each site for each year 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)

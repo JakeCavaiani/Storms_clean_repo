@@ -110,7 +110,9 @@ antecedent_2015$year <- as.character(antecedent_2015$year)
 HI_BETA = left_join(HI, beta_2015, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_BETA_AMC_2015 <- left_join(HI_BETA, antecedent_2015, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_BETA_AMC_2015, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2015.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2015.csv"))
+
+# write.csv(HI_BETA_AMC_2015, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2015.csv")
 
 
 
@@ -224,7 +226,10 @@ antecedent_2018$year <- as.character(antecedent_2018$year)
 HI_FI = left_join(HI_FI, beta_2018, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_FI <- left_join(HI_FI, antecedent_2018, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2018.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2018.csv"))
+
+# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2018.csv")
 
 
 
@@ -520,7 +525,10 @@ antecedent_2019$year <- as.character(antecedent_2019$year)
 HI_FI = left_join(HI_FI, beta_2019, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_FI <- left_join(HI_FI, antecedent_2019, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2019.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2019.csv"))
+
+# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2019.csv")
 
 
 ######################### 2020 ####
@@ -673,7 +681,10 @@ antecedent_2020$year <- as.character(antecedent_2020$year)
 HI_FI = left_join(HI_FI, beta_2020, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_FI <- left_join(HI_FI, antecedent_2020, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2020.csv"))
+
+# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
 
 
 ######################### 2021 ####
@@ -830,7 +841,10 @@ antecedent_2021$year <- as.character(antecedent_2021$year)
 HI_FI = left_join(HI_FI, beta_2021, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_FI <- left_join(HI_FI, antecedent_2021, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2021.csv"))
+
+
+# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv")
 
 
 ######################### 2022 ####
@@ -999,7 +1013,10 @@ antecedent_2022$year <- as.character(antecedent_2022$year)
 HI_BETA = left_join(HI, beta_2022, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_BETA_AMC_2022 <- left_join(HI_BETA, antecedent_2022, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(HI_BETA_AMC_2022, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2022.csv"))
+
+# write.csv(HI_BETA_AMC_2022, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv")
 
 
 #### ALL YEARS #######

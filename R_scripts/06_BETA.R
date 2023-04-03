@@ -34,17 +34,24 @@ library(ggpubr)
 library(dataRetrieval)
 
 ########################################### 2015 ##########################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS/", 
+setwd("Storm_Events/2015")
+storm_file_list_beta <- list.files(path="FRCH_MOOS/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -641,24 +648,32 @@ beta.all.2015 <- beta.all.2015 %>%
   dplyr::mutate(across(c(Coefficient), 
                 ~ifelse(Coefficient > 20, NA, .))) # remove outliers 
 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2015.csv"))
 
-write.csv(beta.all.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2015.csv")
+# write.csv(beta.all.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2015.csv")
 
 beta.all.2015 <- beta.all.2015 %>% 
   filter(Parameter != "(Intercept)")
 
 ########################################## 2018 ##########################################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI/", 
+setwd("Storm_Events/2018")
+storm_file_list_beta <- list.files(path="FRCH_MOOS_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS_CARI//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH_MOOS_CARI//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -1500,7 +1515,9 @@ all.2018.ci.abs$response_var <- "abs"
 beta.all.2018 <- rbind(all.2018.ci.no3, all.2018.ci.fDOM,
                        all.2018.ci.SPC, all.2018.ci.turb,
                        all.2018.ci.abs)
-write.csv(beta.all.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2018.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2018.csv"))
+# write.csv(beta.all.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2018.csv")
 
 beta.all.2018 <- beta.all.2018 %>% 
   filter(Parameter != "(Intercept)")
@@ -1509,17 +1526,24 @@ beta.all.2018 <- beta.all.2018 %>%
 
 
 ########################################## 2019 ##########################################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+setwd("Storm_Events/2019")
+storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -3128,7 +3152,10 @@ beta.all.2019 <- rbind(all.2019.ci.no3, all.2019.ci.fDOM,
                        all.2019.ci.SPC, all.2019.ci.turb,
                        all.2019.ci.abs)
 
-write.csv(beta.all.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2019.csv"))
+
+
+# write.csv(beta.all.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
 
 # beta.all.2019 <- beta.all.2019 %>% 
 #   filter(Parameter != "(Intercept)")
@@ -3317,17 +3344,24 @@ write.csv(beta.all.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/06_
 
 
 ########################################## 2020 ##########################################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+setwd("Storm_Events/2020")
+storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -5083,24 +5117,32 @@ beta.all.2020 <- rbind(all.2020.ci.no3, all.2020.ci.fDOM,
                        all.2020.ci.SPC, all.2020.ci.turb,
                        all.2020.ci.abs)
 
-write.csv(beta.all.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2020.csv"))
+# write.csv(beta.all.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
 
 beta.all.2020 <- beta.all.2020 %>% 
   filter(Parameter != "(Intercept)")
 
 
 ########################################## 2021 ##########################################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2/", 
+setwd("Storm_Events/2021")
+storm_file_list_beta <- list.files(path="Test_2/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("Test_2//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -6565,7 +6607,9 @@ beta.all.2021 <- rbind(all.2021.ci.no3, all.2021.ci.fDOM,
                        all.2021.ci.SPC, all.2021.ci.turb,
                        all.2021.ci.abs)
 
-write.csv(beta.all.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2021.csv"))
+
+# write.csv(beta.all.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2021.csv")
 
 # beta.all.2019 <- beta.all.2019 %>% 
 #   filter(Parameter != "(Intercept)")
@@ -6574,17 +6618,24 @@ write.csv(beta.all.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/06_
 
 
 ################################### 2022 ################################################
-storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+setwd("Storm_Events/2022")
+storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
+
+# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
+#                                    recursive=F, 
+#                                    pattern=".csv", 
+#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -7931,7 +7982,9 @@ beta.all.2022 <- rbind(all.2022.ci.no3, all.2022.ci.fDOM,
                        all.2022.ci.SPC, all.2022.ci.turb,
                        all.2022.ci.abs)
 
-write.csv(beta.all.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2022.csv"))
+
+# write.csv(beta.all.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2022.csv")
 
 beta.all.2022 <- beta.all.2022 %>% 
   filter(Parameter != "(Intercept)")

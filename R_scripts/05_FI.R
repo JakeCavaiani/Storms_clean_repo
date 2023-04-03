@@ -1,6 +1,8 @@
 #########################################################################################################
 ########################################### FI ##########################################################
 #########################################################################################################
+# WE ARE NOT USING FIs so THIS SCRIPT CAN BE SKIPPED # 
+
 # Step 1) Load in the storm files from script 01_storm delineation
 # Step 2) normalize discharge and concentration for each solute
 # Step 3) Run FI function 

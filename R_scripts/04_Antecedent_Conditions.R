@@ -302,7 +302,7 @@ HI.mean.precip.response <- HI.dat %>% group_by(site.ID, year, storm.num, respons
 ##############################################################################################################
 #################################### Antecedent conditions #####################################################################
 ##############################################################################################################
-
+setwd("Storm_Events/2015")
 ########################################## 2015 ########################################
 ### Import climate ###
 CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2015.final.csv"))
@@ -314,10 +314,15 @@ airtempmean$datetimeAK <- airtempmean$date_timeAK
 airtempmean$datetimeAK <- as.POSIXct(airtempmean$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
 
 ### FRCH ####
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -557,14 +562,21 @@ HI.frch.2015$date <- as.Date(HI.frch.2015$doy, origin = "2015-01-01")
 origin_date <- as.Date("2015-05-12")
 HI.frch.2015$TimeSinceChena <- julian(HI.frch.2015$date, origin_date)
 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.frch.2015.csv"))
 
-write.csv(HI.frch.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.frch.2015.csv")
+# write.csv(HI.frch.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.frch.2015.csv")
 
 ### MOOS ####
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -783,29 +795,40 @@ HI.moos.2015$date <- as.Date(HI.moos.2015$doy, origin = "2015-01-01")
 origin_date <- as.Date("2015-05-12")
 HI.moos.2015$TimeSinceChena <- julian(HI.moos.2015$date, origin_date)
 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.moos.2015.csv"))
 
-write.csv(HI.moos.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.moos.2015.csv")
+# write.csv(HI.moos.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.moos.2015.csv")
 
 
 # all sites 
 HI.2015 <- rbind(HI.frch.2015, HI.moos.2015) # bind all 2015 together
 
-write.csv(HI.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.2015.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.2015.csv"))
+
+# write.csv(HI.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.2015.csv")
 
 
 
 
 ######################################## 2018 #####################################################################
+setwd("Storm_Events/2018")
 ## Step 1) Read in list of all sites storms and filter by site
 ## Step 2) Assign storm number to each individual storm
 ## Step 3) read in Rain gauge data and summarize storm characteristics (Total precip/Intensity) and 
 # antecedent conditions (week/month/3month/doy/time since peak SWE)
 ## Step 4) Separate by constituent 
 
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+### FRCH ####
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
-                                  full.names=TRUE) # reading in individual storms by site 
+                                  full.names=TRUE)
+
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE) # reading in individual storms by site 
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -1360,13 +1383,20 @@ HI.frch.2018$burn <- "unburned" # adding a burn column
 HI.frch.2018$pf <- "medium" # adding a pf column
 HI.frch.2018$site.ID <- "FRCH"
 
-write.csv(HI.frch.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.frch.2018.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.frch.2018.csv"))
 
-# MOOS # 
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+# write.csv(HI.frch.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.frch.2018.csv")
+
+# MOOS ####
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -1868,13 +1898,21 @@ HI.moos.2018$burn <- "burned" # adding a burn column
 HI.moos.2018$pf <- "medium" # adding a pf column
 
 HI.moos.2018$site.ID <- "MOOS"
-write.csv(HI.moos.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.moos.2018.csv")
 
-# CARI # 
-CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.moos.2018.csv"))
+
+# write.csv(HI.moos.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.moos.2018.csv")
+
+# CARI #### 
+CARIstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
+
+# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="CARI", 
+#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -2343,7 +2381,10 @@ HI.cari.2018$burn <- "burned" # adding a burn column
 HI.cari.2018$pf <- "medium" # adding a pf column
 
 HI.cari.2018$site.ID <- "CARI"
-write.csv(HI.cari.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.cari.2018.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.cari.2018.csv"))
+
+# write.csv(HI.cari.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.cari.2018.csv")
 
 # MERGE and add time since peak  Q in chena #
 HI.2018 <- rbind(HI.moos.2018, HI.frch.2018, HI.cari.2018) # bind all 2018 together
@@ -2359,6 +2400,7 @@ HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 
 
 ######################################## 2019 ############################################
+setwd("Storm_Events/2019")
 # import rain gauge data #
 FRCH_RainGauge_2019 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2019.csv"))
 POKE_RainGauge_2019 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2019.csv"))
@@ -2388,11 +2430,16 @@ FRCH_RainGauge_2019$DateTime <- lubridate::floor_date(FRCH_RainGauge_2019$Dateti
 POKE_RainGauge_2019$DateTime <- lubridate::floor_date(POKE_RainGauge_2019$DateTime, "15 minutes")
 VAUL_RainGauge_2019$DateTime <- lubridate::floor_date(VAUL_RainGauge_2019$DateTime, "15 minutes")
 
-# MOOS # 
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+# MOOS ####
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -2889,14 +2936,21 @@ HI.moos.2019 <- rbind(HI.moos.no3.2.2019, HI.moos.fDOM.2.2019,
 HI.moos.2019$burn <- "burned" # adding a burn column
 HI.moos.2019$pf <- "medium" # adding a pf column
 
-write.csv(HI.moos.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.moos.2019.csv")
+# write.csv(HI.moos.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.moos.2019.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.moos.2019.csv"))
 
 
-# FRCH # 
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+# FRCH ####
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -3387,10 +3441,17 @@ HI.frch.2019 <- rbind(HI.frch.no3.2.2019, HI.frch.fDOM.2.2019,
 HI.frch.2019$burn <- "unburned" # adding a burn column
 HI.frch.2019$pf <- "medium" # adding a pf column
 
-write.csv(HI.frch.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.frch.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.frch.2019.csv"))
+
+# write.csv(HI.frch.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.frch.2019.csv")
 
 
-# POKE # 
+# POKE ####
+POKEstorm_file_list <- list.files(path = "All_sites/", 
+                                  recursive=F, 
+                                  pattern="POKE", 
+                                  full.names=TRUE)
+
 POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
@@ -3877,13 +3938,20 @@ HI.poke.2019 <- rbind(HI.poke.no3.2.2019, HI.poke.fDOM.2.2019,
 HI.poke.2019$burn <- "burned" # adding a burn column
 HI.poke.2019$pf <- "medium" # adding a pf column
 
-write.csv(HI.poke.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.poke.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.poke.2019.csv"))
 
-# VAUL # 
-VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+# write.csv(HI.poke.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.poke.2019.csv")
+
+# VAUL ####
+VAULstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
+
+# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="VAUL", 
+#                                   full.names=TRUE)
 
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
@@ -4365,14 +4433,21 @@ HI.vaul.2019 <- rbind(HI.vaul.no3.2.2019, HI.vaul.fDOM.2.2019,
 HI.vaul.2019$burn <- "unburned" # adding a burn column
 HI.vaul.2019$pf <- "high" # adding a pf column
 
-write.csv(HI.vaul.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.vaul.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.vaul.2019.csv"))
+
+# write.csv(HI.vaul.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.vaul.2019.csv")
 
 
-# STRT # 
-STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+# STRT ####
+STRTstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
+
+# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="STRT", 
+#                                   full.names=TRUE)
 
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
@@ -4869,14 +4944,21 @@ HI.strt.2019 <- rbind(HI.strt.no3.2.2019, HI.strt.fDOM.2.2019,
 HI.strt.2019$burn <- "burned" # adding a burn column
 HI.strt.2019$pf <- "high" # adding a pf column
 
-write.csv(HI.strt.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.strt.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.strt.2019.csv"))
+
+# write.csv(HI.strt.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.strt.2019.csv")
 
 
-# CARI # 
-CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+# CARI ####
+CARIstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
+
+# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="CARI", 
+#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -5342,7 +5424,9 @@ HI.cari.2019 <- rbind(HI.cari.no3.2.2019, HI.cari.fDOM.2.2019, HI.cari.SPC.2.201
 HI.cari.2019$burn <- "burned" # adding a burn column
 HI.cari.2019$pf <- "medium" # adding a pf column
 
-write.csv(HI.cari.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.cari.2019.csv")
+# write.csv(HI.cari.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.cari.2019.csv")
+
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.cari.2019.csv"))
 
 
 HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, 
@@ -5353,10 +5437,14 @@ HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
 origin_date <- as.Date("2019-05-12")
 HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
 
-write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
+
+
+# write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
 
 
 ######################################## 2020 ####
+setwd("Storm_Events/2020")
 # import rain gauge data #
 FRCH_RainGauge_2020 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
 POKE_RainGauge_2020 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
@@ -5392,11 +5480,16 @@ POKE_RainGauge_2020$DateTime <- lubridate::floor_date(POKE_RainGauge_2020$DateTi
 VAUL_RainGauge_2020$DateTime <- lubridate::floor_date(VAUL_RainGauge_2020$DateTime, "15 minutes")
 STRT_RainGauge_2020$DateTime <- lubridate::floor_date(STRT_RainGauge_2020$DateTime, "15 minutes")
 
-# MOOS # 
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# MOOS ####
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -5895,13 +5988,20 @@ HI.moos.2020 <- rbind(HI.moos.no3.2.2020, HI.moos.fDOM.2.2020,
 HI.moos.2020$burn <- "burned" # adding a burn column
 HI.moos.2020$pf <- "medium" # adding a pf column
 
-write.csv(HI.moos.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.moos.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.moos.2020.csv"))
 
-# FRCH # 
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# write.csv(HI.moos.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.moos.2020.csv")
+
+# FRCH ####
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -6394,13 +6494,20 @@ HI.frch.2020 <- rbind(HI.frch.no3.2.2020, HI.frch.fDOM.2.2020,
 HI.frch.2020$burn <- "unburned" # adding a burn column
 HI.frch.2020$pf <- "medium" # adding a pf column
 
-write.csv(HI.frch.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.frch.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.frch.2020.csv"))
 
-# POKE # 
-POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# write.csv(HI.frch.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.frch.2020.csv")
+
+# POKE ####
+POKEstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
                                   full.names=TRUE)
+
+# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="POKE", 
+#                                   full.names=TRUE)
 
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
@@ -6896,13 +7003,20 @@ HI.poke.2020 <- rbind(HI.poke.no3.2.2020, HI.poke.fDOM.2.2020,
 HI.poke.2020$burn <- "burned" # adding a burn column
 HI.poke.2020$pf <- "medium" # adding a pf column
 
-write.csv(HI.poke.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.poke.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.poke.2020.csv"))
 
-# VAUL # 
-VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# write.csv(HI.poke.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.poke.2020.csv")
+
+# VAUL ####
+VAULstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
+
+# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="VAUL", 
+#                                   full.names=TRUE)
 
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
@@ -7389,13 +7503,20 @@ HI.vaul.2020 <- rbind(HI.vaul.no3.2.2020, HI.vaul.fDOM.2.2020,
 HI.vaul.2020$burn <- "unburned" # adding a burn column
 HI.vaul.2020$pf <- "high" # adding a pf column
 
-write.csv(HI.vaul.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.vaul.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.vaul.2020.csv"))
 
-# STRT # 
-STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# write.csv(HI.vaul.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.vaul.2020.csv")
+
+# STRT ####
+STRTstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
+
+# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="STRT", 
+#                                   full.names=TRUE)
 
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
@@ -7896,13 +8017,20 @@ HI.strt.2020 <- rbind(HI.strt.no3.2.2020, HI.strt.fDOM.2.2020,
 HI.strt.2020$burn <- "burned" # adding a burn column
 HI.strt.2020$pf <- "high" # adding a pf column
 
-write.csv(HI.strt.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.strt.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.strt.2020.csv"))
 
-# CARI # 
-CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+# write.csv(HI.strt.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.strt.2020.csv")
+
+# CARI ####
+CARIstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
+
+# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="CARI", 
+#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -8370,7 +8498,9 @@ HI.cari.2020 <- rbind(HI.cari.no3.2.2020, HI.cari.fDOM.2.2020, HI.cari.SPC.2.202
 HI.cari.2020$burn <- "burned" # adding a burn column
 HI.cari.2020$pf <- "medium" # adding a pf column
 
-write.csv(HI.cari.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.cari.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.cari.2020.csv"))
+
+# write.csv(HI.cari.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.cari.2020.csv")
 
 
 
@@ -8382,14 +8512,16 @@ HI.2020$date <- as.Date(HI.2020$doy, origin = "2020-01-01")
 origin_date <- as.Date("2020-05-13")
 HI.2020$TimeSinceChena <- julian(HI.2020$date, origin_date)
 
-write.csv(HI.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.2020.csv"))
+
+# write.csv(HI.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
 
 
 
 
 
 ####################################### 2021 ############################################################
-
+setwd("Storm_Events/2021")
 # import rain gauge data #
 POKE_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/POKE.RainGauge.2021.csv")
 VAUL_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/VAUL.RainGauge.2021.csv")
@@ -8418,10 +8550,15 @@ VAUL_RainGauge_2021$DateTime <- lubridate::floor_date(VAUL_RainGauge_2021$DateTi
 STRT_RainGauge_2021$DateTime <- lubridate::floor_date(STRT_RainGauge_2021$DateTime, "15 minutes")
 
 # MOOS #### 
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -8804,13 +8941,20 @@ HI.moos.2021 <- rbind(HI.moos.fDOM.2.2021, HI.moos.SPC.2.2021, HI.moos.turb.2.20
 HI.moos.2021$burn <- "unburned" # adding a burn column
 HI.moos.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.moos.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.moos.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.moos.2021.csv"))
+
+# write.csv(HI.moos.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.moos.2021.csv")
 
 # FRCH ####
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -9295,13 +9439,20 @@ HI.frch.2021 <- rbind(HI.frch.no3.2.2021, HI.frch.fDOM.2.2021,
 HI.frch.2021$burn <- "unburned" # adding a burn column
 HI.frch.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.frch.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.frch.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.frch.2021.csv"))
+
+# write.csv(HI.frch.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.frch.2021.csv")
 
 # POKE #### 
-POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+POKEstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
                                   full.names=TRUE)
+
+# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="POKE", 
+#                                   full.names=TRUE)
 
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
@@ -9783,13 +9934,20 @@ HI.poke.2021 <- rbind(HI.poke.no3.2.2021, HI.poke.fDOM.2.2021,
 HI.poke.2021$burn <- "burned" # adding a burn column
 HI.poke.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.poke.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.poke.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.poke.2021.csv"))
+
+# write.csv(HI.poke.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.poke.2021.csv")
 
 # VAUL #### 
-VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+VAULstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
+
+# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="VAUL", 
+#                                   full.names=TRUE)
 
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
@@ -10267,13 +10425,20 @@ HI.vaul.2021 <- rbind(HI.vaul.no3.2.2021, HI.vaul.fDOM.2.2021,
 HI.vaul.2021$burn <- "unburned" # adding a burn column
 HI.vaul.2021$pf <- "high" # adding a pf column
 
-write.csv(HI.vaul.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.vaul.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.vaul.2021.csv"))
+
+# write.csv(HI.vaul.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.vaul.2021.csv")
 
 # STRT #### 
-STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+STRTstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
+
+# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="STRT", 
+#                                   full.names=TRUE)
 
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
@@ -10751,13 +10916,20 @@ HI.strt.2021 <- rbind(HI.strt.no3.2.2021, HI.strt.fDOM.2.2021,
 HI.strt.2021$burn <- "burned" # adding a burn column
 HI.strt.2021$pf <- "high" # adding a pf column
 
-write.csv(HI.strt.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.strt.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.strt.2021.csv"))
+
+# write.csv(HI.strt.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.strt.2021.csv")
 
 # CARI ####
-CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+CARIstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
+
+# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
+#                                   recursive=F, 
+#                                   pattern="CARI", 
+#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -11221,7 +11393,9 @@ HI.cari.2021 <- rbind(HI.cari.no3.2.2021, HI.cari.fDOM.2.2021, HI.cari.SPC.2.202
 HI.cari.2021$burn <- "burned" # adding a burn column
 HI.cari.2021$pf <- "medium" # adding a pf column
 
-write.csv(HI.cari.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.cari.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.cari.2021.csv"))
+
+# write.csv(HI.cari.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.cari.2021.csv")
 
 HI.cari.2021 <- HI.cari.2021[c("site.ID", "year", "storm.num", "response",
                                "HI", "precip", "temp", "precip.week", "precip.month",
@@ -11238,10 +11412,13 @@ HI.2021$date <- as.Date(HI.2021$doy, origin = "2021-01-01")
 origin_date <- as.Date("2021-05-12")
 HI.2021$TimeSinceChena <- julian(HI.2021$date, origin_date)
 
-write.csv(HI.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
+
+# write.csv(HI.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
 
 
 ####################################### 2022 ############################################################
+setwd("Storm_Events/2022")
 ### Import climate ###
 CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2022.final.csv"))
 CPCRW$datetimeAK <- force_tz(CPCRW$datetimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
@@ -11252,10 +11429,15 @@ airtempmean$datetimeAK <- airtempmean$date_timeAK
 airtempmean$datetimeAK <- as.POSIXct(airtempmean$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
 
 ### FRCH ####
-FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+FRCHstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="FRCH", 
                                   full.names=TRUE)
+
+# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="FRCH", 
+#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -11493,14 +11675,20 @@ HI.frch.2022$date <- as.Date(HI.frch.2022$doy, origin = "2022-01-01")
 origin_date <- as.Date("2022-05-13")
 HI.frch.2022$TimeSinceChena <- julian(HI.frch.2022$date, origin_date)
 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.frch.2022.csv"))
 
-write.csv(HI.frch.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.frch.2022.csv")
+# write.csv(HI.frch.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.frch.2022.csv")
 
 ### MOOS ####
-MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
+
+# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="MOOS", 
+#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -11718,14 +11906,20 @@ HI.moos.2022$date <- as.Date(HI.moos.2022$doy, origin = "2022-01-01")
 origin_date <- as.Date("2022-05-13")
 HI.moos.2022$TimeSinceChena <- julian(HI.moos.2022$date, origin_date)
 
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.moos.2022.csv"))
 
-write.csv(HI.moos.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.moos.2022.csv")
+# write.csv(HI.moos.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.moos.2022.csv")
 
 ### POKE ####
-POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+POKEstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="POKE", 
                                   full.names=TRUE)
+
+# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="POKE", 
+#                                   full.names=TRUE)
 
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
@@ -11943,14 +12137,21 @@ origin_date <- as.Date("2022-05-13")
 HI.poke.2022$TimeSinceChena <- julian(HI.poke.2022$date, origin_date)
 
 
-write.csv(HI.poke.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.poke.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.poke.2022.csv"))
+
+# write.csv(HI.poke.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.poke.2022.csv")
 
 
 ### STRT ####
-STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+STRTstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="STRT", 
                                   full.names=TRUE)
+
+# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="STRT", 
+#                                   full.names=TRUE)
 
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
@@ -12168,14 +12369,21 @@ origin_date <- as.Date("2022-05-13")
 HI.strt.2022$TimeSinceChena <- julian(HI.strt.2022$date, origin_date)
 
 
-write.csv(HI.strt.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.strt.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.strt.2022.csv"))
+
+# write.csv(HI.strt.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.strt.2022.csv")
 
 
 ### VAUL ####
-VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+VAULstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="VAUL", 
                                   full.names=TRUE)
+
+# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="VAUL", 
+#                                   full.names=TRUE)
 
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
@@ -12393,14 +12601,21 @@ origin_date <- as.Date("2022-05-13")
 HI.vaul.2022$TimeSinceChena <- julian(HI.vaul.2022$date, origin_date)
 
 
-write.csv(HI.vaul.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.vaul.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.vaul.2022.csv"))
+
+# write.csv(HI.vaul.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.vaul.2022.csv")
 
 
 ### CARI ####
-CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+CARIstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="CARI", 
                                   full.names=TRUE)
+
+# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
+#                                   recursive=F, 
+#                                   pattern="CARI", 
+#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -12629,7 +12844,9 @@ origin_date <- as.Date("2022-05-13")
 HI.cari.2022$TimeSinceChena <- julian(HI.cari.2022$date, origin_date)
 
 
-write.csv(HI.cari.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.cari.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.cari.2022.csv"))
+
+# write.csv(HI.cari.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.cari.2022.csv")
 
 
 
@@ -12638,7 +12855,9 @@ HI.2022 <- rbind(HI.frch.2022, HI.moos.2022,
                  HI.poke.2022, HI.vaul.2022, 
                  HI.strt.2022, HI.cari.2022) # bind all 2022 together
 
-write.csv(HI.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.2022.csv")
+write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.2022.csv"))
+
+# write.csv(HI.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.2022.csv")
 
 
 
