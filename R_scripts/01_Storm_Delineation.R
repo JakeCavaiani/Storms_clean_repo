@@ -1,4 +1,5 @@
 #### READ ME ####
+##TKH: add a description of how the storm delineation is completed- by what criteria? What defines beginning and end of storm?
 # The purpose of this script is to prepare DoD data for hysteresis analysis and, specifically, the hysteresisMetrics function.
 # Step 1: Load in processed SUNA and EXO data from the previous year 
 # scripts within DoD 2018/2019/2020/2021
@@ -9,18 +10,15 @@
 # Step 5: Delineate storms in each catchment.
 # Step 6: IN PYTHON: convert R discharge df to pandas df containing a datetime column named 'valuedatetime', and discharge values in a column 'datavalue'
 # Step 7: IN PYTHON: convert R response df(s) to pandas df(s) containing a datetime column named 'valuedatetime', and response values in a column 'datavalue'
-# install.packages("tidyverse")
-# install.packages("vctrs")
-# install.packages("bit")
-# install.packages("xfun")
+
+## TKH: are all these packages actually used? plyr is the old version of dplyr, and dplyr is included in tidyverse (as is ggplot, which I removed). I don't see any use of nlme in the script.
 library(xfun)
 library(bit)
 library(vctrs)
 library(tidyverse)
 library(lubridate)
-library(ggplot2)
 library(scales)
-library(plyr)
+#library(plyr)
 library(imputeTS)
 library(TSA)
 library(bbmle)
@@ -32,15 +30,18 @@ library(lattice)
 library(nlme)
 library(geosphere)
 library(car)
-library(dplyr)
+#library(dplyr)
 library(readr)
 library(googledrive)
 library(purrr)
 library(here)
 
+#################################
+### Storm delineation by year ###
+#################################
 
 ############################ 2015 ################################################
-# here # 
+## Discharge data input
 Q.daily.2015 <- read.csv(here("processed_sensor_data", "2015", "Q.daily.2015.csv"))
 Q.2015 <- read.csv(here("processed_sensor_data", "2015", "Predicted_Q_2015.csv"))
 
@@ -50,11 +51,9 @@ names(Q.2015) <- c("site.ID", "datetimeAK", "Q") # renaming the column headers t
 
 Q.2015$datetimeAK <- ymd_hms(Q.2015$datetimeAK) # converting character to datetime
 Q.2015$datetimeAK <- force_tz(Q.2015$datetimeAK, "America/Anchorage") # converting character to datetime
+## TKH note: Q.2015 start and end times don't match Karen's notes from the Discharge repo. Re-pull the 2015 Q data and ensure start/end times match notes in the readme file.
 
-
-Q.2015$site.ID <- ifelse(Q.2015$site.ID == "French", "FRCH", "MOOS")
-
-
+## Chems data input
 chem.2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"), na.strings = "NA")
 
 chem.2015 <- chem.2015[c("datetimeAK", "Site", "fDOM.QSU.T.turb.col", "SpCond.uScm.adj",
@@ -65,7 +64,7 @@ chem.2015$datetimeAK <- force_tz(chem.2015$datetimeAK, "America/Anchorage") # co
 
 names(chem.2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
 
-
+## TKH: describe in more detail what is being checked here (e.g., complete time series? gaps?)
 ### PLOTTING TO MAKE SURE OUR INPUT DATA LOOKS GOOD BEFORE DOING LITERALLY EVERYTHING ELSE ####
 # pivot long to get all the response variables in one column
 chem_2015_long <- chem.2015 %>%
@@ -92,10 +91,13 @@ FRCH.2015 <- FRCH.2015[-c(12519:12849), ] # removing unnecessary rows that corre
 MOOS.2015 <-  subset(chem.2015, site.ID == "MOOS")
 MOOS.2015 <- MOOS.2015[-c(12540:12796), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
+## TKH: need clean-up line 90 & 93. Figure out what the additional rows are and explain them in the notes when removing (maybe "remove rows containing all NA")
+
 DOD.2015 <- rbind(FRCH.2015, MOOS.2015)
 
-DOD.2015 <- full_join(DOD.2015, Q.2015) # merging chem and discharge data 
+DOD.2015 <- full_join(DOD.2015, Q.2015, by = c("site.ID", "datetimeAK")) # merging chem and discharge data 
 
+## TKH: Need some annotation here. Q was joined to chems in the previous line. What are these additional steps?
 frch.final.discharge.2015 <- subset(Q.2015, site.ID == "FRCH")
 moos.final.discharge.2015 <- subset(Q.2015, site.ID == "MOOS")
 
@@ -125,6 +127,7 @@ MOOS = full_join(MOOS.2015, moos.final.discharge.2015)
 
 any(is.na(FRCH.Q.2015$day))
 any(is.na(FRCH.Q.2015$Discharge_Lsec)) 
+# TKH note: there are NAs in FRCH Q
 
 any(is.na(MOOS.Q.2015$day))
 any(is.na(MOOS.Q.2015$Discharge_Lsec)) 
@@ -132,6 +135,7 @@ MOOS.Q.2015 <- na.omit(MOOS.Q.2015) # Removed 3 rows - (126 to 123)
 
 
 ### examine the recursive digital filter at .9, .925, .95 levels ###
+## TKH: Nothing in this block (lines 138-144) invokes a recursive digital filter
 plot(frch.final.discharge.2015$Q ~ frch.final.discharge.2015$datetimeAK, type = "l", xlab = "", ylab = "Q (L/sec)",
      xlim =  as.POSIXct(c("2015-05-01 00:00:00","2015-10-31 00:00:00"), tz="America/Anchorage"),
      ylim = c(0, 5000), col="blue")
@@ -151,6 +155,7 @@ moos.precip.discharge <- full_join(moos.final.discharge.2015, CPCRW) # merging p
 frch.precip.discharge <- frch.precip.discharge[order(frch.precip.discharge$datetimeAK),]
 moos.precip.discharge <- moos.precip.discharge[order(moos.precip.discharge$datetimeAK),]
 
+##TKH: need annotation here- what is the purpose of this step?
 # making a uniform time series with 30 minute intervals and then I can sum precip by 24/48hour windows 
 ts <- seq(as.POSIXct("2015-05-01", tz = "America/Anchorage"),
           as.POSIXct("2015-11-01", tz = "America/Anchorage"),
@@ -167,6 +172,7 @@ frch.precip.discharge$fourtyeight <- rollapplyr(frch.precip.discharge$mean, 48, 
 moos.precip.discharge$twentyfour <- rollapplyr(moos.precip.discharge$mean, 24, sum, na.rm = TRUE, fill = NA, partial = TRUE)
 moos.precip.discharge$fourtyeight <- rollapplyr(moos.precip.discharge$mean, 48, sum, na.rm = TRUE, fill = NA, partial = TRUE)
 
+##TKH: need annotation...greater than 5 what- 5 cm ppt?
 # Greater than 5 #
 moos.five.twenty.four <- moos.precip.discharge[which(moos.precip.discharge$twentyfour >= 5),] # twenty four hour period where the precip is 5
 moos.five.fourty.eight <- moos.precip.discharge[which(moos.precip.discharge$fourtyeight >= 5),] # fourty eight hour period where the precip is greater than 10
@@ -181,8 +187,12 @@ moos.ten.fourty.eight <- moos.precip.discharge[which(moos.precip.discharge$fourt
 frch.ten.twenty.four <- frch.precip.discharge[which(frch.precip.discharge$twentyfour >= 10),] # twenty four hour period where the precip is 10
 frch.ten.fourty.eight <- frch.precip.discharge[which(frch.precip.discharge$fourtyeight >= 10),] # fourty eight hour period where the precip is greater than 10
 
-
-#FRCH#
+#########################
+### Storm delineation ###
+#########################
+## TKH: Add a brief reminder here of how the storm delineation is done.
+##TKH: Annotation needed here. What are the components of the figure and what is it intended to show?
+## FRCH ##
 plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
      xlim = as.POSIXct(c("2015-05-01 0:00:00","2015-10-31 00:00:00"), tz="America/Anchorage"),
      ylim = c(15,0), 
@@ -839,6 +849,7 @@ write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm7_09_13_SPC.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm7_09_13_turb.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm7_09_13_abs.csv"))
 
+##TKH : Delete the below if no longer needed
 # write.csv(FRCH_storm1_07_01, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01.csv")
 # write.csv(FRCH_storm1_07_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01_Q.csv")
 # write.csv(FRCH_storm1_07_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01_NO3.csv")
@@ -1387,7 +1398,7 @@ write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_SPC.csv"))
 write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_turb.csv"))
 write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_abs.csv"))
 
-
+## TKH: delete if no longer needed
 # write.csv(MOOS_storm1_07_01, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01.csv")
 # write.csv(MOOS_storm1_07_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_Q.csv")
 # write.csv(MOOS_storm1_07_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_NO3.csv")
@@ -1446,6 +1457,7 @@ write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_abs.csv"))
 
 
 ############################ 2018 ################################################
+# TKH: unclear why the daily mean Q data are needed for storm delineation routine? Annotate their purpose if they are ultimately used.
 Q.daily.2018 <- read.csv(here("processed_sensor_data", "2018", "Q.daily.2018.csv"))
 Q.2018 <- read.csv(here("processed_sensor_data", "2018", "Q_2018.csv"))
 
@@ -1661,10 +1673,11 @@ ts <- as.data.frame(ts)
 names(ts) <- c("DateTime")
 FRCH <- left_join(ts, FRCH, by = "DateTime")
 
+## TKH: Has this been handled?
 # i need to make this time series at 30 minute intervals because the discharge is at 30
 # even though the chem is at 15 minute intervals so the plots dont come out well 
 
-
+## TKH: is this needed?
 # Assign CPCRW precip script to POKE.st because thats what I named it earlier and it will save me time just like the previous couple lines
 POKE.st <- CPCRW
 names(POKE.st) <- c("DateTime", "Site", "inst_rainfall_mm")
@@ -3765,6 +3778,8 @@ write.csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm12_09_25_abs.csv"))
 
 ### Precip Discharge Chem ###
 #CARI#
+## TKH: CARI_bfQ_mn called in plot but doesn't exist in the dataframe.
+## TKH: You might repull in CARI data. It doesn't look like these were fully QA/QC'd. SPC has a lot of noise and step changes. Turb has negative values.
 CARI_2018 <- CARI.2018 # renaming this to save me lots of time from old script
 names(CARI_2018) <- c("Site","DateTime", "Discharge", "NO3",
                       "fDOM", "SpCond", "Turb", "day")
@@ -3793,7 +3808,7 @@ lines(CARI_2018$fDOM * 7 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
 lines(CARI_2018$SpCond * 10 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
-lines(CARI_2018$Turb * 0.5 ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="blue",
+lines(CARI_2018$Turb ~ CARI_2018$DateTime, type="l", xlab="", ylab="", col="blue",
       xlim = as.POSIXct(c("2018-05-01 00:00:00","2018-10-15 01:00:00"), tz="America/Anchorage"))
 
 # Storm 1 # 
