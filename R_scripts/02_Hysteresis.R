@@ -318,13 +318,6 @@ MOOS_storm3a_07_27_SPC <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_st
 MOOS_storm3a_07_27_Turb <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3a_07_27_turb.csv"))
 MOOS_storm3a_07_27_abs <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3a_07_27_abs.csv"))
 
-# MOOS_storm3b_07_28 <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28.csv"))
-MOOS_storm3b_07_28_Q <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_Q.csv"))
-MOOS_storm3b_07_28_NO3 <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_NO3.csv"))
-MOOS_storm3b_07_28_fDOM <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_fDOM.csv"))
-MOOS_storm3b_07_28_SPC <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_SPC.csv"))
-MOOS_storm3b_07_28_Turb <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_turb.csv"))
-MOOS_storm3b_07_28_abs <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm3b_07_28_abs.csv"))
 
 # MOOS_storm4_08_16 <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm4_08_16.csv"))
 MOOS_storm4_08_16_Q <- read_csv(here("Storm_events", "2015", "MOOS", "MOOS_storm4_08_16_Q.csv"))
@@ -420,7 +413,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 MOOS_storm1_07_01_NO3.p = hyst_plot(MOOS_storm1_07_01_Q, MOOS_storm1_07_01_NO3, "MOOS", "NO3", "0701")
 MOOS_storm2_07_18_NO3.p = hyst_plot(MOOS_storm2_07_18_Q, MOOS_storm2_07_18_NO3, "MOOS", "NO3", "0718")
 MOOS_storm3a_07_27_NO3.p = hyst_plot(MOOS_storm3a_07_27_Q, MOOS_storm3a_07_27_NO3, "MOOS", "NO3", "0727a")
-MOOS_storm3b_07_28_NO3.p = hyst_plot(MOOS_storm3b_07_28_Q, MOOS_storm3b_07_28_NO3, "MOOS", "NO3", "0728b")
+
 MOOS_storm4_08_16_NO3.p = hyst_plot(MOOS_storm4_08_16_Q, MOOS_storm4_08_16_NO3, "MOOS", "NO3", "0816")
 MOOS_storm5_08_25_NO3.p = hyst_plot(MOOS_storm5_08_25_Q, MOOS_storm5_08_25_NO3, "MOOS", "NO3", "0825")
 MOOS_storm6_09_14_NO3.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_NO3, "MOOS", "NO3", "0914")
@@ -438,7 +431,7 @@ multiplot(MOOS_storm6_09_14_NO3.p)
 MOOS_storm1_07_01_fDOM.p = hyst_plot(MOOS_storm1_07_01_Q, MOOS_storm1_07_01_fDOM, "MOOS", "fDOM", "0701")
 MOOS_storm2_07_18_fDOM.p = hyst_plot(MOOS_storm2_07_18_Q, MOOS_storm2_07_18_fDOM, "MOOS", "fDOM", "0718")
 MOOS_storm3a_07_27_fDOM.p = hyst_plot(MOOS_storm3a_07_27_Q, MOOS_storm3a_07_27_fDOM, "MOOS", "fDOM", "0727a")
-MOOS_storm3b_07_28_fDOM.p = hyst_plot(MOOS_storm3b_07_28_Q, MOOS_storm3b_07_28_fDOM, "MOOS", "fDOM", "0728b")
+
 MOOS_storm4_08_16_fDOM.p = hyst_plot(MOOS_storm4_08_16_Q, MOOS_storm4_08_16_fDOM, "MOOS", "fDOM", "0816")
 MOOS_storm5_08_25_fDOM.p = hyst_plot(MOOS_storm5_08_25_Q, MOOS_storm5_08_25_fDOM, "MOOS", "fDOM", "0825")
 MOOS_storm6_09_14_fDOM.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_fDOM, "MOOS", "fDOM", "0914")
@@ -455,7 +448,7 @@ multiplot(MOOS_storm6_09_14_fDOM.p)
 MOOS_storm1_07_01_SPC.p = hyst_plot(MOOS_storm1_07_01_Q, MOOS_storm1_07_01_SPC, "MOOS", "SPC", "0701")
 MOOS_storm2_07_18_SPC.p = hyst_plot(MOOS_storm2_07_18_Q, MOOS_storm2_07_18_SPC, "MOOS", "SPC", "0718")
 MOOS_storm3a_07_27_SPC.p = hyst_plot(MOOS_storm3a_07_27_Q, MOOS_storm3a_07_27_SPC, "MOOS", "SPC", "0727a")
-MOOS_storm3b_07_28_SPC.p = hyst_plot(MOOS_storm3b_07_28_Q, MOOS_storm3b_07_28_SPC, "MOOS", "SPC", "0728b")
+
 MOOS_storm4_08_16_SPC.p = hyst_plot(MOOS_storm4_08_16_Q, MOOS_storm4_08_16_SPC, "MOOS", "SPC", "0816")
 MOOS_storm5_08_25_SPC.p = hyst_plot(MOOS_storm5_08_25_Q, MOOS_storm5_08_25_SPC, "MOOS", "SPC", "0825")
 MOOS_storm6_09_14_SPC.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_SPC, "MOOS", "SPC", "0914")
@@ -472,7 +465,7 @@ multiplot(MOOS_storm6_09_14_SPC.p)
 MOOS_storm1_07_01_turb.p = hyst_plot(MOOS_storm1_07_01_Q, MOOS_storm1_07_01_Turb, "MOOS", "Turb", "0701")
 MOOS_storm2_07_18_turb.p = hyst_plot(MOOS_storm2_07_18_Q, MOOS_storm2_07_18_Turb, "MOOS", "Turb", "0718")
 MOOS_storm3a_07_27_turb.p = hyst_plot(MOOS_storm3a_07_27_Q, MOOS_storm3a_07_27_Turb, "MOOS", "Turb", "0727a")
-MOOS_storm3b_07_28_turb.p = hyst_plot(MOOS_storm3b_07_28_Q, MOOS_storm3b_07_28_Turb, "MOOS", "Turb", "0728b")
+
 MOOS_storm4_08_16_turb.p = hyst_plot(MOOS_storm4_08_16_Q, MOOS_storm4_08_16_Turb, "MOOS", "Turb", "0816")
 MOOS_storm5_08_25_turb.p = hyst_plot(MOOS_storm5_08_25_Q, MOOS_storm5_08_25_Turb, "MOOS", "Turb", "0825")
 MOOS_storm6_09_14_turb.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_Turb, "MOOS", "Turb", "0914")
@@ -480,7 +473,7 @@ MOOS_storm6_09_14_turb.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_Turb
 multiplot(MOOS_storm1_07_01_turb.p)
 multiplot(MOOS_storm2_07_18_turb.p) 
 multiplot(MOOS_storm3a_07_27_turb.p)  # empty
-multiplot(MOOS_storm3b_07_28_turb.p) # empty
+
 multiplot(MOOS_storm4_08_16_turb.p)
 multiplot(MOOS_storm5_08_25_turb.p) 
 multiplot(MOOS_storm6_09_14_turb.p) 
@@ -489,7 +482,7 @@ multiplot(MOOS_storm6_09_14_turb.p)
 MOOS_storm1_07_01_abs.p = hyst_plot(MOOS_storm1_07_01_Q, MOOS_storm1_07_01_abs, "MOOS", "abs", "0701")
 MOOS_storm2_07_18_abs.p = hyst_plot(MOOS_storm2_07_18_Q, MOOS_storm2_07_18_abs, "MOOS", "abs", "0718")
 MOOS_storm3a_07_27_abs.p = hyst_plot(MOOS_storm3a_07_27_Q, MOOS_storm3a_07_27_abs, "MOOS", "abs", "0727a")
-MOOS_storm3b_07_28_abs.p = hyst_plot(MOOS_storm3b_07_28_Q, MOOS_storm3b_07_28_abs, "MOOS", "abs", "0728b")
+
 MOOS_storm4_08_16_abs.p = hyst_plot(MOOS_storm4_08_16_Q, MOOS_storm4_08_16_abs, "MOOS", "abs", "0816")
 MOOS_storm5_08_25_abs.p = hyst_plot(MOOS_storm5_08_25_Q, MOOS_storm5_08_25_abs, "MOOS", "abs", "0825")
 MOOS_storm6_09_14_abs.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_abs, "MOOS", "abs", "0914")
@@ -497,7 +490,7 @@ MOOS_storm6_09_14_abs.p = hyst_plot(MOOS_storm6_09_14_Q, MOOS_storm6_09_14_abs, 
 multiplot(MOOS_storm1_07_01_abs.p)
 multiplot(MOOS_storm2_07_18_abs.p) 
 multiplot(MOOS_storm3a_07_27_abs.p) 
-multiplot(MOOS_storm3b_07_28_abs.p)
+
 multiplot(MOOS_storm4_08_16_abs.p)
 multiplot(MOOS_storm5_08_25_abs.p) # empty
 multiplot(MOOS_storm6_09_14_abs.p) 
@@ -507,7 +500,7 @@ multiplot(MOOS_storm6_09_14_abs.p)
 MOOS_HI_Loop <- multiplot(MOOS_storm1_07_01_NO3.p,MOOS_storm1_07_01_fDOM.p, MOOS_storm1_07_01_SPC.p,MOOS_storm1_07_01_turb.p,MOOS_storm1_07_01_abs.p,
                           MOOS_storm2_07_18_NO3.p,MOOS_storm2_07_18_fDOM.p, MOOS_storm2_07_18_SPC.p,MOOS_storm2_07_18_turb.p,MOOS_storm2_07_18_abs.p,
                           MOOS_storm3a_07_27_NO3.p,MOOS_storm3a_07_27_fDOM.p, MOOS_storm3a_07_27_SPC.p,MOOS_storm3a_07_27_turb.p, MOOS_storm3a_07_27_abs.p,
-                          MOOS_storm3b_07_28_NO3.p,MOOS_storm3b_07_28_fDOM.p, MOOS_storm3b_07_28_SPC.p,MOOS_storm3b_07_28_turb.p,MOOS_storm3b_07_28_abs.p,
+                          
                           MOOS_storm4_08_16_NO3.p,MOOS_storm4_08_16_fDOM.p, MOOS_storm4_08_16_SPC.p,MOOS_storm4_08_16_turb.p, MOOS_storm4_08_16_abs.p,
                           MOOS_storm5_08_25_NO3.p,MOOS_storm5_08_25_fDOM.p, MOOS_storm5_08_25_SPC.p,MOOS_storm5_08_25_turb.p, MOOS_storm5_08_25_abs.p,
                           MOOS_storm6_09_14_NO3.p, MOOS_storm6_09_14_fDOM.p,  MOOS_storm6_09_14_SPC.p, MOOS_storm6_09_14_turb.p, MOOS_storm6_09_14_abs.p)
