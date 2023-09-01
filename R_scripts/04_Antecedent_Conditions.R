@@ -143,7 +143,7 @@ HI.dat_2022$year <- "2022"
 
 
 
-HI.dat <- HI.dat_2015
+HI.dat <- rbind(HI.dat_2015, HI.dat_2018)
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -830,18 +830,18 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
 
 FRCH_storms$storm.num = c(rep("storm1", 142),
                           rep("storm10", 689),
-                          rep("storm11a", 91),
-                          rep("storm11b", 256),
-                          rep("storm2a", 208),
-                          rep("storm2b", 156),
+                          rep("storm11a", 353),
+                          
+                          rep("storm2a", 364),
+                         
                           rep("storm3", 196),
                           rep("storm4a", 88),
                           rep("storm4b", 153),
                           rep("storm5", 331),
                           rep("storm6", 303),
                           rep("storm7", 129),
-                          rep("storm8a", 79),
-                          rep("storm8b", 95),
+                          rep("storm8a", 175),
+                          
                           rep("storm9", 99)) # naming each storm by the number of storm 
 
 #write_csv(FRCH_storms, "~/Desktop/FRCH_2018_test_beta.csv")
@@ -1375,7 +1375,7 @@ HI.frch.2018$burn <- "unburned" # adding a burn column
 HI.frch.2018$pf <- "medium" # adding a pf column
 HI.frch.2018$site.ID <- "FRCH"
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.frch.2018.csv"))
+write.csv(HI.frch.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.frch.2018.csv"))
 
 # write.csv(HI.frch.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.frch.2018.csv")
 
