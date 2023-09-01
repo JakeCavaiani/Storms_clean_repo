@@ -36,8 +36,6 @@ library(googledrive)
 library(purrr)
 library(here)
 
-Does this change anything on git?
-  
 
 #################################
 ### Storm delineation by year ###
@@ -797,10 +795,10 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2015-07-27 05:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2015-07-28 14:30:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2015-08-02 14:30:00", tz="America/Anchorage"), col="purple")
 
 MOOS_storm3a_07_27 = MOOS[MOOS$datetimeAK > as.POSIXct("2015-07-27 05:30:00", tz="America/Anchorage") &
-                           MOOS$datetimeAK < as.POSIXct("2015-07-28 14:30:00", tz="America/Anchorage"),]
+                           MOOS$datetimeAK < as.POSIXct("2015-08-02 14:30:00", tz="America/Anchorage"),]
 
 plot(MOOS_storm3a_07_27$Q ~ as.POSIXct(MOOS_storm3a_07_27$datetimeAK, tz="America/Anchorage"), xlab="", ylab="Q (L/sec)",ylim = c(0,6500), col="blue", main="MOOS 150727 storm 3a",
      xlim = as.POSIXct(c("2015-07-25 00:00:00","2015-07-29 23:45:00"), tz="America/Anchorage"))
@@ -823,46 +821,7 @@ plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# storm 3b # 
-plot(MOOS$Q ~ MOOS$datetimeAK, type="p", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2015-07-25 00:00:00","2015-08-05 23:45:00"), tz="America/Anchorage"),
-     ylim = c(0, 6500))
-par(new = T)
 
-plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2015-07-25 00:00:00","2015-08-05 23:45:00"), tz="America/Anchorage"),
-     ylim = c(8,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2015-07-28 14:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2015-08-02 14:30:00", tz="America/Anchorage"), col="purple")
-
-MOOS_storm3b_07_28 = MOOS[MOOS$datetimeAK > as.POSIXct("2015-07-28 14:30:00", tz="America/Anchorage") &
-                            MOOS$datetimeAK < as.POSIXct("2015-08-02 14:30:00", tz="America/Anchorage"),]
-
-plot(MOOS_storm3b_07_28$Q ~ as.POSIXct(MOOS_storm3b_07_28$datetimeAK, tz="America/Anchorage"), xlab="", ylab="Q (L/sec)",ylim = c(0,6500), col="blue", main="MOOS 150728 storm 3b",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(MOOS$fDOM ~ MOOS$datetimeAK, xlab="", ylab="", col="maroon",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(MOOS$NO3 ~ MOOS$datetimeAK, xlab="", ylab="", col="purple",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(MOOS$SPC ~ MOOS$datetimeAK, xlab="", ylab="", col="red",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(MOOS$Turb ~ MOOS$datetimeAK, xlab="", ylab="", col="black",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2015-07-27 00:00:00","2015-08-03 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # storm 4 # 
 plot(MOOS$Q ~ MOOS$datetimeAK, type="p", xlab="", ylab="Q (L/sec)",
@@ -1029,18 +988,6 @@ names(MOOS_storm3a_07_27_turb) = c("valuedatetime","datavalue")
 MOOS_storm3a_07_27_abs = subset(MOOS_storm3a_07_27, select = c("datetimeAK","ABS_254"))
 names(MOOS_storm3a_07_27_abs) = c("valuedatetime","datavalue")
 
-MOOS_storm3b_07_28_Q = subset(MOOS_storm3b_07_28, select = c("datetimeAK","Q"))
-names(MOOS_storm3b_07_28_Q) = c("valuedatetime","datavalue")
-MOOS_storm3b_07_28_NO3 = subset(MOOS_storm3b_07_28, select = c("datetimeAK","NO3"))
-names(MOOS_storm3b_07_28_NO3) = c("valuedatetime","datavalue")
-MOOS_storm3b_07_28_fDOM = subset(MOOS_storm3b_07_28, select = c("datetimeAK","fDOM"))
-names(MOOS_storm3b_07_28_fDOM) = c("valuedatetime","datavalue")
-MOOS_storm3b_07_28_SPC = subset(MOOS_storm3b_07_28, select = c("datetimeAK","SPC"))
-names(MOOS_storm3b_07_28_SPC) = c("valuedatetime","datavalue")
-MOOS_storm3b_07_28_turb = subset(MOOS_storm3b_07_28, select = c("datetimeAK","Turb"))
-names(MOOS_storm3b_07_28_turb) = c("valuedatetime","datavalue")
-MOOS_storm3b_07_28_abs = subset(MOOS_storm3b_07_28, select = c("datetimeAK","ABS_254"))
-names(MOOS_storm3b_07_28_abs) = c("valuedatetime","datavalue")
 
 MOOS_storm4_08_16_Q = subset(MOOS_storm4_08_16, select = c("datetimeAK","Q"))
 names(MOOS_storm4_08_16_Q) = c("valuedatetime","datavalue")
@@ -1082,118 +1029,55 @@ MOOS_storm6_09_14_abs = subset(MOOS_storm6_09_14, select = c("datetimeAK","ABS_2
 names(MOOS_storm6_09_14_abs) = c("valuedatetime","datavalue")
 
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_abs.csv"))
+write.csv(MOOS_storm1_07_01, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01.csv"))
+write.csv(MOOS_storm1_07_01_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_Q.csv"))
+write.csv(MOOS_storm1_07_01_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_NO3.csv"))
+write.csv(MOOS_storm1_07_01_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_fDOM.csv"))
+write.csv(MOOS_storm1_07_01_SPC, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_SPC.csv"))
+write.csv(MOOS_storm1_07_01_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_turb.csv"))
+write.csv(MOOS_storm1_07_01_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm1_07_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_abs.csv"))
+write.csv(MOOS_storm2_07_18, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18.csv"))
+write.csv(MOOS_storm2_07_18_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_Q.csv"))
+write.csv(MOOS_storm2_07_18_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_NO3.csv"))
+write.csv(MOOS_storm2_07_18_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_fDOM.csv"))
+write.csv(MOOS_storm2_07_18_SPC, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_SPC.csv"))
+write.csv(MOOS_storm2_07_18_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_turb.csv"))
+write.csv(MOOS_storm2_07_18_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm2_07_18_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_abs.csv"))
+write.csv(MOOS_storm3a_07_27, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27.csv"))
+write.csv(MOOS_storm3a_07_27_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_Q.csv"))
+write.csv(MOOS_storm3a_07_27_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_NO3.csv"))
+write.csv(MOOS_storm3a_07_27_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_fDOM.csv"))
+write.csv(MOOS_storm3a_07_27_SPC, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_SPC.csv"))
+write.csv(MOOS_storm3a_07_27_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_turb.csv"))
+write.csv(MOOS_storm3a_07_27_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm3a_07_27_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm3b_07_28_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_abs.csv"))
+write.csv(MOOS_storm4_08_16, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16.csv"))
+write.csv(MOOS_storm4_08_16_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_Q.csv"))
+write.csv(MOOS_storm4_08_16_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_NO3.csv"))
+write.csv(MOOS_storm4_08_16_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_fDOM.csv"))
+write.csv(MOOS_storm4_08_16_SPC, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_SPC.csv"))
+write.csv(MOOS_storm4_08_16_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_turb.csv"))
+write.csv(MOOS_storm4_08_16_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm4_08_16_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_abs.csv"))
+write.csv(MOOS_storm5_08_25, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25.csv"))
+write.csv(MOOS_storm5_08_25_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_Q.csv"))
+write.csv(MOOS_storm5_08_25_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_NO3.csv"))
+write.csv(MOOS_storm5_08_25_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_fDOM.csv"))
+write.csv(MOOS_storm5_08_25_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_SPC.csv"))
+write.csv(MOOS_storm5_08_25_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_turb.csv"))
+write.csv(MOOS_storm5_08_25_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm5_08_25_abs.csv"))
 
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_Q.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_NO3.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_fDOM.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_SPC.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_turb.csv"))
-write.csv(here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_abs.csv"))
+write.csv(MOOS_storm6_09_14, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14.csv"))
+write.csv(MOOS_storm6_09_14_Q, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_Q.csv"))
+write.csv(MOOS_storm6_09_14_NO3, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_NO3.csv"))
+write.csv(MOOS_storm6_09_14_fDOM, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_fDOM.csv"))
+write.csv(MOOS_storm6_09_14_SPC, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_SPC.csv"))
+write.csv(MOOS_storm6_09_14_turb, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_turb.csv"))
+write.csv(MOOS_storm6_09_14_abs, here("Storm_Events", "2015", "MOOS", "MOOS_storm6_09_14_abs.csv"))
 
-## TKH: delete if no longer needed
-# write.csv(MOOS_storm1_07_01, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01.csv")
-# write.csv(MOOS_storm1_07_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_Q.csv")
-# write.csv(MOOS_storm1_07_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_NO3.csv")
-# write.csv(MOOS_storm1_07_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_fDOM.csv")
-# write.csv(MOOS_storm1_07_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_SPC.csv")
-# write.csv(MOOS_storm1_07_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_turb.csv")
-# write.csv(MOOS_storm1_07_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm1_07_01_abs.csv")
-# 
-# write.csv(MOOS_storm2_07_18, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18.csv")
-# write.csv(MOOS_storm2_07_18_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_Q.csv")
-# write.csv(MOOS_storm2_07_18_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_NO3.csv")
-# write.csv(MOOS_storm2_07_18_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_fDOM.csv")
-# write.csv(MOOS_storm2_07_18_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_SPC.csv")
-# write.csv(MOOS_storm2_07_18_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_turb.csv")
-# write.csv(MOOS_storm2_07_18_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm2_07_18_abs.csv")
-
-# write.csv(MOOS_storm3a_07_27, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27.csv")
-# write.csv(MOOS_storm3a_07_27_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_Q.csv")
-# write.csv(MOOS_storm3a_07_27_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_NO3.csv")
-# write.csv(MOOS_storm3a_07_27_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_fDOM.csv")
-# write.csv(MOOS_storm3a_07_27_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_SPC.csv")
-# write.csv(MOOS_storm3a_07_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_turb.csv")
-# write.csv(MOOS_storm3a_07_27_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3a_07_27_abs.csv")
-
-# write.csv(MOOS_storm3b_07_28, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28.csv")
-# write.csv(MOOS_storm3b_07_28_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_Q.csv")
-# write.csv(MOOS_storm3b_07_28_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_NO3.csv")
-# write.csv(MOOS_storm3b_07_28_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_fDOM.csv")
-# write.csv(MOOS_storm3b_07_28_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_SPC.csv")
-# write.csv(MOOS_storm3b_07_28_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_turb.csv")
-# write.csv(MOOS_storm3b_07_28_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm3b_07_28_abs.csv")
-
-# write.csv(MOOS_storm4_08_16, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16.csv")
-# write.csv(MOOS_storm4_08_16_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_Q.csv")
-# write.csv(MOOS_storm4_08_16_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_NO3.csv")
-# write.csv(MOOS_storm4_08_16_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_fDOM.csv")
-# write.csv(MOOS_storm4_08_16_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_SPC.csv")
-# write.csv(MOOS_storm4_08_16_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_turb.csv")
-# write.csv(MOOS_storm4_08_16_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm4_08_16_abs.csv")
-
-# write.csv(MOOS_storm5_08_25, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25.csv")
-# write.csv(MOOS_storm5_08_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_Q.csv")
-# write.csv(MOOS_storm5_08_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_NO3.csv")
-# write.csv(MOOS_storm5_08_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_fDOM.csv")
-# write.csv(MOOS_storm5_08_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_SPC.csv")
-# write.csv(MOOS_storm5_08_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_turb.csv")
-# write.csv(MOOS_storm5_08_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm5_08_25_abs.csv")
-
-# write.csv(MOOS_storm6_09_14, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14.csv")
-# write.csv(MOOS_storm6_09_14_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_Q.csv")
-# write.csv(MOOS_storm6_09_14_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_NO3.csv")
-# write.csv(MOOS_storm6_09_14_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_fDOM.csv")
-# write.csv(MOOS_storm6_09_14_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_SPC.csv")
-# write.csv(MOOS_storm6_09_14_turb, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_turb.csv")
-# write.csv(MOOS_storm6_09_14_abs, "~/Documents/Storms_clean_repo/Storm_Events/2015/MOOS/MOOS_storm6_09_14_abs.csv")
 
 
 ############################ 2018 ################################################
