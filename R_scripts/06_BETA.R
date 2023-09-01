@@ -62,7 +62,7 @@ for(i in 1:length(storm_list_beta)){
 
 #  organize storm data by site and solute 
 FRCH_storm_list_beta = storm_list_beta[c(1:42)] #42
-MOOS_storm_list_beta = storm_list_beta[c(61:102)] #42
+MOOS_storm_list_beta = storm_list_beta[c(43:78)] #36
 
 FRCH_NO3_storm_list_beta = FRCH_storm_list_beta[c(grep("NO3", names(FRCH_storm_list_beta)))]
 FRCH_fDOM_storm_list_beta = FRCH_storm_list_beta[c(grep("fDOM", names(FRCH_storm_list_beta)))]
@@ -208,12 +208,12 @@ beta.all.no3 <- FRCH_NO3_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_NO3_storm$storm.ID = c(rep("storm1", 383),
-                             rep("storm2", 575),
-                             rep("storm3a", 133),
-                             rep("storm3b", 477),
-                             rep("storm4", 191),
-                             rep("storm5", 455),
-                             rep("storm6", 178))
+                            rep("storm2", 575),
+                            rep("storm3a", 611),
+                            
+                            rep("storm4", 191),
+                            rep("storm5", 455),
+                            rep("storm6", 178))
 
 names(MOOS_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
 MOOS_NO3_storm$site.ID <- "MOOS"
@@ -303,8 +303,8 @@ beta.all.fDOM <- FRCH_fDOM_storm_ascending %>% group_by(storm.ID) %>%
 # MOOS # 
 MOOS_fDOM_storm$storm.ID = c(rep("storm1", 383),
                              rep("storm2", 575),
-                             rep("storm3a", 133),
-                             rep("storm3b", 477),
+                             rep("storm3a", 611),
+                             
                              rep("storm4", 191),
                              rep("storm5", 455),
                              rep("storm6", 178))
@@ -395,8 +395,8 @@ beta.all.SPC <- FRCH_SPC_storm_ascending %>% group_by(storm.ID) %>%
 # MOOS # 
 MOOS_SPC_storm$storm.ID = c(rep("storm1", 383),
                             rep("storm2", 575),
-                            rep("storm3a", 133),
-                            rep("storm3b", 477),
+                            rep("storm3a", 611),
+                            
                             rep("storm4", 191),
                             rep("storm5", 455),
                             rep("storm6", 178))
@@ -490,8 +490,8 @@ beta.all.turb <- FRCH_turb_storm_ascending %>% group_by(storm.ID) %>%
 # MOOS # 
 MOOS_turb_storm$storm.ID = c(rep("storm1", 383),
                              rep("storm2", 575),
-                             rep("storm3a", 133),
-                             rep("storm3b", 477),
+                             rep("storm3a", 611),
+                             
                              rep("storm4", 191),
                              rep("storm5", 455),
                              rep("storm6", 178))
@@ -582,12 +582,12 @@ beta.all.abs <- FRCH_abs_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_abs_storm$storm.ID = c(rep("storm1", 383),
-                             rep("storm2", 575),
-                             rep("storm3a", 133),
-                             rep("storm3b", 477),
-                             rep("storm4", 191),
-                             rep("storm5", 455),
-                             rep("storm6", 178))
+                            rep("storm2", 575),
+                            rep("storm3a", 611),
+                            
+                            rep("storm4", 191),
+                            rep("storm5", 455),
+                            rep("storm6", 178))
 
 names(MOOS_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 MOOS_abs_storm$site.ID <- "MOOS"
@@ -643,9 +643,7 @@ beta.all.2015 <- beta.all.2015 %>%
   dplyr::mutate(across(c(Coefficient), 
                 ~ifelse(Coefficient > 20, NA, .))) # remove outliers 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2015.csv"))
-
-# write.csv(beta.all.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2015.csv")
+write.csv(beta.all.2015, here("Output_from_analysis", "06_BETA", "beta.2015.csv"))
 
 beta.all.2015 <- beta.all.2015 %>% 
   filter(Parameter != "(Intercept)")
