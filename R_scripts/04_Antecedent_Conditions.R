@@ -584,8 +584,8 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
 
 MOOS_storms$storm.num = c(rep("storm1", 383),
                           rep("storm2", 575),
-                          rep("storm3a", 131),
-                          rep("storm3b", 479),
+                          rep("storm3a", 611),
+                          
                           rep("storm4", 191),
                           rep("storm5", 455),
                           rep("storm6", 176))
@@ -793,19 +793,13 @@ HI.moos.2015$date <- as.Date(HI.moos.2015$doy, origin = "2015-01-01")
 origin_date <- as.Date("2015-05-12")
 HI.moos.2015$TimeSinceChena <- julian(HI.moos.2015$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.moos.2015.csv"))
-
-# write.csv(HI.moos.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.moos.2015.csv")
+write.csv(HI.moos.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.moos.2015.csv"))
 
 
 # all sites 
 HI.2015 <- rbind(HI.frch.2015, HI.moos.2015) # bind all 2015 together
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.2015.csv"))
-
-# write.csv(HI.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.2015.csv")
-
-
+write.csv(HI.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.2015.csv"))
 
 
 ######################################## 2018 #####################################################################
