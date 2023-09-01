@@ -1297,11 +1297,7 @@ ts <- as.data.frame(ts)
 names(ts) <- c("DateTime")
 FRCH <- left_join(ts, FRCH, by = "DateTime")
 
-## TKH: Has this been handled?
-# i need to make this time series at 30 minute intervals because the discharge is at 30
-# even though the chem is at 15 minute intervals so the plots dont come out well 
 
-## TKH: is this needed?
 # Assign CPCRW precip script to POKE.st because thats what I named it earlier and it will save me time just like the previous couple lines
 POKE.st <- CPCRW
 names(POKE.st) <- c("DateTime", "Site", "inst_rainfall_mm")
@@ -1311,10 +1307,6 @@ names(poke.five.fourty.eight) <- c("DateTime", "site.ID", "Q", "Site",
 poke.five.twenty.four <- frch.five.twenty.four
 names(poke.five.twenty.four) <- c("DateTime", "site.ID", "Q", "Site",
                                    "inst_rainfall_mm", "twentyfour", "fourtyeight")
-# test 
-ggplot(FRCH, aes(DateTime, MeanDischarge)) + 
-  geom_line()
-#
 
 #plots
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -1397,51 +1389,13 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2018-06-30 23:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-07-05 07:45:00", ), col="purple")
+abline(v= as.POSIXct("2018-07-08 14:00:00", ), col="purple")
 
 FRCH_storm2a_06_30 = FRCH[FRCH$DateTime > as.POSIXct("2018-06-30 23:30:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2018-07-05 07:45:00", tz="America/Anchorage"),]
+                            FRCH$DateTime < as.POSIXct("2018-07-08 14:00:00", tz="America/Anchorage"),]
 plot(FRCH_storm2a_06_30$MeanDischarge ~ as.POSIXct(FRCH_storm2a_06_30$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(300,1200), col="blue", main="FRCH 180630 storm 2a",
      xlim = as.POSIXct(c("2018-06-28 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"))
 lines(FRCH$nitrateuM * 25 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$SpCond.uScm * 4 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$Turbidity.FNU * 100 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-06-28 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 2b # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2018-06-28 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"))
-abline(v= as.POSIXct("2018-07-05 07:45:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-07-08 14:00:00", tz="America/Anchorage"), col="purple")
-
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-06-28 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-07-05 07:45:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-07-08 14:00:00", tz="America/Anchorage"), col="purple")
-
-FRCH_storm2b_07_05 = FRCH[FRCH$DateTime > as.POSIXct("2018-07-05 07:45:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2018-07-08 14:00:00", tz="America/Anchorage"),]
-plot(FRCH_storm2b_07_05$MeanDischarge ~ as.POSIXct(FRCH_storm2b_07_05$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,600), col="blue", main="FRCH 180705 storm 2b",
-     xlim = as.POSIXct(c("2018-06-28 00:00:00","2018-07-15 23:45:00"), tz="America/Anchorage"))
-lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
@@ -1681,10 +1635,10 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2018-08-26 20:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-28 12:00:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-08-30 12:00:00", tz="America/Anchorage"), col="purple")
 
 FRCH_storm8a_08_26 = FRCH[FRCH$DateTime > as.POSIXct("2018-08-26 20:00:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2018-08-28 12:00:00", tz="America/Anchorage"),]
+                            FRCH$DateTime < as.POSIXct("2018-08-30 12:00:00", tz="America/Anchorage"),]
 plot(FRCH_storm8a_08_26$MeanDischarge ~ as.POSIXct(FRCH_storm8a_08_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,700), col="blue", main="FRCH 180826 storm 8a",
      xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
 lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -1702,40 +1656,6 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 8b # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-08-28 12:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-08-30 12:00:00", tz="America/Anchorage"), col="purple")
-
-FRCH_storm8b_08_28 = FRCH[FRCH$DateTime > as.POSIXct("2018-08-28 12:00:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2018-08-30 12:00:00", tz="America/Anchorage"),]
-plot(FRCH_storm8b_08_28$MeanDischarge ~ as.POSIXct(FRCH_storm8b_08_28$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,800), col="blue", main="FRCH 180828 storm 8b",
-     xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"))
-lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$fDOM.QSU * 5 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$SpCond.uScm * 5 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$Turbidity.FNU * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-08-12 00:00:00","2018-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 9 # 
 plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
@@ -1822,10 +1742,10 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2018-09-22 23:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-09-24 20:45:00", tz="America/Anchorage"), col="purple")
+abline(v= as.POSIXct("2018-09-30 07:45:00", tz="America/Anchorage"), col="purple")
 
 FRCH_storm11a_09_22 = FRCH[FRCH$DateTime > as.POSIXct("2018-09-22 23:00:00", tz="America/Anchorage") &
-                             FRCH$DateTime < as.POSIXct("2018-09-24 20:45:00", tz="America/Anchorage"),]
+                             FRCH$DateTime < as.POSIXct("2018-09-30 07:45:00", tz="America/Anchorage"),]
 plot(FRCH_storm11a_09_22$MeanDischarge ~ as.POSIXct(FRCH_storm11a_09_22$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1000), col="blue", main="FRCH 180922 storm 11a",
      xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"))
 lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -1843,65 +1763,6 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      ylim = c(10,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
-
-# Storm 11b# 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2018-09-24 23:45:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2018-09-30 07:45:00", tz="America/Anchorage"), col="purple")
-
-FRCH_storm11b_09_24 = FRCH[FRCH$DateTime > as.POSIXct("2018-09-24 23:45:00", tz="America/Anchorage") &
-                             FRCH$DateTime < as.POSIXct("2018-09-30 07:45:00", tz="America/Anchorage"),]
-plot(FRCH_storm11b_09_24$MeanDischarge ~ as.POSIXct(FRCH_storm11b_09_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1000), col="blue", main="FRCH 180924 storm 11b",
-     xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"))
-lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$SpCond.uScm * 10 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$Turbidity.FNU * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-08-30 00:00:00","2018-09-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# No storm for the remainder of the season # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2018-10-01 00:00:00","2018-10-31 23:45:00"), tz="America/Anchorage"))
-lines(FRCH$nitrateuM * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$fDOM.QSU * 15 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$SpCond.uScm * 7 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(FRCH$Turbidity.FNU * 20 ~ FRCH$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2018-10-01 00:00:00","2018-10-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
 
 # modify format and save FRCH storms # 
 # nitrateuM, fDOM.QSU 
@@ -1933,20 +1794,6 @@ FRCH_storm2a_06_30_turb = subset(FRCH_storm2a_06_30, select = c("DateTime","Turb
 names(FRCH_storm2a_06_30_turb) = c("valuedatetime","datavalue")
 FRCH_storm2a_06_30_abs = subset(FRCH_storm2a_06_30, select = c("DateTime","ABS_254"))
 names(FRCH_storm2a_06_30_abs) = c("valuedatetime","datavalue")
-
-
-FRCH_storm2b_07_05_Q = subset(FRCH_storm2b_07_05, select = c("DateTime","MeanDischarge"))
-names(FRCH_storm2b_07_05_Q) = c("valuedatetime","datavalue")
-FRCH_storm2b_07_05_NO3 = subset(FRCH_storm2b_07_05, select = c("DateTime","nitrateuM"))
-names(FRCH_storm2b_07_05_NO3) = c("valuedatetime","datavalue")
-FRCH_storm2b_07_05_fDOM = subset(FRCH_storm2b_07_05, select = c("DateTime","fDOM.QSU"))
-names(FRCH_storm2b_07_05_fDOM) = c("valuedatetime","datavalue")
-FRCH_storm2b_07_05_SPC = subset(FRCH_storm2b_07_05, select = c("DateTime","SpCond.uScm"))
-names(FRCH_storm2b_07_05_SPC) = c("valuedatetime","datavalue")
-FRCH_storm2b_07_05_turb = subset(FRCH_storm2b_07_05, select = c("DateTime","Turbidity.FNU"))
-names(FRCH_storm2b_07_05_turb) = c("valuedatetime","datavalue")
-FRCH_storm2b_07_05_abs = subset(FRCH_storm2b_07_05, select = c("DateTime","ABS_254"))
-names(FRCH_storm2b_07_05_abs) = c("valuedatetime","datavalue")
 
 
 FRCH_storm3_07_11_Q = subset(FRCH_storm3_07_11, select = c("DateTime","MeanDischarge"))
@@ -2047,19 +1894,6 @@ FRCH_storm8a_08_26_abs = subset(FRCH_storm8a_08_26, select = c("DateTime","ABS_2
 names(FRCH_storm8a_08_26_abs) = c("valuedatetime","datavalue")
 
 
-FRCH_storm8b_08_28_Q = subset(FRCH_storm8b_08_28, select = c("DateTime","MeanDischarge"))
-names(FRCH_storm8b_08_28_Q) = c("valuedatetime","datavalue")
-FRCH_storm8b_08_28_NO3 = subset(FRCH_storm8b_08_28, select = c("DateTime","nitrateuM"))
-names(FRCH_storm8b_08_28_NO3) = c("valuedatetime","datavalue")
-FRCH_storm8b_08_28_fDOM = subset(FRCH_storm8b_08_28, select = c("DateTime","fDOM.QSU"))
-names(FRCH_storm8b_08_28_fDOM) = c("valuedatetime","datavalue")
-FRCH_storm8b_08_28_SPC = subset(FRCH_storm8b_08_28, select = c("DateTime","SpCond.uScm"))
-names(FRCH_storm8b_08_28_SPC) = c("valuedatetime","datavalue")
-FRCH_storm8b_08_28_turb = subset(FRCH_storm8b_08_28, select = c("DateTime","Turbidity.FNU"))
-names(FRCH_storm8b_08_28_turb) = c("valuedatetime","datavalue")
-FRCH_storm8b_08_28_abs = subset(FRCH_storm8b_08_28, select = c("DateTime","ABS_254"))
-names(FRCH_storm8b_08_28_abs) = c("valuedatetime","datavalue")
-
 FRCH_storm9_08_30_Q = subset(FRCH_storm9_08_30, select = c("DateTime","MeanDischarge"))
 names(FRCH_storm9_08_30_Q) = c("valuedatetime","datavalue")
 FRCH_storm9_08_30_NO3 = subset(FRCH_storm9_08_30, select = c("DateTime","nitrateuM"))
@@ -2101,263 +1935,105 @@ FRCH_storm11a_09_22_abs = subset(FRCH_storm11a_09_22, select = c("DateTime","ABS
 names(FRCH_storm11a_09_22_abs) = c("valuedatetime","datavalue")
 
 
-FRCH_storm11b_09_24_Q = subset(FRCH_storm11b_09_24, select = c("DateTime","MeanDischarge"))
-names(FRCH_storm11b_09_24_Q) = c("valuedatetime","datavalue")
-FRCH_storm11b_09_24_NO3 = subset(FRCH_storm11b_09_24, select = c("DateTime","nitrateuM"))
-names(FRCH_storm11b_09_24_NO3) = c("valuedatetime","datavalue")
-FRCH_storm11b_09_24_fDOM = subset(FRCH_storm11b_09_24, select = c("DateTime","fDOM.QSU"))
-names(FRCH_storm11b_09_24_fDOM) = c("valuedatetime","datavalue")
-FRCH_storm11b_09_24_SPC = subset(FRCH_storm11b_09_24, select = c("DateTime","SpCond.uScm"))
-names(FRCH_storm11b_09_24_SPC) = c("valuedatetime","datavalue")
-FRCH_storm11b_09_24_turb = subset(FRCH_storm11b_09_24, select = c("DateTime","Turbidity.FNU"))
-names(FRCH_storm11b_09_24_turb) = c("valuedatetime","datavalue")
-FRCH_storm11b_09_24_abs = subset(FRCH_storm11b_09_24, select = c("DateTime","ABS_254"))
-names(FRCH_storm11b_09_24_abs) = c("valuedatetime","datavalue")
-
 
 ### Write csv ###
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_abs.csv"))
+write.csv(FRCH_storm1_06_21, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21.csv"))
+write.csv(FRCH_storm1_06_21_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Q.csv"))
+write.csv(FRCH_storm1_06_21_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_NO3.csv"))
+write.csv(FRCH_storm1_06_21_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_fDOM.csv"))
+write.csv(FRCH_storm1_06_21_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_SPC.csv"))
+write.csv(FRCH_storm1_06_21_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_Turb.csv"))
+write.csv(FRCH_storm1_06_21_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm1_06_21_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_abs.csv"))
+write.csv(FRCH_storm2a_06_30, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30.csv"))
+write.csv(FRCH_storm2a_06_30_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_Q.csv"))
+write.csv(FRCH_storm2a_06_30_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_NO3.csv"))
+write.csv(FRCH_storm2a_06_30_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_fDOM.csv"))
+write.csv(FRCH_storm2a_06_30_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_SPC.csv"))
+write.csv(FRCH_storm2a_06_30_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_Turb.csv"))
+write.csv(FRCH_storm2a_06_30_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm2a_06_30_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm2b_07_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_abs.csv"))
+write.csv(FRCH_storm3_07_11, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11.csv"))
+write.csv(FRCH_storm3_07_11_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_Q.csv"))
+write.csv(FRCH_storm3_07_11_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_NO3.csv"))
+write.csv(FRCH_storm3_07_11_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_fDOM.csv"))
+write.csv(FRCH_storm3_07_11_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_SPC.csv"))
+write.csv(FRCH_storm3_07_11_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_Turb.csv"))
+write.csv(FRCH_storm3_07_11_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm3_07_11_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_abs.csv"))
+write.csv(FRCH_storm4a_07_15, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15.csv"))
+write.csv(FRCH_storm4a_07_15_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Q.csv"))
+write.csv(FRCH_storm4a_07_15_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_NO3.csv"))
+write.csv(FRCH_storm4a_07_15_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_fDOM.csv"))
+write.csv(FRCH_storm4a_07_15_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_SPC.csv"))
+write.csv(FRCH_storm4a_07_15_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_Turb.csv"))
+write.csv(FRCH_storm4a_07_15_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm4a_07_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_abs.csv"))
+write.csv(FRCH_storm4b_07_17, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17.csv"))
+write.csv(FRCH_storm4b_07_17_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_Q.csv"))
+write.csv(FRCH_storm4b_07_17_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_NO3.csv"))
+write.csv(FRCH_storm4b_07_17_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_fDOM.csv"))
+write.csv(FRCH_storm4b_07_17_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_SPC.csv"))
+write.csv(FRCH_storm4b_07_17_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_Turb.csv"))
+write.csv(FRCH_storm4b_07_17_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm4b_07_17_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_abs.csv"))
+write.csv(FRCH_storm5_08_05, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05.csv"))
+write.csv(FRCH_storm5_08_05_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_Q.csv"))
+write.csv(FRCH_storm5_08_05_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_NO3.csv"))
+write.csv(FRCH_storm5_08_05_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_fDOM.csv"))
+write.csv(FRCH_storm5_08_05_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_SPC.csv"))
+write.csv(FRCH_storm5_08_05_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_Turb.csv"))
+write.csv(FRCH_storm5_08_05_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm5_08_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_abs.csv"))
+write.csv(FRCH_storm6_08_13, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13.csv"))
+write.csv(FRCH_storm6_08_13_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Q.csv"))
+write.csv(FRCH_storm6_08_13_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_NO3.csv"))
+write.csv(FRCH_storm6_08_13_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_fDOM.csv"))
+write.csv(FRCH_storm6_08_13_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_SPC.csv"))
+write.csv(FRCH_storm6_08_13_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_Turb.csv"))
+write.csv(FRCH_storm6_08_13_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm6_08_13_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_abs.csv"))
+write.csv(FRCH_storm7_08_24, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24.csv"))
+write.csv(FRCH_storm7_08_24_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_Q.csv"))
+write.csv(FRCH_storm7_08_24_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_NO3.csv"))
+write.csv(FRCH_storm7_08_24_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_fDOM.csv"))
+write.csv(FRCH_storm7_08_24_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_SPC.csv"))
+write.csv(FRCH_storm7_08_24_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_Turb.csv"))
+write.csv(FRCH_storm7_08_24_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm7_08_24_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_abs.csv"))
+write.csv(FRCH_storm8a_08_26, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26.csv"))
+write.csv(FRCH_storm8a_08_26_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Q.csv"))
+write.csv(FRCH_storm8a_08_26_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_NO3.csv"))
+write.csv(FRCH_storm8a_08_26_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_fDOM.csv"))
+write.csv(FRCH_storm8a_08_26_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_SPC.csv"))
+write.csv(FRCH_storm8a_08_26_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_Turb.csv"))
+write.csv(FRCH_storm8a_08_26_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm8a_08_26_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm8b_08_28_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_abs.csv"))
+write.csv(FRCH_storm9_08_30, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30.csv"))
+write.csv(FRCH_storm9_08_30_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Q.csv"))
+write.csv(FRCH_storm9_08_30_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_NO3.csv"))
+write.csv(FRCH_storm9_08_30_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_fDOM.csv"))
+write.csv(FRCH_storm9_08_30_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_SPC.csv"))
+write.csv(FRCH_storm9_08_30_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_Turb.csv"))
+write.csv(FRCH_storm9_08_30_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm9_08_30_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_abs.csv"))
+write.csv(FRCH_storm10_09_01, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01.csv"))
+write.csv(FRCH_storm10_09_01_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Q.csv"))
+write.csv(FRCH_storm10_09_01_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_NO3.csv"))
+write.csv(FRCH_storm10_09_01_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_fDOM.csv"))
+write.csv(FRCH_storm10_09_01_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_SPC.csv"))
+write.csv(FRCH_storm10_09_01_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_Turb.csv"))
+write.csv(FRCH_storm10_09_01_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm10_09_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_abs.csv"))
-
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_Q.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_NO3.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_fDOM.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_SPC.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_Turb.csv"))
-write.csv(here("Storm_Events", "2018", "FRCH", "FRCH_storm11b_09_24_abs.csv"))
-
-# setwd("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH")
-# 
-# write.csv(FRCH_storm1_06_21, "FRCH_storm1_06_21.csv")
-# write.csv(FRCH_storm1_06_21_Q, "FRCH_storm1_06_21_Q.csv")
-# write.csv(FRCH_storm1_06_21_NO3, "FRCH_storm1_06_21_NO3.csv")
-# write.csv(FRCH_storm1_06_21_fDOM, "FRCH_storm1_06_21_fDOM.csv")
-# write.csv(FRCH_storm1_06_21_SPC, "FRCH_storm1_06_21_SPC.csv")
-# write.csv(FRCH_storm1_06_21_turb, "FRCH_storm1_06_21_Turb.csv")
-# write.csv(FRCH_storm1_06_21_abs, "FRCH_storm1_06_21_abs.csv")
-# 
-# write.csv(FRCH_storm2a_06_30, "FRCH_storm2a_06_30.csv")
-# write.csv(FRCH_storm2a_06_30_Q, "FRCH_storm2a_06_30_Q.csv")
-# write.csv(FRCH_storm2a_06_30_NO3, "FRCH_storm2a_06_30_NO3.csv")
-# write.csv(FRCH_storm2a_06_30_fDOM, "FRCH_storm2a_06_30_fDOM.csv")
-# write.csv(FRCH_storm2a_06_30_SPC, "FRCH_storm2a_06_30_SPC.csv")
-# write.csv(FRCH_storm2a_06_30_turb, "FRCH_storm2a_06_30_Turb.csv")
-# write.csv(FRCH_storm2a_06_30_abs, "FRCH_storm2a_06_30_abs.csv")
-# 
-# 
-# write.csv(FRCH_storm2b_07_05, "FRCH_storm2b_07_05.csv")
-# write.csv(FRCH_storm2b_07_05_Q, "FRCH_storm2b_07_05_Q.csv")
-# write.csv(FRCH_storm2b_07_05_NO3, "FRCH_storm2b_07_05_NO3.csv")
-# write.csv(FRCH_storm2b_07_05_fDOM, "FRCH_storm2b_07_05_fDOM.csv")
-# write.csv(FRCH_storm2b_07_05_SPC, "FRCH_storm2b_07_05_SPC.csv")
-# write.csv(FRCH_storm2b_07_05_turb, "FRCH_storm2b_07_05_Turb.csv")
-# write.csv(FRCH_storm2b_07_05_abs, "FRCH_storm2b_07_05_abs.csv")
-# 
-# write.csv(FRCH_storm3_07_11, "FRCH_storm3_07_11.csv")
-# write.csv(FRCH_storm3_07_11_Q, "FRCH_storm3_07_11_Q.csv")
-# write.csv(FRCH_storm3_07_11_NO3, "FRCH_storm3_07_11_NO3.csv")
-# write.csv(FRCH_storm3_07_11_fDOM, "FRCH_storm3_07_11_fDOM.csv")
-# write.csv(FRCH_storm3_07_11_SPC, "FRCH_storm3_07_11_SPC.csv")
-# write.csv(FRCH_storm3_07_11_turb, "FRCH_storm3_07_11_Turb.csv")
-# write.csv(FRCH_storm3_07_11_abs, "FRCH_storm3_07_11_abs.csv")
-# 
-# write.csv(FRCH_storm4a_07_15, "FRCH_storm4a_07_15.csv")
-# write.csv(FRCH_storm4a_07_15_Q, "FRCH_storm4a_07_15_Q.csv")
-# write.csv(FRCH_storm4a_07_15_NO3, "FRCH_storm4a_07_15_NO3.csv")
-# write.csv(FRCH_storm4a_07_15_fDOM, "FRCH_storm4a_07_15_fDOM.csv")
-# write.csv(FRCH_storm4a_07_15_SPC, "FRCH_storm4a_07_15_SPC.csv")
-# write.csv(FRCH_storm4a_07_15_turb, "FRCH_storm4a_07_15_Turb.csv")
-# write.csv(FRCH_storm4a_07_15_abs, "FRCH_storm4a_07_15_abs.csv")
-# 
-# write.csv(FRCH_storm4b_07_17, "FRCH_storm4b_07_17.csv")
-# write.csv(FRCH_storm4b_07_17_Q, "FRCH_storm4b_07_17_Q.csv")
-# write.csv(FRCH_storm4b_07_17_NO3, "FRCH_storm4b_07_17_NO3.csv")
-# write.csv(FRCH_storm4b_07_17_fDOM, "FRCH_storm4b_07_17_fDOM.csv")
-# write.csv(FRCH_storm4b_07_17_SPC, "FRCH_storm4b_07_17_SPC.csv")
-# write.csv(FRCH_storm4b_07_17_turb, "FRCH_storm4b_07_17_Turb.csv")
-# write.csv(FRCH_storm4b_07_17_abs, "FRCH_storm4b_07_17_abs.csv")
-# 
-# write.csv(FRCH_storm5_08_05, "FRCH_storm5_08_05.csv")
-# write.csv(FRCH_storm5_08_05_Q, "FRCH_storm5_08_05_Q.csv")
-# write.csv(FRCH_storm5_08_05_NO3, "FRCH_storm5_08_05_NO3.csv")
-# write.csv(FRCH_storm5_08_05_fDOM, "FRCH_storm5_08_05_fDOM.csv")
-# write.csv(FRCH_storm5_08_05_SPC, "FRCH_storm5_08_05_SPC.csv")
-# write.csv(FRCH_storm5_08_05_turb, "FRCH_storm5_08_05_Turb.csv")
-# write.csv(FRCH_storm5_08_05_abs, "FRCH_storm5_08_05_abs.csv")
-# 
-# write.csv(FRCH_storm6_08_13, "FRCH_storm6_08_13.csv")
-# write.csv(FRCH_storm6_08_13_Q, "FRCH_storm6_08_13_Q.csv")
-# write.csv(FRCH_storm6_08_13_NO3, "FRCH_storm6_08_13_NO3.csv")
-# write.csv(FRCH_storm6_08_13_fDOM, "FRCH_storm6_08_13_fDOM.csv")
-# write.csv(FRCH_storm6_08_13_SPC, "FRCH_storm6_08_13_SPC.csv")
-# write.csv(FRCH_storm6_08_13_turb, "FRCH_storm6_08_13_Turb.csv")
-# write.csv(FRCH_storm6_08_13_abs, "FRCH_storm6_08_13_abs.csv")
-# 
-# write.csv(FRCH_storm7_08_24, "FRCH_storm7_08_24.csv")
-# write.csv(FRCH_storm7_08_24_Q, "FRCH_storm7_08_24_Q.csv")
-# write.csv(FRCH_storm7_08_24_NO3, "FRCH_storm7_08_24_NO3.csv")
-# write.csv(FRCH_storm7_08_24_fDOM, "FRCH_storm7_08_24_fDOM.csv")
-# write.csv(FRCH_storm7_08_24_SPC, "FRCH_storm7_08_24_SPC.csv")
-# write.csv(FRCH_storm7_08_24_turb, "FRCH_storm7_08_24_Turb.csv")
-# write.csv(FRCH_storm7_08_24_abs, "FRCH_storm7_08_24_abs.csv")
-# 
-# write.csv(FRCH_storm8a_08_26, "FRCH_storm8a_08_26.csv")
-# write.csv(FRCH_storm8a_08_26_Q, "FRCH_storm8a_08_26_Q.csv")
-# write.csv(FRCH_storm8a_08_26_NO3, "FRCH_storm8a_08_26_NO3.csv")
-# write.csv(FRCH_storm8a_08_26_fDOM, "FRCH_storm8a_08_26_fDOM.csv")
-# write.csv(FRCH_storm8a_08_26_SPC, "FRCH_storm8a_08_26_SPC.csv")
-# write.csv(FRCH_storm8a_08_26_turb, "FRCH_storm8a_08_26_Turb.csv")
-# write.csv(FRCH_storm8a_08_26_abs, "FRCH_storm8a_08_26_abs.csv")
-# 
-# write.csv(FRCH_storm8b_08_28, "FRCH_storm8b_08_28.csv")
-# write.csv(FRCH_storm8b_08_28_Q, "FRCH_storm8b_08_28_Q.csv")
-# write.csv(FRCH_storm8b_08_28_NO3, "FRCH_storm8b_08_28_NO3.csv")
-# write.csv(FRCH_storm8b_08_28_fDOM, "FRCH_storm8b_08_28_fDOM.csv")
-# write.csv(FRCH_storm8b_08_28_SPC, "FRCH_storm8b_08_28_SPC.csv")
-# write.csv(FRCH_storm8b_08_28_turb, "FRCH_storm8b_08_28_Turb.csv")
-# write.csv(FRCH_storm8b_08_28_abs, "FRCH_storm8b_08_28_abs.csv")
-# 
-# write.csv(FRCH_storm9_08_30, "FRCH_storm9_08_30.csv")
-# write.csv(FRCH_storm9_08_30_Q, "FRCH_storm9_08_30_Q.csv")
-# write.csv(FRCH_storm9_08_30_NO3, "FRCH_storm9_08_30_NO3.csv")
-# write.csv(FRCH_storm9_08_30_fDOM, "FRCH_storm9_08_30_fDOM.csv")
-# write.csv(FRCH_storm9_08_30_SPC, "FRCH_storm9_08_30_SPC.csv")
-# write.csv(FRCH_storm9_08_30_turb, "FRCH_storm9_08_30_Turb.csv")
-# write.csv(FRCH_storm9_08_30_abs, "FRCH_storm9_08_30_abs.csv")
-# 
-# write.csv(FRCH_storm10_09_01, "FRCH_storm10_09_01.csv")
-# write.csv(FRCH_storm10_09_01_Q, "FRCH_storm10_09_01_Q.csv")
-# write.csv(FRCH_storm10_09_01_NO3, "FRCH_storm10_09_01_NO3.csv")
-# write.csv(FRCH_storm10_09_01_fDOM, "FRCH_storm10_09_01_fDOM.csv")
-# write.csv(FRCH_storm10_09_01_SPC, "FRCH_storm10_09_01_SPC.csv")
-# write.csv(FRCH_storm10_09_01_turb, "FRCH_storm10_09_01_Turb.csv")
-# write.csv(FRCH_storm10_09_01_abs, "FRCH_storm10_09_01_abs.csv")
-# 
-# write.csv(FRCH_storm11a_09_22, "FRCH_storm11a_09_22.csv")
-# write.csv(FRCH_storm11a_09_22_Q, "FRCH_storm11a_09_22_Q.csv")
-# write.csv(FRCH_storm11a_09_22_NO3, "FRCH_storm11a_09_22_NO3.csv")
-# write.csv(FRCH_storm11a_09_22_fDOM, "FRCH_storm11a_09_22_fDOM.csv")
-# write.csv(FRCH_storm11a_09_22_SPC, "FRCH_storm11a_09_22_SPC.csv")
-# write.csv(FRCH_storm11a_09_22_turb, "FRCH_storm11a_09_22_Turb.csv")
-# write.csv(FRCH_storm11a_09_22_abs, "FRCH_storm11a_09_22_abs.csv")
-# 
-# write.csv(FRCH_storm11b_09_24, "FRCH_storm11b_09_24.csv")
-# write.csv(FRCH_storm11b_09_24_Q, "FRCH_storm11b_09_24_Q.csv")
-# write.csv(FRCH_storm11b_09_24_NO3, "FRCH_storm11b_09_24_NO3.csv")
-# write.csv(FRCH_storm11b_09_24_fDOM, "FRCH_storm11b_09_24_fDOM.csv")
-# write.csv(FRCH_storm11b_09_24_SPC, "FRCH_storm11b_09_24_SPC.csv")
-# write.csv(FRCH_storm11b_09_24_turb, "FRCH_storm11b_09_24_Turb.csv")
-# write.csv(FRCH_storm11b_09_24_abs, "FRCH_storm11b_09_24_abs.csv")
+write.csv(FRCH_storm11a_09_22, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22.csv"))
+write.csv(FRCH_storm11a_09_22_Q, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Q.csv"))
+write.csv(FRCH_storm11a_09_22_NO3, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_NO3.csv"))
+write.csv(FRCH_storm11a_09_22_fDOM, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_fDOM.csv"))
+write.csv(FRCH_storm11a_09_22_SPC, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_SPC.csv"))
+write.csv(FRCH_storm11a_09_22_turb, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_Turb.csv"))
+write.csv(FRCH_storm11a_09_22_abs, here("Storm_Events", "2018", "FRCH", "FRCH_storm11a_09_22_abs.csv"))
 
 
 ### Precip Discharge Chem ###
