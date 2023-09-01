@@ -13,33 +13,37 @@ Output: HI csv's for each site for each year
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(reticulate)
-Sys.which("python")
-use_python("/usr/local/bin/python3")
 library(tidyverse)
-options(tz="America/Anchorage")
 library(ggplot2)
 library(gridExtra)
 library(boot)
 library(lubridate)
 
+Sys.which("python")
+use_python("/usr/local/bin/python3")
+
+options(tz="America/Anchorage")
 
 
-
-
-
-
+# install pandas #
 virtualenv_create("r-reticulate")
-
-
 # RETICULATE_PYTHON = "lib/python3.8"
 reticulate::py_config()
 reticulate::py_install("pandas")
+
+reticulate::py_install('pandas', pip = TRUE)
+
+
 ```
 
 
 # Python setup
 ```{python}
+pip install pandas
+pip show pandas
+
 import pickle
 import pandas
 import pandas as pd
