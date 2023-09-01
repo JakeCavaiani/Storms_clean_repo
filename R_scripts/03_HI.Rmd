@@ -1001,110 +1001,89 @@ write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2015", "MOOS", "
 ### Load data to pandas 2018
 ```{python}
 # FRCH #
-FRCH_storm1_06_21_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_Q.csv")
-FRCH_storm1_06_21_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_NO3.csv")
-FRCH_storm1_06_21_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_fDOM.csv")
-FRCH_storm1_06_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_SPC.csv")
-FRCH_storm1_06_21_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_turb.csv")
-FRCH_storm1_06_21_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm1_06_21_abs.csv")
+FRCH_storm1_06_21_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_Q.csv'))
+FRCH_storm1_06_21_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_NO3.csv'))
+FRCH_storm1_06_21_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_fDOM.csv'))
+FRCH_storm1_06_21_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_SPC.csv'))
+FRCH_storm1_06_21_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_turb.csv'))
+FRCH_storm1_06_21_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm1_06_21_abs.csv'))
 
-FRCH_storm2a_06_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_Q.csv")
-FRCH_storm2a_06_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_NO3.csv")
-FRCH_storm2a_06_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_fDOM.csv")
-FRCH_storm2a_06_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_SPC.csv")
-FRCH_storm2a_06_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_turb.csv")
-FRCH_storm2a_06_30_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2a_06_30_abs.csv")
+FRCH_storm2a_06_30_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_Q.csv'))
+FRCH_storm2a_06_30_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_NO3.csv'))
+FRCH_storm2a_06_30_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_fDOM.csv'))
+FRCH_storm2a_06_30_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_SPC.csv'))
+FRCH_storm2a_06_30_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_turb.csv'))
+FRCH_storm2a_06_30_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm2a_06_30_abs.csv'))
 
-FRCH_storm2b_07_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_Q.csv")
-FRCH_storm2b_07_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_NO3.csv")
-FRCH_storm2b_07_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_fDOM.csv")
-FRCH_storm2b_07_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_SPC.csv")
-FRCH_storm2b_07_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_turb.csv")
-FRCH_storm2b_07_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm2b_07_05_abs.csv")
+FRCH_storm3_07_11_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_Q.csv'))
+FRCH_storm3_07_11_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_NO3.csv'))
+FRCH_storm3_07_11_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_fDOM.csv'))
+FRCH_storm3_07_11_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_SPC.csv'))
+FRCH_storm3_07_11_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_turb.csv'))
+FRCH_storm3_07_11_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm3_07_11_abs.csv'))
 
-FRCH_storm3_07_11_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_Q.csv")
-FRCH_storm3_07_11_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_NO3.csv")
-FRCH_storm3_07_11_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_fDOM.csv")
-FRCH_storm3_07_11_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_SPC.csv")
-FRCH_storm3_07_11_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_turb.csv")
-FRCH_storm3_07_11_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm3_07_11_abs.csv")
+FRCH_storm4a_07_15_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_Q.csv'))
+FRCH_storm4a_07_15_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_NO3.csv'))
+FRCH_storm4a_07_15_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_fDOM.csv'))
+FRCH_storm4a_07_15_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_SPC.csv'))
+FRCH_storm4a_07_15_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_turb.csv'))
+FRCH_storm4a_07_15_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4a_07_15_abs.csv'))
 
-FRCH_storm4a_07_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_Q.csv")
-FRCH_storm4a_07_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_NO3.csv")
-FRCH_storm4a_07_15_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_fDOM.csv")
-FRCH_storm4a_07_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_SPC.csv")
-FRCH_storm4a_07_15_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_turb.csv")
-FRCH_storm4a_07_15_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4a_07_15_abs.csv")
+FRCH_storm4b_07_17_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_Q.csv'))
+FRCH_storm4b_07_17_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_NO3.csv'))
+FRCH_storm4b_07_17_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_fDOM.csv'))
+FRCH_storm4b_07_17_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_SPC.csv'))
+FRCH_storm4b_07_17_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_turb.csv'))
+FRCH_storm4b_07_17_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm4b_07_17_abs.csv'))
 
-FRCH_storm4b_07_17_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_Q.csv")
-FRCH_storm4b_07_17_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_NO3.csv")
-FRCH_storm4b_07_17_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_fDOM.csv")
-FRCH_storm4b_07_17_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_SPC.csv")
-FRCH_storm4b_07_17_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_turb.csv")
-FRCH_storm4b_07_17_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm4b_07_17_abs.csv")
+FRCH_storm5_08_05_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_Q.csv'))
+FRCH_storm5_08_05_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_NO3.csv'))
+FRCH_storm5_08_05_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_fDOM.csv'))
+FRCH_storm5_08_05_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_SPC.csv'))
+FRCH_storm5_08_05_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_turb.csv'))
+FRCH_storm5_08_05_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm5_08_05_abs.csv'))
 
-FRCH_storm5_08_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_Q.csv")
-FRCH_storm5_08_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_NO3.csv")
-FRCH_storm5_08_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_fDOM.csv")
-FRCH_storm5_08_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_SPC.csv")
-FRCH_storm5_08_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_turb.csv")
-FRCH_storm5_08_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm5_08_05_abs.csv")
+FRCH_storm6_08_13_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_Q.csv'))
+FRCH_storm6_08_13_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_NO3.csv'))
+FRCH_storm6_08_13_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_fDOM.csv'))
+FRCH_storm6_08_13_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_SPC.csv'))
+FRCH_storm6_08_13_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_turb.csv'))
+FRCH_storm6_08_13_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm6_08_13_abs.csv'))
 
-FRCH_storm6_08_13_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_Q.csv")
-FRCH_storm6_08_13_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_NO3.csv")
-FRCH_storm6_08_13_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_fDOM.csv")
-FRCH_storm6_08_13_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_SPC.csv")
-FRCH_storm6_08_13_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_turb.csv")
-FRCH_storm6_08_13_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm6_08_13_abs.csv")
+FRCH_storm7_08_24_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_Q.csv'))
+FRCH_storm7_08_24_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_NO3.csv'))
+FRCH_storm7_08_24_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_fDOM.csv'))
+FRCH_storm7_08_24_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_SPC.csv'))
+FRCH_storm7_08_24_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_turb.csv'))
+FRCH_storm7_08_24_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm7_08_24_abs.csv'))
 
-FRCH_storm7_08_24_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_Q.csv")
-FRCH_storm7_08_24_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_NO3.csv")
-FRCH_storm7_08_24_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_fDOM.csv")
-FRCH_storm7_08_24_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_SPC.csv")
-FRCH_storm7_08_24_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_turb.csv")
-FRCH_storm7_08_24_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm7_08_24_abs.csv")
+FRCH_storm8a_08_26_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_Q.csv'))
+FRCH_storm8a_08_26_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_NO3.csv'))
+FRCH_storm8a_08_26_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_fDOM.csv'))
+FRCH_storm8a_08_26_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_SPC.csv'))
+FRCH_storm8a_08_26_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_turb.csv'))
+FRCH_storm8a_08_26_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm8a_08_26_abs.csv'))
 
-FRCH_storm8a_08_26_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_Q.csv")
-FRCH_storm8a_08_26_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_NO3.csv")
-FRCH_storm8a_08_26_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_fDOM.csv")
-FRCH_storm8a_08_26_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_SPC.csv")
-FRCH_storm8a_08_26_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_turb.csv")
-FRCH_storm8a_08_26_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8a_08_26_abs.csv")
+FRCH_storm9_08_30_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_Q.csv'))
+FRCH_storm9_08_30_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_NO3.csv'))
+FRCH_storm9_08_30_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_fDOM.csv'))
+FRCH_storm9_08_30_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_SPC.csv'))
+FRCH_storm9_08_30_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_turb.csv'))
+FRCH_storm9_08_30_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm9_08_30_abs.csv'))
 
-FRCH_storm8b_08_28_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_Q.csv")
-FRCH_storm8b_08_28_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_NO3.csv")
-FRCH_storm8b_08_28_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_fDOM.csv")
-FRCH_storm8b_08_28_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_SPC.csv")
-FRCH_storm8b_08_28_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_turb.csv")
-FRCH_storm8b_08_28_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm8b_08_28_abs.csv")
+FRCH_storm10_09_01_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_Q.csv'))
+FRCH_storm10_09_01_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_NO3.csv'))
+FRCH_storm10_09_01_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_fDOM.csv'))
+FRCH_storm10_09_01_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_SPC.csv'))
+FRCH_storm10_09_01_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_turb.csv'))
+FRCH_storm10_09_01_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm10_09_01_abs.csv'))
 
-FRCH_storm9_08_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_Q.csv")
-FRCH_storm9_08_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_NO3.csv")
-FRCH_storm9_08_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_fDOM.csv")
-FRCH_storm9_08_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_SPC.csv")
-FRCH_storm9_08_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_turb.csv")
-FRCH_storm9_08_30_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm9_08_30_abs.csv")
-
-FRCH_storm10_09_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_Q.csv")
-FRCH_storm10_09_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_NO3.csv")
-FRCH_storm10_09_01_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_fDOM.csv")
-FRCH_storm10_09_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_SPC.csv")
-FRCH_storm10_09_01_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_turb.csv")
-FRCH_storm10_09_01_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm10_09_01_abs.csv")
-
-FRCH_storm11a_09_22_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_Q.csv")
-FRCH_storm11a_09_22_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_NO3.csv")
-FRCH_storm11a_09_22_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_fDOM.csv")
-FRCH_storm11a_09_22_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_SPC.csv")
-FRCH_storm11a_09_22_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_turb.csv")
-FRCH_storm11a_09_22_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11a_09_22_abs.csv")
-
-FRCH_storm11b_09_24_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_Q.csv")
-FRCH_storm11b_09_24_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_NO3.csv")
-FRCH_storm11b_09_24_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_fDOM.csv")
-FRCH_storm11b_09_24_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_SPC.csv")
-FRCH_storm11b_09_24_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_turb.csv")
-FRCH_storm11b_09_24_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/FRCH/FRCH_storm11b_09_24_abs.csv")
+FRCH_storm11a_09_22_Q = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_Q.csv'))
+FRCH_storm11a_09_22_NO3 = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_NO3.csv'))
+FRCH_storm11a_09_22_fDOM = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_fDOM.csv'))
+FRCH_storm11a_09_22_SPC = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_SPC.csv'))
+FRCH_storm11a_09_22_turb = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_turb.csv'))
+FRCH_storm11a_09_22_abs = pd.read_csv(here('Storm_events/2018/FRCH/FRCH_storm11a_09_22_abs.csv'))
 
 
 ```
@@ -1124,11 +1103,6 @@ FRCH_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_Q['va
 FRCH_storm2a_06_30_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm2a_06_30_NO3 = hysteresisMetrics(FRCH_storm2a_06_30_Q, FRCH_storm2a_06_30_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-FRCH_storm2b_07_05_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm2b_07_05_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm2b_07_05_NO3 = hysteresisMetrics(FRCH_storm2b_07_05_Q, FRCH_storm2b_07_05_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm3_07_11_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm3_07_11_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1165,11 +1139,6 @@ FRCH_storm8a_08_26_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm8a_08_26_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm8a_08_26_NO3 = hysteresisMetrics(FRCH_storm8a_08_26_Q, FRCH_storm8a_08_26_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm8b_08_28_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm8b_08_28_NO3 = hysteresisMetrics(FRCH_storm8b_08_28_Q, FRCH_storm8b_08_28_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 FRCH_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm9_08_30_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -1185,11 +1154,6 @@ FRCH_storm11a_09_22_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm11a_09_22_N
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm11a_09_22_NO3 = hysteresisMetrics(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm11b_09_24_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm11b_09_24_NO3 = hysteresisMetrics(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 ## fDOM ##
 FRCH_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm1_06_21_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm1_06_21_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1200,11 +1164,6 @@ FRCH_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_Q['va
 FRCH_storm2a_06_30_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm2a_06_30_fDOM = hysteresisMetrics(FRCH_storm2a_06_30_Q, FRCH_storm2a_06_30_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-FRCH_storm2b_07_05_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm2b_07_05_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm2b_07_05_fDOM = hysteresisMetrics(FRCH_storm2b_07_05_Q, FRCH_storm2b_07_05_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm3_07_11_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm3_07_11_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1241,11 +1200,6 @@ FRCH_storm8a_08_26_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm8a_08_26_fD
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm8a_08_26_fDOM = hysteresisMetrics(FRCH_storm8a_08_26_Q, FRCH_storm8a_08_26_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm8b_08_28_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm8b_08_28_fDOM = hysteresisMetrics(FRCH_storm8b_08_28_Q, FRCH_storm8b_08_28_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 FRCH_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm9_08_30_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -1261,10 +1215,6 @@ FRCH_storm11a_09_22_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm11a_09_22_
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm11a_09_22_fDOM = hysteresisMetrics(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm11b_09_24_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm11b_09_24_fDOM = hysteresisMetrics(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 # SPC ##
 FRCH_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1276,11 +1226,6 @@ FRCH_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_Q['va
 FRCH_storm2a_06_30_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm2a_06_30_SPC = hysteresisMetrics(FRCH_storm2a_06_30_Q, FRCH_storm2a_06_30_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-FRCH_storm2b_07_05_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm2b_07_05_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm2b_07_05_SPC = hysteresisMetrics(FRCH_storm2b_07_05_Q, FRCH_storm2b_07_05_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm3_07_11_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm3_07_11_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1317,10 +1262,6 @@ FRCH_storm8a_08_26_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm8a_08_26_SPC
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm8a_08_26_SPC = hysteresisMetrics(FRCH_storm8a_08_26_Q, FRCH_storm8a_08_26_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm8b_08_28_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm8b_08_28_SPC = hysteresisMetrics(FRCH_storm8b_08_28_Q, FRCH_storm8b_08_28_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm9_08_30_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1337,10 +1278,6 @@ FRCH_storm11a_09_22_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm11a_09_22_S
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm11a_09_22_SPC = hysteresisMetrics(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm11b_09_24_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm11b_09_24_SPC = hysteresisMetrics(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 # turb ##
 FRCH_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1353,10 +1290,6 @@ FRCH_storm2a_06_30_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_tu
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm2a_06_30_turb = hysteresisMetrics(FRCH_storm2a_06_30_Q, FRCH_storm2a_06_30_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm2b_07_05_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm2b_07_05_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm2b_07_05_turb = hysteresisMetrics(FRCH_storm2b_07_05_Q, FRCH_storm2b_07_05_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm3_07_11_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm3_07_11_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1393,11 +1326,6 @@ FRCH_storm8a_08_26_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm8a_08_26_tu
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm8a_08_26_turb = hysteresisMetrics(FRCH_storm8a_08_26_Q, FRCH_storm8a_08_26_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm8b_08_28_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm8b_08_28_turb = hysteresisMetrics(FRCH_storm8b_08_28_Q, FRCH_storm8b_08_28_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 FRCH_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm9_08_30_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -1413,10 +1341,6 @@ FRCH_storm11a_09_22_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm11a_09_22_
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm11a_09_22_turb = hysteresisMetrics(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm11b_09_24_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm11b_09_24_turb = hysteresisMetrics(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 ## ABS ##
 FRCH_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1429,10 +1353,6 @@ FRCH_storm2a_06_30_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm2a_06_30_abs
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm2a_06_30_abs = hysteresisMetrics(FRCH_storm2a_06_30_Q, FRCH_storm2a_06_30_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm2b_07_05_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm2b_07_05_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm2b_07_05_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm2b_07_05_abs = hysteresisMetrics(FRCH_storm2b_07_05_Q, FRCH_storm2b_07_05_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm3_07_11_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm3_07_11_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm3_07_11_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1469,10 +1389,6 @@ FRCH_storm8a_08_26_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm8a_08_26_abs
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm8a_08_26_abs = hysteresisMetrics(FRCH_storm8a_08_26_Q, FRCH_storm8a_08_26_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm8b_08_28_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm8b_08_28_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm8b_08_28_abs = hysteresisMetrics(FRCH_storm8b_08_28_Q, FRCH_storm8b_08_28_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 FRCH_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 FRCH_storm9_08_30_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm9_08_30_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1489,10 +1405,6 @@ FRCH_storm11a_09_22_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm11a_09_22_a
 timespacing = 15 # 15 minutes between records
 hysdict_FRCH_storm11a_09_22_abs = hysteresisMetrics(FRCH_storm11a_09_22_Q, FRCH_storm11a_09_22_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-FRCH_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-FRCH_storm11b_09_24_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm11b_09_24_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_FRCH_storm11b_09_24_abs = hysteresisMetrics(FRCH_storm11b_09_24_Q, FRCH_storm11b_09_24_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 ```
 
@@ -1506,8 +1418,7 @@ FRCH.hyst.results.list = list(py$hysdict_FRCH_storm1_06_21_NO3,
                               py$hysdict_FRCH_storm1_06_21_abs,
                               py$hysdict_FRCH_storm2a_06_30_NO3,
                               py$hysdict_FRCH_storm2a_06_30_abs,
-                              py$hysdict_FRCH_storm2b_07_05_NO3,
-                              py$hysdict_FRCH_storm2b_07_05_abs,
+                              
                               py$hysdict_FRCH_storm3_07_11_NO3,
                               py$hysdict_FRCH_storm3_07_11_abs,
                               py$hysdict_FRCH_storm4a_07_15_NO3,
@@ -1533,9 +1444,7 @@ FRCH.hyst.results.list = list(py$hysdict_FRCH_storm1_06_21_NO3,
                               py$hysdict_FRCH_storm8a_08_26_SPC,
                               py$hysdict_FRCH_storm8a_08_26_turb,
                               
-                              py$hysdict_FRCH_storm8b_08_28_fDOM,
-                              py$hysdict_FRCH_storm8b_08_28_SPC,
-                              py$hysdict_FRCH_storm8b_08_28_turb,
+                             
                               
                               py$hysdict_FRCH_storm9_08_30_fDOM,
                               py$hysdict_FRCH_storm9_08_30_SPC,
@@ -1585,8 +1494,7 @@ FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_06_21_NO3",
                                   "FRCH_storm1_06_21_abs",
                                   "FRCH_storm2a_06_30_NO3",
                                   "FRCH_storm2a_06_30_abs",
-                                  "FRCH_storm2b_07_05_NO3",
-                                  "FRCH_storm2b_07_05_abs",
+                                  
                                   "FRCH_storm3_07_11_NO3",
                                   "FRCH_storm3_07_11_abs",
                                   "FRCH_storm4a_07_15_NO3",
@@ -1607,9 +1515,7 @@ FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_06_21_NO3",
                                   "FRCH_storm8a_08_26_fDOM",
                                   "FRCH_storm8a_08_26_SPC",
                                   "FRCH_storm8a_08_26_turb",
-                                  "FRCH_storm8b_08_28_fDOM",
-                                  "FRCH_storm8b_08_28_SPC",
-                                  "FRCH_storm8b_08_28_turb",
+                                  
                                   "FRCH_storm9_08_30_fDOM",
                                   "FRCH_storm9_08_30_SPC",
                                   "FRCH_storm9_08_30_turb",
@@ -1622,7 +1528,7 @@ FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_06_21_NO3",
 
 FRCH.hyst.results.df$site.ID = "FRCH"
 
-write.csv(FRCH.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.hyst.results.csv")
+write.csv(FRCH.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2018", "FRCH", "FRCH.hyst.results.csv"))
 
 # plot HI by normalized discharge
 HIs.Q.list =list()
@@ -1662,8 +1568,7 @@ FRCH.HI.df$storm.ID = c(rep("FRCH_storm1_06_21_NO3", 50),
                         rep("FRCH_storm1_06_21_abs", 50),
                         rep("FRCH_storm2a_06_30_NO3", 50),
                         rep("FRCH_storm2a_06_30_abs", 50),
-                        rep("FRCH_storm2b_07_05_NO3", 50),
-                        rep("FRCH_storm2b_07_05_abs", 50),
+                        
                         rep("FRCH_storm3_07_11_NO3", 50),
                         rep("FRCH_storm3_07_11_abs", 50),
                         rep("FRCH_storm4a_07_15_NO3", 50),
@@ -1684,9 +1589,7 @@ FRCH.HI.df$storm.ID = c(rep("FRCH_storm1_06_21_NO3", 50),
                         rep("FRCH_storm8a_08_26_fDOM", 50),
                         rep("FRCH_storm8a_08_26_SPC", 50),
                         rep("FRCH_storm8a_08_26_turb", 50),
-                        rep("FRCH_storm8b_08_28_fDOM", 50),
-                        rep("FRCH_storm8b_08_28_SPC", 50),
-                        rep("FRCH_storm8b_08_28_turb", 50),
+                        
                         rep("FRCH_storm9_08_30_fDOM", 50),
                         rep("FRCH_storm9_08_30_SPC", 50),
                         rep("FRCH_storm9_08_30_turb", 50),
@@ -1716,8 +1619,12 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/FRCH/FRCH.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(FRCH.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.csv")
+
+ggsave(here("plots", "HI_plots", "2018", "FRCH", "FRCH.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(FRCH.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "FRCH", "FRCH.HI.df.csv"))
+
 
 FRCH.HI.df$date <- as.Date(with(FRCH.HI.df, paste(month, day, sep = "-")), "%m-%d")
 FRCH.HI.df$doy <- yday(FRCH.HI.df$date) 
@@ -1731,8 +1638,12 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/FRCH/FRCH.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(FRCH.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv")
+
+ggsave(here("plots", "HI_plots", "2018", "FRCH", "FRCH.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(FRCH.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "FRCH", "FRCH.HI.df.doy.csv"))
+
 
 ```
 
