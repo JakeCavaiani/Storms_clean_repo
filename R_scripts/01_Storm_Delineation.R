@@ -768,9 +768,8 @@ FRCH_storm7_09_13_abs = subset(FRCH_storm7_09_13, select = c("datetimeAK","ABS_2
 names(FRCH_storm7_09_13_abs) = c("valuedatetime","datavalue")
 
 
-
-write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01.csv"))
-write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01_Q.csv"))
+write.csv(FRCH_storm1_07_01, here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01.csv"))
+write.csv(FRCH_storm1_07_01_Q, here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01_Q.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01_NO3.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01_fDOM.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm1_07_01_SPC.csv"))
@@ -850,7 +849,7 @@ write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm7_09_13_turb.csv"))
 write.csv(here("Storm_Events", "2015", "FRCH", "FRCH_storm7_09_13_abs.csv"))
 
 ##TKH : Delete the below if no longer needed
-# write.csv(FRCH_storm1_07_01, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01.csv")
+write.csv(FRCH_storm1_07_01, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01.csv")
 # write.csv(FRCH_storm1_07_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01_Q.csv")
 # write.csv(FRCH_storm1_07_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01_NO3.csv")
 # write.csv(FRCH_storm1_07_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH/FRCH_storm1_07_01_fDOM.csv")

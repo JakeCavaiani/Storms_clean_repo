@@ -21,7 +21,7 @@ library(lattice)
 library(nlme)
 library(geosphere)
 library(car)
-library(EcoHydRology)
+
 library(dplyr)
 library(here)
 
