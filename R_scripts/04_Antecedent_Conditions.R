@@ -47,7 +47,7 @@ library(SLOPE)
 library(wesanderson)
 library(ggpubr)
 library(dataRetrieval)
-setwd("~/Documents/Storms_clean_repo")
+
 # Import data #
 # 2015
 FRCH_HI_doy_df_2015 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2015", "FRCH","FRCH.HI.df.doy.csv"))
@@ -143,7 +143,7 @@ HI.dat_2022$year <- "2022"
 
 
 
-#HI.dat <- HI.dat_2018
+HI.dat <- HI.dat_2015
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -334,11 +334,10 @@ FRCH_storms$storm.num = c(rep("storm1", 287),
                           rep("storm2", 331),
                           rep("storm3", 383),
                           rep("storm4", 299),
-                          rep("storm5a", 173),
-                          rep("storm5b", 275),
-                          rep("storm6a", 295),
-                          rep("storm6b", 135),
-                          rep("storm6c", 864),
+                          rep("storm5a", 449),
+                          
+                          rep("storm6a", 1295),
+                          
                           rep("storm7", 240))
 
 FRCH_storms$datetimeAK <- as.POSIXct(FRCH_storms$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
@@ -562,9 +561,8 @@ HI.frch.2015$date <- as.Date(HI.frch.2015$doy, origin = "2015-01-01")
 origin_date <- as.Date("2015-05-12")
 HI.frch.2015$TimeSinceChena <- julian(HI.frch.2015$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.frch.2015.csv"))
+write.csv(HI.frch.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.frch.2015.csv"))
 
-# write.csv(HI.frch.2015, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2015/HI.frch.2015.csv")
 
 ### MOOS ####
 MOOSstorm_file_list <- list.files(path = "All_sites/", 
