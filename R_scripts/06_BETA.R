@@ -679,7 +679,7 @@ for(i in 1:length(storm_list_beta)){
 #  organize storm data by site and solute # 5 for each storm 
 CARI_storm_list_beta = storm_list_beta[c(1:80)] #80
 FRCH_storm_list_beta = storm_list_beta[c(1:72)] #72
-MOOS_storm_list_beta = storm_list_beta[c(171:260)] #90
+MOOS_storm_list_beta = storm_list_beta[c(73:126)] #54
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
 CARI_fDOM_storm_list_beta = CARI_storm_list_beta[c(grep("fDOM", names(CARI_storm_list_beta)))]
@@ -865,22 +865,19 @@ frch.2018.ci <- FRCH_NO3_storm_ascending %>%
   group_modify(~ parameters::model_parameters(stats::lm(NO3.norm ~ Q.norm, data = .x)))
 
 # MOOS # 
-MOOS_NO3_storm$storm.ID = c(rep("storm1", 58),
-                            rep("storm10", 432),
-                            rep("storm11a", 90),
-                            rep("storm11b", 9),
-                            rep("storm12", 301),
-                            rep("storm2a", 75),
-                            rep("storm2b", 145),
-                            rep("storm2c", 183),
+MOOS_NO3_storm$storm.ID = c(rep("storm10", 432),
+                            rep("storm11a", 420),
+                            
+                            rep("storm2a", 412),
+                            
                             rep("storm3", 198),
                             
                             rep("storm5", 282),
-                            rep("storm6", 333),
+                            rep("storm6", 335),
                             rep("storm7", 176),
-                            rep("storm8a", 78),
-                            rep("storm8b", 100),
-                            rep("storm9", 106))
+                            rep("storm8a", 181),
+                            
+                            rep("storm9", 109))
 
 names(MOOS_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
 MOOS_NO3_storm$site.ID <- "MOOS"
