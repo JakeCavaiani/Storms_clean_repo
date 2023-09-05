@@ -1649,151 +1649,86 @@ write.csv(FRCH.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "FRCH", "
 
 ```{python}
 # MOOS #
-MOOS_storm1_06_21_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_Q.csv")
-MOOS_storm1_06_21_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_NO3.csv")
-MOOS_storm1_06_21_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_fDOM.csv")
-MOOS_storm1_06_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_SPC.csv")
-MOOS_storm1_06_21_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_turb.csv")
-MOOS_storm1_06_21_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm1_06_21_abs.csv")
+MOOS_storm2a_06_30_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_Q.csv'))
+MOOS_storm2a_06_30_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_NO3.csv'))
+MOOS_storm2a_06_30_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_fDOM.csv'))
+MOOS_storm2a_06_30_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_SPC.csv'))
+MOOS_storm2a_06_30_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_Turb.csv'))
+MOOS_storm2a_06_30_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm2a_06_30_abs.csv'))
 
-MOOS_storm2a_06_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_Q.csv")
-MOOS_storm2a_06_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_NO3.csv")
-MOOS_storm2a_06_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_fDOM.csv")
-MOOS_storm2a_06_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_SPC.csv")
-MOOS_storm2a_06_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_Turb.csv")
-MOOS_storm2a_06_30_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2a_06_30_abs.csv")
+MOOS_storm3_07_10_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_Q.csv'))
+MOOS_storm3_07_10_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_NO3.csv'))
+MOOS_storm3_07_10_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_fDOM.csv'))
+MOOS_storm3_07_10_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_SPC.csv'))
+MOOS_storm3_07_10_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_Turb.csv'))
+MOOS_storm3_07_10_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm3_07_10_abs.csv'))
 
-MOOS_storm2b_07_02_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_Q.csv")
-MOOS_storm2b_07_02_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_NO3.csv")
-MOOS_storm2b_07_02_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_fDOM.csv")
-MOOS_storm2b_07_02_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_SPC.csv")
-MOOS_storm2b_07_02_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_Turb.csv")
-MOOS_storm2b_07_02_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2b_07_02_abs.csv")
+MOOS_storm5_08_05_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_Q.csv'))
+MOOS_storm5_08_05_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_NO3.csv'))
+MOOS_storm5_08_05_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_fDOM.csv'))
+MOOS_storm5_08_05_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_SPC.csv'))
+MOOS_storm5_08_05_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_Turb.csv'))
+MOOS_storm5_08_05_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm5_08_05_abs.csv'))
 
-MOOS_storm2c_07_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_Q.csv")
-MOOS_storm2c_07_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_NO3.csv")
-MOOS_storm2c_07_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_fDOM.csv")
-MOOS_storm2c_07_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_SPC.csv")
-MOOS_storm2c_07_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_Turb.csv")
-MOOS_storm2c_07_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm2c_07_05_abs.csv")
+MOOS_storm6_08_13_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_Q.csv'))
+MOOS_storm6_08_13_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_NO3.csv'))
+MOOS_storm6_08_13_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_fDOM.csv'))
+MOOS_storm6_08_13_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_SPC.csv'))
+MOOS_storm6_08_13_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_Turb.csv'))
+MOOS_storm6_08_13_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm6_08_13_abs.csv'))
 
-MOOS_storm3_07_10_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_Q.csv")
-MOOS_storm3_07_10_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_NO3.csv")
-MOOS_storm3_07_10_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_fDOM.csv")
-MOOS_storm3_07_10_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_SPC.csv")
-MOOS_storm3_07_10_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_Turb.csv")
-MOOS_storm3_07_10_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm3_07_10_abs.csv")
+MOOS_storm7_08_23_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_Q.csv'))
+MOOS_storm7_08_23_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_NO3.csv'))
+MOOS_storm7_08_23_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_fDOM.csv'))
+MOOS_storm7_08_23_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_SPC.csv'))
+MOOS_storm7_08_23_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_Turb.csv'))
+MOOS_storm7_08_23_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm7_08_23_abs.csv'))
 
-# MOOS_storm4_07_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm4_07_15_Q.csv")
-# MOOS_storm4_07_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm4_07_15_NO3.csv")
-# MOOS_storm4_07_15_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm4_07_15_fDOM.csv")
-# MOOS_storm4_07_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm4_07_15_SPC.csv")
-# MOOS_storm4_07_15_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm4_07_15_turb.csv")
+MOOS_storm8a_08_26_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_Q.csv'))
+MOOS_storm8a_08_26_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_NO3.csv'))
+MOOS_storm8a_08_26_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_fDOM.csv'))
+MOOS_storm8a_08_26_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_SPC.csv'))
+MOOS_storm8a_08_26_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_Turb.csv'))
+MOOS_storm8a_08_26_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm8a_08_26_abs.csv'))
 
-MOOS_storm5_08_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_Q.csv")
-MOOS_storm5_08_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_NO3.csv")
-MOOS_storm5_08_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_fDOM.csv")
-MOOS_storm5_08_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_SPC.csv")
-MOOS_storm5_08_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_Turb.csv")
-MOOS_storm5_08_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm5_08_05_abs.csv")
+MOOS_storm9_08_30_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_Q.csv'))
+MOOS_storm9_08_30_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_NO3.csv'))
+MOOS_storm9_08_30_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_fDOM.csv'))
+MOOS_storm9_08_30_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_SPC.csv'))
+MOOS_storm9_08_30_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_Turb.csv'))
+MOOS_storm9_08_30_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm9_08_30_abs.csv'))
 
-MOOS_storm6_08_13_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_Q.csv")
-MOOS_storm6_08_13_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_NO3.csv")
-MOOS_storm6_08_13_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_fDOM.csv")
-MOOS_storm6_08_13_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_SPC.csv")
-MOOS_storm6_08_13_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_Turb.csv")
-MOOS_storm6_08_13_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm6_08_13_abs.csv")
+MOOS_storm10_09_01_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_Q.csv'))
+MOOS_storm10_09_01_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_NO3.csv'))
+MOOS_storm10_09_01_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_fDOM.csv'))
+MOOS_storm10_09_01_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_SPC.csv'))
+MOOS_storm10_09_01_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_Turb.csv'))
+MOOS_storm10_09_01_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm10_09_01_abs.csv'))
 
-MOOS_storm7_08_23_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_Q.csv")
-MOOS_storm7_08_23_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_NO3.csv")
-MOOS_storm7_08_23_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_fDOM.csv")
-MOOS_storm7_08_23_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_SPC.csv")
-MOOS_storm7_08_23_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_Turb.csv")
-MOOS_storm7_08_23_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm7_08_23_Turb.csv")
-
-MOOS_storm8a_08_26_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_Q.csv")
-MOOS_storm8a_08_26_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_NO3.csv")
-MOOS_storm8a_08_26_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_fDOM.csv")
-MOOS_storm8a_08_26_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_SPC.csv")
-MOOS_storm8a_08_26_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_Turb.csv")
-MOOS_storm8a_08_26_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8a_08_26_abs.csv")
-
-MOOS_storm8b_08_28_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_Q.csv")
-MOOS_storm8b_08_28_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_NO3.csv")
-MOOS_storm8b_08_28_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_fDOM.csv")
-MOOS_storm8b_08_28_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_SPC.csv")
-MOOS_storm8b_08_28_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_Turb.csv")
-MOOS_storm8b_08_28_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm8b_08_28_abs.csv")
-
-MOOS_storm9_08_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_Q.csv")
-MOOS_storm9_08_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_NO3.csv")
-MOOS_storm9_08_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_fDOM.csv")
-MOOS_storm9_08_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_SPC.csv")
-MOOS_storm9_08_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_Turb.csv")
-MOOS_storm9_08_30_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm9_08_30_abs.csv")
-
-MOOS_storm10_09_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_Q.csv")
-MOOS_storm10_09_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_NO3.csv")
-MOOS_storm10_09_01_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_fDOM.csv")
-MOOS_storm10_09_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_SPC.csv")
-MOOS_storm10_09_01_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_Turb.csv")
-MOOS_storm10_09_01_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm10_09_01_abs.csv")
-
-MOOS_storm11a_09_22_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_Q.csv")
-MOOS_storm11a_09_22_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_NO3.csv")
-MOOS_storm11a_09_22_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_fDOM.csv")
-MOOS_storm11a_09_22_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_SPC.csv")
-MOOS_storm11a_09_22_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_Turb.csv")
-MOOS_storm11a_09_22_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11a_09_22_abs.csv")
-
-MOOS_storm11b_09_24_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_Q.csv")
-MOOS_storm11b_09_24_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_NO3.csv")
-MOOS_storm11b_09_24_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_fDOM.csv")
-MOOS_storm11b_09_24_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_SPC.csv")
-MOOS_storm11b_09_24_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_Turb.csv")
-MOOS_storm11b_09_24_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm11b_09_24_abs.csv")
-
-MOOS_storm12_09_25_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_Q.csv")
-MOOS_storm12_09_25_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_NO3.csv")
-MOOS_storm12_09_25_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_fDOM.csv")
-MOOS_storm12_09_25_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_SPC.csv")
-MOOS_storm12_09_25_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_Turb.csv")
-MOOS_storm12_09_25_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/MOOS/MOOS_storm12_09_25_abs.csv")
+MOOS_storm11a_09_22_Q = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_Q.csv'))
+MOOS_storm11a_09_22_NO3 = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_NO3.csv'))
+MOOS_storm11a_09_22_fDOM = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_fDOM.csv'))
+MOOS_storm11a_09_22_SPC = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_SPC.csv'))
+MOOS_storm11a_09_22_turb = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_Turb.csv'))
+MOOS_storm11a_09_22_abs = pd.read_csv(here('Storm_events/2018/MOOS/MOOS_storm11a_09_22_abs.csv'))
 
 ```
 
 MOOS_storms
 ```{python}
 ## NO3 ##
-MOOS_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm1_06_21_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm1_06_21_NO3 = hysteresisMetrics(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm2a_06_30_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_06_30_NO3 = hysteresisMetrics(MOOS_storm2a_06_30_Q, MOOS_storm2a_06_30_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_07_02_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_07_02_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_07_02_NO3 = hysteresisMetrics(MOOS_storm2b_07_02_Q, MOOS_storm2b_07_02_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2c_07_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2c_07_05_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2c_07_05_NO3 = hysteresisMetrics(MOOS_storm2c_07_05_Q, MOOS_storm2c_07_05_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm3_07_10_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_07_10_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm3_07_10_NO3 = hysteresisMetrics(MOOS_storm3_07_10_Q, MOOS_storm3_07_10_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-# MOOS_storm4_07_15_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# MOOS_storm4_07_15_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# timespacing = 15 # 15 minutes between records
-# hysdict_MOOS_storm4_07_15_NO3 = hysteresisMetrics(MOOS_storm4_07_15_Q, MOOS_storm4_07_15_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm5_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm5_08_05_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1815,11 +1750,6 @@ MOOS_storm8a_08_26_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm8a_08_26_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm8a_08_26_NO3 = hysteresisMetrics(MOOS_storm8a_08_26_Q, MOOS_storm8a_08_26_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm8b_08_28_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm8b_08_28_NO3 = hysteresisMetrics(MOOS_storm8b_08_28_Q, MOOS_storm8b_08_28_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm9_08_30_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -1835,46 +1765,18 @@ MOOS_storm11a_09_22_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm11a_09_22_N
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm11a_09_22_NO3 = hysteresisMetrics(MOOS_storm11a_09_22_Q, MOOS_storm11a_09_22_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm11b_09_24_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm11b_09_24_NO3 = hysteresisMetrics(MOOS_storm11b_09_24_Q, MOOS_storm11b_09_24_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm12_09_25_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm12_09_25_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm12_09_25_NO3 = hysteresisMetrics(MOOS_storm12_09_25_Q, MOOS_storm12_09_25_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 ## fDOM ##
-MOOS_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm1_06_21_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm1_06_21_fDOM = hysteresisMetrics(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm2a_06_30_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_06_30_fDOM = hysteresisMetrics(MOOS_storm2a_06_30_Q, MOOS_storm2a_06_30_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_07_02_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_07_02_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_07_02_fDOM = hysteresisMetrics(MOOS_storm2b_07_02_Q, MOOS_storm2b_07_02_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2c_07_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2c_07_05_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2c_07_05_fDOM = hysteresisMetrics(MOOS_storm2c_07_05_Q, MOOS_storm2c_07_05_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm3_07_10_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_07_10_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm3_07_10_fDOM = hysteresisMetrics(MOOS_storm3_07_10_Q, MOOS_storm3_07_10_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-# MOOS_storm4_07_15_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# MOOS_storm4_07_15_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# timespacing = 15 # 15 minutes between records
-# hysdict_MOOS_storm4_07_15_fDOM = hysteresisMetrics(MOOS_storm4_07_15_Q, MOOS_storm4_07_15_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm5_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm5_08_05_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1896,10 +1798,6 @@ MOOS_storm8a_08_26_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm8a_08_26_fD
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm8a_08_26_fDOM = hysteresisMetrics(MOOS_storm8a_08_26_Q, MOOS_storm8a_08_26_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm8b_08_28_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm8b_08_28_fDOM = hysteresisMetrics(MOOS_storm8b_08_28_Q, MOOS_storm8b_08_28_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm9_08_30_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1916,46 +1814,17 @@ MOOS_storm11a_09_22_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm11a_09_22_
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm11a_09_22_fDOM = hysteresisMetrics(MOOS_storm11a_09_22_Q, MOOS_storm11a_09_22_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm11b_09_24_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm11b_09_24_fDOM = hysteresisMetrics(MOOS_storm11b_09_24_Q, MOOS_storm11b_09_24_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm12_09_25_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm12_09_25_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm12_09_25_fDOM = hysteresisMetrics(MOOS_storm12_09_25_Q, MOOS_storm12_09_25_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 ## SPC ##
-MOOS_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm1_06_21_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm1_06_21_SPC = hysteresisMetrics(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm2a_06_30_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_06_30_SPC = hysteresisMetrics(MOOS_storm2a_06_30_Q, MOOS_storm2a_06_30_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_07_02_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_07_02_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_07_02_SPC = hysteresisMetrics(MOOS_storm2b_07_02_Q, MOOS_storm2b_07_02_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2c_07_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2c_07_05_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2c_07_05_SPC = hysteresisMetrics(MOOS_storm2c_07_05_Q, MOOS_storm2c_07_05_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm3_07_10_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_07_10_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm3_07_10_SPC = hysteresisMetrics(MOOS_storm3_07_10_Q, MOOS_storm3_07_10_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-# MOOS_storm4_07_15_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# MOOS_storm4_07_15_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# timespacing = 15 # 15 minutes between records
-# hysdict_MOOS_storm4_07_15_SPC = hysteresisMetrics(MOOS_storm4_07_15_Q, MOOS_storm4_07_15_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm5_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm5_08_05_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1977,10 +1846,6 @@ MOOS_storm8a_08_26_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm8a_08_26_SPC
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm8a_08_26_SPC = hysteresisMetrics(MOOS_storm8a_08_26_Q, MOOS_storm8a_08_26_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm8b_08_28_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm8b_08_28_SPC = hysteresisMetrics(MOOS_storm8b_08_28_Q, MOOS_storm8b_08_28_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm9_08_30_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -1997,46 +1862,16 @@ MOOS_storm11a_09_22_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm11a_09_22_S
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm11a_09_22_SPC = hysteresisMetrics(MOOS_storm11a_09_22_Q, MOOS_storm11a_09_22_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm11b_09_24_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm11b_09_24_SPC = hysteresisMetrics(MOOS_storm11b_09_24_Q, MOOS_storm11b_09_24_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm12_09_25_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm12_09_25_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm12_09_25_SPC = hysteresisMetrics(MOOS_storm12_09_25_Q, MOOS_storm12_09_25_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 ## turb ##
-MOOS_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm1_06_21_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm1_06_21_turb = hysteresisMetrics(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm2a_06_30_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_06_30_turb = hysteresisMetrics(MOOS_storm2a_06_30_Q, MOOS_storm2a_06_30_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_07_02_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_07_02_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_01_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_07_02_turb = hysteresisMetrics(MOOS_storm2b_07_02_Q, MOOS_storm2b_07_02_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2c_07_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2c_07_05_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2c_07_05_turb = hysteresisMetrics(MOOS_storm2c_07_05_Q, MOOS_storm2c_07_05_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm3_07_10_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_07_10_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm3_07_10_turb = hysteresisMetrics(MOOS_storm3_07_10_Q, MOOS_storm3_07_10_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-# MOOS_storm4_07_15_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# MOOS_storm4_07_15_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# timespacing = 15 # 15 minutes between records
-# hysdict_MOOS_storm4_07_15_turb = hysteresisMetrics(MOOS_storm4_07_15_Q, MOOS_storm4_07_15_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm5_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm5_08_05_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2058,11 +1893,6 @@ MOOS_storm8a_08_26_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm8a_08_26_tu
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm8a_08_26_turb = hysteresisMetrics(MOOS_storm8a_08_26_Q, MOOS_storm8a_08_26_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm8b_08_28_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm8b_08_28_turb = hysteresisMetrics(MOOS_storm8b_08_28_Q, MOOS_storm8b_08_28_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm9_08_30_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -2078,46 +1908,19 @@ MOOS_storm11a_09_22_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm11a_09_22_
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm11a_09_22_turb = hysteresisMetrics(MOOS_storm11a_09_22_Q, MOOS_storm11a_09_22_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm11b_09_24_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm11b_09_24_turb = hysteresisMetrics(MOOS_storm11b_09_24_Q, MOOS_storm11b_09_24_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm12_09_25_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm12_09_25_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm12_09_25_turb = hysteresisMetrics(MOOS_storm12_09_25_Q, MOOS_storm12_09_25_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 ## ABS ##
-MOOS_storm1_06_21_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm1_06_21_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm1_06_21_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm1_06_21_abs = hysteresisMetrics(MOOS_storm1_06_21_Q, MOOS_storm1_06_21_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm2a_06_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm2a_06_30_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_06_30_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_06_30_abs = hysteresisMetrics(MOOS_storm2a_06_30_Q, MOOS_storm2a_06_30_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_07_02_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_07_02_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_07_02_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_07_02_abs = hysteresisMetrics(MOOS_storm2b_07_02_Q, MOOS_storm2b_07_02_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2c_07_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2c_07_05_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm2c_07_05_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2c_07_05_abs = hysteresisMetrics(MOOS_storm2c_07_05_Q, MOOS_storm2c_07_05_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm3_07_10_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_07_10_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm3_07_10_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm3_07_10_abs = hysteresisMetrics(MOOS_storm3_07_10_Q, MOOS_storm3_07_10_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-# MOOS_storm4_07_15_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# MOOS_storm4_07_15_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm4_07_15_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-# timespacing = 15 # 15 minutes between records
-# hysdict_MOOS_storm4_07_15_SPC = hysteresisMetrics(MOOS_storm4_07_15_Q, MOOS_storm4_07_15_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm5_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm5_08_05_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm5_08_05_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2139,11 +1942,6 @@ MOOS_storm8a_08_26_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm8a_08_26_abs
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm8a_08_26_abs = hysteresisMetrics(MOOS_storm8a_08_26_Q, MOOS_storm8a_08_26_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm8b_08_28_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm8b_08_28_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm8b_08_28_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm8b_08_28_abs = hysteresisMetrics(MOOS_storm8b_08_28_Q, MOOS_storm8b_08_28_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm9_08_30_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm9_08_30_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm9_08_30_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -2159,26 +1957,12 @@ MOOS_storm11a_09_22_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm11a_09_22_a
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm11a_09_22_abs = hysteresisMetrics(MOOS_storm11a_09_22_Q, MOOS_storm11a_09_22_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm11b_09_24_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm11b_09_24_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm11b_09_24_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm11b_09_24_abs = hysteresisMetrics(MOOS_storm11b_09_24_Q, MOOS_storm11b_09_24_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm12_09_25_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm12_09_25_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm12_09_25_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm12_09_25_abs = hysteresisMetrics(MOOS_storm12_09_25_Q, MOOS_storm12_09_25_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 ```
 
 
 MOOS results
 ```{r}
-MOOS.hyst.results.list = list(py$hysdict_MOOS_storm1_06_21_NO3,
-                              py$hysdict_MOOS_storm1_06_21_fDOM,
-                              py$hysdict_MOOS_storm1_06_21_SPC,
-                              py$hysdict_MOOS_storm1_06_21_turb,
-                              py$hysdict_MOOS_storm1_06_21_abs,
+MOOS.hyst.results.list = list(
                               
                               py$hysdict_MOOS_storm3_07_10_NO3,
                               
@@ -2204,10 +1988,7 @@ MOOS.hyst.results.list = list(py$hysdict_MOOS_storm1_06_21_NO3,
                               py$hysdict_MOOS_storm8a_08_26_turb,
                               py$hysdict_MOOS_storm8a_08_26_abs,
                               
-                              py$hysdict_MOOS_storm8b_08_28_fDOM,
-                              py$hysdict_MOOS_storm8b_08_28_SPC,
-                              py$hysdict_MOOS_storm8b_08_28_turb,
-                              py$hysdict_MOOS_storm8b_08_28_abs,
+                              
                               py$hysdict_MOOS_storm9_08_30_NO3,
                               py$hysdict_MOOS_storm9_08_30_fDOM,
                               py$hysdict_MOOS_storm9_08_30_SPC,
@@ -2222,16 +2003,8 @@ MOOS.hyst.results.list = list(py$hysdict_MOOS_storm1_06_21_NO3,
                               py$hysdict_MOOS_storm11a_09_22_fDOM,
                               py$hysdict_MOOS_storm11a_09_22_SPC,
                               py$hysdict_MOOS_storm11a_09_22_turb,
-                              py$hysdict_MOOS_storm11a_09_22_abs,
-                              py$hysdict_MOOS_storm11b_09_24_NO3,
-                              py$hysdict_MOOS_storm11b_09_24_fDOM,
-                              py$hysdict_MOOS_storm11b_09_24_SPC,
-                              py$hysdict_MOOS_storm11b_09_24_turb,
-                              py$hysdict_MOOS_storm11b_09_24_abs,
-                              py$hysdict_MOOS_storm12_09_25_NO3,
+                              py$hysdict_MOOS_storm11a_09_22_abs)
                               
-                              
-                              py$hysdict_MOOS_storm12_09_25_abs)
                               
 
 
@@ -2268,11 +2041,7 @@ for (i in 1:length(MOOS.hyst.results.list)){
 
 MOOS.hyst.results.df = bind_rows(MOOS.hyst.results.list.3, .id = "column_label")
 
-MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_06_21_NO3",
-                                  "MOOS_storm1_06_21_fDOM",
-                                  "MOOS_storm1_06_21_SPC",
-                                  "MOOS_storm1_06_21_turb",
-                                  "MOOS_storm1_06_21_abs",
+MOOS.hyst.results.df$storm.ID = c(
                                   
                                   "MOOS_storm3_07_09_NO3",
                                   "MOOS_storm3_07_09_abs",
@@ -2299,10 +2068,7 @@ MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_06_21_NO3",
                                   "MOOS_storm8a_08_26_turb",
                                   "MOOS_storm8a_08_26_abs",
                                   
-                                  "MOOS_storm8b_08_28_fDOM",
-                                  "MOOS_storm8b_08_28_SPC",
-                                  "MOOS_storm8b_08_28_turb",
-                                  "MOOS_storm8b_08_28_abs",
+                                  
                                   "MOOS_storm9_08_30_NO3",
                                   "MOOS_storm9_08_30_fDOM",
                                   "MOOS_storm9_08_30_SPC",
@@ -2317,14 +2083,8 @@ MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_06_21_NO3",
                                   "MOOS_storm11a_09_22_fDOM",
                                   "MOOS_storm11a_09_22_SPC",
                                   "MOOS_storm11a_09_22_turb",
-                                  "MOOS_storm11a_09_22_abs",
-                                  "MOOS_storm11b_09_24_NO3",
-                                  "MOOS_storm11b_09_24_fDOM",
-                                  "MOOS_storm11b_09_24_SPC",
-                                  "MOOS_storm11b_09_24_turb",
-                                  "MOOS_storm11b_09_24_abs",
-                                  "MOOS_storm12_09_25_NO3",
-                                  "MOOS_storm12_09_25_abs")
+                                  "MOOS_storm11a_09_22_abs")
+                                  
                                   
                                   
                                  
@@ -2332,7 +2092,7 @@ MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_06_21_NO3",
 
 MOOS.hyst.results.df$site.ID = "MOOS"
 
-write.csv(MOOS.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.hyst.results.csv")
+write.csv(MOOS.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "MOOS.hyst.results.csv"))
 
 # plot HI by normalized discharge
 HIs.Q.list =list()
@@ -2365,11 +2125,7 @@ for (i in 1:length(HIs.list)) {
 }
 
 MOOS.HI.df = bind_rows(HIs.df.list, .id = "column_label")
-MOOS.HI.df$storm.ID = c(rep("MOOS_storm1_06_21_NO3", 50),
-                        rep("MOOS_storm1_06_21_fDOM", 50),
-                        rep("MOOS_storm1_06_21_SPC", 50),
-                        rep("MOOS_storm1_06_21_turb", 50),
-                        rep("MOOS_storm1_06_21_abs", 50),
+MOOS.HI.df$storm.ID = c(
                         rep("MOOS_storm3_07_10_NO3", 50),
                         rep("MOOS_storm3_07_10_abs", 50),
                         rep("MOOS_storm5_08_05_NO3", 50),
@@ -2392,10 +2148,7 @@ MOOS.HI.df$storm.ID = c(rep("MOOS_storm1_06_21_NO3", 50),
                         rep("MOOS_storm8a_08_26_SPC", 50),
                         rep("MOOS_storm8a_08_26_turb", 50),
                         rep("MOOS_storm8a_08_26_abs", 50),
-                        rep("MOOS_storm8b_08_28_fDOM", 50),
-                        rep("MOOS_storm8b_08_28_SPC", 50),
-                        rep("MOOS_storm8b_08_28_turb", 50),
-                        rep("MOOS_storm8b_08_28_abs", 50),
+                        
                         rep("MOOS_storm9_08_30_NO3", 50),
                         rep("MOOS_storm9_08_30_fDOM", 50),
                         rep("MOOS_storm9_08_30_SPC", 50),
@@ -2410,14 +2163,8 @@ MOOS.HI.df$storm.ID = c(rep("MOOS_storm1_06_21_NO3", 50),
                         rep("MOOS_storm11a_09_22_fDOM", 50),
                         rep("MOOS_storm11a_09_22_SPC", 50),
                         rep("MOOS_storm11a_09_22_turb", 50),
-                        rep("MOOS_storm11a_09_22_abs", 50),
-                        rep("MOOS_storm11b_09_24_NO3", 50),
-                        rep("MOOS_storm11b_09_24_fDOM", 50),
-                        rep("MOOS_storm11b_09_24_SPC", 50),
-                        rep("MOOS_storm11b_09_24_turb", 50),
-                        rep("MOOS_storm11b_09_24_abs", 50),
-                        rep("MOOS_storm12_09_24_NO3", 50),
-                        rep("MOOS_storm12_09_24_abs", 50))
+                        rep("MOOS_storm11a_09_22_abs", 50))
+                        
                         
                         
 
@@ -2443,8 +2190,11 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/MOOS/MOOS.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(MOOS.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.csv")
+
+ggsave(here("plots", "HI_plots", "2018", "MOOS", "MOOS.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "MOOS.HI.df.csv"))
 
 MOOS.HI.df$date <- as.Date(with(MOOS.HI.df, paste(month, day, sep = "-")), "%m-%d")
 MOOS.HI.df$doy <- yday(MOOS.HI.df$date) 
@@ -2458,8 +2208,13 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/MOOS/MOOS.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(MOOS.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.doy.csv")
+
+ggsave(here("plots", "HI_plots", "2018", "MOOS", "MOOS.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "MOOS.HI.df.doy.csv"))
+
+
 
 ```
 
