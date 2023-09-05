@@ -1396,21 +1396,19 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-MOOS_storms$storm.num = c(rep("storm1", 58),
+MOOS_storms$storm.num = c(
                           rep("storm10", 432),
-                          rep("storm11a", 90),
-                          rep("storm11b", 9),
-                          rep("storm12", 294),
-                          rep("storm2a", 74),
-                          rep("storm2b", 146),
-                          rep("storm2c", 182),
+                          rep("storm11a", 420),
+                          
+                          rep("storm2a", 412),
+                          
                           rep("storm3", 198),
                           
                           rep("storm5", 282),
                           rep("storm6", 333),
                           rep("storm7", 176),
-                          rep("storm8a", 78),
-                          rep("storm8b", 100),
+                          rep("storm8a", 178),
+                          
                           rep("storm9", 106))
 
 MOOS_storms$DateTime <- as.POSIXct(MOOS_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
@@ -1891,9 +1889,8 @@ HI.moos.2018$pf <- "medium" # adding a pf column
 
 HI.moos.2018$site.ID <- "MOOS"
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.moos.2018.csv"))
+write.csv(HI.moos.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.moos.2018.csv"))
 
-# write.csv(HI.moos.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.moos.2018.csv")
 
 # CARI #### 
 CARIstorm_file_list <- list.files(path = "All_sites/", 
