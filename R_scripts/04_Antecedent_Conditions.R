@@ -57,8 +57,6 @@ MOOS_HI_doy_df_2015 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2015",
 FRCH_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "FRCH","FRCH.HI.df.doy.csv"))
 MOOS_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "MOOS","MOOS.HI.df.doy.csv"))
 CARI_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "CARI","CARI.HI.df.doy.csv"))
-CARI_HI_doy_df_2018 <-  subset(CARI_HI_doy_df_2018, select=-c(X))
-names(CARI_HI_doy_df_2018)[names(CARI_HI_doy_df_2018) == 'X1'] <- 'X'
 
 
 # FRCH_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv")
@@ -844,7 +842,6 @@ FRCH_storms$storm.num = c(rep("storm1", 142),
                           
                           rep("storm9", 99)) # naming each storm by the number of storm 
 
-#write_csv(FRCH_storms, "~/Desktop/FRCH_2018_test_beta.csv")
 
 # Read in precip data 
 POKE_RainGauge_2018 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2018.csv"))
@@ -1377,18 +1374,11 @@ HI.frch.2018$site.ID <- "FRCH"
 
 write.csv(HI.frch.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.frch.2018.csv"))
 
-# write.csv(HI.frch.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.frch.2018.csv")
-
 # MOOS ####
 MOOSstorm_file_list <- list.files(path = "All_sites/", 
                                   recursive=F, 
                                   pattern="MOOS", 
                                   full.names=TRUE)
-
-# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="MOOS", 
-#                                   full.names=TRUE)
 
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
@@ -1898,10 +1888,6 @@ CARIstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="CARI", 
                                   full.names=TRUE)
 
-# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2018/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="CARI", 
-#                                   full.names=TRUE)
 
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
@@ -1916,11 +1902,10 @@ CARI_storms$storm.num = c(rep("storm1", 317),
                           rep("storm12b", 519),
                           rep("storm2", 181),
                           rep("storm3", 121),
-                          rep("storm4a", 85),
-                          rep("storm4b", 181),
-                          rep("storm5a", 77),
-                          rep("storm5b", 121),
-                          rep("storm5c", 575),
+                          rep("storm4a", 277),
+                          
+                          rep("storm5a", 777),
+                          
                           rep("storm6", 650),
                           rep("storm7", 155),
                           rep("storm8", 191),
@@ -2371,9 +2356,7 @@ HI.cari.2018$pf <- "medium" # adding a pf column
 
 HI.cari.2018$site.ID <- "CARI"
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.cari.2018.csv"))
-
-# write.csv(HI.cari.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.cari.2018.csv")
+write.csv(HI.cari.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.cari.2018.csv"))
 
 # MERGE and add time since peak  Q in chena #
 HI.2018 <- rbind(HI.moos.2018, HI.frch.2018, HI.cari.2018) # bind all 2018 together
@@ -2381,11 +2364,8 @@ HI.2018$date <- as.Date(HI.2018$doy, origin = "2018-01-01")
 origin_date <- as.Date("2018-05-22")
 HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 
-# write.csv(HI.2018, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
 
-
-
-
+write.csv(HI.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "2018", "HI.2018.csv"))
 
 
 ######################################## 2019 ############################################
