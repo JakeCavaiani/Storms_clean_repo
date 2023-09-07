@@ -2222,101 +2222,84 @@ write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "
 ### CARI ### 
 ```{python}
 # CARI #
-CARI_storm1_06_10_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm1_06_10_Q.csv")
-CARI_storm1_06_10_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm1_06_10_NO3.csv")
-CARI_storm1_06_10_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm1_06_10_fDOM.csv")
-CARI_storm1_06_10_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm1_06_10_SPC.csv")
-CARI_storm1_06_10_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm1_06_10_Turb.csv")
+# MOOS #
+CARI_storm1_06_10_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_Q.csv'))
+CARI_storm1_06_10_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_NO3.csv'))
+CARI_storm1_06_10_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_fDOM.csv'))
+CARI_storm1_06_10_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_SPC.csv'))
+CARI_storm1_06_10_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_Turb.csv'))
 
-# CARI_storm2_06_21_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm2_06_21_Q.csv")
-# CARI_storm2_06_21_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm2_06_21_NO3.csv")
-# CARI_storm2_06_21_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm2_06_21_fDOM.csv")
-# CARI_storm2_06_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm2_06_21_SPC.csv")
-# CARI_storm2_06_21_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm2_06_21_Turb.csv")
+CARI_storm2_06_21_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm2_06_21_Q.csv'))
+CARI_storm2_06_21_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm2_06_21_NO3.csv'))
+CARI_storm2_06_21_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm2_06_21_fDOM.csv'))
+CARI_storm2_06_21_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm2_06_21_SPC.csv'))
+CARI_storm2_06_21_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm2_06_21_Turb.csv'))
 
-CARI_storm3_06_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm3_06_29_Q.csv")
-CARI_storm3_06_29_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm3_06_29_NO3.csv")
-CARI_storm3_06_29_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm3_06_29_fDOM.csv")
-CARI_storm3_06_29_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm3_06_29_SPC.csv")
-CARI_storm3_06_29_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm3_06_29_Turb.csv")
+CARI_storm3_06_29_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm3_06_29_Q.csv'))
+CARI_storm3_06_29_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm3_06_29_NO3.csv'))
+CARI_storm3_06_29_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm3_06_29_fDOM.csv'))
+CARI_storm3_06_29_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm3_06_29_SPC.csv'))
+CARI_storm3_06_29_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm3_06_29_Turb.csv'))
 
-CARI_storm4a_06_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4a_06_30_Q.csv")
-CARI_storm4a_06_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4a_06_30_NO3.csv")
-CARI_storm4a_06_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4a_06_30_fDOM.csv")
-CARI_storm4a_06_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4a_06_30_SPC.csv")
-CARI_storm4a_06_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4a_06_30_Turb.csv")
+CARI_storm4a_06_30_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm4a_06_30_Q.csv'))
+CARI_storm4a_06_30_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm4a_06_30_NO3.csv'))
+CARI_storm4a_06_30_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm4a_06_30_fDOM.csv'))
+CARI_storm4a_06_30_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm4a_06_30_SPC.csv'))
+CARI_storm4a_06_30_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm4a_06_30_Turb.csv'))
 
-CARI_storm4b_07_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4b_07_01_Q.csv")
-CARI_storm4b_07_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4b_07_01_NO3.csv")
-CARI_storm4b_07_01_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4b_07_01_fDOM.csv")
-CARI_storm4b_07_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4b_07_01_SPC.csv")
-CARI_storm4b_07_01_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm4b_07_01_Turb.csv")
+CARI_storm5a_08_04_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm5a_08_04_Q.csv'))
+CARI_storm5a_08_04_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm5a_08_04_NO3.csv'))
+CARI_storm5a_08_04_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm5a_08_04_fDOM.csv'))
+CARI_storm5a_08_04_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm5a_08_04_SPC.csv'))
+CARI_storm5a_08_04_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm5a_08_04_Turb.csv'))
 
-CARI_storm5a_08_04_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5a_08_04_Q.csv")
-CARI_storm5a_08_04_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5a_08_04_NO3.csv")
-CARI_storm5a_08_04_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5a_08_04_fDOM.csv")
-CARI_storm5a_08_04_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5a_08_04_SPC.csv")
-CARI_storm5a_08_04_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5a_08_04_Turb.csv")
+CARI_storm6_08_13_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm6_08_13_Q.csv'))
+CARI_storm6_08_13_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm6_08_13_NO3.csv'))
+CARI_storm6_08_13_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm6_08_13_fDOM.csv'))
+CARI_storm6_08_13_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm6_08_13_SPC.csv'))
+CARI_storm6_08_13_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm6_08_13_Turb.csv'))
 
-CARI_storm5b_08_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5b_08_05_Q.csv")
-CARI_storm5b_08_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5b_08_05_NO3.csv")
-CARI_storm5b_08_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5b_08_05_fDOM.csv")
-CARI_storm5b_08_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5b_08_05_SPC.csv")
-CARI_storm5b_08_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5b_08_05_Turb.csv")
+CARI_storm7_08_21_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm7_08_21_Q.csv'))
+CARI_storm7_08_21_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm7_08_21_NO3.csv'))
+CARI_storm7_08_21_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm7_08_21_fDOM.csv'))
+CARI_storm7_08_21_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm7_08_21_SPC.csv'))
+CARI_storm7_08_21_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm7_08_21_Turb.csv'))
 
-CARI_storm5c_08_06_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5c_08_06_Q.csv")
-CARI_storm5c_08_06_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5c_08_06_NO3.csv")
-CARI_storm5c_08_06_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5c_08_06_fDOM.csv")
-CARI_storm5c_08_06_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5c_08_06_SPC.csv")
-CARI_storm5c_08_06_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm5c_08_06_Turb.csv")
+CARI_storm8_08_24_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm8_08_24_Q.csv'))
+CARI_storm8_08_24_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm8_08_24_NO3.csv'))
+CARI_storm8_08_24_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm8_08_24_fDOM.csv'))
+CARI_storm8_08_24_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm8_08_24_SPC.csv'))
+CARI_storm8_08_24_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm8_08_24_Turb.csv'))
 
-CARI_storm6_08_13_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm6_08_13_Q.csv")
-CARI_storm6_08_13_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm6_08_13_NO3.csv")
-CARI_storm6_08_13_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm6_08_13_fDOM.csv")
-CARI_storm6_08_13_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm6_08_13_SPC.csv")
-CARI_storm6_08_13_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm6_08_13_Turb.csv")
+CARI_storm9_08_26_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm9_08_26_Q.csv'))
+CARI_storm9_08_26_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm9_08_26_NO3.csv'))
+CARI_storm9_08_26_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm9_08_26_fDOM.csv'))
+CARI_storm9_08_26_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm9_08_26_SPC.csv'))
+CARI_storm9_08_26_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm9_08_26_Turb.csv'))
 
-# CARI_storm7_08_21_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm7_08_21_Q.csv")
-# CARI_storm7_08_21_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm7_08_21_NO3.csv")
-# CARI_storm7_08_21_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm7_08_21_fDOM.csv")
-# CARI_storm7_08_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm7_08_21_SPC.csv")
-# CARI_storm7_08_21_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm7_08_21_Turb.csv")
+CARI_storm10_08_30_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm10_08_30_Q.csv'))
+CARI_storm10_08_30_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm10_08_30_NO3.csv'))
+CARI_storm10_08_30_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm10_08_30_fDOM.csv'))
+CARI_storm10_08_30_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm10_08_30_SPC.csv'))
+CARI_storm10_08_30_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm10_08_30_Turb.csv'))
 
-CARI_storm8_08_24_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm8_08_24_Q.csv")
-CARI_storm8_08_24_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm8_08_24_NO3.csv")
-CARI_storm8_08_24_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm8_08_24_fDOM.csv")
-CARI_storm8_08_24_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm8_08_24_SPC.csv")
-CARI_storm8_08_24_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm8_08_24_Turb.csv")
+CARI_storm11_09_01_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm11_09_01_Q.csv'))
+CARI_storm11_09_01_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm11_09_01_NO3.csv'))
+CARI_storm11_09_01_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm11_09_01_fDOM.csv'))
+CARI_storm11_09_01_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm11_09_01_SPC.csv'))
+CARI_storm11_09_01_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm11_09_01_Turb.csv'))
 
-CARI_storm9_08_26_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm9_08_26_Q.csv")
-CARI_storm9_08_26_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm9_08_26_NO3.csv")
-CARI_storm9_08_26_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm9_08_26_fDOM.csv")
-CARI_storm9_08_26_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm9_08_26_SPC.csv")
-CARI_storm9_08_26_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm9_08_26_Turb.csv")
+CARI_storm12a_09_20_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12a_09_20_Q.csv'))
+CARI_storm12a_09_20_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12a_09_20_NO3.csv'))
+CARI_storm12a_09_20_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12a_09_20_fDOM.csv'))
+CARI_storm12a_09_20_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12a_09_20_SPC.csv'))
+CARI_storm12a_09_20_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12a_09_20_Turb.csv'))
 
-CARI_storm10_08_30_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm10_08_30_Q.csv")
-CARI_storm10_08_30_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm10_08_30_NO3.csv")
-CARI_storm10_08_30_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm10_08_30_fDOM.csv")
-CARI_storm10_08_30_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm10_08_30_SPC.csv")
-CARI_storm10_08_30_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm10_08_30_Turb.csv")
-
-CARI_storm11_09_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm11_09_01_Q.csv")
-CARI_storm11_09_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm11_09_01_NO3.csv")
-CARI_storm11_09_01_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm11_09_01_fDOM.csv")
-CARI_storm11_09_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm11_09_01_SPC.csv")
-CARI_storm11_09_01_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm11_09_01_Turb.csv")
-
-CARI_storm12a_09_20_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12a_09_20_Q.csv")
-CARI_storm12a_09_20_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12a_09_20_NO3.csv")
-CARI_storm12a_09_20_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12a_09_20_fDOM.csv")
-CARI_storm12a_09_20_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12a_09_20_SPC.csv")
-CARI_storm12a_09_20_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12a_09_20_Turb.csv")
-
-CARI_storm12b_09_25_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12b_09_25_Q.csv")
-CARI_storm12b_09_25_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12b_09_25_NO3.csv")
-CARI_storm12b_09_25_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12b_09_25_fDOM.csv")
-CARI_storm12b_09_25_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12b_09_25_SPC.csv")
-CARI_storm12b_09_25_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2018/CARI/CARI_storm12b_09_25_Turb.csv")
+CARI_storm12b_09_25_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12b_09_25_Q.csv'))
+CARI_storm12b_09_25_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12b_09_25_NO3.csv'))
+CARI_storm12b_09_25_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12b_09_25_fDOM.csv'))
+CARI_storm12b_09_25_SPC = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12b_09_25_SPC.csv'))
+CARI_storm12b_09_25_turb = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm12b_09_25_Turb.csv'))
 
 ```
 
@@ -2344,25 +2327,10 @@ CARI_storm4a_06_30_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm4a_06_30_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm4a_06_30_NO3 = hysteresisMetrics(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-CARI_storm4b_07_01_Q['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm4b_07_01_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm4b_07_01_NO3 = hysteresisMetrics(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 CARI_storm5a_08_04_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm5a_08_04_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm5a_08_04_NO3 = hysteresisMetrics(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5b_08_05_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5b_08_05_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5b_08_05_NO3 = hysteresisMetrics(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5c_08_06_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5c_08_06_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5c_08_06_NO3 = hysteresisMetrics(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 CARI_storm6_08_13_Q['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm6_08_13_NO3['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2425,25 +2393,10 @@ CARI_storm4a_06_30_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm4a_06_30_fD
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm4a_06_30_fDOM = hysteresisMetrics(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-CARI_storm4b_07_01_Q['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm4b_07_01_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm4b_07_01_fDOM = hysteresisMetrics(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 CARI_storm5a_08_04_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm5a_08_04_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm5a_08_04_fDOM = hysteresisMetrics(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5b_08_05_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5b_08_05_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15minutes between records
-hysdict_CARI_storm5b_08_05_fDOM = hysteresisMetrics(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5c_08_06_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5c_08_06_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5c_08_06_fDOM = hysteresisMetrics(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 CARI_storm6_08_13_Q['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm6_08_13_fDOM['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2506,25 +2459,10 @@ CARI_storm4a_06_30_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm4a_06_30_SPC
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm4a_06_30_SPC = hysteresisMetrics(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-CARI_storm4b_07_01_Q['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm4b_07_01_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm4b_07_01_SPC = hysteresisMetrics(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 CARI_storm5a_08_04_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm5a_08_04_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm5a_08_04_SPC = hysteresisMetrics(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5b_08_05_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5b_08_05_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5b_08_05_SPC = hysteresisMetrics(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5c_08_06_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5c_08_06_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5c_08_06_SPC = hysteresisMetrics(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 CARI_storm6_08_13_Q['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm6_08_13_SPC['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2587,25 +2525,10 @@ CARI_storm4a_06_30_turb['valuedatetime'] =  pd.to_datetime(CARI_storm4a_06_30_tu
 timespacing = 15 # 15 minutes between records
 hysdict_CARI_storm4a_06_30_turb = hysteresisMetrics(CARI_storm4a_06_30_Q, CARI_storm4a_06_30_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-CARI_storm4b_07_01_Q['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm4b_07_01_turb['valuedatetime'] =  pd.to_datetime(CARI_storm4b_07_01_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15# 15 minutes between records
-hysdict_CARI_storm4b_07_01_turb = hysteresisMetrics(CARI_storm4b_07_01_Q, CARI_storm4b_07_01_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 CARI_storm5a_08_04_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm5a_08_04_turb['valuedatetime'] =  pd.to_datetime(CARI_storm5a_08_04_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15minutes between records
 hysdict_CARI_storm5a_08_04_turb = hysteresisMetrics(CARI_storm5a_08_04_Q, CARI_storm5a_08_04_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5b_08_05_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5b_08_05_turb['valuedatetime'] =  pd.to_datetime(CARI_storm5b_08_05_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_CARI_storm5b_08_05_turb = hysteresisMetrics(CARI_storm5b_08_05_Q, CARI_storm5b_08_05_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-CARI_storm5c_08_06_Q['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-CARI_storm5c_08_06_turb['valuedatetime'] =  pd.to_datetime(CARI_storm5c_08_06_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15minutes between records
-hysdict_CARI_storm5c_08_06_turb = hysteresisMetrics(CARI_storm5c_08_06_Q, CARI_storm5c_08_06_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 CARI_storm6_08_13_Q['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 CARI_storm6_08_13_turb['valuedatetime'] =  pd.to_datetime(CARI_storm6_08_13_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -2660,14 +2583,7 @@ CARI.hyst.results.list = list(
                               py$hysdict_CARI_storm5a_08_04_fDOM,
                               py$hysdict_CARI_storm5a_08_04_SPC,
                               py$hysdict_CARI_storm5a_08_04_turb,
-                              py$hysdict_CARI_storm5b_08_05_NO3,
-                              py$hysdict_CARI_storm5b_08_05_fDOM,
-                              py$hysdict_CARI_storm5b_08_05_SPC,
-                              py$hysdict_CARI_storm5b_08_05_turb,
-                              py$hysdict_CARI_storm5c_08_06_NO3,
-                              py$hysdict_CARI_storm5c_08_06_fDOM,
-                              py$hysdict_CARI_storm5c_08_06_SPC,
-                              py$hysdict_CARI_storm5c_08_06_turb,
+                             
                               py$hysdict_CARI_storm6_08_13_NO3,
                               py$hysdict_CARI_storm6_08_13_fDOM,
                               py$hysdict_CARI_storm6_08_13_SPC,
@@ -2735,14 +2651,7 @@ CARI.hyst.results.df$storm.ID = c("CARI_storm5a_08_04_NO3",
                                   "CARI_storm5a_08_04_fDOM",
                                   "CARI_storm5a_08_04_SPC",
                                   "CARI_storm5a_08_04_turb",
-                                  "CARI_storm5b_08_05_NO3",
-                                  "CARI_storm5b_08_05_fDOM",
-                                  "CARI_storm5b_08_05_SPC",
-                                  "CARI_storm5b_08_05_turb",
-                                  "CARI_storm5c_08_06_NO3",
-                                  "CARI_storm5c_08_06_fDOM",
-                                  "CARI_storm5c_08_06_SPC",
-                                  "CARI_storm5c_08_06_turb",
+                                  
                                   "CARI_storm6_08_13_NO3",
                                   "CARI_storm6_08_13_fDOM",
                                   "CARI_storm6_08_13_SPC",
@@ -2780,7 +2689,7 @@ CARI.hyst.results.df$storm.ID = c("CARI_storm5a_08_04_NO3",
 
 CARI.hyst.results.df$site.ID = "CARI"
 
-write.csv(CARI.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.hyst.results.csv")
+write.csv(CARI.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2018", "CARI", "CARI.hyst.results.csv"))
 
 # plot HI by normalized discharge
 HIs.Q.list =list()
@@ -2819,14 +2728,7 @@ CARI.HI.df$storm.ID = c(
                         rep("CARI_storm5a_08_04_fDOM", 50),
                         rep("CARI_storm5a_08_04_SPC", 50),
                         rep("CARI_storm5a_08_04_turb", 50),
-                        rep("CARI_storm5b_08_05_NO3", 50),
-                        rep("CARI_storm5b_08_05_fDOM", 50),
-                        rep("CARI_storm5b_08_05_SPC", 50),
-                        rep("CARI_storm5b_08_05_turb", 50),
-                        rep("CARI_storm5c_08_06_NO3", 50),
-                        rep("CARI_storm5c_08_06_fDOM", 50),
-                        rep("CARI_storm5c_08_06_SPC", 50),
-                        rep("CARI_storm5c_08_06_turb", 50),
+                       
                         rep("CARI_storm6_08_13_NO3", 50),
                         rep("CARI_storm6_08_13_fDOM", 50),
                         rep("CARI_storm6_08_13_SPC", 50),
@@ -2879,10 +2781,11 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/CARI/CARI.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(CARI.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.csv")
 
-CARI.HI.df <- read_csv("~/Documents/Storms/Output_from_analysis/HI_plots/2018/CARI/CARI.HI.df.csv")
+ggsave(here("plots", "HI_plots", "2018", "CARI", "CARI.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(CARI.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "CARI", "CARI.HI.df.csv"))
 
 CARI.HI.df$date <- as.Date(with(CARI.HI.df, paste(month, day, sep = "-")), "%m-%d")
 CARI.HI.df$doy <- yday(CARI.HI.df$date) 
@@ -2896,8 +2799,11 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/CARI/CARI.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(CARI.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.doy.csv")
+
+ggsave(here("plots", "HI_plots", "2018", "CARI", "CARI.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(CARI.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "CARI", "CARI.HI.df.doy.csv"))
 
 ```
 
