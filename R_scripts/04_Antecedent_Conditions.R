@@ -59,11 +59,6 @@ MOOS_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018",
 CARI_HI_doy_df_2018 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2018", "CARI","CARI.HI.df.doy.csv"))
 
 
-# FRCH_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.HI.df.doy.csv")
-# MOOS_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.HI.df.doy.csv")
-# CARI_HI_doy_df_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.HI.df.doy.csv")
-# CARI_HI_doy_df_2018 <- CARI_HI_doy_df_2018[,-2]
-
 # 2019
 FRCH_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "FRCH","FRCH.HI.df.doy.csv"))
 MOOS_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "MOOS","MOOS.HI.df.doy.csv"))
@@ -73,14 +68,6 @@ VAUL_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019",
 CARI_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI","CARI.HI.df.doy.csv"))
 STRT_HI_doy_df_2019[c(2251:2500), 7] <- "storm7c"
 
-
-# FRCH_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/FRCH/FRCH.HI.df.doy.csv")
-# MOOS_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/MOOS/MOOS.HI.df.doy.csv")
-# POKE_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/POKE/POKE.HI.df.doy.csv")
-# STRT_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/STRT/STRT.HI.df.doy.csv")
-# VAUL_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.doy.csv")
-# CARI_HI_doy_df_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/CARI/CARI.HI.df.doy.csv")
-# STRT_HI_doy_df_2019[c(1701:1900), 7] <- "storm7c"
 
 # 2020
 FRCH_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "FRCH","FRCH.HI.df.doy.csv"))
@@ -141,7 +128,7 @@ HI.dat_2022$year <- "2022"
 
 
 
-HI.dat <- rbind(HI.dat_2015, HI.dat_2018)
+HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019)
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -2928,26 +2915,21 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 FRCH_storms$storm.num = c(rep("storm1", 993),
-                          rep("storm10a", 121),
-                          rep("storm10b", 95),
-                          rep("storm10c", 207),
+                          rep("storm10a", 425),
+                          
                           rep("storm11", 479),
                           rep("storm12a", 183),
-                          rep("storm12b", 67),
-                          rep("storm12c", 511),
-                          rep("storm12d", 99),
-                          rep("storm12e", 127),
+                          
+                          rep("storm12c", 1375),
+                         
                           rep("storm13", 391),
                           rep("storm14", 631),
                           rep("storm2", 165),
                           rep("storm3", 201),
                           rep("storm4", 193),
                           rep("storm5", 133),
-                          rep("storm6", 289),
-                          rep("storm7", 133),
-                          rep("storm8", 105),
-                          rep("storm9a", 61),
-                          rep("storm9b", 149))
+                          rep("storm6", 289))
+                          
 
 FRCH_storms$DateTime <- as.POSIXct(FRCH_storms$DateTime) 
 FRCH.2019.storms.1<- left_join(FRCH_storms, FRCH_RainGauge_2019, by = "DateTime")
@@ -3410,9 +3392,7 @@ HI.frch.2019 <- rbind(HI.frch.no3.2.2019, HI.frch.fDOM.2.2019,
 HI.frch.2019$burn <- "unburned" # adding a burn column
 HI.frch.2019$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.frch.2019.csv"))
-
-# write.csv(HI.frch.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.frch.2019.csv")
+write.csv(HI.frch.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.frch.2019.csv"))
 
 
 # POKE ####
