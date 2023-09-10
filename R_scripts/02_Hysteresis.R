@@ -1407,33 +1407,6 @@ FRCH_storm6_07_12_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_sto
 FRCH_storm6_07_12_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_turb.csv"))
 FRCH_storm6_07_12_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm6_07_12_abs.csv"))
 
-FRCH_storm7_07_25_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_Q.csv"))
-FRCH_storm7_07_25_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_NO3.csv"))
-FRCH_storm7_07_25_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_fDOM.csv"))
-FRCH_storm7_07_25_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_SPC.csv"))
-FRCH_storm7_07_25_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_turb.csv"))
-FRCH_storm7_07_25_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm7_07_25_abs.csv"))
-
-FRCH_storm8_07_28_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_Q.csv"))
-FRCH_storm8_07_28_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_NO3.csv"))
-FRCH_storm8_07_28_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_fDOM.csv"))
-FRCH_storm8_07_28_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_SPC.csv"))
-FRCH_storm8_07_28_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_turb.csv"))
-FRCH_storm8_07_28_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm8_07_28_abs.csv"))
-
-FRCH_storm9a_07_29_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_Q.csv"))
-FRCH_storm9a_07_29_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_NO3.csv"))
-FRCH_storm9a_07_29_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_fDOM.csv"))
-FRCH_storm9a_07_29_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_SPC.csv"))
-FRCH_storm9a_07_29_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_turb.csv"))
-FRCH_storm9a_07_29_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9a_07_29_abs.csv"))
-
-FRCH_storm9b_07_30_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_Q.csv"))
-FRCH_storm9b_07_30_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_NO3.csv"))
-FRCH_storm9b_07_30_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_fDOM.csv"))
-FRCH_storm9b_07_30_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_SPC.csv"))
-FRCH_storm9b_07_30_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_turb.csv"))
-FRCH_storm9b_07_30_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm9b_07_30_abs.csv"))
 
 FRCH_storm10a_08_01_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_Q.csv"))
 FRCH_storm10a_08_01_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_NO3.csv"))
@@ -1441,19 +1414,6 @@ FRCH_storm10a_08_01_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_
 FRCH_storm10a_08_01_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_SPC.csv"))
 FRCH_storm10a_08_01_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_turb.csv"))
 FRCH_storm10a_08_01_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10a_08_01_abs.csv"))
-
-FRCH_storm10b_08_02_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_Q.csv"))
-FRCH_storm10b_08_02_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_NO3.csv"))
-FRCH_storm10b_08_02_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_fDOM.csv"))
-FRCH_storm10b_08_02_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_SPC.csv"))
-FRCH_storm10b_08_02_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_turb.csv"))
-FRCH_storm10b_08_02_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10b_08_02_abs.csv"))
-
-FRCH_storm10c_08_03_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10c_08_03_Q.csv"))
-FRCH_storm10c_08_03_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10c_08_03_fDOM.csv"))
-FRCH_storm10c_08_03_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10c_08_03_SPC.csv"))
-FRCH_storm10c_08_03_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10c_08_03_turb.csv"))
-FRCH_storm10c_08_03_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm10c_08_03_abs.csv"))
 
 FRCH_storm11_08_05_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_Q.csv"))
 FRCH_storm11_08_05_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm11_08_05_NO3.csv"))
@@ -1469,32 +1429,12 @@ FRCH_storm12a_08_12_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_s
 FRCH_storm12a_08_12_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_turb.csv"))
 FRCH_storm12a_08_12_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12a_08_12_abs.csv"))
 
-FRCH_storm12b_08_14_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_Q.csv"))
-FRCH_storm12b_08_14_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_fDOM.csv"))
-FRCH_storm12b_08_14_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_SPC.csv"))
-FRCH_storm12b_08_14_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_turb.csv"))
-FRCH_storm12b_08_14_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12b_08_14_abs.csv"))
-
 FRCH_storm12c_08_15_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_Q.csv"))
 FRCH_storm12c_08_15_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_NO3.csv"))
 FRCH_storm12c_08_15_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_fDOM.csv"))
 FRCH_storm12c_08_15_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_SPC.csv"))
 FRCH_storm12c_08_15_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_turb.csv"))
 FRCH_storm12c_08_15_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12c_08_15_abs.csv"))
-
-FRCH_storm12d_08_21_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_Q.csv"))
-FRCH_storm12d_08_21_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_NO3.csv"))
-FRCH_storm12d_08_21_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_fDOM.csv"))
-FRCH_storm12d_08_21_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_SPC.csv"))
-FRCH_storm12d_08_21_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_turb.csv"))
-FRCH_storm12d_08_21_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12d_08_21_abs.csv"))
-
-FRCH_storm12e_08_23_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_Q.csv"))
-FRCH_storm12e_08_23_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_NO3.csv"))
-FRCH_storm12e_08_23_fDOM <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_fDOM.csv"))
-FRCH_storm12e_08_23_SPC <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_SPC.csv"))
-FRCH_storm12e_08_23_turb <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_turb.csv"))
-FRCH_storm12e_08_23_abs <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm12e_08_23_abs.csv"))
 
 FRCH_storm13_09_20_Q <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_Q.csv"))
 FRCH_storm13_09_20_NO3 <- read_csv(here("Storm_Events", "2019", "FRCH", "FRCH_storm13_09_20_NO3.csv"))
@@ -2057,19 +1997,14 @@ FRCH_storm3_06_18_NO3.p = hyst_plot(FRCH_storm3_06_18_Q, FRCH_storm3_06_18_NO3, 
 FRCH_storm4_06_20_NO3.p = hyst_plot(FRCH_storm4_06_20_Q, FRCH_storm4_06_20_NO3, "FRCH", "NO3", "0620")
 FRCH_storm5_06_22_NO3.p = hyst_plot(FRCH_storm5_06_22_Q, FRCH_storm5_06_22_NO3, "FRCH", "NO3", "0622")
 FRCH_storm6_07_12_NO3.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_NO3, "FRCH", "NO3", "0712")
-FRCH_storm7_07_25_NO3.p = hyst_plot(FRCH_storm7_07_25_Q, FRCH_storm7_07_25_NO3, "FRCH", "NO3", "0725")
-FRCH_storm8_07_28_NO3.p = hyst_plot(FRCH_storm8_07_28_Q, FRCH_storm8_07_28_NO3, "FRCH", "NO3", "0728")
-FRCH_storm9a_07_29_NO3.p = hyst_plot(FRCH_storm9a_07_29_Q, FRCH_storm9a_07_29_NO3, "FRCH", "NO3", "0729a")
-FRCH_storm9b_07_30_NO3.p = hyst_plot(FRCH_storm9b_07_30_Q, FRCH_storm9b_07_30_NO3, "FRCH", "NO3", "0730b")
+
 FRCH_storm10a_08_01_NO3.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_NO3, "FRCH", "NO3", "0801a")
-FRCH_storm10b_08_02_NO3.p = hyst_plot(FRCH_storm10b_08_02_Q, FRCH_storm10b_08_02_NO3, "FRCH", "NO3", "0802b")
-FRCH_storm10c_08_03_NO3.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_NO3, "FRCH", "NO3", "0803c")
+
 FRCH_storm11_08_05_NO3.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_NO3, "FRCH", "NO3", "0805")
 FRCH_storm12a_08_12_NO3.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_NO3, "FRCH", "NO3", "0812a")
-FRCH_storm12b_08_14_NO3.p = hyst_plot(FRCH_storm12b_08_14_Q, FRCH_storm12b_08_14_NO3, "FRCH", "NO3", "0814b")
+
 FRCH_storm12c_08_15_NO3.p = hyst_plot(FRCH_storm12c_08_15_Q, FRCH_storm12c_08_15_NO3, "FRCH", "NO3", "0815c")
-FRCH_storm12d_08_21_NO3.p = hyst_plot(FRCH_storm12d_08_21_Q, FRCH_storm12d_08_21_NO3, "FRCH", "NO3", "0821d")
-FRCH_storm12e_08_23_NO3.p = hyst_plot(FRCH_storm12e_08_23_Q, FRCH_storm12e_08_23_NO3, "FRCH", "NO3", "0823e")
+
 FRCH_storm13_09_20_NO3.p = hyst_plot(FRCH_storm13_09_20_Q, FRCH_storm13_09_20_NO3, "FRCH", "NO3", "0920")
 FRCH_storm14_10_01_NO3.p = hyst_plot(FRCH_storm14_10_01_Q, FRCH_storm14_10_01_NO3, "FRCH", "NO3", "1001")
 
@@ -2080,19 +2015,15 @@ FRCH_storm3_06_18_fDOM.p = hyst_plot(FRCH_storm3_06_18_Q, FRCH_storm3_06_18_fDOM
 FRCH_storm4_06_20_fDOM.p = hyst_plot(FRCH_storm4_06_20_Q, FRCH_storm4_06_20_fDOM, "FRCH", "fDOM", "0620")
 FRCH_storm5_06_22_fDOM.p = hyst_plot(FRCH_storm5_06_22_Q, FRCH_storm5_06_22_fDOM, "FRCH", "fDOM", "0622")
 FRCH_storm6_07_12_fDOM.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_fDOM, "FRCH", "fDOM", "0712")
-FRCH_storm7_07_25_fDOM.p = hyst_plot(FRCH_storm7_07_25_Q, FRCH_storm7_07_25_fDOM, "FRCH", "fDOM", "0725")
-FRCH_storm8_07_28_fDOM.p = hyst_plot(FRCH_storm8_07_28_Q, FRCH_storm8_07_28_fDOM, "FRCH", "fDOM", "0728")
-FRCH_storm9a_07_29_fDOM.p = hyst_plot(FRCH_storm9a_07_29_Q, FRCH_storm9a_07_29_fDOM, "FRCH", "fDOM", "0729a")
-FRCH_storm9b_07_30_fDOM.p = hyst_plot(FRCH_storm9b_07_30_Q, FRCH_storm9b_07_30_fDOM, "FRCH", "fDOM", "0730b")
+
 FRCH_storm10a_08_01_fDOM.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_fDOM, "FRCH", "fDOM", "0801a")
-FRCH_storm10b_08_02_fDOM.p = hyst_plot(FRCH_storm10b_08_02_Q, FRCH_storm10b_08_02_fDOM, "FRCH", "fDOM", "0802b")
+
 FRCH_storm10c_08_03_fDOM.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_fDOM, "FRCH", "fDOM", "0803c")
 FRCH_storm11_08_05_fDOM.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_fDOM, "FRCH", "fDOM", "0805")
 FRCH_storm12a_08_12_fDOM.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_fDOM, "FRCH", "fDOM", "0812a")
-FRCH_storm12b_08_14_fDOM.p = hyst_plot(FRCH_storm12b_08_14_Q, FRCH_storm12b_08_14_fDOM, "FRCH", "fDOM", "0814b")
+
 FRCH_storm12c_08_15_fDOM.p = hyst_plot(FRCH_storm12c_08_15_Q, FRCH_storm12c_08_15_fDOM, "FRCH", "fDOM", "0815c")
-FRCH_storm12d_08_21_fDOM.p = hyst_plot(FRCH_storm12d_08_21_Q, FRCH_storm12d_08_21_fDOM, "FRCH", "fDOM", "0821d")
-FRCH_storm12e_08_23_fDOM.p = hyst_plot(FRCH_storm12e_08_23_Q, FRCH_storm12e_08_23_fDOM, "FRCH", "NO3", "0823e")
+
 FRCH_storm13_09_20_fDOM.p = hyst_plot(FRCH_storm13_09_20_Q, FRCH_storm13_09_20_fDOM, "FRCH", "fDOM", "0920")
 FRCH_storm14_10_01_fDOM.p = hyst_plot(FRCH_storm14_10_01_Q, FRCH_storm14_10_01_fDOM, "FRCH", "fDOM", "1001")
 
@@ -2103,19 +2034,15 @@ FRCH_storm3_06_18_SPC.p = hyst_plot(FRCH_storm3_06_18_Q, FRCH_storm3_06_18_SPC, 
 FRCH_storm4_06_20_SPC.p = hyst_plot(FRCH_storm4_06_20_Q, FRCH_storm4_06_20_SPC, "FRCH", "SPC", "0620")
 FRCH_storm5_06_22_SPC.p = hyst_plot(FRCH_storm5_06_22_Q, FRCH_storm5_06_22_SPC, "FRCH", "SPC", "0622")
 FRCH_storm6_07_12_SPC.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_SPC, "FRCH", "SPC", "0712")
-FRCH_storm7_07_25_SPC.p = hyst_plot(FRCH_storm7_07_25_Q, FRCH_storm7_07_25_SPC, "FRCH", "SPC", "0725")
-FRCH_storm8_07_28_SPC.p = hyst_plot(FRCH_storm8_07_28_Q, FRCH_storm8_07_28_SPC, "FRCH", "SPC", "0728")
-FRCH_storm9a_07_29_SPC.p = hyst_plot(FRCH_storm9a_07_29_Q, FRCH_storm9a_07_29_SPC, "FRCH", "SPC", "0729a")
-FRCH_storm9b_07_30_SPC.p = hyst_plot(FRCH_storm9b_07_30_Q, FRCH_storm9b_07_30_SPC, "FRCH", "SPC", "0730b")
+
 FRCH_storm10a_08_01_SPC.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_SPC, "FRCH", "SPC", "0801a")
-FRCH_storm10b_08_02_SPC.p = hyst_plot(FRCH_storm10b_08_02_Q, FRCH_storm10b_08_02_SPC, "FRCH", "SPC", "0802b")
+
 FRCH_storm10c_08_03_SPC.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_SPC, "FRCH", "SPC", "0803c")
 FRCH_storm11_08_05_SPC.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_SPC, "FRCH", "SPC", "0805")
 FRCH_storm12a_08_12_SPC.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_SPC, "FRCH", "SPC", "0812a")
-FRCH_storm12b_08_14_SPC.p = hyst_plot(FRCH_storm12b_08_14_Q, FRCH_storm12b_08_14_SPC, "FRCH", "SPC", "0814b")
+
 FRCH_storm12c_08_15_SPC.p = hyst_plot(FRCH_storm12c_08_15_Q, FRCH_storm12c_08_15_SPC, "FRCH", "SPC", "0815c")
-FRCH_storm12d_08_21_SPC.p = hyst_plot(FRCH_storm12d_08_21_Q, FRCH_storm12d_08_21_SPC, "FRCH", "SPC", "0821d")
-FRCH_storm12e_08_23_SPC.p = hyst_plot(FRCH_storm12e_08_23_Q, FRCH_storm12e_08_23_SPC, "FRCH", "NO3", "0823e")
+
 FRCH_storm13_09_20_SPC.p = hyst_plot(FRCH_storm13_09_20_Q, FRCH_storm13_09_20_SPC, "FRCH", "SPC", "0920")
 FRCH_storm14_10_01_SPC.p = hyst_plot(FRCH_storm14_10_01_Q, FRCH_storm14_10_01_SPC, "FRCH", "SPC", "1001")
 
@@ -2126,19 +2053,15 @@ FRCH_storm3_06_18_turb.p = hyst_plot(FRCH_storm3_06_18_Q, FRCH_storm3_06_18_turb
 FRCH_storm4_06_20_turb.p = hyst_plot(FRCH_storm4_06_20_Q, FRCH_storm4_06_20_turb, "FRCH", "turb", "0620")
 FRCH_storm5_06_22_turb.p = hyst_plot(FRCH_storm5_06_22_Q, FRCH_storm5_06_22_turb, "FRCH", "turb", "0622")
 FRCH_storm6_07_12_turb.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_turb, "FRCH", "turb", "0712")
-FRCH_storm7_07_25_turb.p = hyst_plot(FRCH_storm7_07_25_Q, FRCH_storm7_07_25_turb, "FRCH", "turb", "0725")
-FRCH_storm8_07_28_turb.p = hyst_plot(FRCH_storm8_07_28_Q, FRCH_storm8_07_28_turb, "FRCH", "turb", "0728")
-FRCH_storm9a_07_29_turb.p = hyst_plot(FRCH_storm9a_07_29_Q, FRCH_storm9a_07_29_turb, "FRCH", "turb", "0729a")
-FRCH_storm9b_07_30_turb.p = hyst_plot(FRCH_storm9b_07_30_Q, FRCH_storm9b_07_30_turb, "FRCH", "turb", "0730b")
+
 FRCH_storm10a_08_01_turb.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_turb, "FRCH", "turb", "0801a")
-FRCH_storm10b_08_02_turb.p = hyst_plot(FRCH_storm10b_08_02_Q, FRCH_storm10b_08_02_turb, "FRCH", "turb", "0802b")
+
 FRCH_storm10c_08_03_turb.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_turb, "FRCH", "turb", "0803c")
 FRCH_storm11_08_05_turb.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_turb, "FRCH", "turb", "0805")
 FRCH_storm12a_08_12_turb.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_turb, "FRCH", "turb", "0812a")
-FRCH_storm12b_08_14_turb.p = hyst_plot(FRCH_storm12b_08_14_Q, FRCH_storm12b_08_14_turb, "FRCH", "turb", "0814b")
+
 FRCH_storm12c_08_15_turb.p = hyst_plot(FRCH_storm12c_08_15_Q, FRCH_storm12c_08_15_turb, "FRCH", "turb", "0815c")
-FRCH_storm12d_08_21_turb.p = hyst_plot(FRCH_storm12d_08_21_Q, FRCH_storm12d_08_21_turb, "FRCH", "turb", "0821d")
-FRCH_storm12e_08_23_turb.p = hyst_plot(FRCH_storm12e_08_23_Q, FRCH_storm12e_08_23_turb, "FRCH", "NO3", "0823e")
+
 FRCH_storm13_09_20_turb.p = hyst_plot(FRCH_storm13_09_20_Q, FRCH_storm13_09_20_turb, "FRCH", "turb", "0920")
 FRCH_storm14_10_01_turb.p = hyst_plot(FRCH_storm14_10_01_Q, FRCH_storm14_10_01_turb, "FRCH", "turb", "1001")
 
@@ -2149,19 +2072,15 @@ FRCH_storm3_06_18_abs.p = hyst_plot(FRCH_storm3_06_18_Q, FRCH_storm3_06_18_abs, 
 FRCH_storm4_06_20_abs.p = hyst_plot(FRCH_storm4_06_20_Q, FRCH_storm4_06_20_abs, "FRCH", "abs", "0620")
 FRCH_storm5_06_22_abs.p = hyst_plot(FRCH_storm5_06_22_Q, FRCH_storm5_06_22_abs, "FRCH", "abs", "0622")
 FRCH_storm6_07_12_abs.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_abs, "FRCH", "abs", "0712")
-FRCH_storm7_07_25_abs.p = hyst_plot(FRCH_storm7_07_25_Q, FRCH_storm7_07_25_abs, "FRCH", "abs", "0725")
-FRCH_storm8_07_28_abs.p = hyst_plot(FRCH_storm8_07_28_Q, FRCH_storm8_07_28_abs, "FRCH", "abs", "0728")
-FRCH_storm9a_07_29_abs.p = hyst_plot(FRCH_storm9a_07_29_Q, FRCH_storm9a_07_29_abs, "FRCH", "abs", "0729a")
-FRCH_storm9b_07_30_abs.p = hyst_plot(FRCH_storm9b_07_30_Q, FRCH_storm9b_07_30_abs, "FRCH", "abs", "0730b")
+
 FRCH_storm10a_08_01_abs.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_abs, "FRCH", "abs", "0801a")
-FRCH_storm10b_08_02_abs.p = hyst_plot(FRCH_storm10b_08_02_Q, FRCH_storm10b_08_02_abs, "FRCH", "abs", "0802b")
+
 FRCH_storm10c_08_03_abs.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_abs, "FRCH", "abs", "0803c")
 FRCH_storm11_08_05_abs.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_abs, "FRCH", "abs", "0805")
 FRCH_storm12a_08_12_abs.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_abs, "FRCH", "abs", "0812a")
-FRCH_storm12b_08_14_abs.p = hyst_plot(FRCH_storm12b_08_14_Q, FRCH_storm12b_08_14_abs, "FRCH", "abs", "0814b")
+
 FRCH_storm12c_08_15_abs.p = hyst_plot(FRCH_storm12c_08_15_Q, FRCH_storm12c_08_15_abs, "FRCH", "abs", "0815c")
-FRCH_storm12d_08_21_abs.p = hyst_plot(FRCH_storm12d_08_21_Q, FRCH_storm12d_08_21_abs, "FRCH", "abs", "0821d")
-FRCH_storm12e_08_23_abs.p = hyst_plot(FRCH_storm12e_08_23_Q, FRCH_storm12e_08_23_abs, "FRCH", "abs", "0823e")
+
 FRCH_storm13_09_20_abs.p = hyst_plot(FRCH_storm13_09_20_Q, FRCH_storm13_09_20_abs, "FRCH", "abs", "0920")
 FRCH_storm14_10_01_abs.p = hyst_plot(FRCH_storm14_10_01_Q, FRCH_storm14_10_01_abs, "FRCH", "abs", "1001")
 
@@ -2209,19 +2128,16 @@ multiplot(FRCH_storm1_05_31_NO3.p, FRCH_storm1_05_31_fDOM.p,FRCH_storm1_05_31_SP
           FRCH_storm3_06_18_NO3.p, FRCH_storm3_06_18_fDOM.p,FRCH_storm3_06_18_SPC.p, FRCH_storm3_06_18_turb.p,
           FRCH_storm5_06_22_NO3.p, FRCH_storm5_06_22_fDOM.p,FRCH_storm5_06_22_SPC.p, FRCH_storm5_06_22_turb.p,
           FRCH_storm6_07_12_NO3.p, FRCH_storm6_07_12_fDOM.p,FRCH_storm6_07_12_SPC.p, FRCH_storm6_07_12_turb.p,
-          FRCH_storm7_07_25_NO3.p, FRCH_storm7_07_25_fDOM.p,FRCH_storm7_07_25_SPC.p, FRCH_storm7_07_25_turb.p,
-          FRCH_storm8_07_28_NO3.p, FRCH_storm8_07_28_fDOM.p,FRCH_storm8_07_28_SPC.p, FRCH_storm8_07_28_turb.p,
-          FRCH_storm9a_07_29_NO3.p, FRCH_storm9a_07_29_fDOM.p,FRCH_storm9a_07_29_SPC.p, FRCH_storm9a_07_29_turb.p,
-          FRCH_storm9b_07_30_NO3.p, FRCH_storm9b_07_30_fDOM.p,FRCH_storm9b_07_30_SPC.p, FRCH_storm9b_07_30_turb.p,
+          
           FRCH_storm10a_08_01_NO3.p, FRCH_storm10a_08_01_fDOM.p,FRCH_storm10a_08_01_SPC.p, FRCH_storm10a_08_01_turb.p,
-          FRCH_storm10b_08_02_NO3.p, FRCH_storm10b_08_02_fDOM.p,FRCH_storm10b_08_02_SPC.p, FRCH_storm10b_08_02_turb.p,
+          
+        
           FRCH_storm10c_08_03_fDOM.p,FRCH_storm10c_08_03_SPC.p, FRCH_storm10c_08_03_turb.p,
           FRCH_storm11_08_05_NO3.p, FRCH_storm11_08_05_fDOM.p,FRCH_storm11_08_05_SPC.p, FRCH_storm11_08_05_turb.p,
           FRCH_storm12a_08_12_NO3.p, FRCH_storm12a_08_12_fDOM.p,FRCH_storm12a_08_12_SPC.p, FRCH_storm12a_08_12_turb.p,
-          FRCH_storm12b_08_14_fDOM.p,FRCH_storm12b_08_14_SPC.p, FRCH_storm12b_08_14_turb.p,
+          
           FRCH_storm12c_08_15_NO3.p, FRCH_storm12c_08_15_fDOM.p,FRCH_storm12c_08_15_SPC.p, FRCH_storm12c_08_15_turb.p,
-          FRCH_storm12d_08_21_NO3.p, FRCH_storm12d_08_21_fDOM.p,FRCH_storm12d_08_21_SPC.p, FRCH_storm12d_08_21_turb.p,
-          FRCH_storm12e_08_23_NO3.p, FRCH_storm12e_08_23_fDOM.p,FRCH_storm12e_08_23_SPC.p, FRCH_storm12e_08_23_turb.p,
+          
           FRCH_storm13_09_20_NO3.p, FRCH_storm13_09_20_fDOM.p,FRCH_storm13_09_20_SPC.p, FRCH_storm13_09_20_turb.p,
           FRCH_storm14_10_01_NO3.p, FRCH_storm14_10_01_fDOM.p,FRCH_storm14_10_01_SPC.p, FRCH_storm14_10_01_turb.p,
           cols = 7)
