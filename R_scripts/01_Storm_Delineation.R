@@ -4381,8 +4381,6 @@ STRT$fDOM.QSU.mn <- STRT$fDOM
 STRT$SpCond.uScm.mn <- STRT$SPC
 STRT$Turbidity.FNU.mn <- STRT$Turb
 
-
-
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
      xlim = as.POSIXct(c("2019-05-01 0:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"),
      ylim = c(10,0), 
@@ -4399,8 +4397,7 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
 par(new = T)
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 lines(STRT$nitrateuM * 105 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(STRT$fDOM.QSU.mn * 52 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
@@ -4414,8 +4411,7 @@ lines(STRT$Turbidity.FNU.mn * 300 ~ STRT$DateTime, type="l", xlab="", ylab="", c
 # Storm 1 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-05-30 00:00:00","2019-06-07 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4448,95 +4444,10 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# No storm #
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-07 00:00:00","2019-06-14 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-06-07 0:00:00","2019-06-14 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-05-31 19:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-07 13:00:00", tz="America/Anchorage"), col="purple")
-
-# 3 24 hour alarms # No response in discharge or chem...no storms
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-14 00:00:00","2019-06-21 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-lines(STRT$nitrateuM * 105 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-14 00:00:00","2019-06-21 20:00:00"), tz="America/Anchorage"))
-lines(STRT$fDOM.QSU.mn * 52 ~ STRT$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-06-14 00:00:00","2019-06-21 20:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-06-14 0:00:00","2019-06-21 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-05-31 19:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-07 13:00:00", tz="America/Anchorage"), col="purple")
-
-# 24 hour alarm # No response in discharge or chemistry...no storm 
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-21 21:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-lines(STRT$nitrateuM * 105 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-21 21:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
-lines(STRT$fDOM.QSU.mn * 52 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-21 21:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-06-21 21:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-05-31 19:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-07 13:00:00", tz="America/Anchorage"), col="purple")
-
-# No storms #
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-07-01 00:00:00","2019-07-10 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-07-01 0:00:00","2019-07-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-05-31 19:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-07 13:00:00", tz="America/Anchorage"), col="purple")
-
 # Storm 2 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-11 00:00:00","2019-07-20 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4573,8 +4484,7 @@ axis(side = 4)
 # Storm 3 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-21 00:00:00","2019-08-14 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4611,8 +4521,7 @@ axis(side = 4)
 # storm b #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-21 00:00:00","2019-08-15 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4628,7 +4537,7 @@ abline(v= as.POSIXct("2019-08-08 23:00:00", tz="America/Anchorage"), col="purple
 
 STRT_storm3b_08_05 = STRT[STRT$DateTime > as.POSIXct("2019-08-05 23:15:00", tz="America/Anchorage") &
                             STRT$DateTime < as.POSIXct("2019-08-08 23:00:00", tz="America/Anchorage"),]
-plot(STRT_storm3b_08_05$MeanDischarge ~ as.POSIXct(STRT_storm3b_08_05$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1000,7000), col="blue", main="STRT 190805 storm 3b",
+plot(STRT_storm3b_08_05$MeanDischarge ~ as.POSIXct(STRT_storm3b_08_05$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(3000,5000), col="blue", main="STRT 190805 storm 3b",
      xlim = as.POSIXct(c("2019-07-21 0:00:00","2019-08-15 20:00:00"), tz="America/Anchorage"))
 lines(STRT$nitrateuM * 80 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-05-30 0:00:00","2019-06-07 20:00:00"), tz="America/Anchorage"))
@@ -4649,8 +4558,7 @@ axis(side = 4)
 # storm 3c #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-21 00:00:00","2019-08-15 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4686,8 +4594,7 @@ axis(side = 4)
 # storm 4 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-15 21:00:00","2019-08-30 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 lines(STRT$nitrateuM * 105 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-06-21 21:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
 lines(STRT$fDOM.QSU.mn * 52 ~ STRT$DateTime, type="l", xlab="", ylab="", col="purple",
@@ -4729,8 +4636,6 @@ axis(side = 4)
 # storm 5 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-15 21:00:00","2019-08-30 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
 
 par(new = T)
 
@@ -4765,49 +4670,9 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-
-
-#  steep incline in discharge...not correct? maybe check the field notebook...maybe a cleaning   #
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-08-15 00:00:00","2019-08-30 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-08-15 0:00:00","2019-08-30 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-24 05:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-20 23:00:00", tz="America/Anchorage"), col="purple")
-
-#  no storms   #
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-08-31 00:00:00","2019-09-10 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-08-31 0:00:00","2019-09-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$datetimeAK), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$datetimeAK), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-24 05:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-20 23:00:00", tz="America/Anchorage"), col="purple")
-
 # storm 6 #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-20 00:00:00","2019-09-30 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4844,8 +4709,7 @@ axis(side = 4)
 # storm 7a  #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-30 00:00:00","2019-10-15 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4882,8 +4746,7 @@ axis(side = 4)
 # storm 7b #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-30 00:00:00","2019-10-15 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -4919,8 +4782,6 @@ axis(side = 4)
 # storm 7c #
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-30 00:00:00","2019-10-15 20:00:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
@@ -5106,182 +4967,94 @@ names(STRT_storm7c_10_09_abs) = c("valuedatetime","datavalue")
 
 
 ### Write csv ###
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_abs.csv"))
+write.csv(STRT_storm1_05_31, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31.csv"))
+write.csv(STRT_storm1_05_31_Q, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Q.csv"))
+write.csv(STRT_storm1_05_31_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_NO3.csv"))
+write.csv(STRT_storm1_05_31_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_fDOM.csv"))
+write.csv(STRT_storm1_05_31_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_SPC.csv"))
+write.csv(STRT_storm1_05_31_turb, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_Turb.csv"))
+write.csv(STRT_storm1_05_31_abs, here("Storm_Events", "2019", "STRT", "STRT_storm1_05_31_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_abs.csv"))
+write.csv(STRT_storm2_07_12, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12.csv"))
+write.csv(STRT_storm2_07_12_Q, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Q.csv"))
+write.csv(STRT_storm2_07_12_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_NO3.csv"))
+write.csv(STRT_storm2_07_12_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_fDOM.csv"))
+write.csv(STRT_storm2_07_12_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_SPC.csv"))
+write.csv(STRT_storm2_07_12_turb, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_Turb.csv"))
+write.csv(STRT_storm2_07_12_abs, here("Storm_Events", "2019", "STRT", "STRT_storm2_07_12_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_abs.csv"))
+write.csv(STRT_storm3a_07_25, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25.csv"))
+write.csv(STRT_storm3a_07_25_Q, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Q.csv"))
+write.csv(STRT_storm3a_07_25_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_NO3.csv"))
+write.csv(STRT_storm3a_07_25_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_fDOM.csv"))
+write.csv(STRT_storm3a_07_25_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_SPC.csv"))
+write.csv(STRT_storm3a_07_25_turb, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_Turb.csv"))
+write.csv(STRT_storm3a_07_25_abs, here("Storm_Events", "2019", "STRT", "STRT_storm3a_07_25_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_abs.csv"))
+write.csv(STRT_storm3b_08_05, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05.csv"))
+write.csv(STRT_storm3b_08_05_Q, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Q.csv"))
+write.csv(STRT_storm3b_08_05_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_NO3.csv"))
+write.csv(STRT_storm3b_08_05_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_fDOM.csv"))
+write.csv(STRT_storm3b_08_05_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_SPC.csv"))
+write.csv(STRT_storm3b_08_05_turb, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_Turb.csv"))
+write.csv(STRT_storm3b_08_05_abs, here("Storm_Events", "2019", "STRT", "STRT_storm3b_08_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_abs.csv"))
+write.csv(STRT_storm3c_08_12, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12.csv"))
+write.csv(STRT_storm3c_08_12_Q, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Q.csv"))
+write.csv(STRT_storm3c_08_12_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_NO3.csv"))
+write.csv(STRT_storm3c_08_12_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_fDOM.csv"))
+write.csv(STRT_storm3c_08_12_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_SPC.csv"))
+write.csv(STRT_storm3c_08_12_turb, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_Turb.csv"))
+write.csv(STRT_storm3c_08_12_abs, here("Storm_Events", "2019", "STRT", "STRT_storm3c_08_12_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_abs.csv"))
+write.csv(STRT_storm4_08_15, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15.csv"))
+write.csv(STRT_storm4_08_15_Q, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Q.csv"))
+write.csv(STRT_storm4_08_15_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_NO3.csv"))
+write.csv(STRT_storm4_08_15_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_fDOM.csv"))
+write.csv(STRT_storm4_08_15_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_SPC.csv"))
+write.csv(STRT_storm4_08_15_turb, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_Turb.csv"))
+write.csv(STRT_storm4_08_15_abs, here("Storm_Events", "2019", "STRT", "STRT_storm4_08_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_abs.csv"))
+write.csv(STRT_storm5_08_20, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20.csv"))
+write.csv(STRT_storm5_08_20_Q, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Q.csv"))
+write.csv(STRT_storm5_08_20_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_NO3.csv"))
+write.csv(STRT_storm5_08_20_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_fDOM.csv"))
+write.csv(STRT_storm5_08_20_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_SPC.csv"))
+write.csv(STRT_storm5_08_20_turb, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_Turb.csv"))
+write.csv(STRT_storm5_08_20_abs, here("Storm_Events", "2019", "STRT", "STRT_storm5_08_20_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_abs.csv"))
+write.csv(STRT_storm6_09_20, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20.csv"))
+write.csv(STRT_storm6_09_20_Q, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Q.csv"))
+write.csv(STRT_storm6_09_20_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_NO3.csv"))
+write.csv(STRT_storm6_09_20_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_fDOM.csv"))
+write.csv(STRT_storm6_09_20_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_SPC.csv"))
+write.csv(STRT_storm6_09_20_turb, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Turb.csv"))
+write.csv(STRT_storm6_09_20_abs, here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_abs.csv"))
+write.csv(STRT_storm7a_10_01, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01.csv"))
+write.csv(STRT_storm7a_10_01_Q, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_Q.csv"))
+write.csv(STRT_storm7a_10_01_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_NO3.csv"))
+write.csv(STRT_storm7a_10_01_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_fDOM.csv"))
+write.csv(STRT_storm7a_10_01_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_SPC.csv"))
+write.csv(STRT_storm7a_10_01_turb, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_Turb.csv"))
+write.csv(STRT_storm7a_10_01_abs, here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_abs.csv"))
+write.csv(STRT_storm7b_10_04, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04.csv"))
+write.csv(STRT_storm7b_10_04_Q, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Q.csv"))
+write.csv(STRT_storm7b_10_04_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_NO3.csv"))
+write.csv(STRT_storm7b_10_04_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_fDOM.csv"))
+write.csv(STRT_storm7b_10_04_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_SPC.csv"))
+write.csv(STRT_storm7b_10_04_turb, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Turb.csv"))
+write.csv(STRT_storm7b_10_04_abs, here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Q.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_abs.csv"))
+write.csv(STRT_storm7c_10_09, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09.csv"))
+write.csv(STRT_storm7c_10_09_Q, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Q.csv"))
+write.csv(STRT_storm7c_10_09_NO3, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_NO3.csv"))
+write.csv(STRT_storm7c_10_09_fDOM, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_fDOM.csv"))
+write.csv(STRT_storm7c_10_09_SPC, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_SPC.csv"))
+write.csv(STRT_storm7c_10_09_turb, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_Turb.csv"))
+write.csv(STRT_storm7c_10_09_abs, here("Storm_Events", "2019", "STRT", "STRT_storm7c_10_09_abs.csv"))
 
-
-# write.csv(STRT_storm1_05_31, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31.csv")
-# write.csv(STRT_storm1_05_31_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_Q.csv")
-# write.csv(STRT_storm1_05_31_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_NO3.csv")
-# write.csv(STRT_storm1_05_31_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_fDOM.csv")
-# write.csv(STRT_storm1_05_31_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_SPC.csv")
-# write.csv(STRT_storm1_05_31_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_Turb.csv")
-# write.csv(STRT_storm1_05_31_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm1_05_31_abs.csv")
-# 
-# write.csv(STRT_storm2_07_12, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12.csv")
-# write.csv(STRT_storm2_07_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_Q.csv")
-# write.csv(STRT_storm2_07_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_NO3.csv")
-# write.csv(STRT_storm2_07_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_fDOM.csv")
-# write.csv(STRT_storm2_07_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_SPC.csv")
-# write.csv(STRT_storm2_07_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_Turb.csv")
-# write.csv(STRT_storm2_07_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm2_07_12_abs.csv")
-# 
-# write.csv(STRT_storm3a_07_25, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25.csv")
-# write.csv(STRT_storm3a_07_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_Q.csv")
-# write.csv(STRT_storm3a_07_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_NO3.csv")
-# write.csv(STRT_storm3a_07_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_fDOM.csv")
-# write.csv(STRT_storm3a_07_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_SPC.csv")
-# write.csv(STRT_storm3a_07_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_Turb.csv")
-# write.csv(STRT_storm3a_07_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3a_07_25_abs.csv")
-# 
-# write.csv(STRT_storm3b_08_05, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05.csv")
-# write.csv(STRT_storm3b_08_05_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_Q.csv")
-# write.csv(STRT_storm3b_08_05_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_NO3.csv")
-# write.csv(STRT_storm3b_08_05_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_fDOM.csv")
-# write.csv(STRT_storm3b_08_05_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_SPC.csv")
-# write.csv(STRT_storm3b_08_05_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_Turb.csv")
-# write.csv(STRT_storm3b_08_05_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3b_08_05_abs.csv")
-# 
-# write.csv(STRT_storm3c_08_12, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12.csv")
-# write.csv(STRT_storm3c_08_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_Q.csv")
-# write.csv(STRT_storm3c_08_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_NO3.csv")
-# write.csv(STRT_storm3c_08_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_fDOM.csv")
-# write.csv(STRT_storm3c_08_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_SPC.csv")
-# write.csv(STRT_storm3c_08_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_Turb.csv")
-# write.csv(STRT_storm3c_08_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm3c_08_12_abs.csv")
-# 
-# write.csv(STRT_storm4_08_15, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15.csv")
-# write.csv(STRT_storm4_08_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_Q.csv")
-# write.csv(STRT_storm4_08_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_NO3.csv")
-# write.csv(STRT_storm4_08_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_fDOM.csv")
-# write.csv(STRT_storm4_08_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_SPC.csv")
-# write.csv(STRT_storm4_08_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_Turb.csv")
-# write.csv(STRT_storm4_08_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm4_08_15_abs.csv")
-# 
-# write.csv(STRT_storm5_08_20, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20.csv")
-# write.csv(STRT_storm5_08_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_Q.csv")
-# write.csv(STRT_storm5_08_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_NO3.csv")
-# write.csv(STRT_storm5_08_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_fDOM.csv")
-# write.csv(STRT_storm5_08_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_SPC.csv")
-# write.csv(STRT_storm5_08_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_Turb.csv")
-# write.csv(STRT_storm5_08_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm5_08_20_abs.csv")
-# 
-# write.csv(STRT_storm6_09_20, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20.csv")
-# write.csv(STRT_storm6_09_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_Q.csv")
-# write.csv(STRT_storm6_09_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_NO3.csv")
-# write.csv(STRT_storm6_09_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_fDOM.csv")
-# write.csv(STRT_storm6_09_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_SPC.csv")
-# write.csv(STRT_storm6_09_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_Turb.csv")
-# write.csv(STRT_storm6_09_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm6_09_20_abs.csv")
-# 
-# write.csv(STRT_storm7a_10_01, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01.csv")
-# write.csv(STRT_storm7a_10_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_Q.csv")
-# write.csv(STRT_storm7a_10_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_NO3.csv")
-# write.csv(STRT_storm7a_10_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_fDOM.csv")
-# write.csv(STRT_storm7a_10_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_SPC.csv")
-# write.csv(STRT_storm7a_10_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_Turb.csv")
-# write.csv(STRT_storm7a_10_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7_10_01_abs.csv")
-# 
-# write.csv(STRT_storm7b_10_04, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04.csv")
-# write.csv(STRT_storm7b_10_04_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_Q.csv")
-# write.csv(STRT_storm7b_10_04_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_NO3.csv")
-# write.csv(STRT_storm7b_10_04_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_fDOM.csv")
-# write.csv(STRT_storm7b_10_04_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_SPC.csv")
-# write.csv(STRT_storm7b_10_04_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_Turb.csv")
-# write.csv(STRT_storm7b_10_04_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7b_10_04_abs.csv")
-# 
-# write.csv(STRT_storm7c_10_09, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09.csv")
-# write.csv(STRT_storm7c_10_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_Q.csv")
-# write.csv(STRT_storm7c_10_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_NO3.csv")
-# write.csv(STRT_storm7c_10_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_fDOM.csv")
-# write.csv(STRT_storm7c_10_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_SPC.csv")
-# write.csv(STRT_storm7c_10_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_Turb.csv")
-# write.csv(STRT_storm7c_10_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/STRT/STRT_storm7c_10_09_abs.csv")
 
 
 vaul.five.fourty.eight$datetimeAK <- vaul.five.fourty.eight$DateTime
