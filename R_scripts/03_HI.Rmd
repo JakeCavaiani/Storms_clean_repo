@@ -2222,7 +2222,6 @@ write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "MOOS", "
 ### CARI ### 
 ```{python}
 # CARI #
-# MOOS #
 CARI_storm1_06_10_Q = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_Q.csv'))
 CARI_storm1_06_10_NO3 = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_NO3.csv'))
 CARI_storm1_06_10_fDOM = pd.read_csv(here('Storm_events/2018/CARI/CARI_storm1_06_10_fDOM.csv'))
@@ -2882,90 +2881,75 @@ ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/all.HI.p.pdf", plot=al
 ### Load data to pandas 2019 
 ```{python}
 # VAUL #
-VAUL_storm1_07_13_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_Q.csv")
-VAUL_storm1_07_13_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_NO3.csv")
-VAUL_storm1_07_13_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_fDOM.csv")
-VAUL_storm1_07_13_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_SPC.csv")
-VAUL_storm1_07_13_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_turb.csv")
-VAUL_storm1_07_13_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm1_07_13_abs.csv")
+VAUL_storm1_07_13_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_Q.csv'))
+VAUL_storm1_07_13_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_NO3.csv'))
+VAUL_storm1_07_13_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_fDOM.csv'))
+VAUL_storm1_07_13_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_SPC.csv'))
+VAUL_storm1_07_13_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_turb.csv'))
+VAUL_storm1_07_13_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm1_07_13_abs.csv'))
 
+VAUL_storm2_07_26_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_Q.csv'))
+VAUL_storm2_07_26_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_NO3.csv'))
+VAUL_storm2_07_26_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_fDOM.csv'))
+VAUL_storm2_07_26_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_SPC.csv'))
+VAUL_storm2_07_26_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_turb.csv'))
+VAUL_storm2_07_26_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm2_07_26_abs.csv'))
 
-VAUL_storm2_07_26_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_Q.csv")
-VAUL_storm2_07_26_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_NO3.csv")
-VAUL_storm2_07_26_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_fDOM.csv")
-VAUL_storm2_07_26_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_SPC.csv")
-VAUL_storm2_07_26_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_turb.csv")
-VAUL_storm2_07_26_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm2_07_26_abs.csv")
+VAUL_storm3_07_29_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_Q.csv'))
+VAUL_storm3_07_29_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_NO3.csv'))
+VAUL_storm3_07_29_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_fDOM.csv'))
+VAUL_storm3_07_29_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_SPC.csv'))
+VAUL_storm3_07_29_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_turb.csv'))
+VAUL_storm3_07_29_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm3_07_29_abs.csv'))
 
-VAUL_storm3_07_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_Q.csv")
-VAUL_storm3_07_29_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_NO3.csv")
-VAUL_storm3_07_29_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_fDOM.csv")
-VAUL_storm3_07_29_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_SPC.csv")
-VAUL_storm3_07_29_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_turb.csv")
-VAUL_storm3_07_29_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm3_07_29_abs.csv")
+VAUL_storm4a_08_02_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_Q.csv'))
+VAUL_storm4a_08_02_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_NO3.csv'))
+VAUL_storm4a_08_02_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_fDOM.csv'))
+VAUL_storm4a_08_02_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_SPC.csv'))
+VAUL_storm4a_08_02_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_turb.csv'))
+VAUL_storm4a_08_02_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4a_08_02_abs.csv'))
 
-VAUL_storm4a_08_02_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_Q.csv")
-VAUL_storm4a_08_02_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_NO3.csv")
-VAUL_storm4a_08_02_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_fDOM.csv")
-VAUL_storm4a_08_02_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_SPC.csv")
-VAUL_storm4a_08_02_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_turb.csv")
-VAUL_storm4a_08_02_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4a_08_02_abs.csv")
+VAUL_storm4c_08_05_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_Q.csv'))
+VAUL_storm4c_08_05_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_NO3.csv'))
+VAUL_storm4c_08_05_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_fDOM.csv'))
+VAUL_storm4c_08_05_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_SPC.csv'))
+VAUL_storm4c_08_05_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_turb.csv'))
+VAUL_storm4c_08_05_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm4c_08_05_abs.csv'))
 
-VAUL_storm4b_08_03_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_Q.csv")
-VAUL_storm4b_08_03_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_NO3.csv")
-VAUL_storm4b_08_03_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_fDOM.csv")
-VAUL_storm4b_08_03_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_SPC.csv")
-VAUL_storm4b_08_03_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_turb.csv")
-VAUL_storm4b_08_03_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4b_08_03_abs.csv")
+VAUL_storm5_08_12_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_Q.csv'))
+VAUL_storm5_08_12_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_NO3.csv'))
+VAUL_storm5_08_12_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_fDOM.csv'))
+VAUL_storm5_08_12_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_SPC.csv'))
+VAUL_storm5_08_12_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_turb.csv'))
+VAUL_storm5_08_12_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm5_08_12_abs.csv'))
 
-VAUL_storm4c_08_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_Q.csv")
-VAUL_storm4c_08_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_NO3.csv")
-VAUL_storm4c_08_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_fDOM.csv")
-VAUL_storm4c_08_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_SPC.csv")
-VAUL_storm4c_08_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_turb.csv")
-VAUL_storm4c_08_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm4c_08_05_abs.csv")
+VAUL_storm6_08_15_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_Q.csv'))
+VAUL_storm6_08_15_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_NO3.csv'))
+VAUL_storm6_08_15_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_fDOM.csv'))
+VAUL_storm6_08_15_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_SPC.csv'))
+VAUL_storm6_08_15_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_turb.csv'))
+VAUL_storm6_08_15_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm6_08_15_abs.csv'))
 
-VAUL_storm5_08_12_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_Q.csv")
-VAUL_storm5_08_12_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_NO3.csv")
-VAUL_storm5_08_12_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_fDOM.csv")
-VAUL_storm5_08_12_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_SPC.csv")
-VAUL_storm5_08_12_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_turb.csv")
-VAUL_storm5_08_12_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm5_08_12_abs.csv")
+VAUL_storm7_09_19_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_Q.csv'))
+VAUL_storm7_09_19_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_NO3.csv'))
+VAUL_storm7_09_19_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_fDOM.csv'))
+VAUL_storm7_09_19_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_SPC.csv'))
+VAUL_storm7_09_19_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_turb.csv'))
+VAUL_storm7_09_19_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm7_09_19_abs.csv'))
 
-VAUL_storm6_08_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_Q.csv")
-VAUL_storm6_08_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_NO3.csv")
-VAUL_storm6_08_15_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_fDOM.csv")
-VAUL_storm6_08_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_SPC.csv")
-VAUL_storm6_08_15_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_turb.csv")
-VAUL_storm6_08_15_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm6_08_15_abs.csv")
+VAUL_storm8a_09_29_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_Q.csv'))
+VAUL_storm8a_09_29_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_NO3.csv'))
+VAUL_storm8a_09_29_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_fDOM.csv'))
+VAUL_storm8a_09_29_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_SPC.csv'))
+VAUL_storm8a_09_29_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_turb.csv'))
+VAUL_storm8a_09_29_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8a_09_29_abs.csv'))
 
-VAUL_storm7_09_19_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_Q.csv")
-VAUL_storm7_09_19_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_NO3.csv")
-VAUL_storm7_09_19_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_fDOM.csv")
-VAUL_storm7_09_19_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_SPC.csv")
-VAUL_storm7_09_19_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_turb.csv")
-VAUL_storm7_09_19_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm7_09_19_abs.csv")
-
-VAUL_storm8a_09_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_Q.csv")
-VAUL_storm8a_09_29_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_NO3.csv")
-VAUL_storm8a_09_29_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_fDOM.csv")
-VAUL_storm8a_09_29_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_SPC.csv")
-VAUL_storm8a_09_29_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_turb.csv")
-VAUL_storm8a_09_29_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8a_09_29_abs.csv")
-
-VAUL_storm8b_10_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_Q.csv")
-VAUL_storm8b_10_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_NO3.csv")
-VAUL_storm8b_10_01_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_fDOM.csv")
-VAUL_storm8b_10_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_SPC.csv")
-VAUL_storm8b_10_01_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_turb.csv")
-VAUL_storm8b_10_01_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8b_10_01_abs.csv")
-
-VAUL_storm8c_10_04_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_Q.csv")
-VAUL_storm8c_10_04_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_NO3.csv")
-VAUL_storm8c_10_04_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_fDOM.csv")
-VAUL_storm8c_10_04_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_SPC.csv")
-VAUL_storm8c_10_04_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_turb.csv")
-VAUL_storm8c_10_04_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2019/VAUL/VAUL_storm8c_10_04_abs.csv")
+VAUL_storm8c_10_04_Q = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_Q.csv'))
+VAUL_storm8c_10_04_NO3 = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_NO3.csv'))
+VAUL_storm8c_10_04_fDOM = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_fDOM.csv'))
+VAUL_storm8c_10_04_SPC = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_SPC.csv'))
+VAUL_storm8c_10_04_turb = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_turb.csv'))
+VAUL_storm8c_10_04_abs = pd.read_csv(here('Storm_events/2019/VAUL/VAUL_storm8c_10_04_abs.csv'))
 
 ```
 
@@ -2993,10 +2977,6 @@ VAUL_storm4a_08_02_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm4a_08_02_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm4a_08_02_NO3 = hysteresisMetrics(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm4b_08_03_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm4b_08_03_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm4b_08_03_NO3 = hysteresisMetrics(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm4c_08_05_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm4c_08_05_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3023,10 +3003,7 @@ VAUL_storm8a_09_29_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm8a_09_29_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm8a_09_29_NO3 = hysteresisMetrics(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm8b_10_01_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm8b_10_01_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm8b_10_01_NO3 = hysteresisMetrics(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
 
 VAUL_storm8c_10_04_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm8c_10_04_NO3['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3054,10 +3031,7 @@ VAUL_storm4a_08_02_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm4a_08_02_fD
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm4a_08_02_fDOM = hysteresisMetrics(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm4b_08_03_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm4b_08_03_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm4b_08_03_fDOM = hysteresisMetrics(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
 
 VAUL_storm4c_08_05_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm4c_08_05_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3084,10 +3058,6 @@ VAUL_storm8a_09_29_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm8a_09_29_fD
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm8a_09_29_fDOM = hysteresisMetrics(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm8b_10_01_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm8b_10_01_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm8b_10_01_fDOM = hysteresisMetrics(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm8c_10_04_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm8c_10_04_fDOM['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3115,10 +3085,6 @@ VAUL_storm4a_08_02_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm4a_08_02_SPC
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm4a_08_02_SPC = hysteresisMetrics(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm4b_08_03_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm4b_08_03_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm4b_08_03_SPC = hysteresisMetrics(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm4c_08_05_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm4c_08_05_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3145,10 +3111,6 @@ VAUL_storm8a_09_29_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm8a_09_29_SPC
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm8a_09_29_SPC = hysteresisMetrics(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm8b_10_01_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm8b_10_01_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm8b_10_01_SPC = hysteresisMetrics(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm8c_10_04_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm8c_10_04_SPC['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3177,10 +3139,6 @@ VAUL_storm4a_08_02_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm4a_08_02_tu
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm4a_08_02_turb = hysteresisMetrics(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm4b_08_03_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm4b_08_03_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm4b_08_03_turb = hysteresisMetrics(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm4c_08_05_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm4c_08_05_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3207,10 +3165,6 @@ VAUL_storm8a_09_29_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm8a_09_29_tu
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm8a_09_29_turb = hysteresisMetrics(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm8b_10_01_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm8b_10_01_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm8b_10_01_turb = hysteresisMetrics(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm8c_10_04_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm8c_10_04_turb['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3238,10 +3192,6 @@ VAUL_storm4a_08_02_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm4a_08_02_abs
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm4a_08_02_abs = hysteresisMetrics(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm4b_08_03_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm4b_08_03_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm4b_08_03_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm4b_08_03_abs = hysteresisMetrics(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm4c_08_05_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm4c_08_05_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm4c_08_05_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3268,10 +3218,6 @@ VAUL_storm8a_09_29_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm8a_09_29_abs
 timespacing = 15 # 15 minutes between records
 hysdict_VAUL_storm8a_09_29_abs = hysteresisMetrics(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-VAUL_storm8b_10_01_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-VAUL_storm8b_10_01_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm8b_10_01_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_VAUL_storm8b_10_01_abs = hysteresisMetrics(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 VAUL_storm8c_10_04_Q['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 VAUL_storm8c_10_04_abs['valuedatetime'] =  pd.to_datetime(VAUL_storm8c_10_04_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -3299,8 +3245,7 @@ VAUL.hyst.results.list = list(py$hysdict_VAUL_storm1_07_13_NO3,
                               py$hysdict_VAUL_storm3_07_29_abs,
                               py$hysdict_VAUL_storm4a_08_02_fDOM,
                               py$hysdict_VAUL_storm4a_08_02_SPC,
-                              py$hysdict_VAUL_storm4b_08_03_fDOM,
-                              py$hysdict_VAUL_storm4b_08_03_SPC,
+                              
                               py$hysdict_VAUL_storm4c_08_05_NO3,
                               py$hysdict_VAUL_storm4c_08_05_fDOM,
                               py$hysdict_VAUL_storm4c_08_05_SPC,
@@ -3325,16 +3270,11 @@ VAUL.hyst.results.list = list(py$hysdict_VAUL_storm1_07_13_NO3,
                               py$hysdict_VAUL_storm8a_09_29_SPC,
                               py$hysdict_VAUL_storm8a_09_29_turb,
                               py$hysdict_VAUL_storm8a_09_29_abs,
-                              py$hysdict_VAUL_storm8b_10_01_NO3,
-                              py$hysdict_VAUL_storm8b_10_01_fDOM,
-                              py$hysdict_VAUL_storm8b_10_01_SPC,
-                              py$hysdict_VAUL_storm8b_10_01_turb,
-                              py$hysdict_VAUL_storm8b_10_01_abs,
+                              
                               py$hysdict_VAUL_storm8c_10_04_NO3,
                               py$hysdict_VAUL_storm8c_10_04_fDOM,
                               py$hysdict_VAUL_storm8c_10_04_SPC,
-                              py$hysdict_VAUL_storm8c_10_04_turb,
-                              py$hysdict_VAUL_storm8c_10_04_abs)
+                              py$hysdict_VAUL_storm8c_10_04_turb)
                               
 VAUL.hyst.results.list.2 = list()
 for (i in 1:length(VAUL.hyst.results.list)){
@@ -3387,8 +3327,7 @@ VAUL.hyst.results.df$storm.ID = c("VAUL_storm1_07_13_NO3",
                                   "VAUL_storm4a_08_02_fDOM",
                                   "VAUL_storm4a_08_02_SPC",
                                   
-                                  "VAUL_storm4b_08_03_fDOM",
-                                  "VAUL_storm4b_08_03_SPC",
+                                 
                                   
                                   "VAUL_storm4c_08_05_NO3",
                                   "VAUL_storm4c_08_05_fDOM",
@@ -3415,21 +3354,15 @@ VAUL.hyst.results.df$storm.ID = c("VAUL_storm1_07_13_NO3",
                                   "VAUL_storm8a_09_29_SPC",
                                   "VAUL_storm8a_09_29_turb",
                                   "VAUL_storm8a_09_29_abs",
-                                  "VAUL_storm8b_10_01_NO3",
-                                  "VAUL_storm8b_10_01_fDOM",
-                                  "VAUL_storm8b_10_01_SPC",
-                                  "VAUL_storm8b_10_01_turb",
-                                  "VAUL_storm8b_10_01_abs",
+                                  
                                   "VAUL_storm8c_10_04_NO3",
                                   "VAUL_storm8c_10_04_fDOM",
                                   "VAUL_storm8c_10_04_SPC",
-                                  "VAUL_storm8c_10_04_turb",
-                                  "VAUL_storm8c_10_04_abs")
-
+                                  "VAUL_storm8c_10_04_turb")
 
 VAUL.hyst.results.df$site.ID = "VAUL"
 
-write.csv(VAUL.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.hyst.results.csv")
+write.csv(VAUL.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2019", "VAUL", "VAUL.hyst.results.csv"))
 
 # plot HI by normalized discharge
 HIs.Q.list =list()
@@ -3476,11 +3409,10 @@ VAUL.HI.df$storm.ID = c(rep("VAUL_storm1_07_13_NO3", 50),
                         rep("VAUL_storm3_07_29_fDOM", 50),
                         rep("VAUL_storm3_07_29_SPC", 50),
                         rep("VAUL_storm3_07_29_turb", 50),
-                        rep("VAUL_storm3_07_29_abs", 49),
+                        rep("VAUL_storm3_07_29_abs", 50),
                         rep("VAUL_storm4a_08_02_fDOM", 50),
                         rep("VAUL_storm4a_08_02_SPC", 50),
-                        rep("VAUL_storm4b_08_03_fDOM", 50),
-                        rep("VAUL_storm4b_08_03_SPC", 49),
+                        
                         rep("VAUL_storm4c_08_05_NO3", 50),
                         rep("VAUL_storm4c_08_05_fDOM", 50),
                         rep("VAUL_storm4c_08_05_SPC", 50),
@@ -3506,16 +3438,11 @@ VAUL.HI.df$storm.ID = c(rep("VAUL_storm1_07_13_NO3", 50),
                         rep("VAUL_storm8a_09_29_SPC", 50),
                         rep("VAUL_storm8a_09_29_turb", 50),
                         rep("VAUL_storm8a_09_29_abs", 50),
-                        rep("VAUL_storm8b_10_01_NO3", 50),
-                        rep("VAUL_storm8b_10_01_fDOM", 50),
-                        rep("VAUL_storm8b_10_01_SPC", 50),
-                        rep("VAUL_storm8b_10_01_turb", 50),
-                        rep("VAUL_storm8b_10_01_abs", 50),
+                        
                         rep("VAUL_storm8c_10_04_NO3", 50),
                         rep("VAUL_storm8c_10_04_fDOM", 50),
-                        rep("VAUL_storm8c_10_04_SPC", 49),
-                        rep("VAUL_storm8c_10_04_turb", 50),
-                        rep("VAUL_storm8c_10_04_abs", 49))
+                        rep("VAUL_storm8c_10_04_SPC", 50),
+                        rep("VAUL_storm8c_10_04_turb", 50))
 
 VAUL.HI.df$storm.ID = as.factor(VAUL.HI.df$storm.ID)
 VAUL.HI.df = separate(data=VAUL.HI.df, col=storm.ID, into=c("site.ID","storm.num", "month", "day", "response"), sep = "_", remove = F)
@@ -3539,8 +3466,12 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2019/VAUL/VAUL.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(VAUL.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.csv")
+
+ggsave(here("plots", "HI_plots", "2019", "VAUL", "VAUL.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(VAUL.HI.df, here("Output_from_analysis", "03_HI_FI", "2019", "VAUL", "VAUL.HI.df.csv"))
+
 
 VAUL.HI.df$date <- as.Date(with(VAUL.HI.df, paste(month, day, sep = "-")), "%m-%d")
 VAUL.HI.df$doy <- yday(VAUL.HI.df$date) 
@@ -3554,8 +3485,12 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2019/VAUL/VAUL.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(VAUL.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2019/VAUL/VAUL.HI.df.doy.csv")
+
+ggsave(here("plots", "HI_plots", "2019", "VAUL", "VAUL.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(VAUL.HI.df, here("Output_from_analysis", "03_HI_FI", "2019", "VAUL", "VAUL.HI.df.doy.csv"))
+
 
 ```
 
