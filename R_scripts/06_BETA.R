@@ -1499,18 +1499,12 @@ storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/",
                                    pattern=".csv", 
                                    full.names=TRUE)
 
-# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
-#                                    recursive=F, 
-#                                    pattern=".csv", 
-#                                    full.names=TRUE)
-
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
 storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
-# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2019/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -1519,7 +1513,7 @@ CARI_storm_list_beta = storm_list_beta[c(1:60)] # 60
 FRCH_storm_list_beta = storm_list_beta[c(1:72)] #72
 MOOS_storm_list_beta = storm_list_beta[c(187:264)] #78
 POKE_storm_list_beta = storm_list_beta[c(265:342)] # 78
-STRT_storm_list_beta = storm_list_beta[c(343:408)] # 66
+STRT_storm_list_beta = storm_list_beta[c(73:138)] # 66
 VAUL_storm_list_beta = storm_list_beta[c(409:480)] # 72
 
 
