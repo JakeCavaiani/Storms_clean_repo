@@ -1479,12 +1479,6 @@ VAUL_storm4a_08_02_SPC <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_st
 VAUL_storm4a_08_02_turb <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_turb.csv"))
 VAUL_storm4a_08_02_abs <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4a_08_02_abs.csv"))
 
-VAUL_storm4b_08_03_Q <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_Q.csv"))
-VAUL_storm4b_08_03_NO3 <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_NO3.csv"))
-VAUL_storm4b_08_03_fDOM <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_fDOM.csv"))
-VAUL_storm4b_08_03_SPC <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_SPC.csv"))
-VAUL_storm4b_08_03_turb <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_turb.csv"))
-VAUL_storm4b_08_03_abs <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4b_08_03_abs.csv"))
 
 VAUL_storm4c_08_05_Q <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_Q.csv"))
 VAUL_storm4c_08_05_NO3 <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm4c_08_05_NO3.csv"))
@@ -1520,13 +1514,6 @@ VAUL_storm8a_09_29_fDOM <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_s
 VAUL_storm8a_09_29_SPC <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_SPC.csv"))
 VAUL_storm8a_09_29_turb <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_turb.csv"))
 VAUL_storm8a_09_29_abs <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8a_09_29_abs.csv"))
-
-VAUL_storm8b_10_01_Q <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_Q.csv"))
-VAUL_storm8b_10_01_NO3 <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_NO3.csv"))
-VAUL_storm8b_10_01_fDOM <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_fDOM.csv"))
-VAUL_storm8b_10_01_SPC <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_SPC.csv"))
-VAUL_storm8b_10_01_turb <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_turb.csv"))
-VAUL_storm8b_10_01_abs <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8b_10_01_abs.csv"))
 
 VAUL_storm8c_10_04_Q <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_Q.csv"))
 VAUL_storm8c_10_04_NO3 <- read_csv(here("Storm_Events", "2019", "VAUL", "VAUL_storm8c_10_04_NO3.csv"))
@@ -2158,13 +2145,13 @@ VAUL_storm1_07_13_NO3.p = hyst_plot(VAUL_storm1_07_13_Q, VAUL_storm1_07_13_NO3, 
 VAUL_storm2_07_26_NO3.p = hyst_plot(VAUL_storm2_07_26_Q, VAUL_storm2_07_26_NO3, "VAUL", "NO3", "0726")
 VAUL_storm3_07_29_NO3.p = hyst_plot(VAUL_storm3_07_29_Q, VAUL_storm3_07_29_NO3, "VAUL", "NO3", "0729")
 VAUL_storm4a_08_02_NO3.p = hyst_plot(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_NO3, "VAUL", "NO3", "0802a")
-VAUL_storm4b_08_03_NO3.p = hyst_plot(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_NO3, "VAUL", "NO3", "0803b")
+
 VAUL_storm4c_08_05_NO3.p = hyst_plot(VAUL_storm4c_08_05_Q, VAUL_storm4c_08_05_NO3, "VAUL", "NO3", "0805c")
 VAUL_storm5_08_12_NO3.p = hyst_plot(VAUL_storm5_08_12_Q, VAUL_storm5_08_12_NO3, "VAUL", "NO3", "0812")
 VAUL_storm6_08_15_NO3.p = hyst_plot(VAUL_storm6_08_15_Q, VAUL_storm6_08_15_NO3, "VAUL", "NO3", "0815")
 VAUL_storm7_09_19_NO3.p = hyst_plot(VAUL_storm7_09_19_Q, VAUL_storm7_09_19_NO3, "VAUL", "NO3", "0919")
 VAUL_storm8a_09_29_NO3.p = hyst_plot(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_NO3, "VAUL", "NO3", "0929a")
-VAUL_storm8b_10_01_NO3.p = hyst_plot(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_NO3, "VAUL", "NO3", "1001b")
+
 VAUL_storm8c_10_04_NO3.p = hyst_plot(VAUL_storm8c_10_04_Q, VAUL_storm8c_10_04_NO3, "VAUL", "NO3", "1004c")
 
 # fDOM
@@ -2177,13 +2164,13 @@ VAUL_storm1_07_13_fDOM.p = hyst_plot(VAUL_storm1_07_13_Q, VAUL_storm1_07_13_fDOM
 VAUL_storm2_07_26_fDOM.p = hyst_plot(VAUL_storm2_07_26_Q, VAUL_storm2_07_26_fDOM, "VAUL", "fDOM", "0726")
 VAUL_storm3_07_29_fDOM.p = hyst_plot(VAUL_storm3_07_29_Q, VAUL_storm3_07_29_fDOM, "VAUL", "fDOM", "0729")
 VAUL_storm4a_08_02_fDOM.p = hyst_plot(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_fDOM, "VAUL", "fDOM", "0802a")
-VAUL_storm4b_08_03_fDOM.p = hyst_plot(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_fDOM, "VAUL", "fDOM", "0803b")
+
 VAUL_storm4c_08_05_fDOM.p = hyst_plot(VAUL_storm4c_08_05_Q, VAUL_storm4c_08_05_fDOM, "VAUL", "fDOM", "0805c")
 VAUL_storm5_08_12_fDOM.p = hyst_plot(VAUL_storm5_08_12_Q, VAUL_storm5_08_12_fDOM, "VAUL", "fDOM", "0812")
 VAUL_storm6_08_15_fDOM.p = hyst_plot(VAUL_storm6_08_15_Q, VAUL_storm6_08_15_fDOM, "VAUL", "fDOM", "0815")
 VAUL_storm7_09_19_fDOM.p = hyst_plot(VAUL_storm7_09_19_Q, VAUL_storm7_09_19_fDOM, "VAUL", "fDOM", "0919")
 VAUL_storm8a_09_29_fDOM.p = hyst_plot(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_fDOM, "VAUL", "fDOM", "0929a")
-VAUL_storm8b_10_01_fDOM.p = hyst_plot(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_fDOM, "VAUL", "fDOM", "1001b")
+
 VAUL_storm8c_10_04_fDOM.p = hyst_plot(VAUL_storm8c_10_04_Q, VAUL_storm8c_10_04_fDOM, "VAUL", "fDOM", "1004c")
 
 # SPC
@@ -2197,13 +2184,13 @@ VAUL_storm1_07_13_SPC.p = hyst_plot(VAUL_storm1_07_13_Q, VAUL_storm1_07_13_SPC, 
 VAUL_storm2_07_26_SPC.p = hyst_plot(VAUL_storm2_07_26_Q, VAUL_storm2_07_26_SPC, "VAUL", "SPC", "0726")
 VAUL_storm3_07_29_SPC.p = hyst_plot(VAUL_storm3_07_29_Q, VAUL_storm3_07_29_SPC, "VAUL", "SPC", "0729")
 VAUL_storm4a_08_02_SPC.p = hyst_plot(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_SPC, "VAUL", "SPC", "0802a")
-VAUL_storm4b_08_03_SPC.p = hyst_plot(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_SPC, "VAUL", "SPC", "0803b")
+
 VAUL_storm4c_08_05_SPC.p = hyst_plot(VAUL_storm4c_08_05_Q, VAUL_storm4c_08_05_SPC, "VAUL", "SPC", "0805c")
 VAUL_storm5_08_12_SPC.p = hyst_plot(VAUL_storm5_08_12_Q, VAUL_storm5_08_12_SPC, "VAUL", "SPC", "0812")
 VAUL_storm6_08_15_SPC.p = hyst_plot(VAUL_storm6_08_15_Q, VAUL_storm6_08_15_SPC, "VAUL", "SPC", "0815")
 VAUL_storm7_09_19_SPC.p = hyst_plot(VAUL_storm7_09_19_Q, VAUL_storm7_09_19_SPC, "VAUL", "SPC", "0919")
 VAUL_storm8a_09_29_SPC.p = hyst_plot(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_SPC, "VAUL", "SPC", "0929a")
-VAUL_storm8b_10_01_SPC.p = hyst_plot(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_SPC, "VAUL", "SPC", "1001b")
+
 VAUL_storm8c_10_04_SPC.p = hyst_plot(VAUL_storm8c_10_04_Q, VAUL_storm8c_10_04_SPC, "VAUL", "SPC", "1004c")
 
 # turb 
@@ -2215,13 +2202,13 @@ VAUL_storm1_07_13_turb.p = hyst_plot(VAUL_storm1_07_13_Q, VAUL_storm1_07_13_turb
 VAUL_storm2_07_26_turb.p = hyst_plot(VAUL_storm2_07_26_Q, VAUL_storm2_07_26_turb, "VAUL", "turb", "0726")
 VAUL_storm3_07_29_turb.p = hyst_plot(VAUL_storm3_07_29_Q, VAUL_storm3_07_29_turb, "VAUL", "turb", "0729")
 VAUL_storm4a_08_02_turb.p = hyst_plot(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_turb, "VAUL", "turb", "0802a")
-VAUL_storm4b_08_03_turb.p = hyst_plot(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_turb, "VAUL", "turb", "0803b")
+
 VAUL_storm4c_08_05_turb.p = hyst_plot(VAUL_storm4c_08_05_Q, VAUL_storm4c_08_05_turb, "VAUL", "turb", "0805c")
 VAUL_storm5_08_12_turb.p = hyst_plot(VAUL_storm5_08_12_Q, VAUL_storm5_08_12_turb, "VAUL", "turb", "0812")
 VAUL_storm6_08_15_turb.p = hyst_plot(VAUL_storm6_08_15_Q, VAUL_storm6_08_15_turb, "VAUL", "turb", "0815")
 VAUL_storm7_09_19_turb.p = hyst_plot(VAUL_storm7_09_19_Q, VAUL_storm7_09_19_turb, "VAUL", "turb", "0919")
 VAUL_storm8a_09_29_turb.p = hyst_plot(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_turb, "VAUL", "turb", "0929a")
-VAUL_storm8b_10_01_turb.p = hyst_plot(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_turb, "VAUL", "turb", "1001b")
+
 VAUL_storm8c_10_04_turb.p = hyst_plot(VAUL_storm8c_10_04_Q, VAUL_storm8c_10_04_turb, "VAUL", "turb", "1004c")
 
 # ABS
@@ -2230,13 +2217,13 @@ VAUL_storm1_07_13_abs.p = hyst_plot(VAUL_storm1_07_13_Q, VAUL_storm1_07_13_abs, 
 VAUL_storm2_07_26_abs.p = hyst_plot(VAUL_storm2_07_26_Q, VAUL_storm2_07_26_abs, "VAUL", "abs", "0726")
 VAUL_storm3_07_29_abs.p = hyst_plot(VAUL_storm3_07_29_Q, VAUL_storm3_07_29_abs, "VAUL", "abs", "0729")
 VAUL_storm4a_08_02_abs.p = hyst_plot(VAUL_storm4a_08_02_Q, VAUL_storm4a_08_02_abs, "VAUL", "abs", "0802a")
-VAUL_storm4b_08_03_abs.p = hyst_plot(VAUL_storm4b_08_03_Q, VAUL_storm4b_08_03_abs, "VAUL", "abs", "0803b")
+
 VAUL_storm4c_08_05_abs.p = hyst_plot(VAUL_storm4c_08_05_Q, VAUL_storm4c_08_05_abs, "VAUL", "abs", "0805c")
 VAUL_storm5_08_12_abs.p = hyst_plot(VAUL_storm5_08_12_Q, VAUL_storm5_08_12_abs, "VAUL", "abs", "0812")
 VAUL_storm6_08_15_abs.p = hyst_plot(VAUL_storm6_08_15_Q, VAUL_storm6_08_15_abs, "VAUL", "abs", "0815")
 VAUL_storm7_09_19_abs.p = hyst_plot(VAUL_storm7_09_19_Q, VAUL_storm7_09_19_abs, "VAUL", "abs", "0919")
 VAUL_storm8a_09_29_abs.p = hyst_plot(VAUL_storm8a_09_29_Q, VAUL_storm8a_09_29_abs, "VAUL", "abs", "0929a")
-VAUL_storm8b_10_01_abs.p = hyst_plot(VAUL_storm8b_10_01_Q, VAUL_storm8b_10_01_abs, "VAUL", "abs", "1001b")
+
 VAUL_storm8c_10_04_abs.p = hyst_plot(VAUL_storm8c_10_04_Q, VAUL_storm8c_10_04_abs, "VAUL", "abs", "1004c")
 
 # Multiplots of VAUL storms #
@@ -2281,13 +2268,13 @@ multiplot(VAUL_storm1_07_13_NO3.p, VAUL_storm1_07_13_fDOM.p,VAUL_storm1_07_13_SP
           VAUL_storm2_07_26_NO3.p, VAUL_storm2_07_26_fDOM.p,VAUL_storm2_07_26_SPC.p, VAUL_storm2_07_26_turb.p,
           VAUL_storm3_07_29_NO3.p, VAUL_storm3_07_29_fDOM.p,VAUL_storm3_07_29_SPC.p, VAUL_storm3_07_29_turb.p,
           VAUL_storm4a_08_02_NO3.p, VAUL_storm4a_08_02_fDOM.p,VAUL_storm4a_08_02_SPC.p, VAUL_storm4a_08_02_turb.p,
-          VAUL_storm4b_08_03_NO3.p, VAUL_storm4b_08_03_fDOM.p,VAUL_storm4b_08_03_SPC.p, VAUL_storm4b_08_03_turb.p,
+          
           VAUL_storm4c_08_05_NO3.p, VAUL_storm4c_08_05_fDOM.p,VAUL_storm4c_08_05_SPC.p, VAUL_storm4c_08_05_turb.p,
           VAUL_storm5_08_12_NO3.p, VAUL_storm5_08_12_fDOM.p,VAUL_storm5_08_12_SPC.p, VAUL_storm5_08_12_turb.p,
           VAUL_storm6_08_15_NO3.p, VAUL_storm6_08_15_fDOM.p,VAUL_storm6_08_15_SPC.p, VAUL_storm6_08_15_turb.p,
           VAUL_storm7_09_19_NO3.p, VAUL_storm7_09_19_fDOM.p,VAUL_storm7_09_19_SPC.p, VAUL_storm7_09_19_turb.p,
           VAUL_storm8a_09_29_NO3.p, VAUL_storm8a_09_29_fDOM.p,VAUL_storm8a_09_29_SPC.p, VAUL_storm8a_09_29_turb.p,
-          VAUL_storm8b_10_01_NO3.p, VAUL_storm8b_10_01_fDOM.p,VAUL_storm8b_10_01_SPC.p, VAUL_storm8b_10_01_turb.p,
+          
           VAUL_storm8c_10_04_NO3.p, VAUL_storm8c_10_04_fDOM.p,VAUL_storm8c_10_04_SPC.p, VAUL_storm8c_10_04_turb.p,
           cols = 7)
 
