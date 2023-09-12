@@ -66,7 +66,7 @@ POKE_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019",
 STRT_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "STRT","STRT.HI.df.doy.csv"))
 VAUL_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "VAUL","VAUL.HI.df.doy.csv"))
 CARI_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI","CARI.HI.df.doy.csv"))
-STRT_HI_doy_df_2019[c(2251:2500), 7] <- "storm7c"
+# STRT_HI_doy_df_2019[c(2251:2500), 7] <- "storm7c"
 
 
 # 2020
@@ -4393,11 +4393,6 @@ STRTstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="STRT", 
                                   full.names=TRUE)
 
-# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="STRT", 
-#                                   full.names=TRUE)
-
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -4412,7 +4407,7 @@ STRT_storms$storm.num = c(rep("storm1", 638),
                           rep("storm4", 466),
                           rep("storm5", 98),
                           rep("storm6", 246),
-                          rep("storm7", 246),
+                          rep("storm7a", 246),
                           rep("storm7b", 266),
                           rep("storm7c", 258))
 
@@ -4893,9 +4888,7 @@ HI.strt.2019 <- rbind(HI.strt.no3.2.2019, HI.strt.fDOM.2.2019,
 HI.strt.2019$burn <- "burned" # adding a burn column
 HI.strt.2019$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.strt.2019.csv"))
-
-# write.csv(HI.strt.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.strt.2019.csv")
+write.csv(HI.strt.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.strt.2019.csv"))
 
 
 # CARI ####
