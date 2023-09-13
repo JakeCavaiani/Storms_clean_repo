@@ -66,7 +66,7 @@ POKE_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019",
 STRT_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "STRT","STRT.HI.df.doy.csv"))
 VAUL_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "VAUL","VAUL.HI.df.doy.csv"))
 CARI_HI_doy_df_2019 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2019", "CARI","CARI.HI.df.doy.csv"))
-# STRT_HI_doy_df_2019[c(2251:2500), 7] <- "storm7c"
+
 
 
 # 2020
@@ -3897,11 +3897,6 @@ VAULstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="VAUL", 
                                   full.names=TRUE)
 
-# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="VAUL", 
-#                                   full.names=TRUE)
-
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -3911,15 +3906,15 @@ VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list,
 VAUL_storms$storm.num = c(rep("storm1", 191),
                           rep("storm2", 207),
                           rep("storm3", 191),
-                          rep("storm4a", 83),
-                          rep("storm4b", 211),
-                          rep("storm4c", 707),
+                          rep("storm4a", 307),
+                          
+                          rep("storm4c", 227),
                           rep("storm5", 275),
                           rep("storm6", 263),
                           rep("storm7", 107),
-                          rep("storm8a", 167),
-                          rep("storm8b", 223),
-                          rep("storm8c", 479))
+                          rep("storm8a", 455),
+                         
+                          rep("storm8c", 191))
 
 VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
 VAUL.2019.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2019, by = "DateTime")
@@ -4382,9 +4377,7 @@ HI.vaul.2019 <- rbind(HI.vaul.no3.2.2019, HI.vaul.fDOM.2.2019,
 HI.vaul.2019$burn <- "unburned" # adding a burn column
 HI.vaul.2019$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.vaul.2019.csv"))
-
-# write.csv(HI.vaul.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.vaul.2019.csv")
+write.csv(HI.vaul.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.vaul.2019.csv"))
 
 
 # STRT ####
