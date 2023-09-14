@@ -6393,8 +6393,7 @@ par(new = T)
 
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-11-01 00:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 lines(MOOS$nitrateuM * 55 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(MOOS$fDOM.QSU.mn * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
@@ -6409,8 +6408,7 @@ lines(MOOS$Turbidity.FNU.mn * 10 ~ MOOS$DateTime, type="l", xlab="", ylab="", co
 # Storm 1 # 
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-06-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6443,86 +6441,11 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# 3 alarms go off for 24 hour window but not a lot of response in discharge or chem no storm # 
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-11 00:00:00","2019-06-20 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-lines(MOOS$nitrateuM * 55 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$fDOM.QSU.mn * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-06-11 0:00:00","2019-06-20 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-06-01 06:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-08 16:00:00", tz="America/Anchorage"), col="purple")
-
-# 1 alarm go off for 24 hour window but not a lot of response in discharge # 
-# second alarm i see a slight response in fdom...im going to delineate it and see what happens
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-21 00:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-lines(MOOS$nitrateuM * 55 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$fDOM.QSU.mn * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-06-21 0:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-06-22 14:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-23 13:00:00", tz="America/Anchorage"), col="purple")
-
-MOOS_storm2_06_22 = MOOS[MOOS$DateTime > as.POSIXct("2019-06-22 14:15:00", tz="America/Anchorage") &
-                           MOOS$DateTime < as.POSIXct("2019-06-23 13:00:00", tz="America/Anchorage"),]
-plot(MOOS_storm2_06_22$MeanDischarge ~ as.POSIXct(MOOS_storm2_06_22$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,1000), col="blue", main="MOOS 190622 storm 2",
-     xlim = as.POSIXct(c("2019-06-21 0:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$datetimeAK, type="h",
-     xlim = as.POSIXct(c("2019-06-21 0:00:00","2019-06-30 20:00:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# No alarms # 
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-30 00:00:00","2019-07-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-06-30 0:00:00","2019-07-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-06-01 06:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-06-08 16:00:00", tz="America/Anchorage"), col="purple")
 
 # storm 3 # 
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-11 00:00:00","2019-07-20 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6559,8 +6482,7 @@ axis(side = 4)
 # Storm 4 #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6597,8 +6519,7 @@ axis(side = 4)
 # 5 #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6634,8 +6555,7 @@ axis(side = 4)
 # 6a #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6647,87 +6567,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2019-08-01 13:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-02 18:00:00", tz="America/Anchorage"), col="purple")
-
-MOOS_storm6a_08_01 = MOOS[MOOS$DateTime > as.POSIXct("2019-08-01 13:15:00", tz="America/Anchorage") &
-                            MOOS$DateTime < as.POSIXct("2019-08-02 18:00:00", tz="America/Anchorage"),]
-plot(MOOS_storm6a_08_01$MeanDischarge ~ as.POSIXct(MOOS_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,1000), col="blue", main="MOOS 190801 storm 6",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$fDOM.QSU.mn * 8 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$SpCond.uScm.mn * 5 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$Turbidity.FNU.mn * 70 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# 6b #
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-02 18:0:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-03 18:00:00", tz="America/Anchorage"), col="purple")
-
-MOOS_storm6b_08_02 = MOOS[MOOS$DateTime > as.POSIXct("2019-08-02 18:00:00", tz="America/Anchorage") &
-                            MOOS$DateTime < as.POSIXct("2019-08-03 18:00:00", tz="America/Anchorage"),]
-plot(MOOS_storm6b_08_02$MeanDischarge ~ as.POSIXct(MOOS_storm6b_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,2000), col="blue", main="MOOS 190802 storm 6b",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$fDOM.QSU.mn * 8 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$SpCond.uScm.mn * 5 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$Turbidity.FNU.mn * 70 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# 6c #
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-03 18:00:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2019-08-06 02:00:00", tz="America/Anchorage"), col="purple")
 
-MOOS_storm6c_08_03 = MOOS[MOOS$DateTime > as.POSIXct("2019-08-03 18:00:00", tz="America/Anchorage") &
+MOOS_storm6a_08_01 = MOOS[MOOS$DateTime > as.POSIXct("2019-08-01 13:15:00", tz="America/Anchorage") &
                             MOOS$DateTime < as.POSIXct("2019-08-06 02:00:00", tz="America/Anchorage"),]
-plot(MOOS_storm6c_08_03$MeanDischarge ~ as.POSIXct(MOOS_storm6c_08_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,2250), col="blue", main="MOOS 190803 storm 6c",
+plot(MOOS_storm6a_08_01$MeanDischarge ~ as.POSIXct(MOOS_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,2000), col="blue", main="MOOS 190801 storm 6",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
 lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
@@ -6737,18 +6581,19 @@ lines(MOOS$SpCond.uScm.mn * 5 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="
       xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(MOOS$Turbidity.FNU.mn * 70 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="black",
       xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
+
 par(new = T)
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"),
      ylim = c(10,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
+
 
 # 6d #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-20 23:45:00","2019-08-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6782,12 +6627,10 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
 axis(side = 4)
 
 
-# 1 storm on top of the other #
 # 7a #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-11 00:00:00","2019-08-20 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6823,8 +6666,7 @@ axis(side = 4)
 # 7b #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-11 00:00:00","2019-08-20 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6840,7 +6682,7 @@ abline(v= as.POSIXct("2019-08-16 04:15:00", tz="America/Anchorage"), col="purple
 
 MOOS_storm7b_08_14 = MOOS[MOOS$DateTime > as.POSIXct("2019-08-15 07:00:00", tz="America/Anchorage") &
                             MOOS$DateTime < as.POSIXct("2019-08-16 04:15:00", tz="America/Anchorage"),]
-plot(MOOS_storm7b_08_14$MeanDischarge ~ as.POSIXct(MOOS_storm7b_08_14$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1500,3000), col="blue", main="MOOS 190814 storm 7b",
+plot(MOOS_storm7b_08_14$MeanDischarge ~ as.POSIXct(MOOS_storm7b_08_14$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1700,2000), col="blue", main="MOOS 190814 storm 7b",
      xlim = as.POSIXct(c("2019-08-11 0:00:00","2019-08-20 20:00:00"), tz="America/Anchorage"))
 lines(MOOS$nitrateuM * 40 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
@@ -6860,8 +6702,7 @@ axis(side = 4)
 # 7c #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-11 00:00:00","2019-08-20 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6895,51 +6736,11 @@ plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
 axis(side = 4)
 
 
-# alarm on the down swing of the last storm # no response in discharge or chem no storm 
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-08-20 20:15:00","2019-08-31 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-lines(MOOS$nitrateuM * 55 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-lines(MOOS$fDOM.QSU.mn * 30 ~ MOOS$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-08-20 20:15:00","2019-08-31 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-16 05:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-20 18:00:00", tz="America/Anchorage"), col="purple")
-
-# No alarms #
-plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-08-31 00:00:00","2019-09-10 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
-par(new = T)
-
-plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
-     xlim = as.POSIXct(c("2019-08-31 0:00:00","2019-09-10 20:00:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(frch.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(frch.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-16 05:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-20 18:00:00", tz="America/Anchorage"), col="purple")
 
 # Storm 8 # 
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-11 00:00:00","2019-09-30 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -6976,8 +6777,7 @@ axis(side = 4)
 # Storm 9 #
 plot(MOOS$MeanDischarge ~ MOOS$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-09-30 00:00:00","2019-10-15 20:00:00"), tz="America/Anchorage"))
-abline(h=MOOS_bfQ_mn*2, col="red", lty=2)
-abline(h=MOOS_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(FRCH.st$inst_rainfall_mm ~ FRCH.st$Datetime, type="h",
@@ -7027,16 +6827,6 @@ names(MOOS_storm1_06_01_turb) = c("valuedatetime","datavalue")
 MOOS_storm1_06_01_abs = subset(MOOS_storm1_06_01, select = c("DateTime","ABS_254"))
 names(MOOS_storm1_06_01_abs) = c("valuedatetime","datavalue")
 
-#MOOS_storm2_06_01_Q = subset(MOOS_storm1_06_01, select = c("DateTime", "MeanDischarge"))
-#names(MOOS_storm1_06_01_Q) = c("valuedatetime","datavalue")
-#MOOS_storm1_06_01_NO3 = subset(MOOS_storm1_06_01, select = c("DateTime","nitrateuM"))
-#names(MOOS_storm1_06_01_NO3) = c("valuedatetime","datavalue")
-#MOOS_storm1_06_01_fDOM = subset(MOOS_storm1_06_01, select = c("DateTime","fDOM.QSU.mn"))
-#names(MOOS_storm1_06_01_fDOM) = c("valuedatetime","datavalue")
-#MOOS_storm1_06_01_SPC = subset(MOOS_storm1_06_01, select = c("DateTime","SpCond.uScm.mn"))
-#names(MOOS_storm1_06_01_SPC) = c("valuedatetime","datavalue")
-#MOOS_storm1_06_01_turb = subset(MOOS_storm1_06_01, select = c("DateTime","Turbidity.FNU.mn"))
-#names(MOOS_storm1_06_01_turb) = c("valuedatetime","datavalue")
 
 MOOS_storm3_07_12_Q = subset(MOOS_storm3_07_12, select = c("DateTime", "MeanDischarge"))
 names(MOOS_storm3_07_12_Q) = c("valuedatetime","datavalue")
@@ -7092,34 +6882,6 @@ MOOS_storm6a_08_01_turb = subset(MOOS_storm6a_08_01, select = c("DateTime","Turb
 names(MOOS_storm6a_08_01_turb) = c("valuedatetime","datavalue")
 MOOS_storm6a_08_01_abs = subset(MOOS_storm6a_08_01, select = c("DateTime","ABS_254"))
 names(MOOS_storm6a_08_01_abs) = c("valuedatetime","datavalue")
-
-
-MOOS_storm6b_08_02_Q = subset(MOOS_storm6b_08_02, select = c("DateTime", "MeanDischarge"))
-names(MOOS_storm6b_08_02_Q) = c("valuedatetime","datavalue")
-MOOS_storm6b_08_02_NO3 = subset(MOOS_storm6b_08_02, select = c("DateTime","nitrateuM"))
-names(MOOS_storm6b_08_02_NO3) = c("valuedatetime","datavalue")
-MOOS_storm6b_08_02_fDOM = subset(MOOS_storm6b_08_02, select = c("DateTime","fDOM.QSU.mn"))
-names(MOOS_storm6b_08_02_fDOM) = c("valuedatetime","datavalue")
-MOOS_storm6b_08_02_SPC = subset(MOOS_storm6b_08_02, select = c("DateTime","SpCond.uScm.mn"))
-names(MOOS_storm6b_08_02_SPC) = c("valuedatetime","datavalue")
-MOOS_storm6b_08_02_turb = subset(MOOS_storm6b_08_02, select = c("DateTime","Turbidity.FNU.mn"))
-names(MOOS_storm6b_08_02_turb) = c("valuedatetime","datavalue")
-MOOS_storm6b_08_02_abs = subset(MOOS_storm6b_08_02, select = c("DateTime","ABS_254"))
-names(MOOS_storm6b_08_02_abs) = c("valuedatetime","datavalue")
-
-
-MOOS_storm6c_08_03_Q = subset(MOOS_storm6c_08_03, select = c("DateTime", "MeanDischarge"))
-names(MOOS_storm6c_08_03_Q) = c("valuedatetime","datavalue")
-MOOS_storm6c_08_03_NO3 = subset(MOOS_storm6c_08_03, select = c("DateTime","nitrateuM"))
-names(MOOS_storm6c_08_03_NO3) = c("valuedatetime","datavalue")
-MOOS_storm6c_08_03_fDOM = subset(MOOS_storm6c_08_03, select = c("DateTime","fDOM.QSU.mn"))
-names(MOOS_storm6c_08_03_fDOM) = c("valuedatetime","datavalue")
-MOOS_storm6c_08_03_SPC = subset(MOOS_storm6c_08_03, select = c("DateTime","SpCond.uScm.mn"))
-names(MOOS_storm6c_08_03_SPC) = c("valuedatetime","datavalue")
-MOOS_storm6c_08_03_turb = subset(MOOS_storm6c_08_03, select = c("DateTime","Turbidity.FNU.mn"))
-names(MOOS_storm6c_08_03_turb) = c("valuedatetime","datavalue")
-MOOS_storm6c_08_03_abs = subset(MOOS_storm6c_08_03, select = c("DateTime","ABS_254"))
-names(MOOS_storm6c_08_03_abs) = c("valuedatetime","datavalue")
 
 
 MOOS_storm6d_08_05_Q = subset(MOOS_storm6d_08_05, select = c("DateTime", "MeanDischarge"))
@@ -7207,213 +6969,95 @@ names(MOOS_storm9_10_02_abs) = c("valuedatetime","datavalue")
 
 
 ### Write csv ###
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_abs.csv"))
+write.csv(MOOS_storm1_06_01, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01.csv"))
+write.csv(MOOS_storm1_06_01_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Q.csv"))
+write.csv(MOOS_storm1_06_01_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_NO3.csv"))
+write.csv(MOOS_storm1_06_01_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_fDOM.csv"))
+write.csv(MOOS_storm1_06_01_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_SPC.csv"))
+write.csv(MOOS_storm1_06_01_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_Turb.csv"))
+write.csv(MOOS_storm1_06_01_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm1_06_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_abs.csv"))
+write.csv(MOOS_storm3_07_12, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12.csv"))
+write.csv(MOOS_storm3_07_12_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Q.csv"))
+write.csv(MOOS_storm3_07_12_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_NO3.csv"))
+write.csv(MOOS_storm3_07_12_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_fDOM.csv"))
+write.csv(MOOS_storm3_07_12_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_SPC.csv"))
+write.csv(MOOS_storm3_07_12_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_Turb.csv"))
+write.csv(MOOS_storm3_07_12_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm3_07_12_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_abs.csv"))
+write.csv(MOOS_storm4_07_25, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25.csv"))
+write.csv(MOOS_storm4_07_25_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Q.csv"))
+write.csv(MOOS_storm4_07_25_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_NO3.csv"))
+write.csv(MOOS_storm4_07_25_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_fDOM.csv"))
+write.csv(MOOS_storm4_07_25_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_SPC.csv"))
+write.csv(MOOS_storm4_07_25_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_Turb.csv"))
+write.csv(MOOS_storm4_07_25_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm4_07_25_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_abs.csv"))
+write.csv(MOOS_storm5_07_29, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29.csv"))
+write.csv(MOOS_storm5_07_29_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Q.csv"))
+write.csv(MOOS_storm5_07_29_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_NO3.csv"))
+write.csv(MOOS_storm5_07_29_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_fDOM.csv"))
+write.csv(MOOS_storm5_07_29_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_SPC.csv"))
+write.csv(MOOS_storm5_07_29_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_Turb.csv"))
+write.csv(MOOS_storm5_07_29_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm5_07_29_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_abs.csv"))
+write.csv(MOOS_storm6a_08_01, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01.csv"))
+write.csv(MOOS_storm6a_08_01_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Q.csv"))
+write.csv(MOOS_storm6a_08_01_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_NO3.csv"))
+write.csv(MOOS_storm6a_08_01_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_fDOM.csv"))
+write.csv(MOOS_storm6a_08_01_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_SPC.csv"))
+write.csv(MOOS_storm6a_08_01_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Turb.csv"))
+write.csv(MOOS_storm6a_08_01_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_abs.csv"))
+write.csv(MOOS_storm6d_08_05, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05.csv"))
+write.csv(MOOS_storm6d_08_05_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Q.csv"))
+write.csv(MOOS_storm6d_08_05_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_NO3.csv"))
+write.csv(MOOS_storm6d_08_05_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_fDOM.csv"))
+write.csv(MOOS_storm6d_08_05_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_SPC.csv"))
+write.csv(MOOS_storm6d_08_05_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Turb.csv"))
+write.csv(MOOS_storm6d_08_05_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_abs.csv"))
+write.csv(MOOS_storm7a_08_13, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13.csv"))
+write.csv(MOOS_storm7a_08_13_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Q.csv"))
+write.csv(MOOS_storm7a_08_13_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_NO3.csv"))
+write.csv(MOOS_storm7a_08_13_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_fDOM.csv"))
+write.csv(MOOS_storm7a_08_13_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_SPC.csv"))
+write.csv(MOOS_storm7a_08_13_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Turb.csv"))
+write.csv(MOOS_storm7a_08_13_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7a_08_13_abs.csv"))
+write.csv(MOOS_storm7b_08_14, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14.csv"))
+write.csv(MOOS_storm7b_08_14_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Q.csv"))
+write.csv(MOOS_storm7b_08_14_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_NO3.csv"))
+write.csv(MOOS_storm7b_08_14_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_fDOM.csv"))
+write.csv(MOOS_storm7b_08_14_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_SPC.csv"))
+write.csv(MOOS_storm7b_08_14_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Turb.csv"))
+write.csv(MOOS_storm7b_08_14_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7b_08_14_abs.csv"))
+write.csv(MOOS_storm7c_08_15, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15.csv"))
+write.csv(MOOS_storm7c_08_15_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Q.csv"))
+write.csv(MOOS_storm7c_08_15_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_NO3.csv"))
+write.csv(MOOS_storm7c_08_15_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_fDOM.csv"))
+write.csv(MOOS_storm7c_08_15_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_SPC.csv"))
+write.csv(MOOS_storm7c_08_15_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Turb.csv"))
+write.csv(MOOS_storm7c_08_15_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm7c_08_15_abs.csv"))
+write.csv(MOOS_storm8_09_21, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21.csv"))
+write.csv(MOOS_storm8_09_21_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Q.csv"))
+write.csv(MOOS_storm8_09_21_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_NO3.csv"))
+write.csv(MOOS_storm8_09_21_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_fDOM.csv"))
+write.csv(MOOS_storm8_09_21_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_SPC.csv"))
+write.csv(MOOS_storm8_09_21_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Turb.csv"))
+write.csv(MOOS_storm8_09_21_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm8_09_21_abs.csv"))
+write.csv(MOOS_storm9_10_02, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02.csv"))
+write.csv(MOOS_storm9_10_02_Q, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Q.csv"))
+write.csv(MOOS_storm9_10_02_NO3, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_NO3.csv"))
+write.csv(MOOS_storm9_10_02_fDOM, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_fDOM.csv"))
+write.csv(MOOS_storm9_10_02_SPC, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_SPC.csv"))
+write.csv(MOOS_storm9_10_02_turb, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Turb.csv"))
+write.csv(MOOS_storm9_10_02_abs, here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_abs.csv"))
 
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Q.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_Turb.csv"))
-write.csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm9_10_02_abs.csv"))
-
-# write.csv(MOOS_storm1_06_01, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01.csv")
-# write.csv(MOOS_storm1_06_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Q.csv")
-# write.csv(MOOS_storm1_06_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_NO3.csv")
-# write.csv(MOOS_storm1_06_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_fDOM.csv")
-# write.csv(MOOS_storm1_06_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_SPC.csv")
-# write.csv(MOOS_storm1_06_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_Turb.csv")
-# write.csv(MOOS_storm1_06_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm1_06_01_abs.csv")
-# 
-# write.csv(MOOS_storm3_07_12, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12.csv")
-# write.csv(MOOS_storm3_07_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Q.csv")
-# write.csv(MOOS_storm3_07_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_NO3.csv")
-# write.csv(MOOS_storm3_07_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_fDOM.csv")
-# write.csv(MOOS_storm3_07_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_SPC.csv")
-# write.csv(MOOS_storm3_07_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_Turb.csv")
-# write.csv(MOOS_storm3_07_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm3_07_12_abs.csv")
-# 
-# write.csv(MOOS_storm4_07_25, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25.csv")
-# write.csv(MOOS_storm4_07_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Q.csv")
-# write.csv(MOOS_storm4_07_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_NO3.csv")
-# write.csv(MOOS_storm4_07_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_fDOM.csv")
-# write.csv(MOOS_storm4_07_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_SPC.csv")
-# write.csv(MOOS_storm4_07_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_Turb.csv")
-# write.csv(MOOS_storm4_07_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm4_07_25_abs.csv")
-# 
-# write.csv(MOOS_storm5_07_29, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29.csv")
-# write.csv(MOOS_storm5_07_29_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Q.csv")
-# write.csv(MOOS_storm5_07_29_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_NO3.csv")
-# write.csv(MOOS_storm5_07_29_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_fDOM.csv")
-# write.csv(MOOS_storm5_07_29_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_SPC.csv")
-# write.csv(MOOS_storm5_07_29_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_Turb.csv")
-# write.csv(MOOS_storm5_07_29_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm5_07_29_abs.csv")
-# 
-# write.csv(MOOS_storm6a_08_01, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01.csv")
-# write.csv(MOOS_storm6a_08_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Q.csv")
-# write.csv(MOOS_storm6a_08_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_NO3.csv")
-# write.csv(MOOS_storm6a_08_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_fDOM.csv")
-# write.csv(MOOS_storm6a_08_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_SPC.csv")
-# write.csv(MOOS_storm6a_08_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_Turb.csv")
-# write.csv(MOOS_storm6a_08_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6a_08_01_abs.csv")
-# 
-# write.csv(MOOS_storm6b_08_02, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02.csv")
-# write.csv(MOOS_storm6b_08_02_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Q.csv")
-# write.csv(MOOS_storm6b_08_02_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_NO3.csv")
-# write.csv(MOOS_storm6b_08_02_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_fDOM.csv")
-# write.csv(MOOS_storm6b_08_02_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_SPC.csv")
-# write.csv(MOOS_storm6b_08_02_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_Turb.csv")
-# write.csv(MOOS_storm6b_08_02_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6b_08_02_abs.csv")
-# 
-# write.csv(MOOS_storm6c_08_03, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03.csv")
-# write.csv(MOOS_storm6c_08_03_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Q.csv")
-# write.csv(MOOS_storm6c_08_03_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_NO3.csv")
-# write.csv(MOOS_storm6c_08_03_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_fDOM.csv")
-# write.csv(MOOS_storm6c_08_03_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_SPC.csv")
-# write.csv(MOOS_storm6c_08_03_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_Turb.csv")
-# write.csv(MOOS_storm6c_08_03_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6c_08_03_abs.csv")
-# 
-# write.csv(MOOS_storm6d_08_05, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05.csv")
-# write.csv(MOOS_storm6d_08_05_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Q.csv")
-# write.csv(MOOS_storm6d_08_05_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_NO3.csv")
-# write.csv(MOOS_storm6d_08_05_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_fDOM.csv")
-# write.csv(MOOS_storm6d_08_05_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_SPC.csv")
-# write.csv(MOOS_storm6d_08_05_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_Turb.csv")
-# write.csv(MOOS_storm6d_08_05_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm6d_08_05_abs.csv")
-# 
-# write.csv(MOOS_storm7a_08_13, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13.csv")
-# write.csv(MOOS_storm7a_08_13_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Q.csv")
-# write.csv(MOOS_storm7a_08_13_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_NO3.csv")
-# write.csv(MOOS_storm7a_08_13_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_fDOM.csv")
-# write.csv(MOOS_storm7a_08_13_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_SPC.csv")
-# write.csv(MOOS_storm7a_08_13_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_Turb.csv")
-# write.csv(MOOS_storm7a_08_13_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7a_08_13_abs.csv")
-# 
-# write.csv(MOOS_storm7b_08_14, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14.csv")
-# write.csv(MOOS_storm7b_08_14_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Q.csv")
-# write.csv(MOOS_storm7b_08_14_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_NO3.csv")
-# write.csv(MOOS_storm7b_08_14_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_fDOM.csv")
-# write.csv(MOOS_storm7b_08_14_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_SPC.csv")
-# write.csv(MOOS_storm7b_08_14_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_Turb.csv")
-# write.csv(MOOS_storm7b_08_14_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7b_08_14_abs.csv")
-# 
-# write.csv(MOOS_storm7c_08_15, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15.csv")
-# write.csv(MOOS_storm7c_08_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Q.csv")
-# write.csv(MOOS_storm7c_08_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_NO3.csv")
-# write.csv(MOOS_storm7c_08_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_fDOM.csv")
-# write.csv(MOOS_storm7c_08_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_SPC.csv")
-# write.csv(MOOS_storm7c_08_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_Turb.csv")
-# write.csv(MOOS_storm7c_08_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm7c_08_15_abs.csv")
-# 
-# write.csv(MOOS_storm8_09_21, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21.csv")
-# write.csv(MOOS_storm8_09_21_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Q.csv")
-# write.csv(MOOS_storm8_09_21_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_NO3.csv")
-# write.csv(MOOS_storm8_09_21_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_fDOM.csv")
-# write.csv(MOOS_storm8_09_21_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_SPC.csv")
-# write.csv(MOOS_storm8_09_21_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_Turb.csv")
-# write.csv(MOOS_storm8_09_21_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm8_09_21_abs.csv")
-# 
-# write.csv(MOOS_storm9_10_02, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02.csv")
-# write.csv(MOOS_storm9_10_02_Q, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Q.csv")
-# write.csv(MOOS_storm9_10_02_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_NO3.csv")
-# write.csv(MOOS_storm9_10_02_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_fDOM.csv")
-# write.csv(MOOS_storm9_10_02_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_SPC.csv")
-# write.csv(MOOS_storm9_10_02_turb, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_Turb.csv")
-# write.csv(MOOS_storm9_10_02_abs, "~/Documents/Storms_clean_repo/Storm_Events/2019/MOOS/MOOS_storm9_10_02_abs.csv")
 
 #CARI#
 CARI_2019$DateTime <- CARI_2019$datetimeAK

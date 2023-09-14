@@ -1309,19 +1309,6 @@ MOOS_storm6a_08_01_SPC <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_st
 MOOS_storm6a_08_01_turb <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_Turb.csv"))
 MOOS_storm6a_08_01_abs <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6a_08_01_abs.csv"))
 
-MOOS_storm6b_08_02_Q <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Q.csv"))
-MOOS_storm6b_08_02_NO3 <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_NO3.csv"))
-MOOS_storm6b_08_02_fDOM <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_fDOM.csv"))
-MOOS_storm6b_08_02_SPC <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_SPC.csv"))
-MOOS_storm6b_08_02_turb <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_Turb.csv"))
-MOOS_storm6b_08_02_abs <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6b_08_02_abs.csv"))
-
-MOOS_storm6c_08_03_Q <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Q.csv"))
-MOOS_storm6c_08_03_fDOM <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_fDOM.csv"))
-MOOS_storm6c_08_03_SPC <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_SPC.csv"))
-MOOS_storm6c_08_03_turb <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_Turb.csv"))
-MOOS_storm6c_08_03_abs <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6c_08_03_abs.csv"))
-
 MOOS_storm6d_08_05_Q <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_Q.csv"))
 MOOS_storm6d_08_05_NO3 <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_NO3.csv"))
 MOOS_storm6d_08_05_fDOM <- read_csv(here("Storm_Events", "2019", "MOOS", "MOOS_storm6d_08_05_fDOM.csv"))
@@ -1829,8 +1816,7 @@ MOOS_storm3_07_12_NO3.p = hyst_plot(MOOS_storm3_07_12_Q, MOOS_storm3_07_12_NO3, 
 MOOS_storm4_07_25_NO3.p = hyst_plot(MOOS_storm4_07_25_Q, MOOS_storm4_07_25_NO3, "MOOS", "NO3", "0725")
 MOOS_storm5_07_29_NO3.p = hyst_plot(MOOS_storm5_07_29_Q, MOOS_storm5_07_29_NO3, "MOOS", "NO3", "0729")
 MOOS_storm6a_08_01_NO3.p = hyst_plot(MOOS_storm6a_08_01_Q, MOOS_storm6a_08_01_NO3, "MOOS", "NO3", "0801a")
-MOOS_storm6b_08_02_NO3.p = hyst_plot(MOOS_storm6b_08_02_Q, MOOS_storm6b_08_02_NO3, "MOOS", "NO3", "0802b")
-MOOS_storm6c_08_03_NO3.p = hyst_plot(MOOS_storm6c_08_03_Q, MOOS_storm6c_08_03_NO3, "MOOS", "NO3", "0803c")
+
 MOOS_storm6d_08_05_NO3.p = hyst_plot(MOOS_storm6d_08_05_Q, MOOS_storm6d_08_05_NO3, "MOOS", "NO3", "0805d")
 MOOS_storm7a_08_13_NO3.p = hyst_plot(MOOS_storm7a_08_13_Q, MOOS_storm7a_08_13_NO3, "MOOS", "NO3", "0813a")
 MOOS_storm7b_08_14_NO3.p = hyst_plot(MOOS_storm7b_08_14_Q, MOOS_storm7b_08_14_NO3, "MOOS", "NO3", "0814b")
@@ -1844,8 +1830,7 @@ MOOS_storm3_07_12_fDOM.p = hyst_plot(MOOS_storm3_07_12_Q, MOOS_storm3_07_12_fDOM
 MOOS_storm4_07_25_fDOM.p = hyst_plot(MOOS_storm4_07_25_Q, MOOS_storm4_07_25_fDOM, "MOOS", "fDOM", "0725")
 MOOS_storm5_07_29_fDOM.p = hyst_plot(MOOS_storm5_07_29_Q, MOOS_storm5_07_29_fDOM, "MOOS", "fDOM", "0729")
 MOOS_storm6a_08_01_fDOM.p = hyst_plot(MOOS_storm6a_08_01_Q, MOOS_storm6a_08_01_fDOM, "MOOS", "fDOM", "0801a")
-MOOS_storm6b_08_02_fDOM.p = hyst_plot(MOOS_storm6b_08_02_Q, MOOS_storm6b_08_02_fDOM, "MOOS", "fDOM", "0802b")
-MOOS_storm6c_08_03_fDOM.p = hyst_plot(MOOS_storm6c_08_03_Q, MOOS_storm6c_08_03_fDOM, "MOOS", "fDOM", "0803c")
+
 MOOS_storm6d_08_05_fDOM.p = hyst_plot(MOOS_storm6d_08_05_Q, MOOS_storm6d_08_05_fDOM, "MOOS", "fDOM", "0805d")
 MOOS_storm7a_08_13_fDOM.p = hyst_plot(MOOS_storm7a_08_13_Q, MOOS_storm7a_08_13_fDOM, "MOOS", "fDOM", "0813a")
 MOOS_storm7b_08_14_fDOM.p = hyst_plot(MOOS_storm7b_08_14_Q, MOOS_storm7b_08_14_fDOM, "MOOS", "fDOM", "0814b")
@@ -1859,8 +1844,7 @@ MOOS_storm3_07_12_SPC.p = hyst_plot(MOOS_storm3_07_12_Q, MOOS_storm3_07_12_SPC, 
 MOOS_storm4_07_25_SPC.p = hyst_plot(MOOS_storm4_07_25_Q, MOOS_storm4_07_25_SPC, "MOOS", "SPC", "0725")
 MOOS_storm5_07_29_SPC.p = hyst_plot(MOOS_storm5_07_29_Q, MOOS_storm5_07_29_SPC, "MOOS", "SPC", "0729")
 MOOS_storm6a_08_01_SPC.p = hyst_plot(MOOS_storm6a_08_01_Q, MOOS_storm6a_08_01_SPC, "MOOS", "SPC", "0801a")
-MOOS_storm6b_08_02_SPC.p = hyst_plot(MOOS_storm6b_08_02_Q, MOOS_storm6b_08_02_SPC, "MOOS", "SPC", "0802b")
-MOOS_storm6c_08_03_SPC.p = hyst_plot(MOOS_storm6c_08_03_Q, MOOS_storm6c_08_03_SPC, "MOOS", "SPC", "0803c")
+
 MOOS_storm6d_08_05_SPC.p = hyst_plot(MOOS_storm6d_08_05_Q, MOOS_storm6d_08_05_SPC, "MOOS", "SPC", "0805d")
 MOOS_storm7a_08_13_SPC.p = hyst_plot(MOOS_storm7a_08_13_Q, MOOS_storm7a_08_13_SPC, "MOOS", "SPC", "0813a")
 MOOS_storm7b_08_14_SPC.p = hyst_plot(MOOS_storm7b_08_14_Q, MOOS_storm7b_08_14_SPC, "MOOS", "SPC", "0814b")
@@ -1877,8 +1861,7 @@ MOOS_storm3_07_12_turb.p = hyst_plot(MOOS_storm3_07_12_Q, MOOS_storm3_07_12_turb
 MOOS_storm4_07_25_turb.p = hyst_plot(MOOS_storm4_07_25_Q, MOOS_storm4_07_25_turb, "MOOS", "turb", "0725")
 MOOS_storm5_07_29_turb.p = hyst_plot(MOOS_storm5_07_29_Q, MOOS_storm5_07_29_turb, "MOOS", "turb", "0729")
 MOOS_storm6a_08_01_turb.p = hyst_plot(MOOS_storm6a_08_01_Q, MOOS_storm6a_08_01_turb, "MOOS", "turb", "0801a")
-MOOS_storm6b_08_02_turb.p = hyst_plot(MOOS_storm6b_08_02_Q, MOOS_storm6b_08_02_turb, "MOOS", "turb", "0802b")
-MOOS_storm6c_08_03_turb.p = hyst_plot(MOOS_storm6c_08_03_Q, MOOS_storm6c_08_03_turb, "MOOS", "turb", "0803c")
+
 MOOS_storm6d_08_05_turb.p = hyst_plot(MOOS_storm6d_08_05_Q, MOOS_storm6d_08_05_turb, "MOOS", "turb", "0805d")
 MOOS_storm7a_08_13_turb.p = hyst_plot(MOOS_storm7a_08_13_Q, MOOS_storm7a_08_13_turb, "MOOS", "turb", "0813a")
 MOOS_storm7b_08_14_turb.p = hyst_plot(MOOS_storm7b_08_14_Q, MOOS_storm7b_08_14_turb, "MOOS", "turb", "0814b")
@@ -1892,8 +1875,7 @@ MOOS_storm3_07_12_abs.p = hyst_plot(MOOS_storm3_07_12_Q, MOOS_storm3_07_12_abs, 
 MOOS_storm4_07_25_abs.p = hyst_plot(MOOS_storm4_07_25_Q, MOOS_storm4_07_25_abs, "MOOS", "abs", "0725")
 MOOS_storm5_07_29_abs.p = hyst_plot(MOOS_storm5_07_29_Q, MOOS_storm5_07_29_abs, "MOOS", "abs", "0729")
 MOOS_storm6a_08_01_abs.p = hyst_plot(MOOS_storm6a_08_01_Q, MOOS_storm6a_08_01_abs, "MOOS", "abs", "0801a")
-MOOS_storm6b_08_02_abs.p = hyst_plot(MOOS_storm6b_08_02_Q, MOOS_storm6b_08_02_abs, "MOOS", "abs", "0802b")
-MOOS_storm6c_08_03_abs.p = hyst_plot(MOOS_storm6c_08_03_Q, MOOS_storm6c_08_03_abs, "MOOS", "abs", "0803c")
+
 MOOS_storm6d_08_05_abs.p = hyst_plot(MOOS_storm6d_08_05_Q, MOOS_storm6d_08_05_abs, "MOOS", "abs", "0805d")
 MOOS_storm7a_08_13_abs.p = hyst_plot(MOOS_storm7a_08_13_Q, MOOS_storm7a_08_13_abs, "MOOS", "abs", "0813a")
 MOOS_storm7b_08_14_abs.p = hyst_plot(MOOS_storm7b_08_14_Q, MOOS_storm7b_08_14_abs, "MOOS", "abs", "0814b")
@@ -1945,8 +1927,7 @@ multiplot(MOOS_storm1_06_01_NO3.p, MOOS_storm1_06_01_fDOM.p, MOOS_storm1_06_01_S
           MOOS_storm4_07_25_fDOM.p,MOOS_storm4_07_25_SPC.p, MOOS_storm4_07_25_turb.p,
           MOOS_storm5_07_29_NO3.p, MOOS_storm5_07_29_fDOM.p,MOOS_storm5_07_29_SPC.p, MOOS_storm5_07_29_turb.p,
           MOOS_storm6a_08_01_NO3.p, MOOS_storm6a_08_01_fDOM.p,MOOS_storm6a_08_01_SPC.p, MOOS_storm6a_08_01_turb.p,
-          MOOS_storm6b_08_02_NO3.p, MOOS_storm6b_08_02_fDOM.p,MOOS_storm6b_08_02_SPC.p, MOOS_storm6b_08_02_turb.p,
-          MOOS_storm6c_08_03_fDOM.p,MOOS_storm6c_08_03_SPC.p, MOOS_storm6c_08_03_turb.p,
+          
           MOOS_storm6d_08_05_NO3.p, MOOS_storm6d_08_05_fDOM.p,MOOS_storm6d_08_05_SPC.p, MOOS_storm6d_08_05_turb.p,
           MOOS_storm7a_08_13_NO3.p, MOOS_storm7a_08_13_fDOM.p,MOOS_storm7a_08_13_SPC.p, MOOS_storm7a_08_13_turb.p,
           MOOS_storm7b_08_14_NO3.p, MOOS_storm7b_08_14_fDOM.p,MOOS_storm7b_08_14_SPC.p, MOOS_storm7b_08_14_turb.p,
