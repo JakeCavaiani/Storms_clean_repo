@@ -1512,9 +1512,9 @@ names(storm_list_beta) = storm_file_list_beta
 CARI_storm_list_beta = storm_list_beta[c(1:60)] # 60
 FRCH_storm_list_beta = storm_list_beta[c(1:72)] #72
 MOOS_storm_list_beta = storm_list_beta[c(187:264)] #78
-POKE_storm_list_beta = storm_list_beta[c(265:342)] # 78
-STRT_storm_list_beta = storm_list_beta[c(73:138)] # 66
-VAUL_storm_list_beta = storm_list_beta[c(139:198)] # 60
+POKE_storm_list_beta = storm_list_beta[c(73:138)] # 66
+STRT_storm_list_beta = storm_list_beta[c(139:204)] # 66
+VAUL_storm_list_beta = storm_list_beta[c(205:264)] # 60
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -1880,12 +1880,12 @@ POKE_NO3_storm$storm.ID = c(rep("storm1", 103),
                             rep("storm2", 91),
                             rep("storm3", 147),
                             rep("storm4", 115),
-                            rep("storm5a", 87),
-                            rep("storm5b", 239),
+                            rep("storm5a", 327),
+                            
                             rep("storm5c", 111),
                             rep("storm5d", 99),
-                            rep("storm6a", 51),
-                            rep("storm6b", 231),
+                            rep("storm6a", 283),
+                            
                             rep("storm7", 235),
                             rep("storm8", 95),
                             rep("storm9", 211))
@@ -2145,12 +2145,12 @@ POKE_fDOM_storm$storm.ID = c(rep("storm1", 103),
                              rep("storm2", 91),
                              rep("storm3", 147),
                              rep("storm4", 115),
-                             rep("storm5a", 87),
-                             rep("storm5b", 239),
+                             rep("storm5a", 327),
+                             
                              rep("storm5c", 111),
                              rep("storm5d", 99),
-                             rep("storm6a", 51),
-                             rep("storm6b", 231),
+                             rep("storm6a", 283),
+                             
                              rep("storm7", 235),
                              rep("storm8", 95),
                              rep("storm9", 211))
@@ -2413,12 +2413,12 @@ POKE_SPC_storm$storm.ID = c(rep("storm1", 103),
                             rep("storm2", 91),
                             rep("storm3", 147),
                             rep("storm4", 115),
-                            rep("storm5a", 87),
-                            rep("storm5b", 239),
+                            rep("storm5a", 327),
+                            
                             rep("storm5c", 111),
                             rep("storm5d", 99),
-                            rep("storm6a", 51),
-                            rep("storm6b", 231),
+                            rep("storm6a", 283),
+                            
                             rep("storm7", 235),
                             rep("storm8", 95),
                             rep("storm9", 211))
@@ -2678,12 +2678,12 @@ POKE_turb_storm$storm.ID = c(rep("storm1", 103),
                              rep("storm2", 91),
                              rep("storm3", 147),
                              rep("storm4", 115),
-                             rep("storm5a", 87),
-                             rep("storm5b", 239),
+                             rep("storm5a", 327),
+                             
                              rep("storm5c", 111),
                              rep("storm5d", 99),
-                             rep("storm6a", 51),
-                             rep("storm6b", 231),
+                             rep("storm6a", 283),
+                             
                              rep("storm7", 235),
                              rep("storm8", 95),
                              rep("storm9", 211))
@@ -2940,12 +2940,12 @@ POKE_abs_storm$storm.ID = c(rep("storm1", 103),
                             rep("storm2", 91),
                             rep("storm3", 147),
                             rep("storm4", 115),
-                            rep("storm5a", 87),
-                            rep("storm5b", 239),
+                            rep("storm5a", 327),
+                            
                             rep("storm5c", 111),
                             rep("storm5d", 99),
-                            rep("storm6a", 51),
-                            rep("storm6b", 231),
+                            rep("storm6a", 283),
+                            
                             rep("storm7", 235),
                             rep("storm8", 95),
                             rep("storm9", 211))
