@@ -2903,11 +2903,6 @@ FRCHstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="FRCH", 
                                   full.names=TRUE)
 
-# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="FRCH", 
-#                                   full.names=TRUE)
-
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -3401,11 +3396,6 @@ POKEstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="POKE", 
                                   full.names=TRUE)
 
-POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
-                                  recursive=F, 
-                                  pattern="POKE", 
-                                  full.names=TRUE)
-
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -3416,12 +3406,12 @@ POKE_storms$storm.num = c(rep("storm1", 103),
                           rep("storm2", 91),
                           rep("storm3", 147),
                           rep("storm4", 115),
-                          rep("storm5a", 87),
-                          rep("storm5b", 239),
+                          rep("storm5a", 327),
+                          
                           rep("storm5c", 111),
                           rep("storm5d", 99),
-                          rep("storm6a", 51),
-                          rep("storm6b", 231),
+                          rep("storm6a", 283),
+                         
                           rep("storm7", 235),
                           rep("storm8", 95),
                           rep("storm9", 211))
@@ -3887,9 +3877,8 @@ HI.poke.2019 <- rbind(HI.poke.no3.2.2019, HI.poke.fDOM.2.2019,
 HI.poke.2019$burn <- "burned" # adding a burn column
 HI.poke.2019$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.poke.2019.csv"))
+write.csv(HI.poke.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.poke.2019.csv"))
 
-# write.csv(HI.poke.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.poke.2019.csv")
 
 # VAUL ####
 VAULstorm_file_list <- list.files(path = "All_sites/", 
