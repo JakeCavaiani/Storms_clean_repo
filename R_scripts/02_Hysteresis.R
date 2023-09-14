@@ -1561,13 +1561,6 @@ POKE_storm5a_08_02_SPC <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_st
 POKE_storm5a_08_02_turb <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_Turb.csv"))
 POKE_storm5a_08_02_abs <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5a_08_02_abs.csv"))
 
-POKE_storm5b_08_03_Q <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_Q.csv"))
-POKE_storm5b_08_03_NO3 <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_NO3.csv"))
-POKE_storm5b_08_03_fDOM <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_fDOM.csv"))
-POKE_storm5b_08_03_SPC <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_SPC.csv"))
-POKE_storm5b_08_03_turb <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_Turb.csv"))
-POKE_storm5b_08_03_abs <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5b_08_03_abs.csv"))
-
 POKE_storm5c_08_05_Q <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_Q.csv"))
 POKE_storm5c_08_05_NO3 <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_NO3.csv"))
 POKE_storm5c_08_05_fDOM <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm5c_08_05_fDOM.csv"))
@@ -1588,14 +1581,6 @@ POKE_storm6a_08_12_fDOM <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_s
 POKE_storm6a_08_12_SPC <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_SPC.csv"))
 POKE_storm6a_08_12_turb <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_Turb.csv"))
 POKE_storm6a_08_12_abs <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6a_08_12_abs.csv"))
-
-POKE_storm6b_08_13_Q <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_Q.csv"))
-names(POKE_storm6b_08_13_Q) <- c("X1", "valuedatetime", "datavalue")
-POKE_storm6b_08_13_NO3 <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_NO3.csv"))
-POKE_storm6b_08_13_fDOM <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_fDOM.csv"))
-POKE_storm6b_08_13_SPC <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_SPC.csv"))
-POKE_storm6b_08_13_turb <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_Turb.csv"))
-POKE_storm6b_08_13_abs <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm6b_08_13_abs.csv"))
 
 POKE_storm7_08_15_Q <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_Q.csv"))
 POKE_storm7_08_15_NO3 <- read_csv(here("Storm_Events", "2019", "POKE", "POKE_storm7_08_15_NO3.csv"))
@@ -2290,11 +2275,11 @@ POKE_storm2_07_12_NO3.p = hyst_plot(POKE_storm2_07_12_Q, POKE_storm2_07_12_NO3, 
 POKE_storm3_07_26_NO3.p = hyst_plot(POKE_storm3_07_26_Q, POKE_storm3_07_26_NO3, "POKE", "NO3", "0726")
 POKE_storm4_07_31_NO3.p = hyst_plot(POKE_storm4_07_31_Q, POKE_storm4_07_31_NO3, "POKE", "NO3", "0731")
 POKE_storm5a_08_02_NO3.p = hyst_plot(POKE_storm5a_08_02_Q, POKE_storm5a_08_02_NO3, "POKE", "NO3", "0802a")
-POKE_storm5b_08_03_NO3.p = hyst_plot(POKE_storm5b_08_03_Q, POKE_storm5b_08_03_NO3, "POKE", "NO3", "0803b")
+
 POKE_storm5c_08_05_NO3.p = hyst_plot(POKE_storm5c_08_05_Q, POKE_storm5c_08_05_NO3, "POKE", "NO3", "0805c")
 POKE_storm5d_08_10_NO3.p = hyst_plot(POKE_storm5d_08_10_Q, POKE_storm5d_08_10_NO3, "POKE", "NO3", "0810d")
 POKE_storm6a_08_12_NO3.p = hyst_plot(POKE_storm6a_08_12_Q, POKE_storm6a_08_12_NO3, "POKE", "NO3", "0812a")
-POKE_storm6b_08_13_NO3.p = hyst_plot(POKE_storm6b_08_13_Q, POKE_storm6b_08_13_NO3, "POKE", "NO3", "0813b")
+
 POKE_storm7_08_15_NO3.p = hyst_plot(POKE_storm7_08_15_Q, POKE_storm7_08_15_NO3, "POKE", "NO3", "0815")
 POKE_storm8_09_29_NO3.p = hyst_plot(POKE_storm8_09_29_Q, POKE_storm8_09_29_NO3, "POKE", "NO3", "0929")
 POKE_storm9_10_04_NO3.p = hyst_plot(POKE_storm9_10_04_Q, POKE_storm9_10_04_NO3, "POKE", "NO3", "1004")
@@ -2305,11 +2290,11 @@ POKE_storm2_07_12_fDOM.p = hyst_plot(POKE_storm2_07_12_Q, POKE_storm2_07_12_fDOM
 POKE_storm3_07_26_fDOM.p = hyst_plot(POKE_storm3_07_26_Q, POKE_storm3_07_26_fDOM, "POKE", "fDOM", "0726")
 POKE_storm4_07_31_fDOM.p = hyst_plot(POKE_storm4_07_31_Q, POKE_storm4_07_31_fDOM, "POKE", "fDOM", "0731")
 POKE_storm5a_08_02_fDOM.p = hyst_plot(POKE_storm5a_08_02_Q, POKE_storm5a_08_02_fDOM, "POKE", "fDOM", "0802a")
-POKE_storm5b_08_03_fDOM.p = hyst_plot(POKE_storm5b_08_03_Q, POKE_storm5b_08_03_fDOM, "POKE", "fDOM", "0803b")
+
 POKE_storm5c_08_05_fDOM.p = hyst_plot(POKE_storm5c_08_05_Q, POKE_storm5c_08_05_fDOM, "POKE", "fDOM", "0805c")
 POKE_storm5d_08_10_fDOM.p = hyst_plot(POKE_storm5d_08_10_Q, POKE_storm5d_08_10_fDOM, "POKE", "fDOM", "0810d")
 POKE_storm6a_08_12_fDOM.p = hyst_plot(POKE_storm6a_08_12_Q, POKE_storm6a_08_12_fDOM, "POKE", "fDOM", "0812a")
-POKE_storm6b_08_13_fDOM.p = hyst_plot(POKE_storm6b_08_13_Q, POKE_storm6b_08_13_fDOM, "POKE", "fDOM", "0813b")
+
 POKE_storm7_08_15_fDOM.p = hyst_plot(POKE_storm7_08_15_Q, POKE_storm7_08_15_fDOM, "POKE", "fDOM", "0815")
 POKE_storm8_09_29_fDOM.p = hyst_plot(POKE_storm8_09_29_Q, POKE_storm8_09_29_fDOM, "POKE", "fDOM", "0929")
 POKE_storm9_10_04_fDOM.p = hyst_plot(POKE_storm9_10_04_Q, POKE_storm9_10_04_fDOM, "POKE", "fDOM", "1004")
@@ -2320,11 +2305,11 @@ POKE_storm2_07_12_SPC.p = hyst_plot(POKE_storm2_07_12_Q, POKE_storm2_07_12_SPC, 
 POKE_storm3_07_26_SPC.p = hyst_plot(POKE_storm3_07_26_Q, POKE_storm3_07_26_SPC, "POKE", "SPC", "0726")
 POKE_storm4_07_31_SPC.p = hyst_plot(POKE_storm4_07_31_Q, POKE_storm4_07_31_SPC, "POKE", "SPC", "0731")
 POKE_storm5a_08_02_SPC.p = hyst_plot(POKE_storm5a_08_02_Q, POKE_storm5a_08_02_SPC, "POKE", "SPC", "0802a")
-POKE_storm5b_08_03_SPC.p = hyst_plot(POKE_storm5b_08_03_Q, POKE_storm5b_08_03_SPC, "POKE", "SPC", "0803b")
+
 POKE_storm5c_08_05_SPC.p = hyst_plot(POKE_storm5c_08_05_Q, POKE_storm5c_08_05_SPC, "POKE", "SPC", "0805c")
 POKE_storm5d_08_10_SPC.p = hyst_plot(POKE_storm5d_08_10_Q, POKE_storm5d_08_10_SPC, "POKE", "SPC", "0810d")
 POKE_storm6a_08_12_SPC.p = hyst_plot(POKE_storm6a_08_12_Q, POKE_storm6a_08_12_SPC, "POKE", "SPC", "0812a")
-POKE_storm6b_08_13_SPC.p = hyst_plot(POKE_storm6b_08_13_Q, POKE_storm6b_08_13_SPC, "POKE", "SPC", "0813b")
+
 POKE_storm7_08_15_SPC.p = hyst_plot(POKE_storm7_08_15_Q, POKE_storm7_08_15_SPC, "POKE", "SPC", "0815")
 POKE_storm8_09_29_SPC.p = hyst_plot(POKE_storm8_09_29_Q, POKE_storm8_09_29_SPC, "POKE", "SPC", "0929")
 POKE_storm9_10_04_SPC.p = hyst_plot(POKE_storm9_10_04_Q, POKE_storm9_10_04_SPC, "POKE", "SPC", "1004")
@@ -2335,11 +2320,11 @@ POKE_storm2_07_12_turb.p = hyst_plot(POKE_storm2_07_12_Q, POKE_storm2_07_12_turb
 POKE_storm3_07_26_turb.p = hyst_plot(POKE_storm3_07_26_Q, POKE_storm3_07_26_turb, "POKE", "turb", "0726")
 POKE_storm4_07_31_turb.p = hyst_plot(POKE_storm4_07_31_Q, POKE_storm4_07_31_turb, "POKE", "turb", "0731")
 POKE_storm5a_08_02_turb.p = hyst_plot(POKE_storm5a_08_02_Q, POKE_storm5a_08_02_turb, "POKE", "turb", "0802a")
-POKE_storm5b_08_03_turb.p = hyst_plot(POKE_storm5b_08_03_Q, POKE_storm5b_08_03_turb, "POKE", "turb", "0803b")
+
 POKE_storm5c_08_05_turb.p = hyst_plot(POKE_storm5c_08_05_Q, POKE_storm5c_08_05_turb, "POKE", "turb", "0805c")
 POKE_storm5d_08_10_turb.p = hyst_plot(POKE_storm5d_08_10_Q, POKE_storm5d_08_10_turb, "POKE", "turb", "0810d")
 POKE_storm6a_08_12_turb.p = hyst_plot(POKE_storm6a_08_12_Q, POKE_storm6a_08_12_turb, "POKE", "turb", "0812a")
-POKE_storm6b_08_13_turb.p = hyst_plot(POKE_storm6b_08_13_Q, POKE_storm6b_08_13_turb, "POKE", "turb", "0813b")
+
 POKE_storm7_08_15_turb.p = hyst_plot(POKE_storm7_08_15_Q, POKE_storm7_08_15_turb, "POKE", "turb", "0815")
 POKE_storm8_09_29_turb.p = hyst_plot(POKE_storm8_09_29_Q, POKE_storm8_09_29_turb, "POKE", "turb", "0929")
 POKE_storm9_10_04_turb.p = hyst_plot(POKE_storm9_10_04_Q, POKE_storm9_10_04_turb, "POKE", "turb", "1004")
@@ -2350,11 +2335,11 @@ POKE_storm2_07_12_abs.p = hyst_plot(POKE_storm2_07_12_Q, POKE_storm2_07_12_abs, 
 POKE_storm3_07_26_abs.p = hyst_plot(POKE_storm3_07_26_Q, POKE_storm3_07_26_abs, "POKE", "abs", "0726")
 POKE_storm4_07_31_abs.p = hyst_plot(POKE_storm4_07_31_Q, POKE_storm4_07_31_abs, "POKE", "abs", "0731")
 POKE_storm5a_08_02_abs.p = hyst_plot(POKE_storm5a_08_02_Q, POKE_storm5a_08_02_abs, "POKE", "abs", "0802a")
-POKE_storm5b_08_03_abs.p = hyst_plot(POKE_storm5b_08_03_Q, POKE_storm5b_08_03_abs, "POKE", "abs", "0803b")
+
 POKE_storm5c_08_05_abs.p = hyst_plot(POKE_storm5c_08_05_Q, POKE_storm5c_08_05_abs, "POKE", "abs", "0805c")
 POKE_storm5d_08_10_abs.p = hyst_plot(POKE_storm5d_08_10_Q, POKE_storm5d_08_10_abs, "POKE", "abs", "0810d")
 POKE_storm6a_08_12_abs.p = hyst_plot(POKE_storm6a_08_12_Q, POKE_storm6a_08_12_abs, "POKE", "abs", "0812a")
-POKE_storm6b_08_13_abs.p = hyst_plot(POKE_storm6b_08_13_Q, POKE_storm6b_08_13_abs, "POKE", "abs", "0813b")
+
 POKE_storm7_08_15_abs.p = hyst_plot(POKE_storm7_08_15_Q, POKE_storm7_08_15_abs, "POKE", "abs", "0815")
 POKE_storm8_09_29_abs.p = hyst_plot(POKE_storm8_09_29_Q, POKE_storm8_09_29_abs, "POKE", "abs", "0929")
 POKE_storm9_10_04_abs.p = hyst_plot(POKE_storm9_10_04_Q, POKE_storm9_10_04_abs, "POKE", "abs", "1004")
@@ -2403,11 +2388,11 @@ multiplot(POKE_storm1_06_30_NO3.p, POKE_storm1_06_30_fDOM.p,POKE_storm1_06_30_SP
           POKE_storm3_07_26_NO3.p, POKE_storm3_07_26_fDOM.p,POKE_storm3_07_26_SPC.p, POKE_storm3_07_26_turb.p,
           POKE_storm4_07_31_NO3.p, POKE_storm4_07_31_fDOM.p,POKE_storm4_07_31_SPC.p, POKE_storm4_07_31_turb.p,
           POKE_storm5a_08_02_NO3.p, POKE_storm5a_08_02_fDOM.p,POKE_storm5a_08_02_SPC.p, POKE_storm5a_08_02_turb.p,
-          POKE_storm5b_08_03_NO3.p, POKE_storm5b_08_03_fDOM.p,POKE_storm5b_08_03_SPC.p, POKE_storm5b_08_03_turb.p,
+          
           POKE_storm5c_08_05_NO3.p, POKE_storm5c_08_05_fDOM.p,POKE_storm5c_08_05_SPC.p, POKE_storm5c_08_05_turb.p,
           POKE_storm5d_08_10_NO3.p, POKE_storm5d_08_10_fDOM.p,POKE_storm5d_08_10_SPC.p, POKE_storm5d_08_10_turb.p,
           POKE_storm6a_08_12_NO3.p, POKE_storm6a_08_12_fDOM.p,POKE_storm6a_08_12_SPC.p, POKE_storm6a_08_12_turb.p,
-          POKE_storm6b_08_13_NO3.p, POKE_storm6b_08_13_fDOM.p,POKE_storm6b_08_13_SPC.p, POKE_storm6b_08_13_turb.p,
+          
           POKE_storm7_08_15_NO3.p, POKE_storm7_08_15_fDOM.p,POKE_storm7_08_15_SPC.p, POKE_storm7_08_15_turb.p,
           POKE_storm8_09_29_NO3.p, POKE_storm8_09_29_fDOM.p,POKE_storm8_09_29_SPC.p, POKE_storm8_09_29_turb.p,
           POKE_storm9_10_04_NO3.p, POKE_storm9_10_04_fDOM.p,POKE_storm9_10_04_SPC.p, POKE_storm9_10_04_turb.p,
