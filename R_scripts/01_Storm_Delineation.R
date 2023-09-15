@@ -7080,8 +7080,7 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
 par(new = T)
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 00:00:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 lines(CARI_2019$NO3 * 20 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2019-05-01 00:00:00","2019-10-15 01:00:00"), tz="America/Anchorage"))
 lines(CARI_2019$fDOM * 10 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", col="brown",
@@ -7096,8 +7095,7 @@ lines(CARI_2019$Turb * 1000 ~ CARI_2019$DateTime, type="l", xlab="", ylab="", co
 # Storm 1 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-04-29 00:00:00","2019-05-31 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7122,43 +7120,10 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# No storm here #
-plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-06-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-06-01 00:00:00","2019-06-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
-# No storm here #
-plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-06-16 00:00:00","2019-06-30:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-06-16 00:00:00","2019-06-30:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
 # Storm 2 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-06-28 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7195,8 +7160,7 @@ axis(side = 4)
 # Storm 3 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-06-28 00:00:00","2019-07-15:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7224,8 +7188,7 @@ axis(side = 4)
 # Storm 4 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-15 00:00:00","2019-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7253,8 +7216,7 @@ axis(side = 4)
 # Storm 5 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7282,8 +7244,7 @@ axis(side = 4)
 # Storm 6a #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7295,40 +7256,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2019-08-02 12:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-03 09:15:00", tz="America/Anchorage"), col="purple")
-
-CARI_storm6a_08_02 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-02 12:15:00", tz="America/Anchorage") &
-                                 CARI_2019$DateTime < as.POSIXct("2019-08-03 09:15:00", tz="America/Anchorage"),]
-plot(CARI_storm6a_08_02$Discharge ~ as.POSIXct(CARI_storm6a_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2000), col="blue", main="CARI 190802 storm 6a",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 6b #
-plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-03 09:15:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2019-08-05 20:15:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm6b_08_03 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-03 09:15:00", tz="America/Anchorage") &
+CARI_storm6a_08_02 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-02 12:15:00", tz="America/Anchorage") &
                                  CARI_2019$DateTime < as.POSIXct("2019-08-05 20:15:00", tz="America/Anchorage"),]
-plot(CARI_storm6b_08_03$Discharge ~ as.POSIXct(CARI_storm6b_08_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,4500), col="blue", main="CARI 190803 storm 6b",
+plot(CARI_storm6a_08_02$Discharge ~ as.POSIXct(CARI_storm6a_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,4500), col="blue", main="CARI 190802 storm 6a",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7336,12 +7268,12 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      ylim = c(10,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
+
 
 # Storm 6c #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7369,8 +7301,7 @@ axis(side = 4)
 # Storm 6d #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7398,8 +7329,7 @@ axis(side = 4)
 # Storm 7a #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7411,40 +7341,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 abline(v= as.POSIXct("2019-08-13 03:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2019-08-13 16:15:00", tz="America/Anchorage"), col="purple")
-
-CARI_storm7a_08_13 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-13 03:15:00", tz="America/Anchorage") &
-                                 CARI_2019$DateTime < as.POSIXct("2019-08-13 16:15:00", tz="America/Anchorage"),]
-plot(CARI_storm7a_08_13$Discharge ~ as.POSIXct(CARI_storm7a_08_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,1500), col="blue", main="CARI 190813 storm 7a",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 7b #
-plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2019-08-13 16:15:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2019-08-15 23:15:00", tz="America/Anchorage"), col="purple")
 
-CARI_storm7b_08_13 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-13 16:15:00", tz="America/Anchorage") &
+CARI_storm7a_08_13 = CARI_2019[CARI_2019$DateTime > as.POSIXct("2019-08-13 03:15:00", tz="America/Anchorage") &
                                  CARI_2019$DateTime < as.POSIXct("2019-08-15 23:15:00", tz="America/Anchorage"),]
-plot(CARI_storm7b_08_13$Discharge ~ as.POSIXct(CARI_storm7b_08_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,2000), col="blue", main="CARI 190813 storm 7b",
+plot(CARI_storm7a_08_13$Discharge ~ as.POSIXct(CARI_storm7a_08_13$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(250,1500), col="blue", main="CARI 190813 storm 7a",
      xlim = as.POSIXct(c("2019-07-30 00:00:00","2019-08-15 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7456,8 +7357,7 @@ axis(side = 4)
 # Storm 8 #
 plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2019-08-13 00:00:00","2019-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
@@ -7481,22 +7381,6 @@ plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
      ylim = c(10,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
-
-# No more storm signals #
-plot(CARI_2019$Discharge ~ CARI_2019$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2019-09-01 00:00:00","2019-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=CARI_bfQ_mn*2, col="red", lty=2)
-abline(h=CARI_bfQ_mn, col="red")
-par(new = T)
-
-plot(POKE.st$inst_rainfall_mm ~ POKE.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2019-09-01 00:00:00","2019-09-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(10,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
 
 # nitrateuM, fDOM.QSU, SPC, Turb CARI #
 # Storm 1 #
@@ -7566,16 +7450,6 @@ names(CARI_storm6a_08_02_SPC) = c("valuedatetime","datavalue")
 CARI_storm6a_08_02_turb = subset(CARI_storm6a_08_02, select = c("DateTime","Turb"))
 names(CARI_storm6a_08_02_turb) = c("valuedatetime","datavalue")
 
-CARI_storm6b_08_03_Q = subset(CARI_storm6b_08_03, select = c("DateTime", "Discharge"))
-names(CARI_storm6b_08_03_Q) = c("valuedatetime","datavalue")
-CARI_storm6b_08_03_NO3 = subset(CARI_storm6b_08_03, select = c("DateTime","NO3"))
-names(CARI_storm6b_08_03_NO3) = c("valuedatetime","datavalue")
-CARI_storm6b_08_03_fDOM = subset(CARI_storm6b_08_03, select = c("DateTime","fDOM"))
-names(CARI_storm6b_08_03_fDOM) = c("valuedatetime","datavalue")
-CARI_storm6b_08_03_SPC = subset(CARI_storm6b_08_03, select = c("DateTime","SpCond"))
-names(CARI_storm6b_08_03_SPC) = c("valuedatetime","datavalue")
-CARI_storm6b_08_03_turb = subset(CARI_storm6b_08_03, select = c("DateTime","Turb"))
-names(CARI_storm6b_08_03_turb) = c("valuedatetime","datavalue")
 
 CARI_storm6c_08_05_Q = subset(CARI_storm6c_08_05, select = c("DateTime", "Discharge"))
 names(CARI_storm6c_08_05_Q) = c("valuedatetime","datavalue")
@@ -7610,16 +7484,6 @@ names(CARI_storm7a_08_13_SPC) = c("valuedatetime","datavalue")
 CARI_storm7a_08_13_turb = subset(CARI_storm7a_08_13, select = c("DateTime","Turb"))
 names(CARI_storm7a_08_13_turb) = c("valuedatetime","datavalue")
 
-CARI_storm7b_08_13_Q = subset(CARI_storm7b_08_13, select = c("DateTime", "Discharge"))
-names(CARI_storm7b_08_13_Q) = c("valuedatetime","datavalue")
-CARI_storm7b_08_13_NO3 = subset(CARI_storm7b_08_13, select = c("DateTime","NO3"))
-names(CARI_storm7b_08_13_NO3) = c("valuedatetime","datavalue")
-CARI_storm7b_08_13_fDOM = subset(CARI_storm7b_08_13, select = c("DateTime","fDOM"))
-names(CARI_storm7b_08_13_fDOM) = c("valuedatetime","datavalue")
-CARI_storm7b_08_13_SPC = subset(CARI_storm7b_08_13, select = c("DateTime","SpCond"))
-names(CARI_storm7b_08_13_SPC) = c("valuedatetime","datavalue")
-CARI_storm7b_08_13_turb = subset(CARI_storm7b_08_13, select = c("DateTime","Turb"))
-names(CARI_storm7b_08_13_turb) = c("valuedatetime","datavalue")
 
 CARI_storm8_08_16_Q = subset(CARI_storm8_08_16, select = c("DateTime", "Discharge"))
 names(CARI_storm8_08_16_Q) = c("valuedatetime","datavalue")
@@ -7633,174 +7497,77 @@ CARI_storm8_08_16_turb = subset(CARI_storm8_08_16, select = c("DateTime","Turb")
 names(CARI_storm8_08_16_turb) = c("valuedatetime","datavalue")
 
 ### Write csv ###
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_Turb.csv"))
+write.csv(CARI_storm1_05_08, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08.csv"))
+write.csv(CARI_storm1_05_08_Q, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_Q.csv"))
+write.csv(CARI_storm1_05_08_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_NO3.csv"))
+write.csv(CARI_storm1_05_08_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_fDOM.csv"))
+write.csv(CARI_storm1_05_08_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_SPC.csv"))
+write.csv(CARI_storm1_05_08_turb, here("Storm_Events", "2019", "CARI", "CARI_storm1_05_08_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Turb.csv"))
+write.csv(CARI_storm2_06_30, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30.csv"))
+write.csv(CARI_storm2_06_30_Q, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Q.csv"))
+write.csv(CARI_storm2_06_30_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_NO3.csv"))
+write.csv(CARI_storm2_06_30_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_fDOM.csv"))
+write.csv(CARI_storm2_06_30_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_SPC.csv"))
+write.csv(CARI_storm2_06_30_turb, here("Storm_Events", "2019", "CARI", "CARI_storm2_06_30_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Turb.csv"))
+write.csv(CARI_storm3_07_12, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12.csv"))
+write.csv(CARI_storm3_07_12_Q, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Q.csv"))
+write.csv(CARI_storm3_07_12_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_NO3.csv"))
+write.csv(CARI_storm3_07_12_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_fDOM.csv"))
+write.csv(CARI_storm3_07_12_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_SPC.csv"))
+write.csv(CARI_storm3_07_12_turb, here("Storm_Events", "2019", "CARI", "CARI_storm3_07_12_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Turb.csv"))
+write.csv(CARI_storm4_07_26, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26.csv"))
+write.csv(CARI_storm4_07_26_Q, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Q.csv"))
+write.csv(CARI_storm4_07_26_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_NO3.csv"))
+write.csv(CARI_storm4_07_26_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_fDOM.csv"))
+write.csv(CARI_storm4_07_26_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_SPC.csv"))
+write.csv(CARI_storm4_07_26_turb, here("Storm_Events", "2019", "CARI", "CARI_storm4_07_26_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Turb.csv"))
+write.csv(CARI_storm5_07_31, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31.csv"))
+write.csv(CARI_storm5_07_31_Q, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Q.csv"))
+write.csv(CARI_storm5_07_31_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_NO3.csv"))
+write.csv(CARI_storm5_07_31_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_fDOM.csv"))
+write.csv(CARI_storm5_07_31_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_SPC.csv"))
+write.csv(CARI_storm5_07_31_turb, here("Storm_Events", "2019", "CARI", "CARI_storm5_07_31_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Turb.csv"))
+write.csv(CARI_storm6a_08_02, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02.csv"))
+write.csv(CARI_storm6a_08_02_Q, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Q.csv"))
+write.csv(CARI_storm6a_08_02_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_NO3.csv"))
+write.csv(CARI_storm6a_08_02_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_fDOM.csv"))
+write.csv(CARI_storm6a_08_02_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_SPC.csv"))
+write.csv(CARI_storm6a_08_02_turb, here("Storm_Events", "2019", "CARI", "CARI_storm6a_08_02_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6b_08_03_Turb.csv"))
+write.csv(CARI_storm6c_08_05, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05.csv"))
+write.csv(CARI_storm6c_08_05_Q, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Q.csv"))
+write.csv(CARI_storm6c_08_05_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_NO3.csv"))
+write.csv(CARI_storm6c_08_05_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_fDOM.csv"))
+write.csv(CARI_storm6c_08_05_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_SPC.csv"))
+write.csv(CARI_storm6c_08_05_turb, here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6c_08_05_Turb.csv"))
+write.csv(CARI_storm6d_08_10, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10.csv"))
+write.csv(CARI_storm6d_08_10_Q, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Q.csv"))
+write.csv(CARI_storm6d_08_10_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_NO3.csv"))
+write.csv(CARI_storm6d_08_10_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_fDOM.csv"))
+write.csv(CARI_storm6d_08_10_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_SPC.csv"))
+write.csv(CARI_storm6d_08_10_turb, here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Turb.csv"))
 
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm6d_08_10_Turb.csv"))
-
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Turb.csv"))
-
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm7b_08_13_Turb.csv"))
-
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Q.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_NO3.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_fDOM.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_SPC.csv"))
-write.csv(here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Turb.csv"))
+write.csv(CARI_storm7a_08_13, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13.csv"))
+write.csv(CARI_storm7a_08_13_Q, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Q.csv"))
+write.csv(CARI_storm7a_08_13_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_NO3.csv"))
+write.csv(CARI_storm7a_08_13_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_fDOM.csv"))
+write.csv(CARI_storm7a_08_13_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_SPC.csv"))
+write.csv(CARI_storm7a_08_13_turb, here("Storm_Events", "2019", "CARI", "CARI_storm7a_08_13_Turb.csv"))
 
 
-# write.csv(CARI_storm1_05_08, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_06_01.csv")
-# write.csv(CARI_storm1_05_08_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Q.csv")
-# write.csv(CARI_storm1_05_08_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_NO3.csv")
-# write.csv(CARI_storm1_05_08_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_fDOM.csv")
-# write.csv(CARI_storm1_05_08_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_SPC.csv")
-# write.csv(CARI_storm1_05_08_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm1_05_08_Turb.csv")
-# 
-# write.csv(CARI_storm2_06_30, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30.csv")
-# write.csv(CARI_storm2_06_30_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Q.csv")
-# write.csv(CARI_storm2_06_30_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_NO3.csv")
-# write.csv(CARI_storm2_06_30_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_fDOM.csv")
-# write.csv(CARI_storm2_06_30_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_SPC.csv")
-# write.csv(CARI_storm2_06_30_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm2_06_30_Turb.csv")
-# 
-# write.csv(CARI_storm3_07_12, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12.csv")
-# write.csv(CARI_storm3_07_12_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Q.csv")
-# write.csv(CARI_storm3_07_12_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_NO3.csv")
-# write.csv(CARI_storm3_07_12_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_fDOM.csv")
-# write.csv(CARI_storm3_07_12_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_SPC.csv")
-# write.csv(CARI_storm3_07_12_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm3_07_12_Turb.csv")
-# 
-# write.csv(CARI_storm4_07_26, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26.csv")
-# write.csv(CARI_storm4_07_26_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Q.csv")
-# write.csv(CARI_storm4_07_26_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_NO3.csv")
-# write.csv(CARI_storm4_07_26_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_fDOM.csv")
-# write.csv(CARI_storm4_07_26_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_SPC.csv")
-# write.csv(CARI_storm4_07_26_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm4_07_26_Turb.csv")
-# 
-# write.csv(CARI_storm5_07_31, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31.csv")
-# write.csv(CARI_storm5_07_31_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Q.csv")
-# write.csv(CARI_storm5_07_31_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_NO3.csv")
-# write.csv(CARI_storm5_07_31_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_fDOM.csv")
-# write.csv(CARI_storm5_07_31_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_SPC.csv")
-# write.csv(CARI_storm5_07_31_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm5_07_31_Turb.csv")
-# 
-# write.csv(CARI_storm6a_08_02, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02.csv")
-# write.csv(CARI_storm6a_08_02_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Q.csv")
-# write.csv(CARI_storm6a_08_02_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_NO3.csv")
-# write.csv(CARI_storm6a_08_02_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_fDOM.csv")
-# write.csv(CARI_storm6a_08_02_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_SPC.csv")
-# write.csv(CARI_storm6a_08_02_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6a_08_02_Turb.csv")
-# 
-# write.csv(CARI_storm6b_08_03, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03.csv")
-# write.csv(CARI_storm6b_08_03_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Q.csv")
-# write.csv(CARI_storm6b_08_03_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_NO3.csv")
-# write.csv(CARI_storm6b_08_03_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_fDOM.csv")
-# write.csv(CARI_storm6b_08_03_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_SPC.csv")
-# write.csv(CARI_storm6b_08_03_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6b_08_03_Turb.csv")
-# 
-# write.csv(CARI_storm6c_08_05, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05.csv")
-# write.csv(CARI_storm6c_08_05_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Q.csv")
-# write.csv(CARI_storm6c_08_05_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_NO3.csv")
-# write.csv(CARI_storm6c_08_05_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_fDOM.csv")
-# write.csv(CARI_storm6c_08_05_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_SPC.csv")
-# write.csv(CARI_storm6c_08_05_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6c_08_05_Turb.csv")
-# 
-# write.csv(CARI_storm6d_08_10, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10.csv")
-# write.csv(CARI_storm6d_08_10_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Q.csv")
-# write.csv(CARI_storm6d_08_10_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_NO3.csv")
-# write.csv(CARI_storm6d_08_10_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_fDOM.csv")
-# write.csv(CARI_storm6d_08_10_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_SPC.csv")
-# write.csv(CARI_storm6d_08_10_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm6d_08_10_Turb.csv")
-# 
-# write.csv(CARI_storm7a_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13.csv")
-# write.csv(CARI_storm7a_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Q.csv")
-# write.csv(CARI_storm7a_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_NO3.csv")
-# write.csv(CARI_storm7a_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_fDOM.csv")
-# write.csv(CARI_storm7a_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_SPC.csv")
-# write.csv(CARI_storm7a_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7a_08_13_Turb.csv")
-# 
-# write.csv(CARI_storm7b_08_13, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13.csv")
-# write.csv(CARI_storm7b_08_13_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Q.csv")
-# write.csv(CARI_storm7b_08_13_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_NO3.csv")
-# write.csv(CARI_storm7b_08_13_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_fDOM.csv")
-# write.csv(CARI_storm7b_08_13_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_SPC.csv")
-# write.csv(CARI_storm7b_08_13_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm7b_08_13_Turb.csv")
-# 
-# write.csv(CARI_storm8_08_16, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16.csv")
-# write.csv(CARI_storm8_08_16_Q, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Q.csv")
-# write.csv(CARI_storm8_08_16_NO3, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_NO3.csv")
-# write.csv(CARI_storm8_08_16_fDOM, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_fDOM.csv")
-# write.csv(CARI_storm8_08_16_SPC, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_SPC.csv")
-# write.csv(CARI_storm8_08_16_turb, "~/Documents/Storms/Storm_Events/2019/CARI/CARI_storm8_08_16_Turb.csv")
+write.csv(CARI_storm8_08_16, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16.csv"))
+write.csv(CARI_storm8_08_16_Q, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Q.csv"))
+write.csv(CARI_storm8_08_16_NO3, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_NO3.csv"))
+write.csv(CARI_storm8_08_16_fDOM, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_fDOM.csv"))
+write.csv(CARI_storm8_08_16_SPC, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_SPC.csv"))
+write.csv(CARI_storm8_08_16_turb, here("Storm_Events", "2019", "CARI", "CARI_storm8_08_16_Turb.csv"))
+
 
 
 ##########################################################################################
