@@ -1511,10 +1511,10 @@ names(storm_list_beta) = storm_file_list_beta
 #  organize storm data by site and solute 
 CARI_storm_list_beta = storm_list_beta[c(1:60)] # 60
 FRCH_storm_list_beta = storm_list_beta[c(1:72)] #72
-MOOS_storm_list_beta = storm_list_beta[c(187:264)] #78
-POKE_storm_list_beta = storm_list_beta[c(73:138)] # 66
-STRT_storm_list_beta = storm_list_beta[c(139:204)] # 66
-VAUL_storm_list_beta = storm_list_beta[c(205:264)] # 60
+MOOS_storm_list_beta = storm_list_beta[c(73:138)] #66
+POKE_storm_list_beta = storm_list_beta[c(139:204)] # 66
+STRT_storm_list_beta = storm_list_beta[c(205:268)] # 66
+VAUL_storm_list_beta = storm_list_beta[c(269:330)] # 60
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -1842,9 +1842,8 @@ MOOS_NO3_storm$storm.ID = c(rep("storm1", 702),
                             rep("storm3", 250),
                             rep("storm4", 228),
                             rep("storm5", 266),
-                            rep("storm6a", 114),
-                            rep("storm6b", 95),
-                            rep("storm6c", 223),
+                            rep("storm6a", 434),
+                            
                             rep("storm6d", 479),
                             rep("storm7a", 166),
                             rep("storm7b", 84),
@@ -2108,9 +2107,8 @@ MOOS_fDOM_storm$storm.ID = c(rep("storm1", 702),
                              rep("storm3", 250),
                              rep("storm4", 228),
                              rep("storm5", 266),
-                             rep("storm6a", 114),
-                             rep("storm6b", 95),
-                             rep("storm6c", 223),
+                             rep("storm6a", 434),
+                             
                              rep("storm6d", 479),
                              rep("storm7a", 166),
                              rep("storm7b", 84),
@@ -2376,9 +2374,8 @@ MOOS_SPC_storm$storm.ID = c(rep("storm1", 702),
                             rep("storm3", 250),
                             rep("storm4", 228),
                             rep("storm5", 266),
-                            rep("storm6a", 114),
-                            rep("storm6b", 95),
-                            rep("storm6c", 223),
+                            rep("storm6a", 434),
+                            
                             rep("storm6d", 479),
                             rep("storm7a", 166),
                             rep("storm7b", 84),
@@ -2641,9 +2638,8 @@ MOOS_turb_storm$storm.ID = c(rep("storm1", 702),
                              rep("storm3", 250),
                              rep("storm4", 228),
                              rep("storm5", 266),
-                             rep("storm6a", 114),
-                             rep("storm6b", 95),
-                             rep("storm6c", 223),
+                             rep("storm6a", 434),
+                             
                              rep("storm6d", 479),
                              rep("storm7a", 166),
                              rep("storm7b", 84),
@@ -2903,9 +2899,8 @@ MOOS_abs_storm$storm.ID = c(rep("storm1", 702),
                             rep("storm3", 250),
                             rep("storm4", 228),
                             rep("storm5", 266),
-                            rep("storm6a", 114),
-                            rep("storm6b", 95),
-                            rep("storm6c", 223),
+                            rep("storm6a", 434),
+                            
                             rep("storm6d", 479),
                             rep("storm7a", 166),
                             rep("storm7b", 84),
