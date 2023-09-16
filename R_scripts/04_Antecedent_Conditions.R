@@ -4872,11 +4872,6 @@ CARIstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="CARI", 
                                   full.names=TRUE)
 
-# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2019/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="CARI", 
-#                                   full.names=TRUE)
-
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -4885,15 +4880,15 @@ CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list,
 
 CARI_storms$storm.num = c(rep("storm1", 371),
                           rep("storm2", 143),
-                          rep("storm3", 104),
+                          rep("storm3", 83),
                           rep("storm4", 147),
                           rep("storm5", 135),
-                          rep("storm6a", 83),
-                          rep("storm6b", 235),
+                          rep("storm6a", 319),
+                         
                           rep("storm6c", 465),
                           rep("storm6d", 135),
-                          rep("storm7a", 51),
-                          rep("storm7b", 219),
+                          rep("storm7a", 271),
+                          
                           rep("storm8", 267))
 
 CARI_storms$DateTime <- as.POSIXct(CARI_storms$DateTime, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
