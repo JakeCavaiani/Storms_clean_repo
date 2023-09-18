@@ -1,0 +1,212 @@
+---
+title: "17_script_walkthrough"
+output: html_document
+date: "2023-09-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(reticulate)
+library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+library(boot)
+library(lubridate)
+library(here)
+Sys.which("python")
+use_python("/usr/local/bin/python3")
+
+
+
+
+```
+
+# Python setup
+```{python}
+import pyprojroot
+from pyprojroot.here import here
+import pickle
+import pandas
+import pandas as pd
+import datetime
+from hysteresis_metrics import hysteresisMetrics
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+quit()
+
+```
+
+```{python}
+
+# FRCH #
+FRCH_storm1_07_01_Q = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_Q.csv'))
+FRCH_storm1_07_01_NO3 = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_NO3.csv'))
+FRCH_storm1_07_01_fDOM = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_fDOM.csv'))
+FRCH_storm1_07_01_SPC = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_SPC.csv'))
+FRCH_storm1_07_01_turb = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_turb.csv'))
+FRCH_storm1_07_01_abs = pd.read_csv(here('Storm_events/2015/FRCH/FRCH_storm1_07_01_abs.csv'))
+
+```
+
+FRCH_storms
+```{python}
+## NO3 ##
+FRCH_storm1_07_01_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+FRCH_storm1_07_01_NO3['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+timespacing = 15 # 15 minutes between records
+hysdict_FRCH_storm1_07_01_NO3 = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_storm1_07_01_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
+## fDOM ##
+FRCH_storm1_07_01_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+FRCH_storm1_07_01_fDOM['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+timespacing = 15 # 15 minutes between records
+hysdict_FRCH_storm1_07_01_fDOM = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_storm1_07_01_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
+## SPC ##
+FRCH_storm1_07_01_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+FRCH_storm1_07_01_SPC['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+timespacing = 15 # 15 minutes between records
+hysdict_FRCH_storm1_07_01_SPC = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_storm1_07_01_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
+## turb ##
+FRCH_storm1_07_01_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+FRCH_storm1_07_01_turb['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+timespacing = 15 # 15 minutes between records
+hysdict_FRCH_storm1_07_01_turb = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_storm1_07_01_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
+## ABS ##
+FRCH_storm1_07_01_Q['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+FRCH_storm1_07_01_abs['valuedatetime'] =  pd.to_datetime(FRCH_storm1_07_01_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
+timespacing = 15 # 15 minutes between records
+hysdict_FRCH_storm1_07_01_abs = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_storm1_07_01_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
+
+```
+
+```{r}
+FRCH.hyst.results.list = list(py$hysdict_FRCH_storm1_07_01_NO3) # output of the hysteresis function
+                         
+
+FRCH.hyst.results.list.2 = list()
+for (i in 1:length(FRCH.hyst.results.list)){
+FRCH.hyst.results.list.2[[i]] = as.data.frame(t(as.numeric(c(
+FRCH.hyst.results.list[[i]][["HI_mean_with_Interp"]],
+FRCH.hyst.results.list[[i]][["HI_standard_deviation_with_Interp"]],
+FRCH.hyst.results.list[[i]][["Normalized slope of response"]],
+FRCH.hyst.results.list[[i]][["interpolated Max width of response"]],
+FRCH.hyst.results.list[[i]][["Min response"]],
+FRCH.hyst.results.list[[i]][["Max response"]],
+FRCH.hyst.results.list[[i]][["Peak Q"]]
+))))
+names(FRCH.hyst.results.list.2[[i]]) = c("HI_mean_Interp", "HI_sd_with_Interp", "N.S.", "Max_width_Interp", "Min_response", "Max_response", "Peak_Q")
+} # Clipping the variables of interests, restructuring the dataframe to numerica and renaming the variables
+
+HIs.list = list()
+HIs.tests = list()
+for (i in 1:length(FRCH.hyst.results.list)){
+  HIs.list[[i]] = unlist(FRCH.hyst.results.list[[i]][["Hysteresis_Index"]],recursive=FALSE)
+  HIs.tests[[i]] = as.data.frame(t(round(as.numeric(c(shapiro.test(HIs.list[[i]])$statistic, shapiro.test(HIs.list[[i]])$p.value,
+                     t.test(HIs.list[[i]], mu=0)$statistic, t.test(HIs.list[[i]], mu=0)$p.value, 
+                     t.test(HIs.list[[i]], mu=0)$conf.int[1],t.test(HIs.list[[i]], mu=0)$conf.int[2],
+                     wilcox.test(HIs.list[[i]], mu=0)$statistic, wilcox.test(HIs.list[[i]], mu=0)$p.value)), 4)))
+  names(HIs.tests[[i]]) = c("ShapiroTest.W", "ShapiroTest.p", "t.test.stat", "t.test.p", "t.test.CIlow", "t.test.CIhigh",
+                            "wilcox.test.stat", "wilcox.test.p") 
+}# these are the stats of the function. Going to give you the t.tests and the CIs
+
+FRCH.hyst.results.list.3 =list()
+for (i in 1:length(FRCH.hyst.results.list)){
+  FRCH.hyst.results.list.3[[i]] = cbind(FRCH.hyst.results.list.2[[i]], HIs.tests[[i]])
+} # this is combining the previous two created dataframes
+
+
+FRCH.hyst.results.df = bind_rows(FRCH.hyst.results.list.3, .id = "column_label")
+
+FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_07_01_NO3") # naming it
+                                  
+
+
+FRCH.hyst.results.df$site.ID = "FRCH" # making sure it is named the correct site
+
+
+
+## plot HI with bootstrapped 95% CIs around the median ##
+HIs.Q.list =list()
+HIs.df.list = list()
+
+for (i in 1:length(HIs.list)) {
+  HIs.Q.list[[i]] = names(HIs.list[[i]])
+  HIs.Q.list[[i]] = (sapply(strsplit(HIs.Q.list[[i]], " "), "[[", 4))
+  HIs.Q.list[[i]] = as.numeric(gsub("%", "", HIs.Q.list[[i]]))
+  HIs.df.list[[i]] = as.data.frame(cbind(HIs.list[[i]], HIs.Q.list[[i]]))
+  HIs.df.list[[i]]= HIs.df.list[[i]][order(HIs.df.list[[i]][["V2"]]),]
+  names(HIs.df.list[[i]]) = c("HI", "Q_interval")
+}
+
+FRCH.HI.df = bind_rows(HIs.df.list, .id = "column_label")
+
+FRCH.HI.df$storm.ID = c(rep("FRCH_storm1_07_01_NO3", 50))
+                        
+
+FRCH.HI.df$storm.ID = as.factor(FRCH.HI.df$storm.ID)
+FRCH.HI.df = separate(data=FRCH.HI.df, col=storm.ID, into=c("site.ID","storm.num", "month", "day", "response"), sep = "_", remove = F)
+
+median_cl_boot <- function(x, conf = 0.95) {
+  lconf <- (1 - conf)/2
+  uconf <- 1 - lconf
+  require(boot)
+  bmedian <- function(x, ind) median(x[ind])
+  bt <- boot(x, bmedian, 10000)
+  bb <- boot.ci(bt, conf = 0.95, type = "perc")
+  data.frame(y = median(x), ymin = quantile(bt$t, lconf), ymax = quantile(bt$t, 
+                                                                          uconf))
+} # Boot straping CIs
+
+
+g0 <- ggplot(FRCH.HI.df, aes(x = storm.num, y = HI, label=storm.num, fill=response))
+g1 = g0 + geom_jitter(width = 0.1, fill = "grey", colour = "#0571B0", alpha=0.25, size=3) + 
+  theme(axis.text.x = element_text(angle = 0))+  labs(x="") + facet_wrap(~ response, scales = "free_x") +
+  theme_bw() +geom_hline(yintercept=0) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + theme(legend.position = "none")
+g2 <- g1 + 
+  stat_summary(fun.data = median_cl_boot, geom = "errorbar",
+               colour = "black", width = 0.2, size=1) + 
+  stat_summary(fun.y = median, geom = "point", 
+               colour = "black", size = 3)
+
+g2
+
+```
+
+
+
+### BETA ####
+```{r}
+library(here)
+library(tidyverse)
+library(boot)
+library(broom)
+library(purrr)
+library(viridis)
+library(readr)
+library(lubridate)
+library(data.table)
+library(rio)
+library(ggplot2)
+library(scales)
+library(psych)
+library(googledrive)
+library(readxl)
+library(cowplot)
+library(zoo)
+library(dplyr)
+library(RColorBrewer)
+library(gridExtra)
+library(ggpmisc)
+library(SLOPE)
+library(wesanderson)
+library(ggpubr)
+library(dataRetrieval)
+```
+
+
+
+
