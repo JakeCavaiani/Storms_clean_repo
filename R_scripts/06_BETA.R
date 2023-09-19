@@ -1505,12 +1505,12 @@ storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
 #  organize storm data by site and solute 
-CARI_storm_list_beta = storm_list_beta[c(1:60)] # 60
-FRCH_storm_list_beta = storm_list_beta[c(1:72)] #72
-MOOS_storm_list_beta = storm_list_beta[c(73:138)] #66
-POKE_storm_list_beta = storm_list_beta[c(139:204)] # 66
-STRT_storm_list_beta = storm_list_beta[c(205:268)] # 66
-VAUL_storm_list_beta = storm_list_beta[c(269:330)] # 60
+CARI_storm_list_beta = storm_list_beta[c(1:50)] # 50
+FRCH_storm_list_beta = storm_list_beta[c(51:122)] #72
+MOOS_storm_list_beta = storm_list_beta[c(123:188)] #66
+POKE_storm_list_beta = storm_list_beta[c(189:254)] # 66
+STRT_storm_list_beta = storm_list_beta[c(255:320)] # 66
+VAUL_storm_list_beta = storm_list_beta[c(321:380)] # 60
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -1984,15 +1984,15 @@ beta.all.no3.vaul <- VAUL_NO3_storm_ascending %>% group_by(storm.ID) %>%
 # CARI # 
 CARI_NO3_storm$storm.ID = c(rep("storm1", 371),
                             rep("storm2", 143),
-                            rep("storm3", 146),
+                            rep("storm3", 83),
                             rep("storm4", 147),
                             rep("storm5", 135),
-                            rep("storm6a", 83),
-                            rep("storm6b", 235),
-                            rep("storm6c", 517),
-                            rep("storm6d", 135),
-                            rep("storm7a", 51),
-                            rep("storm7b", 219),
+                            rep("storm6a", 319),
+                            
+                            rep("storm6c", 481),
+                            rep("storm6d", 129),
+                            rep("storm7a", 271),
+                            
                             rep("storm8", 267))
                            
 
@@ -2247,17 +2247,17 @@ beta.all.fDOM.vaul <- VAUL_fDOM_storm_ascending %>% group_by(storm.ID) %>%
 
 # CARI # 
 CARI_fDOM_storm$storm.ID = c(rep("storm1", 371),
-                            rep("storm2", 143),
-                            rep("storm3", 146),
-                            rep("storm4", 147),
-                            rep("storm5", 135),
-                            rep("storm6a", 83),
-                            rep("storm6b", 235),
-                            rep("storm6c", 517),
-                            rep("storm6d", 135),
-                            rep("storm7a", 51),
-                            rep("storm7b", 219),
-                            rep("storm8", 267))
+                             rep("storm2", 143),
+                             rep("storm3", 83),
+                             rep("storm4", 147),
+                             rep("storm5", 135),
+                             rep("storm6a", 319),
+                             
+                             rep("storm6c", 481),
+                             rep("storm6d", 129),
+                             rep("storm7a", 271),
+                             
+                             rep("storm8", 267))
 
 
 names(CARI_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
@@ -2514,15 +2514,15 @@ beta.all.SPC.vaul <- VAUL_SPC_storm_ascending %>% group_by(storm.ID) %>%
 # CARI #
 CARI_SPC_storm$storm.ID = c(rep("storm1", 371),
                             rep("storm2", 143),
-                            rep("storm3", 146),
+                            rep("storm3", 83),
                             rep("storm4", 147),
                             rep("storm5", 135),
-                            rep("storm6a", 83),
-                            rep("storm6b", 235),
-                            rep("storm6c", 517),
-                            rep("storm6d", 135),
-                            rep("storm7a", 51),
-                            rep("storm7b", 219),
+                            rep("storm6a", 319),
+                            
+                            rep("storm6c", 481),
+                            rep("storm6d", 129),
+                            rep("storm7a", 271),
+                            
                             rep("storm8", 267))
 names(CARI_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 CARI_SPC_storm$site.ID <- "CARI"
@@ -2777,17 +2777,17 @@ beta.all.turb.vaul <- VAUL_turb_storm_ascending %>% group_by(storm.ID) %>%
 
 # CARI #
 CARI_turb_storm$storm.ID = c(rep("storm1", 371),
-                            rep("storm2", 143),
-                            rep("storm3", 146),
-                            rep("storm4", 147),
-                            rep("storm5", 135),
-                            rep("storm6a", 83),
-                            rep("storm6b", 235),
-                            rep("storm6c", 517),
-                            rep("storm6d", 135),
-                            rep("storm7a", 51),
-                            rep("storm7b", 219),
-                            rep("storm8", 267))
+                             rep("storm2", 143),
+                             rep("storm3", 83),
+                             rep("storm4", 147),
+                             rep("storm5", 135),
+                             rep("storm6a", 319),
+                             
+                             rep("storm6c", 481),
+                             rep("storm6d", 129),
+                             rep("storm7a", 271),
+                             
+                             rep("storm8", 267))
 
 names(CARI_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 CARI_turb_storm$site.ID <- "CARI"
@@ -3070,195 +3070,10 @@ beta.all.2019 <- rbind(all.2019.ci.no3, all.2019.ci.fDOM,
                        all.2019.ci.SPC, all.2019.ci.turb,
                        all.2019.ci.abs)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2019.csv"))
-
-
-# write.csv(beta.all.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2019.csv")
+write.csv(beta.all.2019, here("Output_from_analysis", "06_BETA", "beta.2019.csv"))
 
 # beta.all.2019 <- beta.all.2019 %>% 
 #   filter(Parameter != "(Intercept)")
-
-
-
-
-
-
-
-
-
-
-#### plot ####
-# HI_2018 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2018/HI.2018.csv")
-# names(HI_2018)[names(HI_2018) == 'storm.num'] <- 'storm.ID'
-# names(HI_2018)[names(HI_2018) == 'response'] <- 'response_var'
-# 
-# HI_beta = left_join(HI_2018, beta.all.2018, by=c("site.ID", "storm.ID", "response_var"))
-# 
-# # HI_FI <- read.csv("~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_FI.diff_results.2018.csv")
-# # 
-# # HI_FI_beta = left_join(HI_FI, beta.all.2018, by=c("site.ID", "storm.ID", "response_var"))
-# # 
-# # write.csv(HI_FI_beta, "~/Documents/Storms/Output_from_analysis/06_HI_fire_permafrost_script/HI_FI_beta.diff_results_2018.csv")
-# 
-# # NO3 #
-# #HI_FI_NO3 = subset(HI_FI_beta, response_var == "NO3")
-# #HI_FI_NO3$site.ID <- factor(HI_FI_NO3$site.ID, levels = c('FRCH','MOOS','POKE','STRT','VAUL'))
-# 
-# #HI_FI_NO3.p = 
-# # ggplot(HI_FI_NO3, aes(Flush_index, Hyst_index)) + geom_point(aes(colour=factor(site.ID)), size = 4)+
-# #  geom_errorbar(aes(ymin=HI_ymin, ymax=HI_ymax), colour="black", alpha=0.5, size=.5, width = 0.1)+ 
-# #  geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-# #  geom_errorbarh(aes(xmin=FI_ymin, xmax=FI_ymax), colour="black", alpha=0.5, size=.5, height = 0.1) +
-# ##  scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-# #  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-# #  ggtitle("a) NO3-")+ 
-# #  theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) 
-# #HI_FI_NO3.p
-# 
-# # NO3 #
-# HI_beta_NO3 = subset(HI_beta, response_var == "NO3")
-# HI_beta_NO3$site.ID <- factor(HI_beta_NO3$site.ID, levels = c('FRCH','MOOS', 'CARI'))
-# 
-# HI_beta_NO3.p = 
-#   ggplot(HI_beta_NO3, aes(Coefficient, HI)) + geom_point(aes(colour=factor(site.ID)), size = 4)+
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("a) NO3-")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20), legend.title = element_blank()) 
-# HI_beta_NO3.p
-# 
-# # fDOM #
-# HI_FI_fDOM = subset(HI_FI_beta, response_var == "fDOM")
-# HI_FI_fDOM$site.ID <- factor(HI_FI_fDOM$site.ID, levels = c('FRCH','MOOS','POKE','STRT','VAUL'))
-# 
-# HI_FI_fDOM.p = 
-#   ggplot(HI_FI_fDOM, aes(Flush_index, Hyst_index)) + geom_point(aes(colour=factor(site.ID)), size = 4)+
-#   geom_errorbar(aes(ymin=HI_ymin, ymax=HI_ymax), colour="black", alpha=0.5, size=.5, width = 0.1)+ 
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   geom_errorbarh(aes(xmin=FI_ymin, xmax=FI_ymax), colour="black", alpha=0.5, size=.5, height = 0.1) +
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("b) fDOM")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) 
-# HI_FI_fDOM.p
-# 
-# HI_beta_fDOM = subset(HI_beta, response_var == "fDOM")
-# HI_beta_fDOM$site.ID <- factor(HI_beta_fDOM$site.ID, levels = c('FRCH','MOOS','CARI'))
-# 
-# HI_beta_fDOM.p = 
-#   ggplot(HI_beta_fDOM, aes(beta, HI)) + geom_point(aes(colour=factor(site.ID), alpha = doy, shape = burn), size = 4)+
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("b) fDOM")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20), legend.title = element_blank()) 
-# HI_beta_fDOM.p
-# 
-# # SPC#
-# HI_FI_SPC = subset(HI_FI_beta, response_var == "SPC")
-# HI_FI_SPC$site.ID <- factor(HI_FI_SPC$site.ID, levels = c('FRCH','MOOS','POKE','STRT','VAUL'))
-# 
-# HI_FI_SPC.p = 
-#   ggplot(HI_FI_SPC, aes(Flush_index, Hyst_index)) + geom_point(aes(colour=factor(site.ID)), size = 4)+
-#   geom_errorbar(aes(ymin=HI_ymin, ymax=HI_ymax), colour="black", alpha=0.5, size=.5, width = 0.1)+ 
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   geom_errorbarh(aes(xmin=FI_ymin, xmax=FI_ymax), colour="black", alpha=0.5, size=.5, height = 0.1) +
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("c) SPC")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) 
-# HI_FI_SPC.p
-# 
-# 
-# HI_beta_SPC = subset(HI_beta, response_var == "SPC")
-# HI_beta_SPC$site.ID <- factor(HI_beta_SPC$site.ID, levels = c('FRCH','MOOS','CARI'))
-# 
-# HI_beta_SPC.p = 
-#   ggplot(HI_beta_SPC, aes(beta, HI)) + geom_point(aes(colour=factor(site.ID), alpha = doy, shape = burn), size = 4)+
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("c) SPC")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20), legend.title = element_blank()) 
-# HI_beta_SPC.p
-# 
-# # turb #
-# HI_FI_turb = subset(HI_FI_beta, response_var == "turb")
-# HI_FI_turb$site.ID <- factor(HI_FI_turb$site.ID, levels = c('FRCH','MOOS','POKE','STRT','VAUL'))
-# 
-# HI_FI_turb.p = 
-#   ggplot(HI_FI_turb, aes(Flush_index, Hyst_index)) + geom_point(aes(colour=factor(site.ID)), size = 4)+
-#   geom_errorbar(aes(ymin=HI_ymin, ymax=HI_ymax), colour="black", alpha=0.5, size=.5, width = 0.1)+ 
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   geom_errorbarh(aes(xmin=FI_ymin, xmax=FI_ymax), colour="black", alpha=0.5, size=.5, height = 0.1) +
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("d) Turb")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) 
-# HI_FI_turb.p
-# 
-# 
-# HI_beta_turb = subset(HI_beta, response_var == "turb")
-# HI_beta_turb$site.ID <- factor(HI_beta_turb$site.ID, levels = c('FRCH','MOOS','CARI'))
-# 
-# HI_beta_turb.p = 
-#   ggplot(HI_beta_turb, aes(beta, HI)) + geom_point(aes(colour=factor(site.ID), alpha = doy, shape = burn), size = 4)+
-#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0)+
-#   scale_color_manual(values = c("orange red", viridis::viridis(4)), "Catchment")+theme_bw() +
-#   ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-#   ggtitle("d) turb")+ 
-#   theme(panel.border = element_blank(), panel.grid.major = element_blank(),panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20), legend.title = element_blank()) 
-# HI_beta_turb.p
-# 
-# grid.arrange(HI_beta_NO3.p, HI_beta_fDOM.p, HI_beta_SPC.p, HI_beta_turb.p)
-# 
-# # #### Regression between beta and FI #######
-# # FI_beta_comp = 
-# #   ggplot(HI_FI_NO3, aes(Flush_index, beta)) + geom_point(aes(colour=factor(site.ID)), size = 4) +
-# #   ylim(-1.5, 1.5) + xlim(-1.5, 1.5) +
-# #   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) + 
-# #   stat_poly_eq(formula = y~x,
-# #                label.y = "top", label.x = "right",
-# #                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-# #                parse = TRUE)
-# # FI_beta_comp
-# # 
-# # FI_beta_comp_fDOM = 
-# #   ggplot(HI_FI_fDOM, aes(Flush_index, beta)) + geom_point(aes(colour=factor(site.ID)), size = 4) +
-# #   ylim(-1.5, 1.5) + xlim(-1.5, 1.5) +
-# #   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) + 
-# #   stat_poly_eq(formula = y~x,
-# #                label.y = "top", label.x = "right",
-# #                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-# #                parse = TRUE)
-# # FI_beta_comp_fDOM
-# # 
-# # FI_beta_comp_SPC = 
-# #   ggplot(HI_FI_SPC, aes(Flush_index, beta)) + geom_point(aes(colour=factor(site.ID)), size = 4) +
-# #   ylim(-1.5, 1.5) + xlim(-1.5, 1.5) +
-# #   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) + 
-# #   stat_poly_eq(formula = y~x,
-# #                label.y = "top", label.x = "right",
-# #                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-# #                parse = TRUE)
-# # FI_beta_comp_SPC
-# # 
-# # FI_beta_comp_turb = 
-# #   ggplot(HI_FI_turb, aes(Flush_index, beta)) + geom_point(aes(colour=factor(site.ID)), size = 4) +
-# #   ylim(-1.5, 1.5) + xlim(-1.5, 1.5) +
-# #   geom_smooth(method = "lm", na.rm = TRUE, fullrange = TRUE, aes(group = 1)) + 
-# #   stat_poly_eq(formula = y~x,
-# #                label.y = "top", label.x = "right",
-# #                aes(label = paste(..eq.label.., ..rr.label.., sep = "~~~")), 
-# #                parse = TRUE)
-# # FI_beta_comp_turb
-# # 
-# # 
-# # grid.arrange(FI_beta_comp_NO3, FI_beta_comp_fDOM, FI_beta_comp_SPC, FI_beta_comp_turb)
-# # 
-
-
 
 
 ########################################## 2020 ##########################################################
