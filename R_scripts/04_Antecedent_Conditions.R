@@ -4886,7 +4886,7 @@ CARI_storms$storm.num = c(rep("storm1", 371),
                           rep("storm6a", 319),
                          
                           rep("storm6c", 465),
-                          rep("storm6d", 135),
+                          rep("storm6d", 121),
                           rep("storm7a", 271),
                           
                           rep("storm8", 267))
@@ -5336,9 +5336,8 @@ HI.cari.2019 <- rbind(HI.cari.no3.2.2019, HI.cari.fDOM.2.2019, HI.cari.SPC.2.201
 HI.cari.2019$burn <- "burned" # adding a burn column
 HI.cari.2019$pf <- "medium" # adding a pf column
 
-# write.csv(HI.cari.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.cari.2019.csv")
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.cari.2019.csv"))
+write.csv(HI.cari.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.cari.2019.csv"))
 
 
 HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019, 
@@ -5349,10 +5348,9 @@ HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
 origin_date <- as.Date("2019-05-12")
 HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
+write.csv(HI.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
 
 
-# write.csv(HI.2019, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
 
 
 ######################################## 2020 ####
