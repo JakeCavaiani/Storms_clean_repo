@@ -34,7 +34,6 @@ from hysteresis_metrics import hysteresisMetrics
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 quit()
-
 ```
 
 ```{python}
@@ -84,7 +83,7 @@ hysdict_FRCH_storm1_07_01_abs = hysteresisMetrics(FRCH_storm1_07_01_Q, FRCH_stor
 ```
 
 ```{r}
-FRCH.hyst.results.list = list(py$hysdict_FRCH_storm1_07_01_NO3) # output of the hysteresis function
+FRCH.hyst.results.list = list(py$hysdict_FRCH_storm1_07_01_fDOM) # output of the hysteresis function
                          
 
 FRCH.hyst.results.list.2 = list()
@@ -121,7 +120,7 @@ for (i in 1:length(FRCH.hyst.results.list)){
 
 FRCH.hyst.results.df = bind_rows(FRCH.hyst.results.list.3, .id = "column_label")
 
-FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_07_01_NO3") # naming it
+FRCH.hyst.results.df$storm.ID = c("FRCH_storm1_07_01_fDOM") # naming it
                                   
 
 
@@ -144,7 +143,7 @@ for (i in 1:length(HIs.list)) {
 
 FRCH.HI.df = bind_rows(HIs.df.list, .id = "column_label")
 
-FRCH.HI.df$storm.ID = c(rep("FRCH_storm1_07_01_NO3", 50))
+FRCH.HI.df$storm.ID = c(rep("FRCH_storm1_07_01_fDOM", 50))
                         
 
 FRCH.HI.df$storm.ID = as.factor(FRCH.HI.df$storm.ID)

@@ -40,10 +40,6 @@ storm_file_list_beta <- list.files(path="FRCH_MOOS/",
                                    pattern=".csv", 
                                    full.names=TRUE)
 
-# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS/", 
-#                                    recursive=F, 
-#                                    pattern=".csv", 
-#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
@@ -51,7 +47,7 @@ storm_list_beta<-do.call("list", lapply(storm_file_list_beta,
                                         header=T, row.names=1))
 
 storm_file_list_beta = sub("FRCH_MOOS//", storm_file_list_beta, replacement = "")
-# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2015/FRCH_MOOS//", storm_file_list_beta, replacement = "")
+
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
