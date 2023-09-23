@@ -7400,11 +7400,6 @@ STRTstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="STRT", 
                                   full.names=TRUE)
 
-# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="STRT", 
-#                                   full.names=TRUE)
-
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -7412,11 +7407,8 @@ STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 STRT_storms$storm.num = c(rep("storm10", 246),
-                          rep("storm1a", 103),
-                          rep("storm1b", 161),
-                          rep("storm1c", 105),
-                          rep("storm1d", 86),
-                          rep("storm1e", 476),
+                          rep("storm1a", 969),
+                          
                           rep("storm2", 166),
                           rep("storm3", 386),
                           rep("storm4a", 140),
@@ -7424,8 +7416,8 @@ STRT_storms$storm.num = c(rep("storm10", 246),
                           rep("storm5", 250),
                           rep("storm6", 122),
                           rep("storm7a", 98),
-                          rep("storm7b", 95),
-                          rep("storm8", 82),
+                         
+                          rep("storm8", 162),
                           rep("storm9a", 294),
                           rep("storm9b", 134),
                           rep("storm9c", 482))
@@ -7904,9 +7896,8 @@ HI.strt.2020 <- rbind(HI.strt.no3.2.2020, HI.strt.fDOM.2.2020,
 HI.strt.2020$burn <- "burned" # adding a burn column
 HI.strt.2020$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.strt.2020.csv"))
+write.csv(HI.strt.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.strt.2020.csv"))
 
-# write.csv(HI.strt.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.strt.2020.csv")
 
 # CARI ####
 CARIstorm_file_list <- list.files(path = "All_sites/", 

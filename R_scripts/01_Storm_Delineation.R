@@ -9574,6 +9574,14 @@ write.csv(STRT_storm9b_09_06_SPC, here("Storm_Events", "2020", "STRT", "STRT_sto
 write.csv(STRT_storm9b_09_06_turb, here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_Turb.csv"))
 write.csv(STRT_storm9b_09_06_abs, here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_abs.csv"))
 
+write.csv(STRT_storm9c_09_09, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09.csv"))
+write.csv(STRT_storm9c_09_09_Q, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Q.csv"))
+write.csv(STRT_storm9c_09_09_NO3, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_NO3.csv"))
+write.csv(STRT_storm9c_09_09_fDOM, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_fDOM.csv"))
+write.csv(STRT_storm9c_09_09_SPC, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_SPC.csv"))
+write.csv(STRT_storm9c_09_09_turb, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Turb.csv"))
+write.csv(STRT_storm9c_09_09_abs, here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_abs.csv"))
+
 
 write.csv(STRT_storm10_09_23, here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23.csv"))
 write.csv(STRT_storm10_09_23_Q, here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_Q.csv"))
