@@ -3098,7 +3098,7 @@ CARI_storm_list_beta = storm_list_beta[c(1:60)] #60
 FRCH_storm_list_beta = storm_list_beta[c(1:84)] #84
 MOOS_storm_list_beta = storm_list_beta[c(169:234)] #66
 POKE_storm_list_beta = storm_list_beta[c(235:384)]# 150
-STRT_storm_list_beta = storm_list_beta[c(385:492)] #107
+STRT_storm_list_beta = storm_list_beta[c(85:162)] #78
 VAUL_storm_list_beta = storm_list_beta[c(493:594)] #102
 
 
@@ -3550,11 +3550,8 @@ beta.all.no3.moos.with.all <- POKE_NO3_storm_ascending %>% group_by(storm.ID) %>
 
 # STRT # 
 STRT_NO3_storm$storm.ID = c(rep("storm10", 246),
-                            rep("storm1a", 103),
-                            rep("storm1b", 161),
-                            rep("storm1c", 105),
-                            rep("storm1d", 86),
-                            rep("storm1e", 476),
+                            rep("storm1a", 969),
+                            
                             rep("storm2", 166),
                             rep("storm3", 386),
                             rep("storm4a", 140),
@@ -3562,8 +3559,8 @@ STRT_NO3_storm$storm.ID = c(rep("storm10", 246),
                             rep("storm5", 250),
                             rep("storm6", 122),
                             rep("storm7a", 98),
-                            rep("storm7b", 95),
-                            rep("storm8", 82),
+                            
+                            rep("storm8", 162),
                             rep("storm9a", 294),
                             rep("storm9b", 134),
                             rep("storm9c", 482))
@@ -3839,11 +3836,8 @@ beta.all.fDOM.moos.with.all <- POKE_fDOM_storm_ascending %>% group_by(storm.ID) 
 
 # STRT # 
 STRT_fDOM_storm$storm.ID = c(rep("storm10", 246),
-                             rep("storm1a", 103),
-                             rep("storm1b", 161),
-                             rep("storm1c", 105),
-                             rep("storm1d", 86),
-                             rep("storm1e", 476),
+                             rep("storm1a", 969),
+                             
                              rep("storm2", 166),
                              rep("storm3", 386),
                              rep("storm4a", 140),
@@ -3851,8 +3845,8 @@ STRT_fDOM_storm$storm.ID = c(rep("storm10", 246),
                              rep("storm5", 250),
                              rep("storm6", 122),
                              rep("storm7a", 98),
-                             rep("storm7b", 95),
-                             rep("storm8", 82),
+                             
+                             rep("storm8", 162),
                              rep("storm9a", 294),
                              rep("storm9b", 134),
                              rep("storm9c", 482))
@@ -4045,17 +4039,22 @@ beta.all.SPC <- FRCH_SPC_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # MOOS # 
-MOOS_SPC_storm$storm.ID = c(rep("storm1", 723),
-                            rep("storm2", 327),
-                            rep("storm3", 129),
-                            rep("storm4", 321),
-                            rep("storm5", 252),
-                            rep("storm6a", 108),
-                            rep("storm6b", 288),
-                            rep("storm7a", 276),
-                            rep("storm7b", 186),
-                            rep("storm8", 195),
-                            rep("storm9", 405))
+MOOS_SPC_storm$storm.ID = c(rep("storm10", 246),
+                            rep("storm1a", 969),
+                            
+                            rep("storm2", 166),
+                            rep("storm3", 386),
+                            rep("storm4a", 140),
+                            rep("storm4b", 322),
+                            rep("storm5", 250),
+                            rep("storm6", 122),
+                            rep("storm7a", 98),
+                            
+                            rep("storm8", 162),
+                            rep("storm9a", 294),
+                            rep("storm9b", 134),
+                            rep("storm9c", 482))
+
 names(MOOS_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 MOOS_SPC_storm$site.ID <- "MOOS"
 
@@ -4423,11 +4422,8 @@ beta.all.turb.moos.with.all <- POKE_turb_storm_ascending %>% group_by(storm.ID) 
 
 # STRT # 
 STRT_turb_storm$storm.ID = c(rep("storm10", 246),
-                             rep("storm1a", 103),
-                             rep("storm1b", 161),
-                             rep("storm1c", 105),
-                             rep("storm1d", 86),
-                             rep("storm1e", 476),
+                             rep("storm1a", 969),
+                             
                              rep("storm2", 166),
                              rep("storm3", 386),
                              rep("storm4a", 140),
@@ -4435,8 +4431,8 @@ STRT_turb_storm$storm.ID = c(rep("storm10", 246),
                              rep("storm5", 250),
                              rep("storm6", 122),
                              rep("storm7a", 98),
-                             rep("storm7b", 95),
-                             rep("storm8", 82),
+                             
+                             rep("storm8", 162),
                              rep("storm9a", 294),
                              rep("storm9b", 134),
                              rep("storm9c", 482))
@@ -4712,11 +4708,8 @@ beta.all.abs.moos.with.all <- POKE_abs_storm_ascending %>% group_by(storm.ID) %>
 
 # STRT # 
 STRT_abs_storm$storm.ID = c(rep("storm10", 246),
-                            rep("storm1a", 103),
-                            rep("storm1b", 161),
-                            rep("storm1c", 105),
-                            rep("storm1d", 86),
-                            rep("storm1e", 476),
+                            rep("storm1a", 969),
+                            
                             rep("storm2", 166),
                             rep("storm3", 386),
                             rep("storm4a", 140),
@@ -4724,8 +4717,8 @@ STRT_abs_storm$storm.ID = c(rep("storm10", 246),
                             rep("storm5", 250),
                             rep("storm6", 122),
                             rep("storm7a", 98),
-                            rep("storm7b", 95),
-                            rep("storm8", 82),
+                            
+                            rep("storm8", 162),
                             rep("storm9a", 294),
                             rep("storm9b", 134),
                             rep("storm9c", 482))
