@@ -2503,33 +2503,6 @@ STRT_storm1a_06_18_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_st
 STRT_storm1a_06_18_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_Turb.csv"))
 STRT_storm1a_06_18_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1a_06_18_abs.csv"))
 
-STRT_storm1b_06_20_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_Q.csv"))
-STRT_storm1b_06_20_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_NO3.csv"))
-STRT_storm1b_06_20_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_SPC.csv"))
-STRT_storm1b_06_20_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_Turb.csv"))
-STRT_storm1b_06_20_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1b_06_20_abs.csv"))
-
-STRT_storm1c_06_21_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_Q.csv"))
-STRT_storm1c_06_21_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_NO3.csv"))
-STRT_storm1c_06_21_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_fDOM.csv"))
-STRT_storm1c_06_21_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_SPC.csv"))
-STRT_storm1c_06_21_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_Turb.csv"))
-STRT_storm1c_06_21_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1c_06_21_abs.csv"))
-
-STRT_storm1d_06_23_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_Q.csv"))
-STRT_storm1d_06_23_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_NO3.csv"))
-STRT_storm1d_06_23_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_fDOM.csv"))
-STRT_storm1d_06_23_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_SPC.csv"))
-STRT_storm1d_06_23_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_Turb.csv"))
-STRT_storm1d_06_23_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1d_06_23_abs.csv"))
-
-STRT_storm1e_06_24_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_Q.csv"))
-STRT_storm1e_06_24_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_NO3.csv"))
-STRT_storm1e_06_24_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_fDOM.csv"))
-STRT_storm1e_06_24_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_SPC.csv"))
-STRT_storm1e_06_24_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_Turb.csv"))
-STRT_storm1e_06_24_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm1e_06_24_abs.csv"))
-
 STRT_storm2_07_09_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_Q.csv"))
 STRT_storm2_07_09_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_NO3.csv"))
 STRT_storm2_07_09_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm2_07_09_fDOM.csv"))
@@ -2599,13 +2572,6 @@ STRT_storm9b_09_06_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_s
 STRT_storm9b_09_06_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_SPC.csv"))
 STRT_storm9b_09_06_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_Turb.csv"))
 STRT_storm9b_09_06_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9b_09_06_abs.csv"))
-
-STRT_storm9c_09_09_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Q.csv"))
-STRT_storm9c_09_09_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_NO3.csv"))
-STRT_storm9c_09_09_fDOM <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_fDOM.csv"))
-STRT_storm9c_09_09_SPC <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_SPC.csv"))
-STRT_storm9c_09_09_turb <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_Turb.csv"))
-STRT_storm9c_09_09_abs <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm9c_09_09_abs.csv"))
 
 STRT_storm10_09_23_Q <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_Q.csv"))
 STRT_storm10_09_23_NO3 <- read_csv(here("Storm_Events", "2020", "STRT", "STRT_storm10_09_23_NO3.csv"))
@@ -3185,10 +3151,7 @@ hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
 
 # plot STRT loops #
 STRT_storm1a_06_18_NO3.p = hyst_plot(STRT_storm1a_06_18_Q, STRT_storm1a_06_18_NO3, "STRT", "NO3", "0618a")
-STRT_storm1b_06_20_NO3.p = hyst_plot(STRT_storm1b_06_20_Q, STRT_storm1b_06_20_NO3, "STRT", "NO3", "0620b")
-STRT_storm1c_06_21_NO3.p = hyst_plot(STRT_storm1c_06_21_Q, STRT_storm1c_06_21_NO3, "STRT", "NO3", "0621c")
-STRT_storm1d_06_23_NO3.p = hyst_plot(STRT_storm1d_06_23_Q, STRT_storm1d_06_23_NO3, "STRT", "NO3", "0623d")
-STRT_storm1e_06_24_NO3.p = hyst_plot(STRT_storm1e_06_24_Q, STRT_storm1e_06_24_NO3, "STRT", "NO3", "0624e")
+
 STRT_storm2_07_09_NO3.p = hyst_plot(STRT_storm2_07_09_Q, STRT_storm2_07_09_NO3, "STRT", "NO3", "0709")
 STRT_storm3_07_20_NO3.p = hyst_plot(STRT_storm3_07_20_Q, STRT_storm3_07_20_NO3, "STRT", "NO3", "0720")
 STRT_storm4a_08_01_NO3.p = hyst_plot(STRT_storm4a_08_01_Q, STRT_storm4a_08_01_NO3, "STRT", "NO3", "0801a")
@@ -3196,39 +3159,16 @@ STRT_storm4b_08_03_NO3.p = hyst_plot(STRT_storm4b_08_03_Q, STRT_storm4b_08_03_NO
 STRT_storm5_08_09_NO3.p = hyst_plot(STRT_storm5_08_09_Q, STRT_storm5_08_09_NO3, "STRT", "NO3", "0809")
 STRT_storm6_08_12_NO3.p = hyst_plot(STRT_storm6_08_12_Q, STRT_storm6_08_12_NO3, "STRT", "NO3", "0812")
 STRT_storm7a_08_20_NO3.p = hyst_plot(STRT_storm7a_08_20_Q, STRT_storm7a_08_20_NO3, "STRT", "NO3", "0820a")
-#STRT_storm7b_08_21_NO3.p = hyst_plot(STRT_storm7b, STRT_storm7b_08_21_NO3, "STRT", "NO3", "0821b")
+
 STRT_storm8_08_28_NO3.p = hyst_plot(STRT_storm8_08_28_Q, STRT_storm8_08_28_NO3, "STRT", "NO3", "0828")
 STRT_storm9a_09_03_NO3.p = hyst_plot(STRT_storm9a_09_03_Q, STRT_storm9a_09_03_NO3, "STRT", "NO3", "0903a")
 STRT_storm9b_09_06_NO3.p = hyst_plot(STRT_storm9b_09_06_Q, STRT_storm9b_09_06_NO3, "STRT", "NO3", "0906b")
-STRT_storm9c_09_09_NO3.p = hyst_plot(STRT_storm9c_09_09_Q, STRT_storm9c_09_09_NO3, "STRT", "NO3", "0909c")
-STRT_storm10_09_23_NO3.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_NO3, "STRT", "NO3", "0923")
 
-# NO3
-multiplot(STRT_storm1a_06_18_NO3.p) # works 
-multiplot(STRT_storm1b_06_20_NO3.p)# fdom  does not work
-multiplot(STRT_storm1c_06_21_NO3.p) # works 
-multiplot(STRT_storm1d_06_23_NO3.p) # works 
-multiplot(STRT_storm1e_06_24_NO3.p) # works
-multiplot(STRT_storm2_07_09_NO3.p) 
-multiplot(STRT_storm3_07_20_NO3.p) # works 
-multiplot(STRT_storm4a_08_01_NO3.p) # works
-multiplot(STRT_storm4b_08_03_NO3.p) # works 
-multiplot(STRT_storm5_08_09_NO3.p) # works 
-multiplot(STRT_storm6_08_12_NO3.p) # works 
-multiplot(STRT_storm7a_08_20_NO3.p) # works
-#multiplot(STRT_storm7b_08_21_NO3.p) # works 
-multiplot(STRT_storm8_08_28_NO3.p) # works
-multiplot(STRT_storm9a_09_03_NO3.p)
-multiplot(STRT_storm9b_09_06_NO3.p)
-multiplot(STRT_storm9c_09_09_NO3.p) # works
-multiplot(STRT_storm10_09_23_NO3.p) # works 
+STRT_storm10_09_23_NO3.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_NO3, "STRT", "NO3", "0923")
 
 # fDOM #
 STRT_storm1a_06_18_fDOM.p = hyst_plot(STRT_storm1a_06_18_Q, STRT_storm1a_06_18_fDOM, "STRT", "fDOM", "0618a")
-STRT_storm1b_06_20_fDOM.p = hyst_plot(STRT_storm1b_06_20_Q, STRT_storm1b_06_20_fDOM, "STRT", "fDOM", "0620b")
-STRT_storm1c_06_21_fDOM.p = hyst_plot(STRT_storm1c_06_21_Q, STRT_storm1c_06_21_fDOM, "STRT", "fDOM", "0621c")
-STRT_storm1d_06_23_fDOM.p = hyst_plot(STRT_storm1d_06_23_Q, STRT_storm1d_06_23_fDOM, "STRT", "fDOM", "0623d")
-STRT_storm1e_06_24_fDOM.p = hyst_plot(STRT_storm1e_06_24_Q, STRT_storm1e_06_24_fDOM, "STRT", "fDOM", "0624e")
+
 STRT_storm2_07_09_fDOM.p = hyst_plot(STRT_storm2_07_09_Q, STRT_storm2_07_09_fDOM, "STRT", "fDOM", "0709")
 STRT_storm3_07_20_fDOM.p = hyst_plot(STRT_storm3_07_20_Q, STRT_storm3_07_20_fDOM, "STRT", "fDOM", "0720")
 STRT_storm4a_08_01_fDOM.p = hyst_plot(STRT_storm4a_08_01_Q, STRT_storm4a_08_01_fDOM, "STRT", "fDOM", "0801a")
@@ -3236,38 +3176,16 @@ STRT_storm4b_08_03_fDOM.p = hyst_plot(STRT_storm4b_08_03_Q, STRT_storm4b_08_03_f
 STRT_storm5_08_09_fDOM.p = hyst_plot(STRT_storm5_08_09_Q, STRT_storm5_08_09_fDOM, "STRT", "fDOM", "0809")
 STRT_storm6_08_12_fDOM.p = hyst_plot(STRT_storm6_08_12_Q, STRT_storm6_08_12_fDOM, "STRT", "fDOM", "0812")
 STRT_storm7a_08_20_fDOM.p = hyst_plot(STRT_storm7a_08_20_Q, STRT_storm7a_08_20_fDOM, "STRT", "fDOM", "0820a")
-#STRT_storm7b_08_21_fDOM.p = hyst_plot(STRT_storm7b_08_21_Q, STRT_storm7b_08_21_fDOM, "STRT", "fDOM", "0821b")
+
 STRT_storm8_08_28_fDOM.p = hyst_plot(STRT_storm8_08_28_Q, STRT_storm8_08_28_fDOM, "STRT", "fDOM", "0828")
 STRT_storm9a_09_03_fDOM.p = hyst_plot(STRT_storm9a_09_03_Q, STRT_storm9a_09_03_fDOM, "STRT", "fDOM", "0903a")
 STRT_storm9b_09_06_fDOM.p = hyst_plot(STRT_storm9b_09_06_Q, STRT_storm9b_09_06_fDOM, "STRT", "fDOM", "0906b")
-STRT_storm9c_09_09_fDOM.p = hyst_plot(STRT_storm9c_09_09_Q, STRT_storm9c_09_09_fDOM, "STRT", "fDOM", "0909c")
-STRT_storm10_09_23_fDOM.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_fDOM, "STRT", "fDOM", "0923")
 
-multiplot(STRT_storm1a_06_18_fDOM.p) 
-#multiplot(STRT_storm1b_06_20_fDOM.p) # doesnt work
-multiplot(STRT_storm1c_06_21_fDOM.p) 
-multiplot(STRT_storm1d_06_23_fDOM.p) 
-multiplot(STRT_storm1e_06_24_fDOM.p) 
-# multiplot(STRT_storm2_07_09_fDOM.p) # doesnt work
-multiplot(STRT_storm3_07_20_fDOM.p) 
-multiplot(STRT_storm4a_08_01_fDOM.p) 
-multiplot(STRT_storm4b_08_03_fDOM.p) 
-multiplot(STRT_storm5_08_09_fDOM.p) 
-multiplot(STRT_storm6_08_12_fDOM.p) 
-multiplot(STRT_storm7a_08_20_fDOM.p) 
-#multiplot(STRT_storm7b_08_21_fDOM.p) 
-multiplot(STRT_storm8_08_28_fDOM.p) 
-multiplot(STRT_storm9a_09_03_fDOM.p)
-multiplot(STRT_storm9b_09_06_fDOM.p)
-multiplot(STRT_storm9c_09_09_fDOM.p) 
-multiplot(STRT_storm10_09_23_fDOM.p) 
+STRT_storm10_09_23_fDOM.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_fDOM, "STRT", "fDOM", "0923")
 
 # SPC #
 STRT_storm1a_06_18_SPC.p = hyst_plot(STRT_storm1a_06_18_Q, STRT_storm1a_06_18_SPC, "STRT", "SPC", "0618a")
-STRT_storm1b_06_20_SPC.p = hyst_plot(STRT_storm1b_06_20_Q, STRT_storm1b_06_20_SPC, "STRT", "SPC", "0620b")
-STRT_storm1c_06_21_SPC.p = hyst_plot(STRT_storm1c_06_21_Q, STRT_storm1c_06_21_SPC, "STRT", "SPC", "0621c")
-STRT_storm1d_06_23_SPC.p = hyst_plot(STRT_storm1d_06_23_Q, STRT_storm1d_06_23_SPC, "STRT", "SPC", "0623d")
-STRT_storm1e_06_24_SPC.p = hyst_plot(STRT_storm1e_06_24_Q, STRT_storm1e_06_24_SPC, "STRT", "SPC", "0624e")
+
 STRT_storm2_07_09_SPC.p = hyst_plot(STRT_storm2_07_09_Q, STRT_storm2_07_09_SPC, "STRT", "SPC", "0709")
 STRT_storm3_07_20_SPC.p = hyst_plot(STRT_storm3_07_20_Q, STRT_storm3_07_20_SPC, "STRT", "SPC", "0720")
 STRT_storm4a_08_01_SPC.p = hyst_plot(STRT_storm4a_08_01_Q, STRT_storm4a_08_01_SPC, "STRT", "SPC", "0801a")
@@ -3275,38 +3193,17 @@ STRT_storm4b_08_03_SPC.p = hyst_plot(STRT_storm4b_08_03_Q, STRT_storm4b_08_03_SP
 STRT_storm5_08_09_SPC.p = hyst_plot(STRT_storm5_08_09_Q, STRT_storm5_08_09_SPC, "STRT", "SPC", "0809")
 STRT_storm6_08_12_SPC.p = hyst_plot(STRT_storm6_08_12_Q, STRT_storm6_08_12_SPC, "STRT", "SPC", "0812")
 STRT_storm7a_08_20_SPC.p = hyst_plot(STRT_storm7a_08_20_Q, STRT_storm7a_08_20_SPC, "STRT", "SPC", "0820a")
-#STRT_storm7b_08_21_SPC.p = hyst_plot(STRT_storm7b_08_21_Q, STRT_storm7b_08_21_SPC, "STRT", "SPC", "0821b")
+
 STRT_storm8_08_28_SPC.p = hyst_plot(STRT_storm8_08_28_Q, STRT_storm8_08_28_SPC, "STRT", "SPC", "0828")
 STRT_storm9a_09_03_SPC.p = hyst_plot(STRT_storm9a_09_03_Q, STRT_storm9a_09_03_SPC, "STRT", "SPC", "0903a")
 STRT_storm9b_09_06_SPC.p = hyst_plot(STRT_storm9b_09_06_Q, STRT_storm9b_09_06_SPC, "STRT", "SPC", "0906b")
-STRT_storm9c_09_09_SPC.p = hyst_plot(STRT_storm9c_09_09_Q, STRT_storm9c_09_09_SPC, "STRT", "SPC", "0909c")
+
 STRT_storm10_09_23_SPC.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_SPC, "STRT", "SPC", "0923")
 
-multiplot(STRT_storm1a_06_18_SPC.p) 
-multiplot(STRT_storm1b_06_20_SPC.p)
-multiplot(STRT_storm1c_06_21_SPC.p) 
-multiplot(STRT_storm1d_06_23_SPC.p) 
-multiplot(STRT_storm1e_06_24_SPC.p) 
-#multiplot(STRT_storm2_07_09_SPC.p)  # doesnt work
-multiplot(STRT_storm3_07_20_SPC.p) 
-multiplot(STRT_storm4a_08_01_SPC.p) 
-multiplot(STRT_storm4b_08_03_SPC.p) 
-multiplot(STRT_storm5_08_09_SPC.p) 
-multiplot(STRT_storm6_08_12_SPC.p) 
-multiplot(STRT_storm7a_08_20_SPC.p) 
-#multiplot(STRT_storm7b_08_21_NO3.p) 
-multiplot(STRT_storm8_08_28_SPC.p) 
-multiplot(STRT_storm9a_09_03_SPC.p)
-multiplot(STRT_storm9b_09_06_SPC.p)
-multiplot(STRT_storm9c_09_09_SPC.p) 
-multiplot(STRT_storm10_09_23_SPC.p) 
 
 # turb
 STRT_storm1a_06_18_turb.p = hyst_plot(STRT_storm1a_06_18_Q, STRT_storm1a_06_18_turb, "STRT", "turb", "0618a")
-STRT_storm1b_06_20_turb.p = hyst_plot(STRT_storm1b_06_20_Q, STRT_storm1b_06_20_turb, "STRT", "turb", "0620b")
-STRT_storm1c_06_21_turb.p = hyst_plot(STRT_storm1c_06_21_Q, STRT_storm1c_06_21_turb, "STRT", "turb", "0621c")
-STRT_storm1d_06_23_turb.p = hyst_plot(STRT_storm1d_06_23_Q, STRT_storm1d_06_23_turb, "STRT", "turb", "0623d")
-STRT_storm1e_06_24_turb.p = hyst_plot(STRT_storm1e_06_24_Q, STRT_storm1e_06_24_turb, "STRT", "turb", "0624e")
+
 STRT_storm2_07_09_turb.p = hyst_plot(STRT_storm2_07_09_Q, STRT_storm2_07_09_turb, "STRT", "turb", "0709")
 STRT_storm3_07_20_turb.p = hyst_plot(STRT_storm3_07_20_Q, STRT_storm3_07_20_turb, "STRT", "turb", "0720")
 STRT_storm4a_08_01_turb.p = hyst_plot(STRT_storm4a_08_01_Q, STRT_storm4a_08_01_turb, "STRT", "turb", "0801a")
@@ -3314,39 +3211,16 @@ STRT_storm4b_08_03_turb.p = hyst_plot(STRT_storm4b_08_03_Q, STRT_storm4b_08_03_t
 STRT_storm5_08_09_turb.p = hyst_plot(STRT_storm5_08_09_Q, STRT_storm5_08_09_turb, "STRT", "turb", "0809")
 STRT_storm6_08_12_turb.p = hyst_plot(STRT_storm6_08_12_Q, STRT_storm6_08_12_turb, "STRT", "turb", "0812")
 STRT_storm7a_08_20_turb.p = hyst_plot(STRT_storm7a_08_20_Q, STRT_storm7a_08_20_turb, "STRT", "turb", "0820a")
-#STRT_storm7b_08_21_turb.p = hyst_plot(STRT_storm7b_08_21_Q, STRT_storm7b_08_21_turb, "STRT", "turb", "0821b")
+
 STRT_storm8_08_28_turb.p = hyst_plot(STRT_storm8_08_28_Q, STRT_storm8_08_28_turb, "STRT", "turb", "0828")
 STRT_storm9a_09_03_turb.p = hyst_plot(STRT_storm9a_09_03_Q, STRT_storm9a_09_03_turb, "STRT", "turb", "0903a")
 STRT_storm9b_09_06_turb.p = hyst_plot(STRT_storm9b_09_06_Q, STRT_storm9b_09_06_turb, "STRT", "turb", "0906b")
-STRT_storm9c_09_09_turb.p = hyst_plot(STRT_storm9c_09_09_Q, STRT_storm9c_09_09_turb, "STRT", "turb", "0909c")
+
 STRT_storm10_09_23_turb.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_turb, "STRT", "turb", "0923")
-
-
-multiplot(STRT_storm1a_06_18_turb.p) 
-multiplot(STRT_storm1b_06_20_turb.p)
-multiplot(STRT_storm1c_06_21_turb.p) 
-multiplot(STRT_storm1d_06_23_turb.p) 
-multiplot(STRT_storm1e_06_24_turb.p) 
-multiplot(STRT_storm2_07_09_turb.p) 
-multiplot(STRT_storm3_07_20_turb.p) 
-multiplot(STRT_storm4a_08_01_turb.p) 
-multiplot(STRT_storm4b_08_03_turb.p) 
-multiplot(STRT_storm5_08_09_turb.p) 
-multiplot(STRT_storm6_08_12_turb.p) 
-multiplot(STRT_storm7a_08_20_turb.p) 
-#multiplot(STRT_storm7b_08_21_NO3.p) 
-multiplot(STRT_storm8_08_28_turb.p) 
-multiplot(STRT_storm9a_09_03_turb.p)
-multiplot(STRT_storm9b_09_06_turb.p)
-multiplot(STRT_storm9c_09_09_turb.p) 
-multiplot(STRT_storm10_09_23_turb.p)
 
 # ABS #
 STRT_storm1a_06_18_abs.p = hyst_plot(STRT_storm1a_06_18_Q, STRT_storm1a_06_18_abs, "STRT", "abs", "0618a")
-STRT_storm1b_06_20_abs.p = hyst_plot(STRT_storm1b_06_20_Q, STRT_storm1b_06_20_abs, "STRT", "abs", "0620b")
-STRT_storm1c_06_21_abs.p = hyst_plot(STRT_storm1c_06_21_Q, STRT_storm1c_06_21_abs, "STRT", "abs", "0621c")
-STRT_storm1d_06_23_abs.p = hyst_plot(STRT_storm1d_06_23_Q, STRT_storm1d_06_23_abs, "STRT", "abs", "0623d")
-STRT_storm1e_06_24_abs.p = hyst_plot(STRT_storm1e_06_24_Q, STRT_storm1e_06_24_abs, "STRT", "abs", "0624e")
+
 STRT_storm2_07_09_abs.p = hyst_plot(STRT_storm2_07_09_Q, STRT_storm2_07_09_abs, "STRT", "abs", "0709")
 STRT_storm3_07_20_abs.p = hyst_plot(STRT_storm3_07_20_Q, STRT_storm3_07_20_abs, "STRT", "abs", "0720")
 STRT_storm4a_08_01_abs.p = hyst_plot(STRT_storm4a_08_01_Q, STRT_storm4a_08_01_abs, "STRT", "abs", "0801a")
@@ -3354,31 +3228,13 @@ STRT_storm4b_08_03_abs.p = hyst_plot(STRT_storm4b_08_03_Q, STRT_storm4b_08_03_ab
 STRT_storm5_08_09_abs.p = hyst_plot(STRT_storm5_08_09_Q, STRT_storm5_08_09_abs, "STRT", "abs", "0809")
 STRT_storm6_08_12_abs.p = hyst_plot(STRT_storm6_08_12_Q, STRT_storm6_08_12_abs, "STRT", "abs", "0812")
 STRT_storm7a_08_20_abs.p = hyst_plot(STRT_storm7a_08_20_Q, STRT_storm7a_08_20_abs, "STRT", "abs", "0820a")
-#STRT_storm7b_08_21_abs.p = hyst_plot(STRT_storm7b_08_21_Q, STRT_storm7b_08_21_abs, "STRT", "abs", "0821b")
+
 STRT_storm8_08_28_abs.p = hyst_plot(STRT_storm8_08_28_Q, STRT_storm8_08_28_abs, "STRT", "abs", "0828")
 STRT_storm9a_09_03_abs.p = hyst_plot(STRT_storm9a_09_03_Q, STRT_storm9a_09_03_abs, "STRT", "abs", "0903a")
 STRT_storm9b_09_06_abs.p = hyst_plot(STRT_storm9b_09_06_Q, STRT_storm9b_09_06_abs, "STRT", "abs", "0906b")
-STRT_storm9c_09_09_abs.p = hyst_plot(STRT_storm9c_09_09_Q, STRT_storm9c_09_09_abs, "STRT", "abs", "0909c")
+
 STRT_storm10_09_23_abs.p = hyst_plot(STRT_storm10_09_23_Q, STRT_storm10_09_23_abs, "STRT", "abs", "0923")
 
-multiplot(STRT_storm1a_06_18_abs.p) 
-multiplot(STRT_storm1b_06_20_abs.p)
-multiplot(STRT_storm1c_06_21_abs.p) 
-multiplot(STRT_storm1d_06_23_abs.p) 
-multiplot(STRT_storm1e_06_24_abs.p) 
-#multiplot(STRT_storm2_07_09_abs.p)  # doesnt work
-multiplot(STRT_storm3_07_20_abs.p) 
-multiplot(STRT_storm4a_08_01_abs.p) 
-multiplot(STRT_storm4b_08_03_abs.p) 
-multiplot(STRT_storm5_08_09_abs.p) 
-multiplot(STRT_storm6_08_12_abs.p) 
-multiplot(STRT_storm7a_08_20_abs.p) 
-#multiplot(STRT_storm7b_08_21_abs.p) 
-multiplot(STRT_storm8_08_28_abs.p) 
-multiplot(STRT_storm9a_09_03_abs.p)
-multiplot(STRT_storm9b_09_06_abs.p)
-multiplot(STRT_storm9c_09_09_abs.p) 
-multiplot(STRT_storm10_09_23_abs.p) 
 
 # Multiplots of STRT storms #
 
@@ -3420,10 +3276,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 multiplot(STRT_storm1a_06_18_NO3.p, STRT_storm1a_06_18_fDOM.p, STRT_storm1a_06_18_SPC.p, STRT_storm1a_06_18_turb.p,
-          STRT_storm1b_06_20_NO3.p, STRT_storm1b_06_20_SPC.p, STRT_storm1b_06_20_turb.p,
-          STRT_storm1c_06_21_NO3.p, STRT_storm1c_06_21_fDOM.p, STRT_storm1c_06_21_SPC.p, STRT_storm1c_06_21_turb.p,
-          STRT_storm1d_06_23_NO3.p, STRT_storm1d_06_23_fDOM.p, STRT_storm1d_06_23_SPC.p, STRT_storm1d_06_23_turb.p,
-          STRT_storm1e_06_24_NO3.p, STRT_storm1e_06_24_fDOM.p, STRT_storm1e_06_24_SPC.p, STRT_storm1e_06_24_turb.p,
+          
           STRT_storm2_07_09_NO3.p, STRT_storm2_07_09_fDOM.p, STRT_storm2_07_09_SPC.p, STRT_storm2_07_09_turb.p,
           STRT_storm3_07_20_NO3.p, STRT_storm3_07_20_fDOM.p, STRT_storm3_07_20_SPC.p, STRT_storm3_07_20_turb.p,
           STRT_storm4a_08_01_NO3.p, STRT_storm4a_08_01_fDOM.p, STRT_storm4a_08_01_SPC.p, STRT_storm4a_08_01_turb.p,
@@ -3434,7 +3287,7 @@ multiplot(STRT_storm1a_06_18_NO3.p, STRT_storm1a_06_18_fDOM.p, STRT_storm1a_06_1
           STRT_storm8_08_28_NO3.p, STRT_storm8_08_28_fDOM.p, STRT_storm8_08_28_SPC.p, STRT_storm8_08_28_turb.p,
           STRT_storm9a_09_03_NO3.p, STRT_storm9a_09_03_fDOM.p, STRT_storm9a_09_03_SPC.p, STRT_storm9a_09_03_turb.p,
           STRT_storm9b_09_06_NO3.p, STRT_storm9b_09_06_fDOM.p, STRT_storm9b_09_06_SPC.p, STRT_storm9b_09_06_turb.p,
-          STRT_storm9c_09_09_NO3.p, STRT_storm9c_09_09_fDOM.p, STRT_storm9c_09_09_SPC.p, STRT_storm9c_09_09_turb.p,
+          
           STRT_storm10_09_23_NO3.p, STRT_storm10_09_23_fDOM.p, STRT_storm10_09_23_SPC.p, STRT_storm10_09_23_turb.p,
           cols = 7)
 
