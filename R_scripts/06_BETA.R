@@ -3083,11 +3083,6 @@ storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/",
                                    pattern=".csv", 
                                    full.names=TRUE)
 
-# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
-#                                    recursive=F, 
-#                                    pattern=".csv", 
-#                                    full.names=TRUE)
-
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
@@ -3098,15 +3093,9 @@ storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_be
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
-names(storm_list_beta$`/Users/jakecavaiani/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI//STRT_storm1b_06_20_fDOM`) <- c("valuedatetime", "datavalue")
-
-# for(i in 1:length(storm_list_beta)){
-#   storm_list_beta[[i]][["valuedatetime"]] = as.POSIXct(storm_list_beta[[i]][["valuedatetime"]],
-#                                                        "%Y-%m-%d %H:%M:%S", tz="America/Anchorage")
-# } 
 #  organize storm data by site and solute # 5 for each storm 
 CARI_storm_list_beta = storm_list_beta[c(1:60)] #60
-FRCH_storm_list_beta = storm_list_beta[c(61:168)] #108
+FRCH_storm_list_beta = storm_list_beta[c(1:84)] #84
 MOOS_storm_list_beta = storm_list_beta[c(169:234)] #66
 POKE_storm_list_beta = storm_list_beta[c(235:384)]# 150
 STRT_storm_list_beta = storm_list_beta[c(385:492)] #107
@@ -3433,14 +3422,12 @@ CARI_NO3_storm <- map2_df(CARI_Q_storm_list_beta, CARI_NO3_storm_list_beta, inne
 
 FRCH_NO3_storm$storm.ID = c(rep("storm1", 487),
                             rep("storm10a", 255),
-                            rep("storm10b", 439),
+                            rep("storm10b", 151),
                             rep("storm11", 91),
-                            rep("storm12", 67),
-                            rep("storm13", 211),
+                            
                             rep("storm2", 123),
-                            rep("storm3a", 163),
-                            rep("storm3b", 435),
-                            rep("storm3c", 159),
+                            rep("storm3a", 1463),
+                            
                             rep("storm4a", 187),
                             rep("storm4b", 203),
                             rep("storm5", 59),
@@ -3726,14 +3713,12 @@ CARI_fDOM_storm <- map2_df(CARI_Q_storm_list_beta, CARI_fDOM_storm_list_beta, in
 
 FRCH_fDOM_storm$storm.ID = c(rep("storm1", 487),
                              rep("storm10a", 255),
-                             rep("storm10b", 439),
+                             rep("storm10b", 151),
                              rep("storm11", 91),
-                             rep("storm12", 67),
-                             rep("storm13", 211),
+                             
                              rep("storm2", 123),
-                             rep("storm3a", 163),
-                             rep("storm3b", 435),
-                             rep("storm3c", 159),
+                             rep("storm3a", 1463),
+                             
                              rep("storm4a", 187),
                              rep("storm4b", 203),
                              rep("storm5", 59),
@@ -4020,14 +4005,12 @@ CARI_SPC_storm <- map2_df(CARI_Q_storm_list_beta, CARI_SpCond_storm_list_beta, i
 
 FRCH_SPC_storm$storm.ID = c(rep("storm1", 487),
                             rep("storm10a", 255),
-                            rep("storm10b", 439),
+                            rep("storm10b", 151),
                             rep("storm11", 91),
-                            rep("storm12", 67),
-                            rep("storm13", 211),
+                            
                             rep("storm2", 123),
-                            rep("storm3a", 163),
-                            rep("storm3b", 435),
-                            rep("storm3c", 159),
+                            rep("storm3a", 1463),
+                            
                             rep("storm4a", 187),
                             rep("storm4b", 203),
                             rep("storm5", 59),
@@ -4313,14 +4296,12 @@ CARI_turb_storm <- map2_df(CARI_Q_storm_list_beta, CARI_turb_storm_list_beta, in
 
 FRCH_turb_storm$storm.ID = c(rep("storm1", 487),
                              rep("storm10a", 255),
-                             rep("storm10b", 439),
+                             rep("storm10b", 151),
                              rep("storm11", 91),
-                             rep("storm12", 67),
-                             rep("storm13", 211),
+                             
                              rep("storm2", 123),
-                             rep("storm3a", 163),
-                             rep("storm3b", 435),
-                             rep("storm3c", 159),
+                             rep("storm3a", 1463),
+                             
                              rep("storm4a", 187),
                              rep("storm4b", 203),
                              rep("storm5", 59),
@@ -4603,23 +4584,21 @@ STRT_abs_storm <- map2_df(STRT_Q_storm_list_beta, STRT_abs_storm_list_beta, inne
 VAUL_abs_storm <- map2_df(VAUL_Q_storm_list_beta, VAUL_abs_storm_list_beta, inner_join, by = "valuedatetime")
 
 FRCH_abs_storm$storm.ID = c(rep("storm1", 487),
-                             rep("storm10a", 255),
-                             rep("storm10b", 439),
-                             rep("storm11", 91),
-                             rep("storm12", 67),
-                             rep("storm13", 211),
-                             rep("storm2", 123),
-                             rep("storm3a", 163),
-                             rep("storm3b", 435),
-                             rep("storm3c", 159),
-                             rep("storm4a", 187),
-                             rep("storm4b", 203),
-                             rep("storm5", 59),
-                             rep("storm6", 103),
-                             rep("storm7", 339),
-                             rep("storm8", 383),
-                             rep("storm9a", 139),
-                             rep("storm9b", 286))
+                            rep("storm10a", 255),
+                            rep("storm10b", 151),
+                            rep("storm11", 91),
+                            
+                            rep("storm2", 123),
+                            rep("storm3a", 1463),
+                            
+                            rep("storm4a", 187),
+                            rep("storm4b", 203),
+                            rep("storm5", 59),
+                            rep("storm6", 103),
+                            rep("storm7", 339),
+                            rep("storm8", 383),
+                            rep("storm9a", 139),
+                            rep("storm9b", 286))
 
 names(FRCH_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 FRCH_abs_storm$site.ID <- "FRCH"

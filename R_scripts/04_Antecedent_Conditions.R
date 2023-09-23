@@ -77,15 +77,6 @@ STRT_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020",
 VAUL_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "VAUL","VAUL.HI.df.doy.csv"))
 CARI_HI_doy_df_2020 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2020", "CARI","CARI.HI.df.doy.csv"))
 
-
-# FRCH_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/FRCH/FRCH.HI.df.doy.csv")
-# MOOS_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/MOOS/MOOS.HI.df.doy.csv")
-# POKE_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.doy.csv")
-# STRT_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/STRT/STRT.HI.df.doy.csv")
-# VAUL_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/VAUL/VAUL.HI.df.doy.csv")
-# CARI_HI_doy_df_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/CARI/CARI.HI.df.doy.csv")
-
-
 # 2021
 FRCH_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "FRCH","FRCH.HI.df.doy.csv"))
 MOOS_HI_doy_df_2021 <- read.csv(here("Output_from_analysis", "03_HI_FI", "2021", "MOOS","MOOS.HI.df.doy.csv"))
@@ -128,7 +119,7 @@ HI.dat_2022$year <- "2022"
 
 
 
-HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019)
+HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020)
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -5363,11 +5354,6 @@ STRT_RainGauge_2020 <- read.csv(here("Climate", "Precip", "STRT.RainGauge.2020.c
 
 airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
 
-# FRCH_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/FRCH.RainGauge.2020.csv")
-# POKE_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/POKE.RainGauge.2020.csv")
-# VAUL_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/VAUL.RainGauge.2020.csv")
-# STRT_RainGauge_2020 <- read_csv("~/Documents/DoD_2020/RainGauge/STRT.RainGauge.2020.csv")
-# airtempmean <- read_csv("~/Documents/Storms_clean_repo/Climate/airtempmean.csv")
 names(airtempmean)[2] <- "DateTime"
 
 # convert to date time 
@@ -5908,11 +5894,6 @@ FRCHstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="FRCH", 
                                   full.names=TRUE)
 
-# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="FRCH", 
-#                                   full.names=TRUE)
-
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -5921,14 +5902,12 @@ FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list,
 
 FRCH_storms$storm.num = c(rep("storm1", 487),
                           rep("storm10a", 255),
-                          rep("storm10b", 439),
+                          rep("storm10b", 151),
                           rep("storm11", 91),
-                          rep("storm12", 67),
-                          rep("storm13", 211),
+                         
                           rep("storm2", 123),
-                          rep("storm3a", 163),
-                          rep("storm3b", 435),
-                          rep("storm3c", 159),
+                          rep("storm3a", 1463),
+                          
                           rep("storm4a", 187),
                           rep("storm4b", 203),
                           rep("storm5", 59),
@@ -6404,9 +6383,7 @@ HI.frch.2020 <- rbind(HI.frch.no3.2.2020, HI.frch.fDOM.2.2020,
 HI.frch.2020$burn <- "unburned" # adding a burn column
 HI.frch.2020$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.frch.2020.csv"))
-
-# write.csv(HI.frch.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.frch.2020.csv")
+write.csv(HI.frch.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.frch.2020.csv"))
 
 # POKE ####
 POKEstorm_file_list <- list.files(path = "All_sites/", 
