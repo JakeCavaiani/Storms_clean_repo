@@ -3089,7 +3089,7 @@ storm_list_beta<-do.call("list", lapply(storm_file_list_beta,
                                         header=T, row.names=1))
 
 storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
-# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2020/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -3099,7 +3099,7 @@ FRCH_storm_list_beta = storm_list_beta[c(1:84)] #84
 MOOS_storm_list_beta = storm_list_beta[c(169:234)] #66
 POKE_storm_list_beta = storm_list_beta[c(235:384)]# 150
 STRT_storm_list_beta = storm_list_beta[c(85:162)] #78
-VAUL_storm_list_beta = storm_list_beta[c(493:594)] #102
+VAUL_storm_list_beta = storm_list_beta[c(163:240)] #102
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -3597,15 +3597,14 @@ VAUL_NO3_storm$storm.ID = c(rep("storm10", 195),
                             rep("storm1a", 111),
                             rep("storm1b", 234),
                             rep("storm1c", 406),
-                            rep("storm2", 214),
+                            
                             rep("storm3", 342),
                             rep("storm4", 318),
-                            rep("storm5", 230),
+                            
                             rep("storm6a", 107),
                             rep("storm6b", 511),
-                            rep("storm7", 283),
-                            rep("storm8", 91),
-                            rep("storm9", 91))
+                            
+                            rep("storm8", 91))
 
 names(VAUL_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
 VAUL_NO3_storm$site.ID <- "VAUL"
@@ -3886,15 +3885,14 @@ VAUL_fDOM_storm$storm.ID = c(rep("storm10", 195),
                              rep("storm1a", 111),
                              rep("storm1b", 234),
                              rep("storm1c", 406),
-                             rep("storm2", 214),
+                             
                              rep("storm3", 342),
                              rep("storm4", 318),
-                             rep("storm5", 230),
+                             
                              rep("storm6a", 107),
                              rep("storm6b", 511),
-                             rep("storm7", 283),
-                             rep("storm8", 91),
-                             rep("storm9", 91))
+                             
+                             rep("storm8", 91))
 
 names(VAUL_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
 VAUL_fDOM_storm$site.ID <- "VAUL"
@@ -4180,15 +4178,14 @@ VAUL_SPC_storm$storm.ID = c(rep("storm10", 195),
                             rep("storm1a", 111),
                             rep("storm1b", 234),
                             rep("storm1c", 406),
-                            rep("storm2", 214),
+                            
                             rep("storm3", 342),
                             rep("storm4", 318),
-                            rep("storm5", 230),
+                            
                             rep("storm6a", 107),
                             rep("storm6b", 511),
-                            rep("storm7", 283),
-                            rep("storm8", 91),
-                            rep("storm9", 91))
+                            
+                            rep("storm8", 91))
 
 names(VAUL_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 VAUL_SPC_storm$site.ID <- "VAUL"
@@ -4469,15 +4466,14 @@ VAUL_turb_storm$storm.ID = c(rep("storm10", 195),
                              rep("storm1a", 111),
                              rep("storm1b", 234),
                              rep("storm1c", 406),
-                             rep("storm2", 214),
+                             
                              rep("storm3", 342),
                              rep("storm4", 318),
-                             rep("storm5", 230),
+                             
                              rep("storm6a", 107),
                              rep("storm6b", 511),
-                             rep("storm7", 283),
-                             rep("storm8", 91),
-                             rep("storm9", 91))
+                             
+                             rep("storm8", 91))
 
 names(VAUL_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 VAUL_turb_storm$site.ID <- "VAUL"
@@ -4755,15 +4751,14 @@ VAUL_abs_storm$storm.ID = c(rep("storm10", 195),
                             rep("storm1a", 111),
                             rep("storm1b", 234),
                             rep("storm1c", 406),
-                            rep("storm2", 214),
+                            
                             rep("storm3", 342),
                             rep("storm4", 318),
-                            rep("storm5", 230),
+                            
                             rep("storm6a", 107),
                             rep("storm6b", 511),
-                            rep("storm7", 283),
-                            rep("storm8", 91),
-                            rep("storm9", 91))
+                            
+                            rep("storm8", 91))
 
 names(VAUL_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 VAUL_abs_storm$site.ID <- "VAUL"
