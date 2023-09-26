@@ -6900,11 +6900,6 @@ VAULstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="VAUL", 
                                   full.names=TRUE)
 
-# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="VAUL", 
-#                                   full.names=TRUE)
-
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -6919,15 +6914,15 @@ VAUL_storms$storm.num = c(rep("storm10", 195),
                           rep("storm1a", 111),
                           rep("storm1b", 234),
                           rep("storm1c", 406),
-                          rep("storm2", 214),
+                          
                           rep("storm3", 342),
                           rep("storm4", 318),
-                          rep("storm5", 230),
+                          
                           rep("storm6a", 107),
                           rep("storm6b", 511),
-                          rep("storm7", 283),
-                          rep("storm8", 91),
-                          rep("storm9", 91))
+                         
+                          rep("storm8", 91))
+                          
 
 VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
 VAUL.2020.storms.1<- left_join(VAUL_storms, VAUL_RainGauge_2020, by = "DateTime")
@@ -7390,9 +7385,7 @@ HI.vaul.2020 <- rbind(HI.vaul.no3.2.2020, HI.vaul.fDOM.2.2020,
 HI.vaul.2020$burn <- "unburned" # adding a burn column
 HI.vaul.2020$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.vaul.2020.csv"))
-
-# write.csv(HI.vaul.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.vaul.2020.csv")
+write.csv(HI.vaul.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.vaul.2020.csv"))
 
 # STRT ####
 STRTstorm_file_list <- list.files(path = "All_sites/", 
