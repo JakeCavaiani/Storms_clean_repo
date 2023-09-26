@@ -9594,7 +9594,7 @@ write.csv(STRT_storm10_09_23_abs, here("Storm_Events", "2020", "STRT", "STRT_sto
 
 
 # VAUL #
-VAUL <- VAUL.2020.chem
+# VAUL <- VAUL.2020.chem
 VAUL$MeanDischarge <- VAUL$Q
 VAUL$DateTime <- VAUL$datetimeAK
 VAUL$SpCond.uScm <- VAUL$SpCond.µS.cm
@@ -9616,8 +9616,7 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
 par(new = T)
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage")) 
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
+
 lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
@@ -9632,8 +9631,7 @@ lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="
 # Storm 1a
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
@@ -9649,7 +9647,7 @@ abline(v= as.POSIXct("2020-06-20 19:00:00", tz="America/Anchorage"), col="purple
 
 VAUL_storm1a_06_19= VAUL[VAUL$DateTime > as.POSIXct("2020-06-19 15:00:00", tz="America/Anchorage") &
                            VAUL$DateTime < as.POSIXct("2020-06-20 19:00:00", tz="America/Anchorage"),]
-plot(VAUL_storm1a_06_19$MeanDischarge ~ as.POSIXct(VAUL_storm1a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20619 storm 1a",
+plot(VAUL_storm1a_06_19$MeanDischarge ~ as.POSIXct(VAUL_storm1a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 20619 storm 1a",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -9671,8 +9669,7 @@ axis(side = 4)
 # Storm 1b
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
@@ -9688,7 +9685,7 @@ abline(v= as.POSIXct("2020-06-23 07:00:00", tz="America/Anchorage"), col="purple
 
 VAUL_storm1b_06_20= VAUL[VAUL$DateTime > as.POSIXct("2020-06-20 20:15:00", tz="America/Anchorage") &
                            VAUL$DateTime < as.POSIXct("2020-06-23 07:00:00", tz="America/Anchorage"),]
-plot(VAUL_storm1b_06_20$MeanDischarge ~ as.POSIXct(VAUL_storm1b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="VAUL 20620 storm 1b",
+plot(VAUL_storm1b_06_20$MeanDischarge ~ as.POSIXct(VAUL_storm1b_06_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(300,1200), col="blue", main="VAUL 20620 storm 1b",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -9710,8 +9707,7 @@ axis(side = 4)
 # Storm 1c
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
@@ -9746,55 +9742,10 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# storm 2 #
-plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-06-28 12:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-06-30 18:00:00", tz="America/Anchorage"), col="purple")
-
-VAUL_storm2_06_28= VAUL[VAUL$DateTime > as.POSIXct("2020-06-28 12:15:00", tz="America/Anchorage") &
-                          VAUL$DateTime < as.POSIXct("2020-06-30 18:00:00", tz="America/Anchorage"),]
-plot(VAUL_storm2_06_28$MeanDischarge ~ as.POSIXct(VAUL_storm2_06_28$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20628 storm 2",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU* 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 3 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-
 par(new = T)
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
@@ -9832,8 +9783,6 @@ axis(side = 4)
 # Storm 4 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
 
 par(new = T)
 
@@ -9869,59 +9818,9 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 5 #
-plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-07-27 07:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-07-29 17:00:00", tz="America/Anchorage"), col="purple")
-
-VAUL_storm5_07_26= VAUL[VAUL$DateTime > as.POSIXct("2020-07-27 07:15:00", tz="America/Anchorage") &
-                          VAUL$DateTime < as.POSIXct("2020-07-29 17:00:00", tz="America/Anchorage"),]
-plot(VAUL_storm5_07_26$MeanDischarge ~ as.POSIXct(VAUL_storm5_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,500), col="blue", main="VAUL 20726 storm 5",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU* 1 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
 # Storm 6a #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -9938,7 +9837,7 @@ abline(v= as.POSIXct("2020-08-03 07:15:00", tz="America/Anchorage"), col="purple
 
 VAUL_storm6a_08_01= VAUL[VAUL$DateTime > as.POSIXct("2020-08-02 04:15:00", tz="America/Anchorage") &
                            VAUL$DateTime < as.POSIXct("2020-08-03 07:15:00", tz="America/Anchorage"),]
-plot(VAUL_storm6a_08_01$MeanDischarge ~ as.POSIXct(VAUL_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL 20801 storm 6a",
+plot(VAUL_storm6a_08_01$MeanDischarge ~ as.POSIXct(VAUL_storm6a_08_01$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1500), col="blue", main="VAUL 20801 storm 6a",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -9960,13 +9859,6 @@ axis(side = 4)
 # Storm 6b #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-
 par(new = T)
 
 plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
@@ -10001,59 +9893,10 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 7 #
-plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-08-08 16:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-08-11 15:15:00", tz="America/Anchorage"), col="purple")
-
-VAUL_storm7_08_08= VAUL[VAUL$DateTime > as.POSIXct("2020-08-08 16:15:00", tz="America/Anchorage") &
-                          VAUL$DateTime < as.POSIXct("2020-08-11 15:15:00", tz="America/Anchorage"),]
-plot(VAUL_storm7_08_08$MeanDischarge ~ as.POSIXct(VAUL_storm7_08_08$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 20808 storm 7",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 8 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10089,59 +9932,10 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 9 #
-plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-08-12 16:15:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-08-13 15:15:00", tz="America/Anchorage"), col="purple")
-
-VAUL_storm9_08_12= VAUL[VAUL$DateTime > as.POSIXct("2020-08-12 16:15:00", tz="America/Anchorage") &
-                          VAUL$DateTime < as.POSIXct("2020-08-13 15:15:00", tz="America/Anchorage"),]
-plot(VAUL_storm9_08_12$MeanDischarge ~ as.POSIXct(VAUL_storm9_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200812 storm 9",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$SpCond.uScm* 2 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(VAUL$Turbidity.FNU* 100 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 10 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10158,7 +9952,7 @@ abline(v= as.POSIXct("2020-08-27 17:15:00", tz="America/Anchorage"), col="purple
 
 VAUL_storm10_08_25= VAUL[VAUL$DateTime > as.POSIXct("2020-08-25 16:15:00", tz="America/Anchorage") &
                            VAUL$DateTime < as.POSIXct("2020-08-27 17:15:00", tz="America/Anchorage"),]
-plot(VAUL_storm10_08_25$MeanDischarge ~ as.POSIXct(VAUL_storm10_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="VAUL 200825 storm 10",
+plot(VAUL_storm10_08_25$MeanDischarge ~ as.POSIXct(VAUL_storm10_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,600), col="blue", main="VAUL 200825 storm 10",
      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 lines(VAUL$nitrateuM * 5 ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10180,12 +9974,6 @@ axis(side = 4)
 # Storm 11 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10224,12 +10012,6 @@ axis(side = 4)
 # Storm 12 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10268,12 +10050,6 @@ axis(side = 4)
 # Storm 13 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10312,12 +10088,6 @@ axis(side = 4)
 # Storm 14 #
 plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 
 par(new = T)
 
@@ -10352,49 +10122,6 @@ plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
      ylim = c(5,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
-
-# no alarms # no response in discharge or chemistry
-plot(VAUL$MeanDischarge ~ VAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-09-16 00:00:00","2020-09-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
-# no alarms # no response in discharge or chemistry
-plot(VAUL$MeanDischarge ~ vAUL$DateTime, type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,3000), col="blue", main="VAUL",
-     xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
-abline(h=VAUL_bfQ_mn*2, col="red", lty=2)
-abline(h=VAUL_bfQ_mn, col="red")
-lines(VAUL$nitrateuM ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
-lines(VAUL$fDOM.QSU ~ VAUL$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(VAUL.st$inst_rainfall_mm ~ VAUL.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-10-01 00:00:00","2020-10-16 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(vaul.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(vaul.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
 
 
 # rename and subset individual water quality
@@ -10439,21 +10166,6 @@ VAUL_storm1c_06_22_abs = subset(VAUL_storm1c_06_22, select = c("DateTime","ABS_2
 names(VAUL_storm1c_06_22_abs) = c("valuedatetime","datavalue")
 
 
-# Storm 2 #
-VAUL_storm2_06_28_Q = subset(VAUL_storm2_06_28, select = c("DateTime", "MeanDischarge"))
-names(VAUL_storm2_06_28_Q) = c("valuedatetime","datavalue")
-VAUL_storm2_06_28_NO3 = subset(VAUL_storm2_06_28, select = c("DateTime","nitrateuM"))
-names(VAUL_storm2_06_28_NO3) = c("valuedatetime","datavalue")
-VAUL_storm2_06_28_fDOM = subset(VAUL_storm2_06_28, select = c("DateTime","fDOM.QSU"))
-names(VAUL_storm2_06_28_fDOM) = c("valuedatetime","datavalue")
-VAUL_storm2_06_28_SPC = subset(VAUL_storm2_06_28, select = c("DateTime","SpCond.uScm"))
-names(VAUL_storm2_06_28_SPC) = c("valuedatetime","datavalue")
-VAUL_storm2_06_28_turb = subset(VAUL_storm2_06_28, select = c("DateTime","Turbidity.FNU"))
-names(VAUL_storm2_06_28_turb) = c("valuedatetime","datavalue")
-VAUL_storm2_06_28_abs = subset(VAUL_storm2_06_28, select = c("DateTime","ABS_254"))
-names(VAUL_storm2_06_28_abs) = c("valuedatetime","datavalue")
-
-
 
 # Storm 3 #
 VAUL_storm3_07_09_Q = subset(VAUL_storm3_07_09, select = c("DateTime", "MeanDischarge"))
@@ -10483,21 +10195,6 @@ VAUL_storm4_07_12_turb = subset(VAUL_storm4_07_12, select = c("DateTime","Turbid
 names(VAUL_storm4_07_12_turb) = c("valuedatetime","datavalue")
 VAUL_storm4_07_12_abs = subset(VAUL_storm4_07_12, select = c("DateTime","ABS_254"))
 names(VAUL_storm4_07_12_abs) = c("valuedatetime","datavalue")
-
-
-# Storm 5 #
-VAUL_storm5_07_26_Q = subset(VAUL_storm5_07_26, select = c("DateTime", "MeanDischarge"))
-names(VAUL_storm5_07_26_Q) = c("valuedatetime","datavalue")
-VAUL_storm5_07_26_NO3 = subset(VAUL_storm5_07_26, select = c("DateTime","nitrateuM"))
-names(VAUL_storm5_07_26_NO3) = c("valuedatetime","datavalue")
-VAUL_storm5_07_26_fDOM = subset(VAUL_storm5_07_26, select = c("DateTime","fDOM.QSU"))
-names(VAUL_storm5_07_26_fDOM) = c("valuedatetime","datavalue")
-VAUL_storm5_07_26_SPC = subset(VAUL_storm5_07_26, select = c("DateTime","SpCond.uScm"))
-names(VAUL_storm5_07_26_SPC) = c("valuedatetime","datavalue")
-VAUL_storm5_07_26_turb = subset(VAUL_storm5_07_26, select = c("DateTime","Turbidity.FNU"))
-names(VAUL_storm5_07_26_turb) = c("valuedatetime","datavalue")
-VAUL_storm5_07_26_abs = subset(VAUL_storm5_07_26, select = c("DateTime","ABS_254"))
-names(VAUL_storm5_07_26_abs) = c("valuedatetime","datavalue")
 
 
 # Storm 6a #
@@ -10530,20 +10227,6 @@ VAUL_storm6b_08_02_abs = subset(VAUL_storm6b_08_02, select = c("DateTime","ABS_2
 names(VAUL_storm6b_08_02_abs) = c("valuedatetime","datavalue")
 
 
-# Storm 7 #
-VAUL_storm7_08_08_Q = subset(VAUL_storm7_08_08, select = c("DateTime", "MeanDischarge"))
-names(VAUL_storm7_08_08_Q) = c("valuedatetime","datavalue")
-VAUL_storm7_08_08_NO3 = subset(VAUL_storm7_08_08, select = c("DateTime","nitrateuM"))
-names(VAUL_storm7_08_08_NO3) = c("valuedatetime","datavalue")
-VAUL_storm7_08_08_fDOM = subset(VAUL_storm7_08_08, select = c("DateTime","fDOM.QSU"))
-names(VAUL_storm7_08_08_fDOM) = c("valuedatetime","datavalue")
-VAUL_storm7_08_08_SPC = subset(VAUL_storm7_08_08, select = c("DateTime","SpCond.uScm"))
-names(VAUL_storm7_08_08_SPC) = c("valuedatetime","datavalue")
-VAUL_storm7_08_08_turb = subset(VAUL_storm7_08_08, select = c("DateTime","Turbidity.FNU"))
-names(VAUL_storm7_08_08_turb) = c("valuedatetime","datavalue")
-VAUL_storm7_08_08_abs = subset(VAUL_storm7_08_08, select = c("DateTime","ABS_254"))
-names(VAUL_storm7_08_08_abs) = c("valuedatetime","datavalue")
-
 # Storm 8 #
 VAUL_storm8_08_11_Q = subset(VAUL_storm8_08_11, select = c("DateTime", "MeanDischarge"))
 names(VAUL_storm8_08_11_Q) = c("valuedatetime","datavalue")
@@ -10557,21 +10240,6 @@ VAUL_storm8_08_11_turb = subset(VAUL_storm8_08_11, select = c("DateTime","Turbid
 names(VAUL_storm8_08_11_turb) = c("valuedatetime","datavalue")
 VAUL_storm8_08_11_abs = subset(VAUL_storm8_08_11, select = c("DateTime","ABS_254"))
 names(VAUL_storm8_08_11_abs) = c("valuedatetime","datavalue")
-
-
-# Storm 9 #
-VAUL_storm9_08_12_Q = subset(VAUL_storm9_08_12, select = c("DateTime", "MeanDischarge"))
-names(VAUL_storm9_08_12_Q) = c("valuedatetime","datavalue")
-VAUL_storm9_08_12_NO3 = subset(VAUL_storm9_08_12, select = c("DateTime","nitrateuM"))
-names(VAUL_storm9_08_12_NO3) = c("valuedatetime","datavalue")
-VAUL_storm9_08_12_fDOM = subset(VAUL_storm9_08_12, select = c("DateTime","fDOM.QSU"))
-names(VAUL_storm9_08_12_fDOM) = c("valuedatetime","datavalue")
-VAUL_storm9_08_12_SPC = subset(VAUL_storm9_08_12, select = c("DateTime","SpCond.uScm"))
-names(VAUL_storm9_08_12_SPC) = c("valuedatetime","datavalue")
-VAUL_storm9_08_12_turb = subset(VAUL_storm9_08_12, select = c("DateTime","Turbidity.FNU"))
-names(VAUL_storm9_08_12_turb) = c("valuedatetime","datavalue")
-VAUL_storm9_08_12_abs = subset(VAUL_storm9_08_12, select = c("DateTime","ABS_254"))
-names(VAUL_storm9_08_12_abs) = c("valuedatetime","datavalue")
 
 
 # Storm 10 #
@@ -10650,277 +10318,110 @@ names(VAUL_storm14_09_06_abs) = c("valuedatetime","datavalue")
 
 
 # write csv # 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_abs.csv"))
+write.csv(VAUL_storm1a_06_19, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19.csv"))
+write.csv(VAUL_storm1a_06_19_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Q.csv"))
+write.csv(VAUL_storm1a_06_19_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_NO3.csv"))
+write.csv(VAUL_storm1a_06_19_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_fDOM.csv"))
+write.csv(VAUL_storm1a_06_19_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_SPC.csv"))
+write.csv(VAUL_storm1a_06_19_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_Turb.csv"))
+write.csv(VAUL_storm1a_06_19_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm1a_06_19_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_abs.csv"))
+write.csv(VAUL_storm1b_06_20, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20.csv"))
+write.csv(VAUL_storm1b_06_20_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Q.csv"))
+write.csv(VAUL_storm1b_06_20_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_NO3.csv"))
+write.csv(VAUL_storm1b_06_20_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_fDOM.csv"))
+write.csv(VAUL_storm1b_06_20_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_SPC.csv"))
+write.csv(VAUL_storm1b_06_20_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_Turb.csv"))
+write.csv(VAUL_storm1b_06_20_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm1b_06_20_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_abs.csv"))
+write.csv(VAUL_storm1c_06_22, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22.csv"))
+write.csv(VAUL_storm1c_06_22_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Q.csv"))
+write.csv(VAUL_storm1c_06_22_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_NO3.csv"))
+write.csv(VAUL_storm1c_06_22_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_fDOM.csv"))
+write.csv(VAUL_storm1c_06_22_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_SPC.csv"))
+write.csv(VAUL_storm1c_06_22_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_Turb.csv"))
+write.csv(VAUL_storm1c_06_22_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm1c_06_22_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm2_06_28_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_abs.csv"))
+write.csv(VAUL_storm3_07_09, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09.csv"))
+write.csv(VAUL_storm3_07_09_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Q.csv"))
+write.csv(VAUL_storm3_07_09_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_NO3.csv"))
+write.csv(VAUL_storm3_07_09_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_fDOM.csv"))
+write.csv(VAUL_storm3_07_09_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_SPC.csv"))
+write.csv(VAUL_storm3_07_09_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_Turb.csv"))
+write.csv(VAUL_storm3_07_09_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm3_07_09_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_abs.csv"))
+write.csv(VAUL_storm4_07_12, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12.csv"))
+write.csv(VAUL_storm4_07_12_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Q.csv"))
+write.csv(VAUL_storm4_07_12_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_NO3.csv"))
+write.csv(VAUL_storm4_07_12_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_fDOM.csv"))
+write.csv(VAUL_storm4_07_12_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_SPC.csv"))
+write.csv(VAUL_storm4_07_12_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_Turb.csv"))
+write.csv(VAUL_storm4_07_12_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm4_07_12_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm5_07_26_abs.csv"))
+write.csv(VAUL_storm6a_08_01, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01.csv"))
+write.csv(VAUL_storm6a_08_01_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Q.csv"))
+write.csv(VAUL_storm6a_08_01_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_NO3.csv"))
+write.csv(VAUL_storm6a_08_01_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_fDOM.csv"))
+write.csv(VAUL_storm6a_08_01_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_SPC.csv"))
+write.csv(VAUL_storm6a_08_01_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Turb.csv"))
+write.csv(VAUL_storm6a_08_01_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6a_08_01_abs.csv"))
+write.csv(VAUL_storm6b_08_02, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02.csv"))
+write.csv(VAUL_storm6b_08_02_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Q.csv"))
+write.csv(VAUL_storm6b_08_02_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_NO3.csv"))
+write.csv(VAUL_storm6b_08_02_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_fDOM.csv"))
+write.csv(VAUL_storm6b_08_02_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_SPC.csv"))
+write.csv(VAUL_storm6b_08_02_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Turb.csv"))
+write.csv(VAUL_storm6b_08_02_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm6b_08_02_abs.csv"))
+write.csv(VAUL_storm8_08_11, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11.csv"))
+write.csv(VAUL_storm8_08_11_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Q.csv"))
+write.csv(VAUL_storm8_08_11_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_NO3.csv"))
+write.csv(VAUL_storm8_08_11_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_fDOM.csv"))
+write.csv(VAUL_storm8_08_11_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_SPC.csv"))
+write.csv(VAUL_storm8_08_11_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Turb.csv"))
+write.csv(VAUL_storm8_08_11_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm7_08_08_abs.csv"))
+write.csv(VAUL_storm10_08_25, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25.csv"))
+write.csv(VAUL_storm10_08_25_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Q.csv"))
+write.csv(VAUL_storm10_08_25_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_NO3.csv"))
+write.csv(VAUL_storm10_08_25_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_fDOM.csv"))
+write.csv(VAUL_storm10_08_25_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_SPC.csv"))
+write.csv(VAUL_storm10_08_25_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Turb.csv"))
+write.csv(VAUL_storm10_08_25_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm8_08_11_abs.csv"))
+write.csv(VAUL_storm11_08_27, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27.csv"))
+write.csv(VAUL_storm11_08_27_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Q.csv"))
+write.csv(VAUL_storm11_08_27_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_NO3.csv"))
+write.csv(VAUL_storm11_08_27_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_fDOM.csv"))
+write.csv(VAUL_storm11_08_27_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_SPC.csv"))
+write.csv(VAUL_storm11_08_27_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Turb.csv"))
+write.csv(VAUL_storm11_08_27_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm9_08_12_abs.csv"))
+write.csv(VAUL_storm12_09_01, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01.csv"))
+write.csv(VAUL_storm12_09_01_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Q.csv"))
+write.csv(VAUL_storm12_09_01_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_NO3.csv"))
+write.csv(VAUL_storm12_09_01_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_fDOM.csv"))
+write.csv(VAUL_storm12_09_01_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_SPC.csv"))
+write.csv(VAUL_storm12_09_01_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Turb.csv"))
+write.csv(VAUL_storm12_09_01_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm10_08_25_abs.csv"))
+write.csv(VAUL_storm13_09_03, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03.csv"))
+write.csv(VAUL_storm13_09_03_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Q.csv"))
+write.csv(VAUL_storm13_09_03_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_NO3.csv"))
+write.csv(VAUL_storm13_09_03_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_fDOM.csv"))
+write.csv(VAUL_storm13_09_03_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_SPC.csv"))
+write.csv(VAUL_storm13_09_03_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Turb.csv"))
+write.csv(VAUL_storm13_09_03_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm11_08_27_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm12_09_01_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm13_09_03_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Q.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Turb.csv"))
-write.csv(here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_abs.csv"))
-
-# write.csv(VAUL_storm1a_06_19, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19.csv")
-# write.csv(VAUL_storm1a_06_19_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Q.csv")
-# write.csv(VAUL_storm1a_06_19_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_NO3.csv")
-# write.csv(VAUL_storm1a_06_19_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_fDOM.csv")
-# write.csv(VAUL_storm1a_06_19_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_SPC.csv")
-# write.csv(VAUL_storm1a_06_19_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_Turb.csv")
-# write.csv(VAUL_storm1a_06_19_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1a_06_19_abs.csv")
-# 
-# write.csv(VAUL_storm1b_06_20, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20.csv")
-# write.csv(VAUL_storm1b_06_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Q.csv")
-# write.csv(VAUL_storm1b_06_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_NO3.csv")
-# write.csv(VAUL_storm1b_06_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_fDOM.csv")
-# write.csv(VAUL_storm1b_06_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_SPC.csv")
-# write.csv(VAUL_storm1b_06_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_Turb.csv")
-# write.csv(VAUL_storm1b_06_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1b_06_20_abs.csv")
-# 
-# write.csv(VAUL_storm1c_06_22, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22.csv")
-# write.csv(VAUL_storm1c_06_22_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Q.csv")
-# write.csv(VAUL_storm1c_06_22_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_NO3.csv")
-# write.csv(VAUL_storm1c_06_22_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_fDOM.csv")
-# write.csv(VAUL_storm1c_06_22_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_SPC.csv")
-# write.csv(VAUL_storm1c_06_22_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_Turb.csv")
-# write.csv(VAUL_storm1c_06_22_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm1c_06_22_abs.csv")
-# 
-# write.csv(VAUL_storm2_06_28, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28.csv")
-# write.csv(VAUL_storm2_06_28_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Q.csv")
-# write.csv(VAUL_storm2_06_28_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_NO3.csv")
-# write.csv(VAUL_storm2_06_28_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_fDOM.csv")
-# write.csv(VAUL_storm2_06_28_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_SPC.csv")
-# write.csv(VAUL_storm2_06_28_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_Turb.csv")
-# write.csv(VAUL_storm2_06_28_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm2_06_28_abs.csv")
-# 
-# write.csv(VAUL_storm3_07_09, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09.csv")
-# write.csv(VAUL_storm3_07_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Q.csv")
-# write.csv(VAUL_storm3_07_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_NO3.csv")
-# write.csv(VAUL_storm3_07_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_fDOM.csv")
-# write.csv(VAUL_storm3_07_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_SPC.csv")
-# write.csv(VAUL_storm3_07_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_Turb.csv")
-# write.csv(VAUL_storm3_07_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm3_07_09_abs.csv")
-# 
-# write.csv(VAUL_storm4_07_12, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12.csv")
-# write.csv(VAUL_storm4_07_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Q.csv")
-# write.csv(VAUL_storm4_07_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_NO3.csv")
-# write.csv(VAUL_storm4_07_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_fDOM.csv")
-# write.csv(VAUL_storm4_07_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_SPC.csv")
-# write.csv(VAUL_storm4_07_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_Turb.csv")
-# write.csv(VAUL_storm4_07_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm4_07_12_abs.csv")
-# 
-# write.csv(VAUL_storm5_07_26, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26.csv")
-# write.csv(VAUL_storm5_07_26_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Q.csv")
-# write.csv(VAUL_storm5_07_26_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_NO3.csv")
-# write.csv(VAUL_storm5_07_26_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_fDOM.csv")
-# write.csv(VAUL_storm5_07_26_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_SPC.csv")
-# write.csv(VAUL_storm5_07_26_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_Turb.csv")
-# write.csv(VAUL_storm5_07_26_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm5_07_26_abs.csv")
-# 
-# write.csv(VAUL_storm6a_08_01, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01.csv")
-# write.csv(VAUL_storm6a_08_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Q.csv")
-# write.csv(VAUL_storm6a_08_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_NO3.csv")
-# write.csv(VAUL_storm6a_08_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_fDOM.csv")
-# write.csv(VAUL_storm6a_08_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_SPC.csv")
-# write.csv(VAUL_storm6a_08_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_Turb.csv")
-# write.csv(VAUL_storm6a_08_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6a_08_01_abs.csv")
-# 
-# write.csv(VAUL_storm6b_08_02, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02.csv")
-# write.csv(VAUL_storm6b_08_02_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Q.csv")
-# write.csv(VAUL_storm6b_08_02_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_NO3.csv")
-# write.csv(VAUL_storm6b_08_02_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_fDOM.csv")
-# write.csv(VAUL_storm6b_08_02_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_SPC.csv")
-# write.csv(VAUL_storm6b_08_02_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_Turb.csv")
-# write.csv(VAUL_storm6b_08_02_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm6b_08_02_abs.csv")
-# 
-# write.csv(VAUL_storm7_08_08, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08.csv")
-# write.csv(VAUL_storm7_08_08_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Q.csv")
-# write.csv(VAUL_storm7_08_08_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_NO3.csv")
-# write.csv(VAUL_storm7_08_08_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_fDOM.csv")
-# write.csv(VAUL_storm7_08_08_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_SPC.csv")
-# write.csv(VAUL_storm7_08_08_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_Turb.csv")
-# write.csv(VAUL_storm7_08_08_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm7_08_08_abs.csv")
-# 
-# write.csv(VAUL_storm8_08_11, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11.csv")
-# write.csv(VAUL_storm8_08_11_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Q.csv")
-# write.csv(VAUL_storm8_08_11_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_NO3.csv")
-# write.csv(VAUL_storm8_08_11_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_fDOM.csv")
-# write.csv(VAUL_storm8_08_11_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_SPC.csv")
-# write.csv(VAUL_storm8_08_11_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_Turb.csv")
-# write.csv(VAUL_storm8_08_11_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm8_08_11_abs.csv")
-# 
-# write.csv(VAUL_storm9_08_12, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12.csv")
-# write.csv(VAUL_storm9_08_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Q.csv")
-# write.csv(VAUL_storm9_08_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_NO3.csv")
-# write.csv(VAUL_storm9_08_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_fDOM.csv")
-# write.csv(VAUL_storm9_08_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_SPC.csv")
-# write.csv(VAUL_storm9_08_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_Turb.csv")
-# write.csv(VAUL_storm9_08_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm9_08_12_abs.csv")
-# 
-# write.csv(VAUL_storm10_08_25, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25.csv")
-# write.csv(VAUL_storm10_08_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Q.csv")
-# write.csv(VAUL_storm10_08_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_NO3.csv")
-# write.csv(VAUL_storm10_08_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_fDOM.csv")
-# write.csv(VAUL_storm10_08_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_SPC.csv")
-# write.csv(VAUL_storm10_08_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_Turb.csv")
-# write.csv(VAUL_storm10_08_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm10_08_25_abs.csv")
-# 
-# write.csv(VAUL_storm11_08_27, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27.csv")
-# write.csv(VAUL_storm11_08_27_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Q.csv")
-# write.csv(VAUL_storm11_08_27_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_NO3.csv")
-# write.csv(VAUL_storm11_08_27_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_fDOM.csv")
-# write.csv(VAUL_storm11_08_27_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_SPC.csv")
-# write.csv(VAUL_storm11_08_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_Turb.csv")
-# write.csv(VAUL_storm11_08_27_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm11_08_27_abs.csv")
-# 
-# write.csv(VAUL_storm12_09_01, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01.csv")
-# write.csv(VAUL_storm12_09_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Q.csv")
-# write.csv(VAUL_storm12_09_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_NO3.csv")
-# write.csv(VAUL_storm12_09_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_fDOM.csv")
-# write.csv(VAUL_storm12_09_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_SPC.csv")
-# write.csv(VAUL_storm12_09_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_Turb.csv")
-# write.csv(VAUL_storm12_09_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm12_09_01_abs.csv")
-# 
-# write.csv(VAUL_storm13_09_03, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03.csv")
-# write.csv(VAUL_storm13_09_03_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Q.csv")
-# write.csv(VAUL_storm13_09_03_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_NO3.csv")
-# write.csv(VAUL_storm13_09_03_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_fDOM.csv")
-# write.csv(VAUL_storm13_09_03_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_SPC.csv")
-# write.csv(VAUL_storm13_09_03_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_Turb.csv")
-# write.csv(VAUL_storm13_09_03_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm13_09_03_abs.csv")
-# 
-# write.csv(VAUL_storm14_09_06, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06.csv")
-# write.csv(VAUL_storm14_09_06_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Q.csv")
-# write.csv(VAUL_storm14_09_06_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_NO3.csv")
-# write.csv(VAUL_storm14_09_06_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_fDOM.csv")
-# write.csv(VAUL_storm14_09_06_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_SPC.csv")
-# write.csv(VAUL_storm14_09_06_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_Turb.csv")
-# write.csv(VAUL_storm14_09_06_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/VAUL/VAUL_storm14_09_06_abs.csv")
+write.csv(VAUL_storm14_09_06, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06.csv"))
+write.csv(VAUL_storm14_09_06_Q, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Q.csv"))
+write.csv(VAUL_storm14_09_06_NO3, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_NO3.csv"))
+write.csv(VAUL_storm14_09_06_fDOM, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_fDOM.csv"))
+write.csv(VAUL_storm14_09_06_SPC, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_SPC.csv"))
+write.csv(VAUL_storm14_09_06_turb, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_Turb.csv"))
+write.csv(VAUL_storm14_09_06_abs, here("Storm_Events", "2020", "VAUL", "VAUL_storm14_09_06_abs.csv"))
 
 
 ## POKE ##
