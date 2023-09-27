@@ -3097,9 +3097,9 @@ names(storm_list_beta) = storm_file_list_beta
 CARI_storm_list_beta = storm_list_beta[c(1:60)] #60
 FRCH_storm_list_beta = storm_list_beta[c(1:84)] #84
 MOOS_storm_list_beta = storm_list_beta[c(169:234)] #66
-POKE_storm_list_beta = storm_list_beta[c(235:384)]# 150
-STRT_storm_list_beta = storm_list_beta[c(85:162)] #78
-VAUL_storm_list_beta = storm_list_beta[c(163:240)] #102
+POKE_storm_list_beta = storm_list_beta[c(85:192)]# 150
+STRT_storm_list_beta = storm_list_beta[c(193:270)] #78
+VAUL_storm_list_beta = storm_list_beta[c(271:348)] #102
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -3499,31 +3499,29 @@ beta.all.no3.moos.with.all <- MOOS_NO3_storm_ascending %>% group_by(storm.ID) %>
   summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
 
 # POKE # 
-POKE_NO3_storm$storm.ID = c(rep("storm1", 95),
-                            rep("storm10", 99),
-                            rep("storm11", 199),
-                            rep("storm12", 307),
-                            rep("storm13", 87),
-                            rep("storm14", 383),
-                            rep("storm15", 335),
-                            rep("storm16", 95),
-                            rep("storm17", 119),
-                            rep("storm18", 95),
-                            rep("storm19", 135),
-                            rep("storm2", 87),
-                            rep("storm20", 139),
-                            rep("storm21", 227),
-                            rep("storm22a", 107),
-                            rep("storm22b", 212),
-                            rep("storm3", 119),
-                            rep("storm4a", 98),
-                            rep("storm4b", 95),
-                            rep("storm4c", 159),
-                            rep("storm5", 219),
-                            rep("storm6", 95),
-                            rep("storm7", 127),
-                            rep("storm8", 135),
-                            rep("storm9", 263))
+POKE_NO3_storm$storm.ID = c(
+  
+  rep("storm11", 199),
+  rep("storm12", 307),
+  rep("storm13", 87),
+  rep("storm14", 383),
+  rep("storm15", 335),
+  
+  rep("storm19", 135),
+  
+  rep("storm20", 139),
+  rep("storm21", 227),
+  rep("storm22a", 107),
+  rep("storm22b", 212),
+  rep("storm3", 119),
+  rep("storm4a", 98),
+  rep("storm4b", 95),
+  rep("storm4c", 159),
+  rep("storm5", 219),
+  
+  rep("storm7", 127),
+  rep("storm8", 135),
+  rep("storm9", 263))
 
 names(POKE_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
 POKE_NO3_storm$site.ID <- "POKE"
@@ -3784,31 +3782,29 @@ beta.all.fDOM.moos.with.all <- MOOS_fDOM_storm_ascending %>% group_by(storm.ID) 
   summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
 
 # POKE # 
-POKE_fDOM_storm$storm.ID = c(rep("storm1", 95),
-                             rep("storm10", 99),
-                             rep("storm11", 199),
-                             rep("storm12", 307),
-                             rep("storm13", 87),
-                             rep("storm14", 383),
-                             rep("storm15", 335),
-                             rep("storm16", 95),
-                             rep("storm17", 119),
-                             rep("storm18", 95),
-                             rep("storm19", 135),
-                             rep("storm2", 87),
-                             rep("storm20", 139),
-                             rep("storm21", 227),
-                             rep("storm22a", 107),
-                             rep("storm22b", 212),
-                             rep("storm3", 119),
-                             rep("storm4a", 98),
-                             rep("storm4b", 95),
-                             rep("storm4c", 159),
-                             rep("storm5", 219),
-                             rep("storm6", 95),
-                             rep("storm7", 127),
-                             rep("storm8", 135),
-                             rep("storm9", 263))
+POKE_fDOM_storm$storm.ID = c(
+  
+  rep("storm11", 199),
+  rep("storm12", 307),
+  rep("storm13", 87),
+  rep("storm14", 383),
+  rep("storm15", 335),
+  
+  rep("storm19", 135),
+  
+  rep("storm20", 139),
+  rep("storm21", 227),
+  rep("storm22a", 107),
+  rep("storm22b", 212),
+  rep("storm3", 119),
+  rep("storm4a", 98),
+  rep("storm4b", 95),
+  rep("storm4c", 159),
+  rep("storm5", 219),
+  
+  rep("storm7", 127),
+  rep("storm8", 135),
+  rep("storm9", 263))
 
 names(POKE_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
 POKE_fDOM_storm$site.ID <- "POKE"
@@ -4077,31 +4073,29 @@ beta.all.SPC.moos.with.all <- MOOS_SPC_storm_ascending %>% group_by(storm.ID) %>
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # POKE # 
-POKE_SPC_storm$storm.ID = c(rep("storm1", 95),
-                            rep("storm10", 99),
-                            rep("storm11", 199),
-                            rep("storm12", 307),
-                            rep("storm13", 87),
-                            rep("storm14", 383),
-                            rep("storm15", 335),
-                            rep("storm16", 95),
-                            rep("storm17", 119),
-                            rep("storm18", 95),
-                            rep("storm19", 135),
-                            rep("storm2", 87),
-                            rep("storm20", 139),
-                            rep("storm21", 227),
-                            rep("storm22a", 107),
-                            rep("storm22b", 212),
-                            rep("storm3", 119),
-                            rep("storm4a", 98),
-                            rep("storm4b", 95),
-                            rep("storm4c", 159),
-                            rep("storm5", 219),
-                            rep("storm6", 95),
-                            rep("storm7", 127),
-                            rep("storm8", 135),
-                            rep("storm9", 263))
+POKE_SPC_storm$storm.ID = c(
+  
+  rep("storm11", 199),
+  rep("storm12", 307),
+  rep("storm13", 87),
+  rep("storm14", 383),
+  rep("storm15", 335),
+  
+  rep("storm19", 135),
+  
+  rep("storm20", 139),
+  rep("storm21", 227),
+  rep("storm22a", 107),
+  rep("storm22b", 212),
+  rep("storm3", 119),
+  rep("storm4a", 98),
+  rep("storm4b", 95),
+  rep("storm4c", 159),
+  rep("storm5", 219),
+  
+  rep("storm7", 127),
+  rep("storm8", 135),
+  rep("storm9", 263))
 
 names(POKE_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 POKE_SPC_storm$site.ID <- "POKE"
@@ -4368,31 +4362,29 @@ beta.all.turb.moos.with.all <- MOOS_turb_storm_ascending %>% group_by(storm.ID) 
   summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
 
 # POKE # 
-POKE_turb_storm$storm.ID = c(rep("storm1", 95),
-                             rep("storm10", 99),
-                             rep("storm11", 199),
-                             rep("storm12", 307),
-                             rep("storm13", 87),
-                             rep("storm14", 383),
-                             rep("storm15", 335),
-                             rep("storm16", 95),
-                             rep("storm17", 119),
-                             rep("storm18", 95),
-                             rep("storm19", 135),
-                             rep("storm2", 87),
-                             rep("storm20", 139),
-                             rep("storm21", 227),
-                             rep("storm22a", 107),
-                             rep("storm22b", 212),
-                             rep("storm3", 119),
-                             rep("storm4a", 98),
-                             rep("storm4b", 95),
-                             rep("storm4c", 159),
-                             rep("storm5", 219),
-                             rep("storm6", 95),
-                             rep("storm7", 127),
-                             rep("storm8", 135),
-                             rep("storm9", 263))
+POKE_turb_storm$storm.ID = c(
+  
+  rep("storm11", 199),
+  rep("storm12", 307),
+  rep("storm13", 87),
+  rep("storm14", 383),
+  rep("storm15", 335),
+  
+  rep("storm19", 135),
+  
+  rep("storm20", 139),
+  rep("storm21", 227),
+  rep("storm22a", 107),
+  rep("storm22b", 212),
+  rep("storm3", 119),
+  rep("storm4a", 98),
+  rep("storm4b", 95),
+  rep("storm4c", 159),
+  rep("storm5", 219),
+  
+  rep("storm7", 127),
+  rep("storm8", 135),
+  rep("storm9", 263))
 
 names(POKE_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 POKE_turb_storm$site.ID <- "POKE"
@@ -4653,31 +4645,29 @@ beta.all.abs.moos.with.all <- MOOS_abs_storm_ascending %>% group_by(storm.ID) %>
   summarize(beta = slope(Q.norm, abs.norm)) # this works just like the beta one that is for an individual site
 
 # POKE # 
-POKE_abs_storm$storm.ID = c(rep("storm1", 95),
-                            rep("storm10", 99),
-                            rep("storm11", 199),
-                            rep("storm12", 307),
-                            rep("storm13", 87),
-                            rep("storm14", 383),
-                            rep("storm15", 335),
-                            rep("storm16", 95),
-                            rep("storm17", 119),
-                            rep("storm18", 95),
-                            rep("storm19", 135),
-                            rep("storm2", 87),
-                            rep("storm20", 139),
-                            rep("storm21", 227),
-                            rep("storm22a", 107),
-                            rep("storm22b", 212),
-                            rep("storm3", 119),
-                            rep("storm4a", 98),
-                            rep("storm4b", 95),
-                            rep("storm4c", 159),
-                            rep("storm5", 219),
-                            rep("storm6", 95),
-                            rep("storm7", 127),
-                            rep("storm8", 135),
-                            rep("storm9", 263))
+POKE_abs_storm$storm.ID = c(
+  
+  rep("storm11", 199),
+  rep("storm12", 307),
+  rep("storm13", 87),
+  rep("storm14", 383),
+  rep("storm15", 335),
+  
+  rep("storm19", 135),
+  
+  rep("storm20", 139),
+  rep("storm21", 227),
+  rep("storm22a", 107),
+  rep("storm22b", 212),
+  rep("storm3", 119),
+  rep("storm4a", 98),
+  rep("storm4b", 95),
+  rep("storm4c", 159),
+  rep("storm5", 219),
+  
+  rep("storm7", 127),
+  rep("storm8", 135),
+  rep("storm9", 263))
 
 names(POKE_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 POKE_abs_storm$site.ID <- "POKE"
