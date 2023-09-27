@@ -10451,8 +10451,6 @@ par(new = T)
 
 plot(poke.final.discharge$MeanDischarge ~ poke.final.discharge$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 00:00:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
@@ -10463,88 +10461,10 @@ lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 
 ### STORMS ###
-
-# Storm 1 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-06-09 19:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-06-10 19:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm1_06_09 = POKE[POKE$DateTime > as.POSIXct("2020-06-09 19:00:00", tz="America/Anchorage") &
-                           POKE$DateTime < as.POSIXct("2020-06-10 19:00:00", tz="America/Anchorage"),]
-plot(POKE_storm1_06_09$MeanDischarge ~ as.POSIXct(POKE_storm1_06_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200609 storm 1",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 2 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-06-12 21:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-06-13 19:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm2_06_12 = POKE[POKE$DateTime > as.POSIXct("2020-06-12 21:00:00", tz="America/Anchorage") &
-                           POKE$DateTime < as.POSIXct("2020-06-13 19:00:00", tz="America/Anchorage"),]
-plot(POKE_storm2_06_12$MeanDischarge ~ as.POSIXct(POKE_storm2_06_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200612 storm 2",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-06-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
 # Storm 3 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10560,11 +10480,11 @@ abline(v= as.POSIXct("2020-06-16 23:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm3_06_15 = POKE[POKE$DateTime > as.POSIXct("2020-06-15 17:00:00", tz="America/Anchorage") &
                            POKE$DateTime < as.POSIXct("2020-06-16 23:00:00", tz="America/Anchorage"),]
-plot(POKE_storm3_06_15$MeanDischarge ~ as.POSIXct(POKE_storm3_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,1000), col="blue", main="POKE 200615 storm 3",
+plot(POKE_storm3_06_15$MeanDischarge ~ as.POSIXct(POKE_storm3_06_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,550), col="blue", main="POKE 200615 storm 3",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10581,8 +10501,7 @@ axis(side = 4)
 # Storm 4a #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10598,7 +10517,7 @@ abline(v= as.POSIXct("2020-06-20 15:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm4a_06_19 = POKE[POKE$DateTime > as.POSIXct("2020-06-19 14:15:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-06-20 15:00:00", tz="America/Anchorage"),]
-plot(POKE_storm4a_06_19$MeanDischarge ~ as.POSIXct(POKE_storm4a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,2000), col="blue", main="POKE 200619 storm 4a",
+plot(POKE_storm4a_06_19$MeanDischarge ~ as.POSIXct(POKE_storm4a_06_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(350,1500), col="blue", main="POKE 200619 storm 4a",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10619,8 +10538,7 @@ axis(side = 4)
 # Storm 4b #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10657,8 +10575,7 @@ axis(side = 4)
 # Storm 4c #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10694,8 +10611,7 @@ axis(side = 4)
 # Storm 5 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10728,48 +10644,11 @@ plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 6 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-06-29 18:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-06-30 18:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm6_06_29 = POKE[POKE$DateTime > as.POSIXct("2020-06-29 18:00:00", tz="America/Anchorage") &
-                           POKE$DateTime < as.POSIXct("2020-06-30 18:00:00", tz="America/Anchorage"),]
-plot(POKE_storm6_06_29$MeanDischarge ~ as.POSIXct(POKE_storm6_06_29$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200629 storm 6",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-06-15 00:00:00","2020-06-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 7 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10785,7 +10664,7 @@ abline(v= as.POSIXct("2020-07-05 22:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm7_07_04 = POKE[POKE$DateTime > as.POSIXct("2020-07-04 14:00:00", tz="America/Anchorage") &
                            POKE$DateTime < as.POSIXct("2020-07-05 22:00:00", tz="America/Anchorage"),]
-plot(POKE_storm7_07_04$MeanDischarge ~ as.POSIXct(POKE_storm7_07_04$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200704 storm 7",
+plot(POKE_storm7_07_04$MeanDischarge ~ as.POSIXct(POKE_storm7_07_04$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200704 storm 7",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10805,8 +10684,7 @@ axis(side = 4)
 # Storm 8 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10822,7 +10700,7 @@ abline(v= as.POSIXct("2020-07-10 22:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm8_07_09 = POKE[POKE$DateTime > as.POSIXct("2020-07-09 12:00:00", tz="America/Anchorage") &
                            POKE$DateTime < as.POSIXct("2020-07-10 22:00:00", tz="America/Anchorage"),]
-plot(POKE_storm8_07_09$MeanDischarge ~ as.POSIXct(POKE_storm8_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200709 storm 8",
+plot(POKE_storm8_07_09$MeanDischarge ~ as.POSIXct(POKE_storm8_07_09$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,700), col="blue", main="POKE 200709 storm 8",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10843,8 +10721,7 @@ axis(side = 4)
 # Storm 9 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-01 00:00:00","2020-07-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10878,49 +10755,11 @@ plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# Storm 10 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-07-17 06:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-07-18 07:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm10_07_16 = POKE[POKE$DateTime > as.POSIXct("2020-07-17 06:00:00", tz="America/Anchorage") &
-                            POKE$DateTime < as.POSIXct("2020-07-18 07:00:00", tz="America/Anchorage"),]
-plot(POKE_storm10_07_16$MeanDischarge ~ as.POSIXct(POKE_storm10_07_16$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200716 storm 10",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
 
 # Storm 11 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10936,7 +10775,7 @@ abline(v= as.POSIXct("2020-07-20 18:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm11_07_18 = POKE[POKE$DateTime > as.POSIXct("2020-07-18 16:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-07-20 18:00:00", tz="America/Anchorage"),]
-plot(POKE_storm11_07_18$MeanDischarge ~ as.POSIXct(POKE_storm11_07_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200718 storm 11",
+plot(POKE_storm11_07_18$MeanDischarge ~ as.POSIXct(POKE_storm11_07_18$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,900), col="blue", main="POKE 200718 storm 11",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10957,8 +10796,7 @@ axis(side = 4)
 # Storm 12 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -10974,11 +10812,11 @@ abline(v= as.POSIXct("2020-07-24 07:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm12_07_20 = POKE[POKE$DateTime > as.POSIXct("2020-07-21 02:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-07-24 07:00:00", tz="America/Anchorage"),]
-plot(POKE_storm12_07_20$MeanDischarge ~ as.POSIXct(POKE_storm12_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200720 storm 12",
+plot(POKE_storm12_07_20$MeanDischarge ~ as.POSIXct(POKE_storm12_07_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,850), col="blue", main="POKE 200720 storm 12",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 10 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -10995,8 +10833,7 @@ axis(side = 4)
 # Storm 13 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11012,11 +10849,11 @@ abline(v= as.POSIXct("2020-07-26 14:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm13_07_24 = POKE[POKE$DateTime > as.POSIXct("2020-07-24 16:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-07-25 14:00:00", tz="America/Anchorage"),]
-plot(POKE_storm13_07_24$MeanDischarge ~ as.POSIXct(POKE_storm13_07_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200724 storm 13",
+plot(POKE_storm13_07_24$MeanDischarge ~ as.POSIXct(POKE_storm13_07_24$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,850), col="blue", main="POKE 200724 storm 13",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 10 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11033,8 +10870,7 @@ axis(side = 4)
 # Storm 14 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11050,11 +10886,11 @@ abline(v= as.POSIXct("2020-07-31 07:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm14_07_26 = POKE[POKE$DateTime > as.POSIXct("2020-07-27 07:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-07-31 07:00:00", tz="America/Anchorage"),]
-plot(POKE_storm14_07_26$MeanDischarge ~ as.POSIXct(POKE_storm14_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1500), col="blue", main="POKE 200726 storm 14",
+plot(POKE_storm14_07_26$MeanDischarge ~ as.POSIXct(POKE_storm14_07_26$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,900), col="blue", main="POKE 200726 storm 14",
      xlim = as.POSIXct(c("2020-07-16 00:00:00","2020-07-31 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 10 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11071,8 +10907,7 @@ axis(side = 4)
 # Storm 15 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11088,7 +10923,7 @@ abline(v= as.POSIXct("2020-08-06 19:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm15_08_02 = POKE[POKE$DateTime > as.POSIXct("2020-08-03 07:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-08-06 19:00:00", tz="America/Anchorage"),]
-plot(POKE_storm15_08_02$MeanDischarge ~ as.POSIXct(POKE_storm15_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,5000), col="blue", main="POKE 200802 storm 15",
+plot(POKE_storm15_08_02$MeanDischarge ~ as.POSIXct(POKE_storm15_08_02$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,3000), col="blue", main="POKE 200802 storm 15",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11102,127 +10937,6 @@ lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="
 par(new = T)
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 16 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-lines(POKE$nitrateuM * 45 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 50 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-08-12 21:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-08-13 21:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm16_08_12 = POKE[POKE$DateTime > as.POSIXct("2020-08-12 21:00:00", tz="America/Anchorage") &
-                            POKE$DateTime < as.POSIXct("2020-08-13 21:00:00", tz="America/Anchorage"),]
-plot(POKE_storm16_08_12$MeanDischarge ~ as.POSIXct(POKE_storm16_08_12$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200812 storm 16",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-01 00:00:00","2020-08-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 17 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-08-24 07:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-08-25 13:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm17_08_23 = POKE[POKE$DateTime > as.POSIXct("2020-08-24 07:00:00", tz="America/Anchorage") &
-                            POKE$DateTime < as.POSIXct("2020-08-25 13:00:00", tz="America/Anchorage"),]
-plot(POKE_storm17_08_23$MeanDischarge ~ as.POSIXct(POKE_storm17_08_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200823 storm 17",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# Storm 18 #
-plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-
-par(new = T)
-
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(poke.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(poke.five.twenty.four$DateTime), col="green", lwd = 0.1)
-abline(v= as.POSIXct("2020-08-25 13:00:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2020-08-26 13:00:00", tz="America/Anchorage"), col="purple")
-
-POKE_storm18_08_25 = POKE[POKE$DateTime > as.POSIXct("2020-08-25 13:00:00", tz="America/Anchorage") &
-                            POKE$DateTime < as.POSIXct("2020-08-26 13:00:00", tz="America/Anchorage"),]
-plot(POKE_storm18_08_25$MeanDischarge ~ as.POSIXct(POKE_storm18_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200825 storm 18",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$Turbidity.FNU * 70 ~ POKE$DateTime, type="l", xlab="", ylab="", col="black",
-      xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-
-par(new = T)
-plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
-     xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"),
      ylim = c(5,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
@@ -11230,9 +10944,6 @@ axis(side = 4)
 # Storm 19 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11248,7 +10959,7 @@ abline(v= as.POSIXct("2020-08-29 04:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm19_08_27 = POKE[POKE$DateTime > as.POSIXct("2020-08-27 18:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-08-29 04:00:00", tz="America/Anchorage"),]
-plot(POKE_storm19_08_27$MeanDischarge ~ as.POSIXct(POKE_storm19_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200827 storm 19",
+plot(POKE_storm19_08_27$MeanDischarge ~ as.POSIXct(POKE_storm19_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(700,820), col="blue", main="POKE 200827 storm 19",
      xlim = as.POSIXct(c("2020-08-16 00:00:00","2020-08-31 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11269,8 +10980,6 @@ axis(side = 4)
 # Storm 20 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
 
 par(new = T)
 
@@ -11308,13 +11017,6 @@ axis(side = 4)
 # Storm 21 #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-lines(POKE$nitrateuM * 45 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 50 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
-      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11330,11 +11032,11 @@ abline(v= as.POSIXct("2020-09-06 22:00:00", tz="America/Anchorage"), col="purple
 
 POKE_storm21_09_03 = POKE[POKE$DateTime > as.POSIXct("2020-09-04 07:00:00", tz="America/Anchorage") &
                             POKE$DateTime < as.POSIXct("2020-09-06 16:00:00", tz="America/Anchorage"),]
-plot(POKE_storm21_09_03$MeanDischarge ~ as.POSIXct(POKE_storm21_09_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(500,1000), col="blue", main="POKE 200903 storm 21",
+plot(POKE_storm21_09_03$MeanDischarge ~ as.POSIXct(POKE_storm21_09_03$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,800), col="blue", main="POKE 200903 storm 21",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 10 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11351,9 +11053,6 @@ axis(side = 4)
 # Storm 22a #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11373,7 +11072,7 @@ plot(POKE_storm22a_09_07$MeanDischarge ~ as.POSIXct(POKE_storm22a_09_07$DateTime
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
 lines(POKE$nitrateuM * 25 ~ POKE$DateTime, type="l", xlab="", ylab="", col="purple",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
-lines(POKE$fDOM.RFU * 15 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
+lines(POKE$fDOM.RFU * 10 ~ POKE$DateTime, type="l", xlab="", ylab="", col="brown",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
 lines(POKE$SpCond.uScm * 7 ~ POKE$DateTime, type="l", xlab="", ylab="", col="red",
       xlim = as.POSIXct(c("2020-06-01 00:00:00","2020-10-15 01:00:00"), tz="America/Anchorage"))
@@ -11390,9 +11089,6 @@ axis(side = 4)
 # Storm 22b #
 plot(POKE$MeanDischarge ~ POKE$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2020-09-01 00:00:00","2020-09-15 23:45:00"), tz="America/Anchorage"))
-abline(h=POKE_bfQ_mn*2, col="red", lty=2)
-abline(h=POKE_bfQ_mn, col="red")
-
 par(new = T)
 
 plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
@@ -11427,34 +11123,6 @@ plot(poke.gauge$Precip ~ poke.gauge$DateTime, type="h",
 axis(side = 4)
 
 # nitrateuM, fDOM.RFU POKE #
-# Storm 1 #
-POKE_storm1_06_09_Q = subset(POKE_storm1_06_09, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm1_06_09_Q) = c("valuedatetime","datavalue")
-POKE_storm1_06_09_NO3 = subset(POKE_storm1_06_09, select = c("DateTime","nitrateuM"))
-names(POKE_storm1_06_09_NO3) = c("valuedatetime","datavalue")
-POKE_storm1_06_09_fDOM = subset(POKE_storm1_06_09, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm1_06_09_fDOM) = c("valuedatetime","datavalue")
-POKE_storm1_06_09_SPC = subset(POKE_storm1_06_09, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm1_06_09_SPC) = c("valuedatetime","datavalue")
-POKE_storm1_06_09_turb = subset(POKE_storm1_06_09, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm1_06_09_turb) = c("valuedatetime","datavalue")
-POKE_storm1_06_09_abs = subset(POKE_storm1_06_09, select = c("DateTime","ABS_254"))
-names(POKE_storm1_06_09_abs) = c("valuedatetime","datavalue")
-
-POKE_storm2_06_12_Q = subset(POKE_storm2_06_12, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm2_06_12_Q) = c("valuedatetime","datavalue")
-POKE_storm2_06_12_NO3 = subset(POKE_storm2_06_12, select = c("DateTime","nitrateuM"))
-names(POKE_storm2_06_12_NO3) = c("valuedatetime","datavalue")
-POKE_storm2_06_12_fDOM = subset(POKE_storm2_06_12, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm2_06_12_fDOM) = c("valuedatetime","datavalue")
-POKE_storm2_06_12_SPC = subset(POKE_storm2_06_12, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm2_06_12_SPC) = c("valuedatetime","datavalue")
-POKE_storm2_06_12_turb = subset(POKE_storm2_06_12, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm2_06_12_turb) = c("valuedatetime","datavalue")
-POKE_storm2_06_12_abs = subset(POKE_storm2_06_12, select = c("DateTime","ABS_254"))
-names(POKE_storm2_06_12_abs) = c("valuedatetime","datavalue")
-
-
 POKE_storm3_06_15_Q = subset(POKE_storm3_06_15, select = c("DateTime", "MeanDischarge"))
 names(POKE_storm3_06_15_Q) = c("valuedatetime","datavalue")
 POKE_storm3_06_15_NO3 = subset(POKE_storm3_06_15, select = c("DateTime","nitrateuM"))
@@ -11525,20 +11193,6 @@ POKE_storm5_06_22_abs = subset(POKE_storm5_06_22, select = c("DateTime","ABS_254
 names(POKE_storm5_06_22_abs) = c("valuedatetime","datavalue")
 
 
-POKE_storm6_06_29_Q = subset(POKE_storm6_06_29, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm6_06_29_Q) = c("valuedatetime","datavalue")
-POKE_storm6_06_29_NO3 = subset(POKE_storm6_06_29, select = c("DateTime","nitrateuM"))
-names(POKE_storm6_06_29_NO3) = c("valuedatetime","datavalue")
-POKE_storm6_06_29_fDOM = subset(POKE_storm6_06_29, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm6_06_29_fDOM) = c("valuedatetime","datavalue")
-POKE_storm6_06_29_SPC = subset(POKE_storm6_06_29, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm6_06_29_SPC) = c("valuedatetime","datavalue")
-POKE_storm6_06_29_turb = subset(POKE_storm6_06_29, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm6_06_29_turb) = c("valuedatetime","datavalue")
-POKE_storm6_06_29_abs = subset(POKE_storm6_06_29, select = c("DateTime","ABS_254"))
-names(POKE_storm6_06_29_abs) = c("valuedatetime","datavalue")
-
-
 POKE_storm7_07_04_Q = subset(POKE_storm7_07_04, select = c("DateTime", "MeanDischarge"))
 names(POKE_storm7_07_04_Q) = c("valuedatetime","datavalue")
 POKE_storm7_07_04_NO3 = subset(POKE_storm7_07_04, select = c("DateTime","nitrateuM"))
@@ -11579,20 +11233,6 @@ POKE_storm9_07_12_turb = subset(POKE_storm9_07_12, select = c("DateTime","Turbid
 names(POKE_storm9_07_12_turb) = c("valuedatetime","datavalue")
 POKE_storm9_07_12_abs = subset(POKE_storm9_07_12, select = c("DateTime","ABS_254"))
 names(POKE_storm9_07_12_abs) = c("valuedatetime","datavalue")
-
-
-POKE_storm10_07_16_Q = subset(POKE_storm10_07_16, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm10_07_16_Q) = c("valuedatetime","datavalue")
-POKE_storm10_07_16_NO3 = subset(POKE_storm10_07_16, select = c("DateTime","nitrateuM"))
-names(POKE_storm10_07_16_NO3) = c("valuedatetime","datavalue")
-POKE_storm10_07_16_fDOM = subset(POKE_storm10_07_16, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm10_07_16_fDOM) = c("valuedatetime","datavalue")
-POKE_storm10_07_16_SPC = subset(POKE_storm10_07_16, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm10_07_16_SPC) = c("valuedatetime","datavalue")
-POKE_storm10_07_16_turb = subset(POKE_storm10_07_16, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm10_07_16_turb) = c("valuedatetime","datavalue")
-POKE_storm10_07_16_abs = subset(POKE_storm10_07_16, select = c("DateTime","ABS_254"))
-names(POKE_storm10_07_16_abs) = c("valuedatetime","datavalue")
 
 
 POKE_storm11_07_18_Q = subset(POKE_storm11_07_18, select = c("DateTime", "MeanDischarge"))
@@ -11663,49 +11303,6 @@ POKE_storm15_08_02_turb = subset(POKE_storm15_08_02, select = c("DateTime","Turb
 names(POKE_storm15_08_02_turb) = c("valuedatetime","datavalue")
 POKE_storm15_08_02_abs = subset(POKE_storm15_08_02, select = c("DateTime","ABS_254"))
 names(POKE_storm15_08_02_abs) = c("valuedatetime","datavalue")
-
-
-POKE_storm16_08_12_Q = subset(POKE_storm16_08_12, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm16_08_12_Q) = c("valuedatetime","datavalue")
-POKE_storm16_08_12_NO3 = subset(POKE_storm16_08_12, select = c("DateTime","nitrateuM"))
-names(POKE_storm16_08_12_NO3) = c("valuedatetime","datavalue")
-POKE_storm16_08_12_fDOM = subset(POKE_storm16_08_12, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm16_08_12_fDOM) = c("valuedatetime","datavalue")
-POKE_storm16_08_12_SPC = subset(POKE_storm16_08_12, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm16_08_12_SPC) = c("valuedatetime","datavalue")
-POKE_storm16_08_12_turb = subset(POKE_storm16_08_12, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm16_08_12_turb) = c("valuedatetime","datavalue")
-POKE_storm16_08_12_abs = subset(POKE_storm16_08_12, select = c("DateTime","ABS_254"))
-names(POKE_storm16_08_12_abs) = c("valuedatetime","datavalue")
-
-
-POKE_storm17_08_23_Q = subset(POKE_storm17_08_23, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm17_08_23_Q) = c("valuedatetime","datavalue")
-POKE_storm17_08_23_NO3 = subset(POKE_storm17_08_23, select = c("DateTime","nitrateuM"))
-names(POKE_storm17_08_23_NO3) = c("valuedatetime","datavalue")
-POKE_storm17_08_23_fDOM = subset(POKE_storm17_08_23, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm17_08_23_fDOM) = c("valuedatetime","datavalue")
-POKE_storm17_08_23_SPC = subset(POKE_storm17_08_23, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm17_08_23_SPC) = c("valuedatetime","datavalue")
-POKE_storm17_08_23_turb = subset(POKE_storm17_08_23, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm17_08_23_turb) = c("valuedatetime","datavalue")
-POKE_storm17_08_23_abs = subset(POKE_storm17_08_23, select = c("DateTime","ABS_254"))
-names(POKE_storm17_08_23_abs) = c("valuedatetime","datavalue")
-
-
-POKE_storm18_08_25_Q = subset(POKE_storm18_08_25, select = c("DateTime", "MeanDischarge"))
-names(POKE_storm18_08_25_Q) = c("valuedatetime","datavalue")
-POKE_storm18_08_25_NO3 = subset(POKE_storm18_08_25, select = c("DateTime","nitrateuM"))
-names(POKE_storm18_08_25_NO3) = c("valuedatetime","datavalue")
-POKE_storm18_08_25_fDOM = subset(POKE_storm18_08_25, select = c("DateTime","fDOM.RFU"))
-names(POKE_storm18_08_25_fDOM) = c("valuedatetime","datavalue")
-POKE_storm18_08_25_SPC = subset(POKE_storm18_08_25, select = c("DateTime","SpCond.uScm"))
-names(POKE_storm18_08_25_SPC) = c("valuedatetime","datavalue")
-POKE_storm18_08_25_turb = subset(POKE_storm18_08_25, select = c("DateTime","Turbidity.FNU"))
-names(POKE_storm18_08_25_turb) = c("valuedatetime","datavalue")
-POKE_storm18_08_25_abs = subset(POKE_storm18_08_25, select = c("DateTime","ABS_254"))
-names(POKE_storm18_08_25_abs) = c("valuedatetime","datavalue")
-
 
 POKE_storm19_08_27_Q = subset(POKE_storm19_08_27, select = c("DateTime", "MeanDischarge"))
 names(POKE_storm19_08_27_Q) = c("valuedatetime","datavalue")
@@ -11779,407 +11376,149 @@ names(POKE_storm22b_09_09_abs) = c("valuedatetime","datavalue")
 
 
 ### Write csv ###
+write.csv(POKE_storm3_06_15, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15.csv"))
+write.csv(POKE_storm3_06_15_Q, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_Q.csv"))
+write.csv(POKE_storm3_06_15_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_NO3.csv"))
+write.csv(POKE_storm3_06_15_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_fDOM.csv"))
+write.csv(POKE_storm3_06_15_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_SPC.csv"))
+write.csv(POKE_storm3_06_15_turb, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_turb.csv"))
+write.csv(POKE_storm3_06_15_abs, here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm1_06_09_abs.csv"))
+write.csv(POKE_storm4a_06_19, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19.csv"))
+write.csv(POKE_storm4a_06_19_Q, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_Q.csv"))
+write.csv(POKE_storm4a_06_19_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_NO3.csv"))
+write.csv(POKE_storm4a_06_19_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_fDOM.csv"))
+write.csv(POKE_storm4a_06_19_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_SPC.csv"))
+write.csv(POKE_storm4a_06_19_turb, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_turb.csv"))
+write.csv(POKE_storm4a_06_19_abs, here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm2_06_12_abs.csv"))
+write.csv(POKE_storm4b_06_20, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20.csv"))
+write.csv(POKE_storm4b_06_20_Q, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_Q.csv"))
+write.csv(POKE_storm4b_06_20_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_NO3.csv"))
+write.csv(POKE_storm4b_06_20_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_fDOM.csv"))
+write.csv(POKE_storm4b_06_20_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_SPC.csv"))
+write.csv(POKE_storm4b_06_20_turb, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_turb.csv"))
+write.csv(POKE_storm4b_06_20_abs, here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm3_06_15_abs.csv"))
+write.csv(POKE_storm4c_06_21, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21.csv"))
+write.csv(POKE_storm4c_06_21_Q, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_Q.csv"))
+write.csv(POKE_storm4c_06_21_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_NO3.csv"))
+write.csv(POKE_storm4c_06_21_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_fDOM.csv"))
+write.csv(POKE_storm4c_06_21_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_SPC.csv"))
+write.csv(POKE_storm4c_06_21_turb, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_turb.csv"))
+write.csv(POKE_storm4c_06_21_abs, here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4a_06_19_abs.csv"))
+write.csv(POKE_storm5_06_22, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22.csv"))
+write.csv(POKE_storm5_06_22_Q, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_Q.csv"))
+write.csv(POKE_storm5_06_22_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_NO3.csv"))
+write.csv(POKE_storm5_06_22_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_fDOM.csv"))
+write.csv(POKE_storm5_06_22_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_SPC.csv"))
+write.csv(POKE_storm5_06_22_turb, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_turb.csv"))
+write.csv(POKE_storm5_06_22_abs, here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4b_06_20_abs.csv"))
+write.csv(POKE_storm7_07_04, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04.csv"))
+write.csv(POKE_storm7_07_04_Q, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_Q.csv"))
+write.csv(POKE_storm7_07_04_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_NO3.csv"))
+write.csv(POKE_storm7_07_04_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_fDOM.csv"))
+write.csv(POKE_storm7_07_04_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_SPC.csv"))
+write.csv(POKE_storm7_07_04_turb, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_turb.csv"))
+write.csv(POKE_storm7_07_04_abs, here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm4c_06_21_abs.csv"))
+write.csv(POKE_storm8_07_09, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09.csv"))
+write.csv(POKE_storm8_07_09_Q, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_Q.csv"))
+write.csv(POKE_storm8_07_09_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_NO3.csv"))
+write.csv(POKE_storm8_07_09_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_fDOM.csv"))
+write.csv(POKE_storm8_07_09_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_SPC.csv"))
+write.csv(POKE_storm8_07_09_turb, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_turb.csv"))
+write.csv(POKE_storm8_07_09_abs, here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm5_06_22_abs.csv"))
+write.csv(POKE_storm9_07_12, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12.csv"))
+write.csv(POKE_storm9_07_12_Q, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_Q.csv"))
+write.csv(POKE_storm9_07_12_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_NO3.csv"))
+write.csv(POKE_storm9_07_12_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_fDOM.csv"))
+write.csv(POKE_storm9_07_12_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_SPC.csv"))
+write.csv(POKE_storm9_07_12_turb, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_turb.csv"))
+write.csv(POKE_storm9_07_12_abs, here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm6_06_29_abs.csv"))
+write.csv(POKE_storm11_07_18, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18.csv"))
+write.csv(POKE_storm11_07_18_Q, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_Q.csv"))
+write.csv(POKE_storm11_07_18_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_NO3.csv"))
+write.csv(POKE_storm11_07_18_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_fDOM.csv"))
+write.csv(POKE_storm11_07_18_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_SPC.csv"))
+write.csv(POKE_storm11_07_18_turb, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_turb.csv"))
+write.csv(POKE_storm11_07_18_abs, here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm7_07_04_abs.csv"))
+write.csv(POKE_storm12_07_20, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20.csv"))
+write.csv(POKE_storm12_07_20_Q, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_Q.csv"))
+write.csv(POKE_storm12_07_20_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_NO3.csv"))
+write.csv(POKE_storm12_07_20_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_fDOM.csv"))
+write.csv(POKE_storm12_07_20_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_SPC.csv"))
+write.csv(POKE_storm12_07_20_turb, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_turb.csv"))
+write.csv(POKE_storm12_07_20_abs, here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm8_07_09_abs.csv"))
+write.csv(POKE_storm13_07_24, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24.csv"))
+write.csv(POKE_storm13_07_24_Q, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_Q.csv"))
+write.csv(POKE_storm13_07_24_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_NO3.csv"))
+write.csv(POKE_storm13_07_24_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_fDOM.csv"))
+write.csv(POKE_storm13_07_24_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_SPC.csv"))
+write.csv(POKE_storm13_07_24_turb, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_turb.csv"))
+write.csv(POKE_storm13_07_24_abs, here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm9_07_12_abs.csv"))
+write.csv(POKE_storm14_07_26, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26.csv"))
+write.csv(POKE_storm14_07_26_Q, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_Q.csv"))
+write.csv(POKE_storm14_07_26_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_NO3.csv"))
+write.csv(POKE_storm14_07_26_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_fDOM.csv"))
+write.csv(POKE_storm14_07_26_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_SPC.csv"))
+write.csv(POKE_storm14_07_26_turb, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_turb.csv"))
+write.csv(POKE_storm14_07_26_abs, here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm10_07_16_abs.csv"))
+write.csv(POKE_storm15_08_02, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02.csv"))
+write.csv(POKE_storm15_08_02_Q, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_Q.csv"))
+write.csv(POKE_storm15_08_02_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_NO3.csv"))
+write.csv(POKE_storm15_08_02_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_fDOM.csv"))
+write.csv(POKE_storm15_08_02_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_SPC.csv"))
+write.csv(POKE_storm15_08_02_turb, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_turb.csv"))
+write.csv(POKE_storm15_08_02_abs, here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm11_07_18_abs.csv"))
+write.csv(POKE_storm19_08_27, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27.csv"))
+write.csv(POKE_storm19_08_27_Q, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_Q.csv"))
+write.csv(POKE_storm19_08_27_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_NO3.csv"))
+write.csv(POKE_storm19_08_27_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_fDOM.csv"))
+write.csv(POKE_storm19_08_27_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_SPC.csv"))
+write.csv(POKE_storm19_08_27_turb, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_turb.csv"))
+write.csv(POKE_storm19_08_27_abs, here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm12_07_20_abs.csv"))
+write.csv(POKE_storm20_09_01, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01.csv"))
+write.csv(POKE_storm20_09_01_Q, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_Q.csv"))
+write.csv(POKE_storm20_09_01_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_NO3.csv"))
+write.csv(POKE_storm20_09_01_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_fDOM.csv"))
+write.csv(POKE_storm20_09_01_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_SPC.csv"))
+write.csv(POKE_storm20_09_01_turb, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_turb.csv"))
+write.csv(POKE_storm20_09_01_abs, here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm13_07_24_abs.csv"))
+write.csv(POKE_storm21_09_03, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03.csv"))
+write.csv(POKE_storm21_09_03_Q, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_Q.csv"))
+write.csv(POKE_storm21_09_03_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_NO3.csv"))
+write.csv(POKE_storm21_09_03_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_fDOM.csv"))
+write.csv(POKE_storm21_09_03_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_SPC.csv"))
+write.csv(POKE_storm21_09_03_turb, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_turb.csv"))
+write.csv(POKE_storm21_09_03_abs, here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm14_07_26_abs.csv"))
+write.csv(POKE_storm22a_09_07, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07.csv"))
+write.csv(POKE_storm22a_09_07_Q, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_Q.csv"))
+write.csv(POKE_storm22a_09_07_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_NO3.csv"))
+write.csv(POKE_storm22a_09_07_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_fDOM.csv"))
+write.csv(POKE_storm22a_09_07_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_SPC.csv"))
+write.csv(POKE_storm22a_09_07_turb, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_turb.csv"))
+write.csv(POKE_storm22a_09_07_abs, here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_abs.csv"))
 
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm15_08_02_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm16_08_12_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm17_08_23_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm18_08_25_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm19_08_27_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm20_09_01_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm21_09_03_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22a_09_07_abs.csv"))
-
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_Q.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_NO3.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_SPC.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_turb.csv"))
-write.csv(here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_abs.csv"))
-
-  # write.csv(POKE_storm1_06_09, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09.csv")
-  # write.csv(POKE_storm1_06_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_Q.csv")
-  # write.csv(POKE_storm1_06_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_NO3.csv")
-  # write.csv(POKE_storm1_06_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_fDOM.csv")
-  # write.csv(POKE_storm1_06_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_SPC.csv")
-  # write.csv(POKE_storm1_06_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_turb.csv")
-  # write.csv(POKE_storm1_06_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_abs.csv")
-  # 
-  # write.csv(POKE_storm2_06_12, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12.csv")
-  # write.csv(POKE_storm2_06_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_Q.csv")
-  # write.csv(POKE_storm2_06_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_NO3.csv")
-  # write.csv(POKE_storm2_06_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_fDOM.csv")
-  # write.csv(POKE_storm2_06_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_SPC.csv")
-  # write.csv(POKE_storm2_06_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_turb.csv")
-  # write.csv(POKE_storm2_06_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_abs.csv")
-  # 
-  # write.csv(POKE_storm3_06_15, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15.csv")
-  # write.csv(POKE_storm3_06_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_Q.csv")
-  # write.csv(POKE_storm3_06_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_NO3.csv")
-  # write.csv(POKE_storm3_06_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_fDOM.csv")
-  # write.csv(POKE_storm3_06_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_SPC.csv")
-  # write.csv(POKE_storm3_06_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_turb.csv")
-  # write.csv(POKE_storm3_06_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_abs.csv")
-  # 
-  # write.csv(POKE_storm4a_06_19, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19.csv")
-  # write.csv(POKE_storm4a_06_19_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_Q.csv")
-  # write.csv(POKE_storm4a_06_19_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_NO3.csv")
-  # write.csv(POKE_storm4a_06_19_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_fDOM.csv")
-  # write.csv(POKE_storm4a_06_19_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_SPC.csv")
-  # write.csv(POKE_storm4a_06_19_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_turb.csv")
-  # write.csv(POKE_storm4a_06_19_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_abs.csv")
-  # 
-  # write.csv(POKE_storm4b_06_20, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20.csv")
-  # write.csv(POKE_storm4b_06_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_Q.csv")
-  # write.csv(POKE_storm4b_06_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_NO3.csv")
-  # write.csv(POKE_storm4b_06_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_fDOM.csv")
-  # write.csv(POKE_storm4b_06_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_SPC.csv")
-  # write.csv(POKE_storm4b_06_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_turb.csv")
-  # write.csv(POKE_storm4b_06_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_abs.csv")
-  # 
-  # write.csv(POKE_storm4c_06_21, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21.csv")
-  # write.csv(POKE_storm4c_06_21_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_Q.csv")
-  # write.csv(POKE_storm4c_06_21_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_NO3.csv")
-  # write.csv(POKE_storm4c_06_21_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_fDOM.csv")
-  # write.csv(POKE_storm4c_06_21_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_SPC.csv")
-  # write.csv(POKE_storm4c_06_21_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_turb.csv")
-  # write.csv(POKE_storm4c_06_21_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_abs.csv")
-  # 
-  # write.csv(POKE_storm5_06_22, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22.csv")
-  # write.csv(POKE_storm5_06_22_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_Q.csv")
-  # write.csv(POKE_storm5_06_22_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_NO3.csv")
-  # write.csv(POKE_storm5_06_22_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_fDOM.csv")
-  # write.csv(POKE_storm5_06_22_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_SPC.csv")
-  # write.csv(POKE_storm5_06_22_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_turb.csv")
-  # write.csv(POKE_storm5_06_22_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_abs.csv")
-  # 
-  # write.csv(POKE_storm6_06_29, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29.csv")
-  # write.csv(POKE_storm6_06_29_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_Q.csv")
-  # write.csv(POKE_storm6_06_29_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_NO3.csv")
-  # write.csv(POKE_storm6_06_29_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_fDOM.csv")
-  # write.csv(POKE_storm6_06_29_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_SPC.csv")
-  # write.csv(POKE_storm6_06_29_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_turb.csv")
-  # write.csv(POKE_storm6_06_29_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_abs.csv")
-  # 
-  # write.csv(POKE_storm7_07_04, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04.csv")
-  # write.csv(POKE_storm7_07_04_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_Q.csv")
-  # write.csv(POKE_storm7_07_04_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_NO3.csv")
-  # write.csv(POKE_storm7_07_04_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_fDOM.csv")
-  # write.csv(POKE_storm7_07_04_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_SPC.csv")
-  # write.csv(POKE_storm7_07_04_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_turb.csv")
-  # write.csv(POKE_storm7_07_04_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_abs.csv")
-  # 
-  # write.csv(POKE_storm8_07_09, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09.csv")
-  # write.csv(POKE_storm8_07_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_Q.csv")
-  # write.csv(POKE_storm8_07_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_NO3.csv")
-  # write.csv(POKE_storm8_07_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_fDOM.csv")
-  # write.csv(POKE_storm8_07_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_SPC.csv")
-  # write.csv(POKE_storm8_07_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_turb.csv")
-  # write.csv(POKE_storm8_07_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_abs.csv")
-  # 
-  # write.csv(POKE_storm9_07_12, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12.csv")
-  # write.csv(POKE_storm9_07_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_Q.csv")
-  # write.csv(POKE_storm9_07_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_NO3.csv")
-  # write.csv(POKE_storm9_07_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_fDOM.csv")
-  # write.csv(POKE_storm9_07_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_SPC.csv")
-  # write.csv(POKE_storm9_07_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_turb.csv")
-  # write.csv(POKE_storm9_07_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_abs.csv")
-  # 
-  # write.csv(POKE_storm10_07_16, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16.csv")
-  # write.csv(POKE_storm10_07_16_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_Q.csv")
-  # write.csv(POKE_storm10_07_16_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_NO3.csv")
-  # write.csv(POKE_storm10_07_16_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_fDOM.csv")
-  # write.csv(POKE_storm10_07_16_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_SPC.csv")
-  # write.csv(POKE_storm10_07_16_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_turb.csv")
-  # write.csv(POKE_storm10_07_16_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_abs.csv")
-  # 
-  # write.csv(POKE_storm11_07_18, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18.csv")
-  # write.csv(POKE_storm11_07_18_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_Q.csv")
-  # write.csv(POKE_storm11_07_18_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_NO3.csv")
-  # write.csv(POKE_storm11_07_18_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_fDOM.csv")
-  # write.csv(POKE_storm11_07_18_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_SPC.csv")
-  # write.csv(POKE_storm11_07_18_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_turb.csv")
-  # write.csv(POKE_storm11_07_18_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_abs.csv")
-  # 
-  # write.csv(POKE_storm12_07_20, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20.csv")
-  # write.csv(POKE_storm12_07_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_Q.csv")
-  # write.csv(POKE_storm12_07_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_NO3.csv")
-  # write.csv(POKE_storm12_07_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_fDOM.csv")
-  # write.csv(POKE_storm12_07_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_SPC.csv")
-  # write.csv(POKE_storm12_07_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_turb.csv")
-  # write.csv(POKE_storm12_07_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_abs.csv")
-  # 
-  # write.csv(POKE_storm13_07_24, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24.csv")
-  # write.csv(POKE_storm13_07_24_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_Q.csv")
-  # write.csv(POKE_storm13_07_24_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_NO3.csv")
-  # write.csv(POKE_storm13_07_24_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_fDOM.csv")
-  # write.csv(POKE_storm13_07_24_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_SPC.csv")
-  # write.csv(POKE_storm13_07_24_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_turb.csv")
-  # write.csv(POKE_storm13_07_24_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_abs.csv")
-  # 
-  # write.csv(POKE_storm14_07_26, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26.csv")
-  # write.csv(POKE_storm14_07_26_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_Q.csv")
-  # write.csv(POKE_storm14_07_26_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_NO3.csv")
-  # write.csv(POKE_storm14_07_26_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_fDOM.csv")
-  # write.csv(POKE_storm14_07_26_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_SPC.csv")
-  # write.csv(POKE_storm14_07_26_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_turb.csv")
-  # write.csv(POKE_storm14_07_26_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_abs.csv")
-  # 
-  # write.csv(POKE_storm15_08_02, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02.csv")
-  # write.csv(POKE_storm15_08_02_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_Q.csv")
-  # write.csv(POKE_storm15_08_02_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_NO3.csv")
-  # write.csv(POKE_storm15_08_02_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_fDOM.csv")
-  # write.csv(POKE_storm15_08_02_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_SPC.csv")
-  # write.csv(POKE_storm15_08_02_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_turb.csv")
-  # write.csv(POKE_storm15_08_02_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_abs.csv")
-  # 
-  # write.csv(POKE_storm16_08_12, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12.csv")
-  # write.csv(POKE_storm16_08_12_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_Q.csv")
-  # write.csv(POKE_storm16_08_12_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_NO3.csv")
-  # write.csv(POKE_storm16_08_12_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_fDOM.csv")
-  # write.csv(POKE_storm16_08_12_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_SPC.csv")
-  # write.csv(POKE_storm16_08_12_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_turb.csv")
-  # write.csv(POKE_storm16_08_12_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_abs.csv")
-  # 
-  # write.csv(POKE_storm17_08_23, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23.csv")
-  # write.csv(POKE_storm17_08_23_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_Q.csv")
-  # write.csv(POKE_storm17_08_23_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_NO3.csv")
-  # write.csv(POKE_storm17_08_23_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_fDOM.csv")
-  # write.csv(POKE_storm17_08_23_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_SPC.csv")
-  # write.csv(POKE_storm17_08_23_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_turb.csv")
-  # write.csv(POKE_storm17_08_23_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_abs.csv")
-  # 
-  # write.csv(POKE_storm18_08_25, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25.csv")
-  # write.csv(POKE_storm18_08_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_Q.csv")
-  # write.csv(POKE_storm18_08_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_NO3.csv")
-  # write.csv(POKE_storm18_08_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_fDOM.csv")
-  # write.csv(POKE_storm18_08_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_SPC.csv")
-  # write.csv(POKE_storm18_08_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_turb.csv")
-  # write.csv(POKE_storm18_08_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_abs.csv")
-  # 
-  # write.csv(POKE_storm19_08_27, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27.csv")
-  # write.csv(POKE_storm19_08_27_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_Q.csv")
-  # write.csv(POKE_storm19_08_27_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_NO3.csv")
-  # write.csv(POKE_storm19_08_27_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_fDOM.csv")
-  # write.csv(POKE_storm19_08_27_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_SPC.csv")
-  # write.csv(POKE_storm19_08_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_turb.csv")
-  # write.csv(POKE_storm19_08_27_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_abs.csv")
-  # 
-  # write.csv(POKE_storm20_09_01, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01.csv")
-  # write.csv(POKE_storm20_09_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_Q.csv")
-  # write.csv(POKE_storm20_09_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_NO3.csv")
-  # write.csv(POKE_storm20_09_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_fDOM.csv")
-  # write.csv(POKE_storm20_09_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_SPC.csv")
-  # write.csv(POKE_storm20_09_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_turb.csv")
-  # write.csv(POKE_storm20_09_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_abs.csv")
-  # 
-  # write.csv(POKE_storm21_09_03, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03.csv")
-  # write.csv(POKE_storm21_09_03_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_Q.csv")
-  # write.csv(POKE_storm21_09_03_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_NO3.csv")
-  # write.csv(POKE_storm21_09_03_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_fDOM.csv")
-  # write.csv(POKE_storm21_09_03_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_SPC.csv")
-  # write.csv(POKE_storm21_09_03_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_turb.csv")
-  # write.csv(POKE_storm21_09_03_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_abs.csv")
-  # 
-  # write.csv(POKE_storm22a_09_07, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07.csv")
-  # write.csv(POKE_storm22a_09_07_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_Q.csv")
-  # write.csv(POKE_storm22a_09_07_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_NO3.csv")
-  # write.csv(POKE_storm22a_09_07_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_fDOM.csv")
-  # write.csv(POKE_storm22a_09_07_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_SPC.csv")
-  # write.csv(POKE_storm22a_09_07_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_turb.csv")
-  # write.csv(POKE_storm22a_09_07_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_abs.csv")
-  # 
-  # write.csv(POKE_storm22b_09_09, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09.csv")
-  # write.csv(POKE_storm22b_09_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_Q.csv")
-  # write.csv(POKE_storm22b_09_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_NO3.csv")
-  # write.csv(POKE_storm22b_09_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_fDOM.csv")
-  # write.csv(POKE_storm22b_09_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_SPC.csv")
-  # write.csv(POKE_storm22b_09_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_turb.csv")
-  # write.csv(POKE_storm22b_09_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_abs.csv")
-
+write.csv(POKE_storm22b_09_09, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09.csv"))
+write.csv(POKE_storm22b_09_09_Q, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_Q.csv"))
+write.csv(POKE_storm22b_09_09_NO3, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_NO3.csv"))
+write.csv(POKE_storm22b_09_09_fDOM, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_fDOM.csv"))
+write.csv(POKE_storm22b_09_09_SPC, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_SPC.csv"))
+write.csv(POKE_storm22b_09_09_turb, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_turb.csv"))
+write.csv(POKE_storm22b_09_09_abs, here("Storm_Events", "2020", "POKE", "POKE_storm22b_09_09_abs.csv"))
 
 ### MOOS ###
 MOOS$MeanDischarge <- MOOS$Q
