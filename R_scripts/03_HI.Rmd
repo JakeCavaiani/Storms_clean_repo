@@ -9700,182 +9700,131 @@ write.csv(MOOS.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_
  load data to pandas
 ```{python}
 # POKE #
-POKE_storm1_06_09_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_Q.csv")
-POKE_storm1_06_09_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_NO3.csv")
-POKE_storm1_06_09_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_fDOM.csv")
-POKE_storm1_06_09_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_SPC.csv")
-POKE_storm1_06_09_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_turb.csv")
-POKE_storm1_06_09_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm1_06_09_abs.csv")
+POKE_storm3_06_15_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_Q.csv'))
+POKE_storm3_06_15_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_NO3.csv'))
+POKE_storm3_06_15_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_fDOM.csv'))
+POKE_storm3_06_15_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_SPC.csv'))
+POKE_storm3_06_15_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_turb.csv'))
+POKE_storm3_06_15_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm3_06_15_abs.csv'))
 
-POKE_storm2_06_12_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_Q.csv")
-POKE_storm2_06_12_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_NO3.csv")
-POKE_storm2_06_12_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_fDOM.csv")
-POKE_storm2_06_12_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_SPC.csv")
-POKE_storm2_06_12_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_turb.csv")
-POKE_storm2_06_12_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm2_06_12_abs.csv")
+POKE_storm4a_06_19_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_Q.csv'))
+POKE_storm4a_06_19_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_NO3.csv'))
+POKE_storm4a_06_19_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_fDOM.csv'))
+POKE_storm4a_06_19_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_SPC.csv'))
+POKE_storm4a_06_19_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_turb.csv'))
+POKE_storm4a_06_19_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4a_06_19_abs.csv'))
 
-POKE_storm3_06_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_Q.csv")
-POKE_storm3_06_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_NO3.csv")
-POKE_storm3_06_15_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_fDOM.csv")
-POKE_storm3_06_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_SPC.csv")
-POKE_storm3_06_15_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_turb.csv")
-POKE_storm3_06_15_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm3_06_15_abs.csv")
+POKE_storm4b_06_20_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_Q.csv'))
+POKE_storm4b_06_20_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_NO3.csv'))
+POKE_storm4b_06_20_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_fDOM.csv'))
+POKE_storm4b_06_20_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_SPC.csv'))
+POKE_storm4b_06_20_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_turb.csv'))
+POKE_storm4b_06_20_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4b_06_20_abs.csv'))
 
-POKE_storm4a_06_19_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_Q.csv")
-POKE_storm4a_06_19_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_NO3.csv")
-POKE_storm4a_06_19_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_fDOM.csv")
-POKE_storm4a_06_19_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_SPC.csv")
-POKE_storm4a_06_19_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_turb.csv")
-POKE_storm4a_06_19_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4a_06_19_abs.csv")
+POKE_storm4c_06_21_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_Q.csv'))
+POKE_storm4c_06_21_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_NO3.csv'))
+POKE_storm4c_06_21_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_fDOM.csv'))
+POKE_storm4c_06_21_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_SPC.csv'))
+POKE_storm4c_06_21_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_turb.csv'))
+POKE_storm4c_06_21_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm4c_06_21_abs.csv'))
 
-POKE_storm4b_06_20_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_Q.csv")
-POKE_storm4b_06_20_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_NO3.csv")
-POKE_storm4b_06_20_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_fDOM.csv")
-POKE_storm4b_06_20_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_SPC.csv")
-POKE_storm4b_06_20_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_turb.csv")
-POKE_storm4b_06_20_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4b_06_20_abs.csv")
+POKE_storm5_06_22_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_Q.csv'))
+POKE_storm5_06_22_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_NO3.csv'))
+POKE_storm5_06_22_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_fDOM.csv'))
+POKE_storm5_06_22_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_SPC.csv'))
+POKE_storm5_06_22_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_turb.csv'))
+POKE_storm5_06_22_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm5_06_22_abs.csv'))
 
-POKE_storm4c_06_21_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_Q.csv")
-POKE_storm4c_06_21_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_NO3.csv")
-POKE_storm4c_06_21_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_fDOM.csv")
-POKE_storm4c_06_21_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_SPC.csv")
-POKE_storm4c_06_21_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_turb.csv")
-POKE_storm4c_06_21_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm4c_06_21_abs.csv")
+POKE_storm7_07_04_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_Q.csv'))
+POKE_storm7_07_04_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_NO3.csv'))
+POKE_storm7_07_04_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_fDOM.csv'))
+POKE_storm7_07_04_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_SPC.csv'))
+POKE_storm7_07_04_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_turb.csv'))
+POKE_storm7_07_04_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm7_07_04_abs.csv'))
 
-POKE_storm5_06_22_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_Q.csv")
-POKE_storm5_06_22_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_NO3.csv")
-POKE_storm5_06_22_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_fDOM.csv")
-POKE_storm5_06_22_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_SPC.csv")
-POKE_storm5_06_22_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_turb.csv")
-POKE_storm5_06_22_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm5_06_22_abs.csv")
+POKE_storm8_07_09_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_Q.csv'))
+POKE_storm8_07_09_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_NO3.csv'))
+POKE_storm8_07_09_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_fDOM.csv'))
+POKE_storm8_07_09_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_SPC.csv'))
+POKE_storm8_07_09_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_turb.csv'))
+POKE_storm8_07_09_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm8_07_09_abs.csv'))
 
-POKE_storm6_06_29_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_Q.csv")
-POKE_storm6_06_29_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_NO3.csv")
-POKE_storm6_06_29_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_fDOM.csv")
-POKE_storm6_06_29_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_SPC.csv")
-POKE_storm6_06_29_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_turb.csv")
-POKE_storm6_06_29_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm6_06_29_abs.csv")
+POKE_storm9_07_12_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_Q.csv'))
+POKE_storm9_07_12_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_NO3.csv'))
+POKE_storm9_07_12_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_fDOM.csv'))
+POKE_storm9_07_12_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_SPC.csv'))
+POKE_storm9_07_12_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_turb.csv'))
+POKE_storm9_07_12_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm9_07_12_abs.csv'))
 
-POKE_storm7_07_04_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_Q.csv")
-POKE_storm7_07_04_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_NO3.csv")
-POKE_storm7_07_04_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_fDOM.csv")
-POKE_storm7_07_04_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_SPC.csv")
-POKE_storm7_07_04_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_turb.csv")
-POKE_storm7_07_04_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm7_07_04_abs.csv")
+POKE_storm11_07_18_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_Q.csv'))
+POKE_storm11_07_18_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_NO3.csv'))
+POKE_storm11_07_18_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_fDOM.csv'))
+POKE_storm11_07_18_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_SPC.csv'))
+POKE_storm11_07_18_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_turb.csv'))
+POKE_storm11_07_18_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm11_07_18_abs.csv'))
 
-POKE_storm8_07_09_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_Q.csv")
-POKE_storm8_07_09_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_NO3.csv")
-POKE_storm8_07_09_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_fDOM.csv")
-POKE_storm8_07_09_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_SPC.csv")
-POKE_storm8_07_09_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_turb.csv")
-POKE_storm8_07_09_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm8_07_09_abs.csv")
+POKE_storm12_07_20_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_Q.csv'))
+POKE_storm12_07_20_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_NO3.csv'))
+POKE_storm12_07_20_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_fDOM.csv'))
+POKE_storm12_07_20_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_SPC.csv'))
+POKE_storm12_07_20_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_turb.csv'))
+POKE_storm12_07_20_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm12_07_20_abs.csv'))
 
-POKE_storm9_07_12_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_Q.csv")
-POKE_storm9_07_12_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_NO3.csv")
-POKE_storm9_07_12_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_fDOM.csv")
-POKE_storm9_07_12_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_SPC.csv")
-POKE_storm9_07_12_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_turb.csv")
-POKE_storm9_07_12_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm9_07_12_abs.csv")
+POKE_storm13_07_24_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_Q.csv'))
+POKE_storm13_07_24_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_NO3.csv'))
+POKE_storm13_07_24_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_fDOM.csv'))
+POKE_storm13_07_24_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_SPC.csv'))
+POKE_storm13_07_24_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_turb.csv'))
+POKE_storm13_07_24_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm13_07_24_abs.csv'))
 
-POKE_storm10_07_16_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_Q.csv")
-POKE_storm10_07_16_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_NO3.csv")
-POKE_storm10_07_16_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_fDOM.csv")
-POKE_storm10_07_16_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_SPC.csv")
-POKE_storm10_07_16_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_turb.csv")
-POKE_storm10_07_16_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm10_07_16_abs.csv")
+POKE_storm14_07_26_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_Q.csv'))
+POKE_storm14_07_26_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_NO3.csv'))
+POKE_storm14_07_26_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_fDOM.csv'))
+POKE_storm14_07_26_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_SPC.csv'))
+POKE_storm14_07_26_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_turb.csv'))
+POKE_storm14_07_26_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm14_07_26_abs.csv'))
 
-POKE_storm11_07_18_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_Q.csv")
-POKE_storm11_07_18_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_NO3.csv")
-POKE_storm11_07_18_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_fDOM.csv")
-POKE_storm11_07_18_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_SPC.csv")
-POKE_storm11_07_18_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_turb.csv")
-POKE_storm11_07_18_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm11_07_18_abs.csv")
+POKE_storm15_08_02_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_Q.csv'))
+POKE_storm15_08_02_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_NO3.csv'))
+POKE_storm15_08_02_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_fDOM.csv'))
+POKE_storm15_08_02_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_SPC.csv'))
+POKE_storm15_08_02_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_turb.csv'))
+POKE_storm15_08_02_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm15_08_02_abs.csv'))
 
-POKE_storm12_07_20_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_Q.csv")
-POKE_storm12_07_20_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_NO3.csv")
-POKE_storm12_07_20_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_fDOM.csv")
-POKE_storm12_07_20_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_SPC.csv")
-POKE_storm12_07_20_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_turb.csv")
-POKE_storm12_07_20_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm12_07_20_abs.csv")
+POKE_storm19_08_27_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_Q.csv'))
+POKE_storm19_08_27_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_NO3.csv'))
+POKE_storm19_08_27_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_fDOM.csv'))
+POKE_storm19_08_27_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_SPC.csv'))
+POKE_storm19_08_27_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_turb.csv'))
+POKE_storm19_08_27_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm19_08_27_abs.csv'))
 
-POKE_storm13_07_24_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_Q.csv")
-POKE_storm13_07_24_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_NO3.csv")
-POKE_storm13_07_24_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_fDOM.csv")
-POKE_storm13_07_24_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_SPC.csv")
-POKE_storm13_07_24_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_turb.csv")
-POKE_storm13_07_24_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm13_07_24_abs.csv")
+POKE_storm20_09_01_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_Q.csv'))
+POKE_storm20_09_01_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_NO3.csv'))
+POKE_storm20_09_01_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_fDOM.csv'))
+POKE_storm20_09_01_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_SPC.csv'))
+POKE_storm20_09_01_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_turb.csv'))
+POKE_storm20_09_01_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm20_09_01_abs.csv'))
 
-POKE_storm14_07_26_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_Q.csv")
-POKE_storm14_07_26_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_NO3.csv")
-POKE_storm14_07_26_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_fDOM.csv")
-POKE_storm14_07_26_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_SPC.csv")
-POKE_storm14_07_26_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_turb.csv")
-POKE_storm14_07_26_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm14_07_26_abs.csv")
+POKE_storm21_09_03_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_Q.csv'))
+POKE_storm21_09_03_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_NO3.csv'))
+POKE_storm21_09_03_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_fDOM.csv'))
+POKE_storm21_09_03_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_SPC.csv'))
+POKE_storm21_09_03_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_turb.csv'))
+POKE_storm21_09_03_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm21_09_03_abs.csv'))
 
-POKE_storm15_08_02_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_Q.csv")
-POKE_storm15_08_02_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_NO3.csv")
-POKE_storm15_08_02_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_fDOM.csv")
-POKE_storm15_08_02_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_SPC.csv")
-POKE_storm15_08_02_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_turb.csv")
-POKE_storm15_08_02_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm15_08_02_abs.csv")
+POKE_storm22a_09_07_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_Q.csv'))
+POKE_storm22a_09_07_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_NO3.csv'))
+POKE_storm22a_09_07_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_fDOM.csv'))
+POKE_storm22a_09_07_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_SPC.csv'))
+POKE_storm22a_09_07_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_turb.csv'))
+POKE_storm22a_09_07_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22a_09_07_abs.csv'))
 
-POKE_storm16_08_12_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_Q.csv")
-POKE_storm16_08_12_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_NO3.csv")
-POKE_storm16_08_12_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_fDOM.csv")
-POKE_storm16_08_12_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_SPC.csv")
-POKE_storm16_08_12_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_turb.csv")
-POKE_storm16_08_12_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm16_08_12_abs.csv")
-
-POKE_storm17_08_23_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_Q.csv")
-POKE_storm17_08_23_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_NO3.csv")
-POKE_storm17_08_23_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_fDOM.csv")
-POKE_storm17_08_23_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_SPC.csv")
-POKE_storm17_08_23_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_turb.csv")
-POKE_storm17_08_23_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm17_08_23_abs.csv")
-
-POKE_storm18_08_25_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_Q.csv")
-POKE_storm18_08_25_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_NO3.csv")
-POKE_storm18_08_25_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_fDOM.csv")
-POKE_storm18_08_25_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_SPC.csv")
-POKE_storm18_08_25_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_turb.csv")
-POKE_storm18_08_25_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm18_08_25_abs.csv")
-
-POKE_storm19_08_27_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_Q.csv")
-POKE_storm19_08_27_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_NO3.csv")
-POKE_storm19_08_27_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_fDOM.csv")
-POKE_storm19_08_27_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_SPC.csv")
-POKE_storm19_08_27_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_turb.csv")
-POKE_storm19_08_27_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm19_08_27_abs.csv")
-
-POKE_storm20_09_01_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_Q.csv")
-POKE_storm20_09_01_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_NO3.csv")
-POKE_storm20_09_01_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_fDOM.csv")
-POKE_storm20_09_01_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_SPC.csv")
-POKE_storm20_09_01_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_turb.csv")
-POKE_storm20_09_01_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm20_09_01_abs.csv")
-
-POKE_storm21_09_03_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_Q.csv")
-POKE_storm21_09_03_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_NO3.csv")
-POKE_storm21_09_03_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_fDOM.csv")
-POKE_storm21_09_03_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_SPC.csv")
-POKE_storm21_09_03_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_turb.csv")
-POKE_storm21_09_03_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm21_09_03_abs.csv")
-
-POKE_storm22a_09_07_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_Q.csv")
-POKE_storm22a_09_07_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_NO3.csv")
-POKE_storm22a_09_07_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_fDOM.csv")
-POKE_storm22a_09_07_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_SPC.csv")
-POKE_storm22a_09_07_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_turb.csv")
-POKE_storm22a_09_07_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22a_09_07_abs.csv")
-
-POKE_storm22b_09_09_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_Q.csv")
-POKE_storm22b_09_09_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_NO3.csv")
-POKE_storm22b_09_09_fDOM =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_fDOM.csv")
-POKE_storm22b_09_09_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_SPC.csv")
-POKE_storm22b_09_09_turb =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_turb.csv")
-POKE_storm22b_09_09_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2020/POKE/POKE_storm22b_09_09_abs.csv")
-
-
+POKE_storm22b_09_09_Q = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_Q.csv'))
+POKE_storm22b_09_09_NO3 = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_NO3.csv'))
+POKE_storm22b_09_09_fDOM = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_fDOM.csv'))
+POKE_storm22b_09_09_SPC = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_SPC.csv'))
+POKE_storm22b_09_09_turb = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_turb.csv'))
+POKE_storm22b_09_09_abs = pd.read_csv(here('Storm_events/2020/POKE/POKE_storm22b_09_09_abs.csv'))
 ```
 
 
@@ -9883,16 +9832,6 @@ POKE_storm22b_09_09_abs =pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events
  POKE_storms
 ```{python}
 ## NO3 ##
-POKE_storm1_06_09_Q['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm1_06_09_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm1_06_09_NO3 = hysteresisMetrics(POKE_storm1_06_09_Q, POKE_storm1_06_09_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm2_06_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm2_06_12_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm2_06_12_NO3 = hysteresisMetrics(POKE_storm2_06_12_Q, POKE_storm2_06_12_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm3_06_15_Q['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm3_06_15_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -9918,11 +9857,6 @@ POKE_storm5_06_22_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm5_06_22_NO3['
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm5_06_22_NO3 = hysteresisMetrics(POKE_storm5_06_22_Q, POKE_storm5_06_22_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm6_06_29_Q['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm6_06_29_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm6_06_29_NO3 = hysteresisMetrics(POKE_storm6_06_29_Q, POKE_storm6_06_29_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm7_07_04_Q['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm7_07_04_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -9937,11 +9871,6 @@ POKE_storm9_07_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_Q['valu
 POKE_storm9_07_12_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm9_07_12_NO3 = hysteresisMetrics(POKE_storm9_07_12_Q, POKE_storm9_07_12_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm10_07_16_Q['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm10_07_16_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm10_07_16_NO3 = hysteresisMetrics(POKE_storm10_07_16_Q, POKE_storm10_07_16_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm11_07_18_Q['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm11_07_18_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -9968,20 +9897,6 @@ POKE_storm15_08_02_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_NO3
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm15_08_02_NO3 = hysteresisMetrics(POKE_storm15_08_02_Q, POKE_storm15_08_02_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm16_08_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm16_08_12_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm16_08_12_NO3 = hysteresisMetrics(POKE_storm16_08_12_Q, POKE_storm16_08_12_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm17_08_23_Q['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm17_08_23_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm17_08_23_NO3 = hysteresisMetrics(POKE_storm17_08_23_Q, POKE_storm17_08_23_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm18_08_25_Q['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm18_08_25_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm18_08_25_NO3 = hysteresisMetrics(POKE_storm18_08_25_Q, POKE_storm18_08_25_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm19_08_27_Q['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm19_08_27_NO3['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10009,16 +9924,6 @@ timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm22b_09_09_NO3 = hysteresisMetrics(POKE_storm22b_09_09_Q, POKE_storm22b_09_09_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 ## fDOM ##
-POKE_storm1_06_09_Q['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm1_06_09_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm1_06_09_fDOM = hysteresisMetrics(POKE_storm1_06_09_Q, POKE_storm1_06_09_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm2_06_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm2_06_12_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm2_06_12_fDOM = hysteresisMetrics(POKE_storm2_06_12_Q, POKE_storm2_06_12_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm3_06_15_Q['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm3_06_15_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10044,11 +9949,6 @@ POKE_storm5_06_22_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm5_06_22_fDOM
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm5_06_22_fDOM = hysteresisMetrics(POKE_storm5_06_22_Q, POKE_storm5_06_22_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm6_06_29_Q['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm6_06_29_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm6_06_29_fDOM = hysteresisMetrics(POKE_storm6_06_29_Q, POKE_storm6_06_29_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm7_07_04_Q['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm7_07_04_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10063,11 +9963,6 @@ POKE_storm9_07_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_Q['valu
 POKE_storm9_07_12_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm9_07_12_fDOM = hysteresisMetrics(POKE_storm9_07_12_Q, POKE_storm9_07_12_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm10_07_16_Q['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm10_07_16_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm10_07_16_fDOM = hysteresisMetrics(POKE_storm10_07_16_Q, POKE_storm10_07_16_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm11_07_18_Q['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm11_07_18_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10094,22 +9989,6 @@ POKE_storm15_08_02_Q['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_Q['va
 POKE_storm15_08_02_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm15_08_02_fDOM = hysteresisMetrics(POKE_storm15_08_02_Q, POKE_storm15_08_02_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-
-POKE_storm16_08_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm16_08_12_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm16_08_12_fDOM = hysteresisMetrics(POKE_storm16_08_12_Q, POKE_storm16_08_12_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm17_08_23_Q['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm17_08_23_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm17_08_23_fDOM = hysteresisMetrics(POKE_storm17_08_23_Q, POKE_storm17_08_23_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm18_08_25_Q['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm18_08_25_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm18_08_25_fDOM = hysteresisMetrics(POKE_storm18_08_25_Q, POKE_storm18_08_25_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm19_08_27_Q['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm19_08_27_fDOM['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10138,16 +10017,6 @@ hysdict_POKE_storm22b_09_09_fDOM = hysteresisMetrics(POKE_storm22b_09_09_Q, POKE
 
 
 ## SPC ##
-POKE_storm1_06_09_Q['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm1_06_09_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm1_06_09_SPC = hysteresisMetrics(POKE_storm1_06_09_Q, POKE_storm1_06_09_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm2_06_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm2_06_12_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm2_06_12_SPC = hysteresisMetrics(POKE_storm2_06_12_Q, POKE_storm2_06_12_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm3_06_15_Q['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm3_06_15_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10173,11 +10042,6 @@ POKE_storm5_06_22_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm5_06_22_SPC['
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm5_06_22_SPC = hysteresisMetrics(POKE_storm5_06_22_Q, POKE_storm5_06_22_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm6_06_29_Q['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm6_06_29_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm6_06_29_SPC = hysteresisMetrics(POKE_storm6_06_29_Q, POKE_storm6_06_29_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm7_07_04_Q['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm7_07_04_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10192,11 +10056,6 @@ POKE_storm9_07_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_Q['valu
 POKE_storm9_07_12_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm9_07_12_SPC = hysteresisMetrics(POKE_storm9_07_12_Q, POKE_storm9_07_12_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm10_07_16_Q['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm10_07_16_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm10_07_16_SPC = hysteresisMetrics(POKE_storm10_07_16_Q, POKE_storm10_07_16_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm11_07_18_Q['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm11_07_18_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10223,21 +10082,6 @@ POKE_storm15_08_02_Q['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_Q['va
 POKE_storm15_08_02_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm15_08_02_SPC = hysteresisMetrics(POKE_storm15_08_02_Q, POKE_storm15_08_02_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm16_08_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm16_08_12_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm16_08_12_SPC = hysteresisMetrics(POKE_storm16_08_12_Q, POKE_storm16_08_12_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm17_08_23_Q['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm17_08_23_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm17_08_23_SPC = hysteresisMetrics(POKE_storm17_08_23_Q, POKE_storm17_08_23_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm18_08_25_Q['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm18_08_25_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm18_08_25_SPC = hysteresisMetrics(POKE_storm18_08_25_Q, POKE_storm18_08_25_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm19_08_27_Q['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm19_08_27_SPC['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10266,16 +10110,6 @@ hysdict_POKE_storm22b_09_09_SPC = hysteresisMetrics(POKE_storm22b_09_09_Q, POKE_
 
 
 ## turb ##
-POKE_storm1_06_09_Q['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm1_06_09_turb['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm1_06_09_turb = hysteresisMetrics(POKE_storm1_06_09_Q, POKE_storm1_06_09_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm2_06_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm2_06_12_turb['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm2_06_12_turb = hysteresisMetrics(POKE_storm2_06_12_Q, POKE_storm2_06_12_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm3_06_15_Q['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm3_06_15_turb['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10301,11 +10135,6 @@ POKE_storm5_06_22_turb['valuedatetime'] =  pd.to_datetime(POKE_storm5_06_22_turb
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm5_06_22_turb = hysteresisMetrics(POKE_storm5_06_22_Q, POKE_storm5_06_22_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm6_06_29_Q['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm6_06_29_turb['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm6_06_29_turb = hysteresisMetrics(POKE_storm6_06_29_Q, POKE_storm6_06_29_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm7_07_04_Q['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm7_07_04_turb['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10320,11 +10149,6 @@ POKE_storm9_07_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_Q['valu
 POKE_storm9_07_12_turb['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm9_07_12_turb = hysteresisMetrics(POKE_storm9_07_12_Q, POKE_storm9_07_12_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm10_07_16_Q['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm10_07_16_turb['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm10_07_16_turb = hysteresisMetrics(POKE_storm10_07_16_Q, POKE_storm10_07_16_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm11_07_18_Q['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm11_07_18_turb['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10352,20 +10176,6 @@ POKE_storm15_08_02_turb['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_tu
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm15_08_02_turb = hysteresisMetrics(POKE_storm15_08_02_Q, POKE_storm15_08_02_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm16_08_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm16_08_12_turb['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm16_08_12_turb = hysteresisMetrics(POKE_storm16_08_12_Q, POKE_storm16_08_12_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm17_08_23_Q['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm17_08_23_turb['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm17_08_23_turb = hysteresisMetrics(POKE_storm17_08_23_Q, POKE_storm17_08_23_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm18_08_25_Q['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm18_08_25_turb['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm18_08_25_turb = hysteresisMetrics(POKE_storm18_08_25_Q, POKE_storm18_08_25_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm19_08_27_Q['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm19_08_27_turb['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10393,16 +10203,6 @@ timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm22b_09_09_turb = hysteresisMetrics(POKE_storm22b_09_09_Q, POKE_storm22b_09_09_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 ## ABS ##
-POKE_storm1_06_09_Q['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm1_06_09_abs['valuedatetime'] =  pd.to_datetime(POKE_storm1_06_09_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm1_06_09_abs = hysteresisMetrics(POKE_storm1_06_09_Q, POKE_storm1_06_09_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm2_06_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm2_06_12_abs['valuedatetime'] =  pd.to_datetime(POKE_storm2_06_12_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm2_06_12_abs = hysteresisMetrics(POKE_storm2_06_12_Q, POKE_storm2_06_12_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm3_06_15_Q['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm3_06_15_abs['valuedatetime'] =  pd.to_datetime(POKE_storm3_06_15_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10428,11 +10228,6 @@ POKE_storm5_06_22_abs['valuedatetime'] =  pd.to_datetime(POKE_storm5_06_22_abs['
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm5_06_22_abs = hysteresisMetrics(POKE_storm5_06_22_Q, POKE_storm5_06_22_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-POKE_storm6_06_29_Q['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm6_06_29_abs['valuedatetime'] =  pd.to_datetime(POKE_storm6_06_29_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm6_06_29_abs = hysteresisMetrics(POKE_storm6_06_29_Q, POKE_storm6_06_29_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 POKE_storm7_07_04_Q['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm7_07_04_abs['valuedatetime'] =  pd.to_datetime(POKE_storm7_07_04_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -10447,11 +10242,6 @@ POKE_storm9_07_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_Q['valu
 POKE_storm9_07_12_abs['valuedatetime'] =  pd.to_datetime(POKE_storm9_07_12_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm9_07_12_abs = hysteresisMetrics(POKE_storm9_07_12_Q, POKE_storm9_07_12_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm10_07_16_Q['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm10_07_16_abs['valuedatetime'] =  pd.to_datetime(POKE_storm10_07_16_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm10_07_16_abs = hysteresisMetrics(POKE_storm10_07_16_Q, POKE_storm10_07_16_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm11_07_18_Q['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm11_07_18_abs['valuedatetime'] =  pd.to_datetime(POKE_storm11_07_18_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10477,21 +10267,6 @@ POKE_storm15_08_02_Q['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_Q['va
 POKE_storm15_08_02_abs['valuedatetime'] =  pd.to_datetime(POKE_storm15_08_02_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_POKE_storm15_08_02_abs = hysteresisMetrics(POKE_storm15_08_02_Q, POKE_storm15_08_02_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm16_08_12_Q['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm16_08_12_abs['valuedatetime'] =  pd.to_datetime(POKE_storm16_08_12_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm16_08_12_abs = hysteresisMetrics(POKE_storm16_08_12_Q, POKE_storm16_08_12_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm17_08_23_Q['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm17_08_23_abs['valuedatetime'] =  pd.to_datetime(POKE_storm17_08_23_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm17_08_23_abs = hysteresisMetrics(POKE_storm17_08_23_Q, POKE_storm17_08_23_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-POKE_storm18_08_25_Q['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-POKE_storm18_08_25_abs['valuedatetime'] =  pd.to_datetime(POKE_storm18_08_25_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_POKE_storm18_08_25_abs = hysteresisMetrics(POKE_storm18_08_25_Q, POKE_storm18_08_25_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 POKE_storm19_08_27_Q['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 POKE_storm19_08_27_abs['valuedatetime'] =  pd.to_datetime(POKE_storm19_08_27_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -10524,16 +10299,7 @@ hysdict_POKE_storm22b_09_09_abs = hysteresisMetrics(POKE_storm22b_09_09_Q, POKE_
 POKE results
 ```{r}
 
-POKE.hyst.results.list = list(py$hysdict_POKE_storm1_06_09_NO3,
-                              py$hysdict_POKE_storm1_06_09_fDOM,
-                              py$hysdict_POKE_storm1_06_09_SPC,
-                              py$hysdict_POKE_storm1_06_09_turb,
-                              py$hysdict_POKE_storm1_06_09_abs,
-                              py$hysdict_POKE_storm2_06_12_NO3,
-                              py$hysdict_POKE_storm2_06_12_fDOM,
-                              py$hysdict_POKE_storm2_06_12_SPC,
-                              py$hysdict_POKE_storm2_06_12_turb,
-                              py$hysdict_POKE_storm2_06_12_abs,
+POKE.hyst.results.list = list(
                               py$hysdict_POKE_storm3_06_15_NO3,
                               py$hysdict_POKE_storm3_06_15_fDOM,
                               py$hysdict_POKE_storm3_06_15_SPC,
@@ -10559,11 +10325,7 @@ POKE.hyst.results.list = list(py$hysdict_POKE_storm1_06_09_NO3,
                               py$hysdict_POKE_storm5_06_22_SPC,
                               py$hysdict_POKE_storm5_06_22_turb,
                               py$hysdict_POKE_storm5_06_22_abs,
-                              py$hysdict_POKE_storm6_06_29_NO3,
-                              py$hysdict_POKE_storm6_06_29_fDOM,
-                              py$hysdict_POKE_storm6_06_29_SPC,
-                              py$hysdict_POKE_storm6_06_29_turb,
-                              py$hysdict_POKE_storm6_06_29_abs,
+                              
                               py$hysdict_POKE_storm7_07_04_NO3,
                               py$hysdict_POKE_storm7_07_04_fDOM,
                               py$hysdict_POKE_storm7_07_04_SPC,
@@ -10579,11 +10341,7 @@ POKE.hyst.results.list = list(py$hysdict_POKE_storm1_06_09_NO3,
                               py$hysdict_POKE_storm9_07_12_SPC,
                               py$hysdict_POKE_storm9_07_12_turb,
                               py$hysdict_POKE_storm9_07_12_abs,
-                              py$hysdict_POKE_storm10_07_16_NO3,
-                              py$hysdict_POKE_storm10_07_16_fDOM,
-                              py$hysdict_POKE_storm10_07_16_SPC,
-                              py$hysdict_POKE_storm10_07_16_turb,
-                              py$hysdict_POKE_storm10_07_16_abs,
+                              
                               py$hysdict_POKE_storm11_07_18_NO3,
                               py$hysdict_POKE_storm11_07_18_fDOM,
                               py$hysdict_POKE_storm11_07_18_SPC,
@@ -10606,21 +10364,7 @@ POKE.hyst.results.list = list(py$hysdict_POKE_storm1_06_09_NO3,
                               py$hysdict_POKE_storm15_08_02_SPC,
                               py$hysdict_POKE_storm15_08_02_turb,
                               py$hysdict_POKE_storm15_08_02_abs,
-                              py$hysdict_POKE_storm16_08_12_NO3,
-                              py$hysdict_POKE_storm16_08_12_fDOM,
-                              py$hysdict_POKE_storm16_08_12_SPC,
-                              py$hysdict_POKE_storm16_08_12_turb,
-                              py$hysdict_POKE_storm16_08_12_abs,
-                              py$hysdict_POKE_storm17_08_23_NO3,
-                              py$hysdict_POKE_storm17_08_23_fDOM,
-                              py$hysdict_POKE_storm17_08_23_SPC,
-                              py$hysdict_POKE_storm17_08_23_turb,
-                              py$hysdict_POKE_storm17_08_23_abs,
-                              py$hysdict_POKE_storm18_08_25_NO3,
-                              py$hysdict_POKE_storm18_08_25_fDOM,
-                              py$hysdict_POKE_storm18_08_25_SPC,
-                              py$hysdict_POKE_storm18_08_25_turb,
-                              py$hysdict_POKE_storm18_08_25_abs,
+                              
                               py$hysdict_POKE_storm19_08_27_NO3,
                               py$hysdict_POKE_storm19_08_27_fDOM,
                               py$hysdict_POKE_storm19_08_27_SPC,
@@ -10680,16 +10424,7 @@ for (i in 1:length(POKE.hyst.results.list)){
 
 POKE.hyst.results.df = bind_rows(POKE.hyst.results.list.3, .id = "column_label")
 
-POKE.hyst.results.df$storm.ID = c("POKE_storm1_06_09_NO3",
-                              "POKE_storm1_06_09_fDOM",
-                              "POKE_storm1_06_09_SPC",
-                              "POKE_storm1_06_09_turb",
-                              "POKE_storm1_06_09_abs",
-                              "POKE_storm2_06_12_NO3",
-                              "POKE_storm2_06_12_fDOM",
-                              "POKE_storm2_06_12_SPC",
-                              "POKE_storm2_06_12_turb",
-                              "POKE_storm2_06_12_abs",
+POKE.hyst.results.df$storm.ID = c(
                               "POKE_storm3_06_15_NO3",
                               "POKE_storm3_06_15_fDOM",
                               "POKE_storm3_06_15_SPC",
@@ -10715,11 +10450,7 @@ POKE.hyst.results.df$storm.ID = c("POKE_storm1_06_09_NO3",
                               "POKE_storm5_06_22_SPC",
                               "POKE_storm5_06_22_turb",
                               "POKE_storm5_06_22_abs",
-                              "POKE_storm6_06_29_NO3",
-                              "POKE_storm6_06_29_fDOM",
-                              "POKE_storm6_06_29_SPC",
-                              "POKE_storm6_06_29_turb",
-                              "POKE_storm6_06_29_abs",
+                              
                               "POKE_storm7_07_04_NO3",
                               "POKE_storm7_07_04_fDOM",
                               "POKE_storm7_07_04_SPC",
@@ -10735,11 +10466,7 @@ POKE.hyst.results.df$storm.ID = c("POKE_storm1_06_09_NO3",
                               "POKE_storm9_07_12_SPC",
                               "POKE_storm9_07_12_turb",
                               "POKE_storm9_07_12_abs",
-                              "POKE_storm10_07_16_NO3",
-                              "POKE_storm10_07_16_fDOM",
-                              "POKE_storm10_07_16_SPC",
-                              "POKE_storm10_07_16_turb",
-                              "POKE_storm10_07_16_abs",
+                              
                               "POKE_storm11_07_18_NO3",
                               "POKE_storm11_07_18_fDOM",
                               "POKE_storm11_07_18_SPC",
@@ -10764,21 +10491,7 @@ POKE.hyst.results.df$storm.ID = c("POKE_storm1_06_09_NO3",
                               "POKE_storm15_08_02_SPC",
                               "POKE_storm15_08_02_turb",
                               "POKE_storm15_08_02_abs",
-                              "POKE_storm16_08_12_NO3",
-                              "POKE_storm16_08_12_fDOM",
-                              "POKE_storm16_08_12_SPC",
-                              "POKE_storm16_08_12_turb",
-                              "POKE_storm16_08_12_abs",
-                              "POKE_storm17_08_23_NO3",
-                              "POKE_storm17_08_23_fDOM",
-                              "POKE_storm17_08_23_SPC",
-                              "POKE_storm17_08_23_turb",
-                              "POKE_storm17_08_23_abs",
-                              "POKE_storm18_08_25_NO3",
-                              "POKE_storm18_08_25_fDOM",
-                              "POKE_storm18_08_25_SPC",
-                              "POKE_storm18_08_25_turb",
-                              "POKE_storm18_08_25_abs",
+                              
                               "POKE_storm19_08_27_NO3",
                               "POKE_storm19_08_27_fDOM",
                               "POKE_storm19_08_27_SPC",
@@ -10807,7 +10520,7 @@ POKE.hyst.results.df$storm.ID = c("POKE_storm1_06_09_NO3",
 
 POKE.hyst.results.df$site.ID = "POKE"
 
-write.csv(POKE.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.hyst.results.csv")
+write.csv(POKE.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2020", "POKE", "POKE.hyst.results.csv"))
 
 # plot HI by normalized discharge
 HIs.Q.list =list()
@@ -10840,16 +10553,8 @@ for (i in 1:length(HIs.list)) {
 }
 
 POKE.HI.df = bind_rows(HIs.df.list, .id = "column_label")
-POKE.HI.df$storm.ID = c(rep("POKE_storm1_06_09_NO3", 50),
-                        rep("POKE_storm1_06_09_fDOM", 50),
-                        rep("POKE_storm1_06_09_SPC", 50),
-                        rep("POKE_storm1_06_09_turb", 50),
-                        rep("POKE_storm1_06_09_abs", 50),
-                        rep("POKE_storm2_06_12_NO3", 50),
-                        rep("POKE_storm2_06_12_fDOM", 50),
-                        rep("POKE_storm2_06_12_SPC", 50),
-                        rep("POKE_storm2_06_12_turb",50),
-                        rep("POKE_storm2_06_12_abs",50),
+POKE.HI.df$storm.ID = c(
+                       
                         rep("POKE_storm3_06_15_NO3", 50),
                         rep("POKE_storm3_06_15_fDOM",50),
                         rep("POKE_storm3_06_15_SPC",50),    
@@ -10875,11 +10580,7 @@ POKE.HI.df$storm.ID = c(rep("POKE_storm1_06_09_NO3", 50),
                         rep("POKE_storm5_06_22_SPC",50),
                         rep("POKE_storm5_06_22_turb",50),
                         rep("POKE_storm5_06_22_abs",50),
-                        rep("POKE_storm6_06_29_NO3",50),
-                        rep("POKE_storm6_06_29_fDOM",50),
-                        rep("POKE_storm6_06_29_SPC",50),
-                        rep("POKE_storm6_06_29_turb",50),
-                        rep("POKE_storm6_06_29_abs",50),
+                        
                         rep("POKE_storm7_07_04_NO3",50),
                         rep("POKE_storm7_07_04_fDOM",50),
                         rep("POKE_storm7_07_04_SPC",50),
@@ -10895,11 +10596,7 @@ POKE.HI.df$storm.ID = c(rep("POKE_storm1_06_09_NO3", 50),
                         rep("POKE_storm9_07_12_SPC",50),
                         rep("POKE_storm9_07_12_turb",50),
                         rep("POKE_storm9_07_12_abs",50),
-                        rep("POKE_storm10_07_16_NO3",50),
-                        rep("POKE_storm10_07_16_fDOM",50),
-                        rep("POKE_storm10_07_16_SPC",50),
-                        rep("POKE_storm10_07_16_turb",50),
-                        rep("POKE_storm10_07_16_abs",50),
+                        
                         rep("POKE_storm11_07_18_NO3",50),
                         rep("POKE_storm11_07_18_fDOM",50),
                         rep("POKE_storm11_07_18_SPC",50),
@@ -10924,21 +10621,7 @@ POKE.HI.df$storm.ID = c(rep("POKE_storm1_06_09_NO3", 50),
                         rep("POKE_storm15_08_02_SPC",50),
                         rep("POKE_storm15_08_02_turb",50),
                         rep("POKE_storm15_08_02_abs",50),
-                        rep("POKE_storm16_08_12_NO3",50),
-                        rep("POKE_storm16_08_12_fDOM",50),
-                        rep("POKE_storm16_08_12_SPC",50),
-                        rep("POKE_storm16_08_12_turb",50),
-                        rep("POKE_storm16_08_12_abs",50),
-                        rep("POKE_storm17_08_23_NO3",50),
-                        rep("POKE_storm17_08_23_fDOM",50),
-                        rep("POKE_storm17_08_23_SPC",50),
-                        rep("POKE_storm17_08_23_turb",50),
-                        rep("POKE_storm17_08_23_abs",50),
-                        rep("POKE_storm18_08_25_NO3",50),
-                        rep("POKE_storm18_08_25_fDOM",50),
-                        rep("POKE_storm18_08_25_SPC",50),      
-                        rep("POKE_storm18_08_25_turb",50),
-                        rep("POKE_storm18_08_25_abs",50),
+                        
                         rep("POKE_storm19_08_27_NO3",50),
                         rep("POKE_storm19_08_27_fDOM",50),
                         rep("POKE_storm19_08_27_SPC",50),
@@ -10991,8 +10674,11 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2020/POKE/POKE.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(POKE.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.csv")
+ggsave(here("plots", "HI_plots", "2020", "POKE", "POKE.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(POKE.HI.df, here("Output_from_analysis", "03_HI_FI", "2020", "POKE", "POKE.HI.df.csv"))
+
 
 POKE.HI.df$date <- as.Date(with(POKE.HI.df, paste(month, day, sep = "-")), "%m-%d")
 POKE.HI.df$doy <- yday(POKE.HI.df$date) 
@@ -11006,8 +10692,10 @@ g2 <- g1 +
                colour = "black", width = 0.2, size=1) + 
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2020/POKE/POKE.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(POKE.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2020/POKE/POKE.HI.df.doy.csv")
+ggsave(here("plots", "HI_plots", "2020", "POKE", "POKE.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(POKE.HI.df, here("Output_from_analysis", "03_HI_FI", "2020", "POKE", "POKE.HI.df.doy.csv"))
 
 ```
 
