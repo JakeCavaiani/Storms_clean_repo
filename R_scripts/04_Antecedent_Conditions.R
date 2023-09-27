@@ -6391,29 +6391,22 @@ POKEstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="POKE", 
                                   full.names=TRUE)
 
-# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2020/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="POKE", 
-#                                   full.names=TRUE)
-
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-POKE_storms$storm.num = c(rep("storm1", 95),
-                          rep("storm10", 99),
+POKE_storms$storm.num = c(
+                          
                           rep("storm11", 199),
                           rep("storm12", 307),
                           rep("storm13", 87),
                           rep("storm14", 383),
                           rep("storm15", 335),
-                          rep("storm16", 95),
-                          rep("storm17", 119),
-                          rep("storm18", 95),
+                         
                           rep("storm19", 135),
-                          rep("storm2", 87),
+                          
                           rep("storm20", 139),
                           rep("storm21", 227),
                           rep("storm22a", 107),
@@ -6423,7 +6416,7 @@ POKE_storms$storm.num = c(rep("storm1", 95),
                           rep("storm4b", 95),
                           rep("storm4c", 159),
                           rep("storm5", 219),
-                          rep("storm6", 95),
+                          
                           rep("storm7", 127),
                           rep("storm8", 135),
                           rep("storm9", 263))
@@ -6867,7 +6860,7 @@ ppx <- HI.poke.turb.2.2020 %>%
 #        ncol = 4)
 
 # abs #
-HI.poke.abs.2020 <- left_join(HI.mean.precip.frch.abs, POKE.2020.per.storm.1, by = "storm.num")
+HI.poke.abs.2020 <- left_join(HI.mean.precip.poke.abs, POKE.2020.per.storm.1, by = "storm.num")
 HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.2, by = "storm.num")
 HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.3, by = "storm.num")
 HI.poke.abs.2020 <- left_join(HI.poke.abs.2020, POKE.2020.per.storm.4, by = "storm.num")
@@ -6890,9 +6883,7 @@ HI.poke.2020 <- rbind(HI.poke.no3.2.2020, HI.poke.fDOM.2.2020,
 HI.poke.2020$burn <- "burned" # adding a burn column
 HI.poke.2020$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.poke.2020.csv"))
-
-# write.csv(HI.poke.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.poke.2020.csv")
+write.csv(HI.poke.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.poke.2020.csv"))
 
 # VAUL ####
 VAULstorm_file_list <- list.files(path = "All_sites/", 
