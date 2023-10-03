@@ -119,7 +119,7 @@ HI.dat_2022$year <- "2022"
 
 
 
-HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020)
+HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021)
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -8369,9 +8369,14 @@ write.csv(HI.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "202
 ####################################### 2021 ############################################################
 setwd("Storm_Events/2021")
 # import rain gauge data #
-POKE_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/POKE.RainGauge.2021.csv")
-VAUL_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/VAUL.RainGauge.2021.csv")
-STRT_RainGauge_2021 <- read_csv("~/Documents/Storms_clean_repo/Climate/Precip/STRT.RainGauge.2021.csv")
+FRCH_RainGauge_2020 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
+POKE_RainGauge_2020 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
+VAUL_RainGauge_2020 <- read.csv(here("Climate", "Precip", "VAUL.RainGauge.2020.csv"))
+STRT_RainGauge_2020 <- read.csv(here("Climate", "Precip", "STRT.RainGauge.2020.csv"))
+
+POKE_RainGauge_2021 <- read_csv(here("Climate", "Precip", "POKE.RainGauge.2021.csv"))
+VAUL_RainGauge_2021 <- read_csv(here("Climate", "Precip", "VAUL.RainGauge.2021.csv"))
+STRT_RainGauge_2021 <- read_csv(here("Climate", "Precip", "STRT.RainGauge.2021.csv"))
 
 airtempmean <- read.csv(here("Climate", "airtempmean.csv"))
 
@@ -9790,25 +9795,20 @@ VAULstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="VAUL", 
                                   full.names=TRUE)
 
-# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="VAUL", 
-#                                   full.names=TRUE)
-
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-VAUL_storms$storm.num = c(
+VAUL_storms$storm.num = c(rep("storm1a", 375),
                           rep("storm1b", 267),
                           
                           rep("storm3", 667),
                           rep("storm4a", 427),
                           rep("storm4b", 319),
-                          rep("storm5a", 331),
-                          rep("storm5b", 383))
+                          rep("storm5a", 715))
+                         
 
 
 VAUL_storms$DateTime <- as.POSIXct(VAUL_storms$DateTime) 
@@ -10271,9 +10271,7 @@ HI.vaul.2021 <- rbind(HI.vaul.no3.2.2021, HI.vaul.fDOM.2.2021,
 HI.vaul.2021$burn <- "unburned" # adding a burn column
 HI.vaul.2021$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.vaul.2021.csv"))
-
-# write.csv(HI.vaul.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.vaul.2021.csv")
+write.csv(HI.vaul.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.vaul.2021.csv"))
 
 # STRT #### 
 STRTstorm_file_list <- list.files(path = "All_sites/", 
