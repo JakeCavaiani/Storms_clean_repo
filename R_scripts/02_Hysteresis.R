@@ -3940,6 +3940,13 @@ ggsave("CARI_HI_Loops_2020.pdf",
 
 # plot on normalized scale # 
 #### load data #####
+VAUL_storm1a_07_23_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_Q.csv"))
+VAUL_storm1a_07_23_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_NO3.csv"))
+VAUL_storm1a_07_23_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_fDOM.csv"))
+VAUL_storm1a_07_23_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_SPC.csv"))
+VAUL_storm1a_07_23_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_turb.csv"))
+VAUL_storm1a_07_23_abs <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1a_07_23_abs.csv"))
+
 VAUL_storm1b_07_27_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_Q.csv"))
 VAUL_storm1b_07_27_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_NO3.csv"))
 VAUL_storm1b_07_27_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm1b_07_27_fDOM.csv"))
@@ -3974,13 +3981,6 @@ VAUL_storm5a_08_23_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_s
 VAUL_storm5a_08_23_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_SPC.csv"))
 VAUL_storm5a_08_23_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_turb.csv"))
 VAUL_storm5a_08_23_abs <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5a_08_23_abs.csv"))
-
-VAUL_storm5b_08_26_Q <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_Q.csv"))
-VAUL_storm5b_08_26_NO3 <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_NO3.csv"))
-VAUL_storm5b_08_26_fDOM <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_fDOM.csv"))
-VAUL_storm5b_08_26_SPC <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_SPC.csv"))
-VAUL_storm5b_08_26_turb <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_turb.csv"))
-VAUL_storm5b_08_26_abs <- read_csv(here("Storm_Events", "2021", "VAUL", "VAUL_storm5b_08_26_abs.csv"))
 
 # STRT # 
 STRT_storm1a_08_15_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_Q.csv"))
@@ -4314,45 +4314,44 @@ hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
 
 # plot VAUL loops #
 # NO3
-
+VAUL_storm1a_07_23_NO3.p = hyst_plot(VAUL_storm1a_07_23_Q, VAUL_storm1a_07_23_NO3, "VAUL", "NO3", "0723a")
 VAUL_storm1b_07_27_NO3.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_NO3, "VAUL", "NO3", "0727b")
 VAUL_storm3_08_08_NO3.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_NO3, "VAUL", "NO3", "0808")
 VAUL_storm4a_08_15_NO3.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_NO3, "VAUL", "NO3", "0815a")
 VAUL_storm4b_08_20_NO3.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_NO3, "VAUL", "NO3", "0820b")
 VAUL_storm5a_08_23_NO3.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_NO3, "VAUL", "NO3", "0823a")
-VAUL_storm5b_08_26_NO3.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_NO3, "VAUL", "NO3", "0826b")
 
 # fDOM #
+VAUL_storm1a_07_23_fDOM.p = hyst_plot(VAUL_storm1a_07_23_Q, VAUL_storm1a_07_23_fDOM, "VAUL", "fDOM", "0723a")
 VAUL_storm1b_07_27_fDOM.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_fDOM, "VAUL", "fDOM", "0727b")
 VAUL_storm3_08_08_fDOM.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_fDOM, "VAUL", "fDOM", "0808")
 VAUL_storm4a_08_15_fDOM.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_fDOM, "VAUL", "fDOM", "0815a")
 VAUL_storm4b_08_20_fDOM.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_fDOM, "VAUL", "fDOM", "0820b")
 VAUL_storm5a_08_23_fDOM.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_fDOM, "VAUL", "fDOM", "0823a")
-VAUL_storm5b_08_26_fDOM.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_fDOM, "VAUL", "fDOM", "0826b")
 
 # SPC #
+VAUL_storm1a_07_23_SPC.p = hyst_plot(VAUL_storm1a_07_23_Q, VAUL_storm1a_07_23_SPC, "VAUL", "SPC", "0723a")
 VAUL_storm1b_07_27_SPC.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_SPC, "VAUL", "SPC", "0727b")
 VAUL_storm3_08_08_SPC.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_SPC, "VAUL", "SPC", "0808")
 VAUL_storm4a_08_15_SPC.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_SPC, "VAUL", "SPC", "0815a")
 VAUL_storm4b_08_20_SPC.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_SPC, "VAUL", "SPC", "0820b")
 VAUL_storm5a_08_23_SPC.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_SPC, "VAUL", "SPC", "0823a")
-VAUL_storm5b_08_26_SPC.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_SPC, "VAUL", "SPC", "0826b")
 
 # turb
+VAUL_storm1a_07_23_turb.p = hyst_plot(VAUL_storm1a_07_23_Q, VAUL_storm1a_07_23_turb, "VAUL", "turb", "0723a")
 VAUL_storm1b_07_27_turb.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_turb, "VAUL", "turb", "0727b")
 VAUL_storm3_08_08_turb.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_turb, "VAUL", "turb", "0808")
 VAUL_storm4a_08_15_turb.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_turb, "VAUL", "turb", "0815a")
 VAUL_storm4b_08_20_turb.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_turb, "VAUL", "turb", "0820b")
 VAUL_storm5a_08_23_turb.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_turb, "VAUL", "turb", "0823a")
-VAUL_storm5b_08_26_turb.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_turb, "VAUL", "turb", "0826b")
 
 # ABS #
+VAUL_storm1a_07_23_abs.p = hyst_plot(VAUL_storm1a_07_23_Q, VAUL_storm1a_07_23_abs, "VAUL", "abs", "0723a")
 VAUL_storm1b_07_27_abs.p = hyst_plot(VAUL_storm1b_07_27_Q, VAUL_storm1b_07_27_abs, "VAUL", "abs", "0727b")
 VAUL_storm3_08_08_abs.p = hyst_plot(VAUL_storm3_08_08_Q, VAUL_storm3_08_08_abs, "VAUL", "abs", "0808")
 VAUL_storm4a_08_15_abs.p = hyst_plot(VAUL_storm4a_08_15_Q, VAUL_storm4a_08_15_abs, "VAUL", "abs", "0815a")
 VAUL_storm4b_08_20_abs.p = hyst_plot(VAUL_storm4b_08_20_Q, VAUL_storm4b_08_20_abs, "VAUL", "abs", "0820b")
 VAUL_storm5a_08_23_abs.p = hyst_plot(VAUL_storm5a_08_23_Q, VAUL_storm5a_08_23_abs, "VAUL", "abs", "0823a")
-VAUL_storm5b_08_26_abs.p = hyst_plot(VAUL_storm5b_08_26_Q, VAUL_storm5b_08_26_abs, "VAUL", "abs", "0826b")
 
 # Multiplots of VAUL storms #
 
