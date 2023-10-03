@@ -3094,12 +3094,12 @@ storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
 #  organize storm data by site and solute # 5 for each storm 
-CARI_storm_list_beta = storm_list_beta[c(1:60)] #60
-FRCH_storm_list_beta = storm_list_beta[c(1:84)] #84
-MOOS_storm_list_beta = storm_list_beta[c(169:234)] #66
-POKE_storm_list_beta = storm_list_beta[c(85:192)]# 150
-STRT_storm_list_beta = storm_list_beta[c(193:270)] #78
-VAUL_storm_list_beta = storm_list_beta[c(271:348)] #102
+CARI_storm_list_beta = storm_list_beta[c(1:55)] #55
+FRCH_storm_list_beta = storm_list_beta[c(56:139)] #84
+MOOS_storm_list_beta = storm_list_beta[c(140:205)] #66
+POKE_storm_list_beta = storm_list_beta[c(206:313)]# 150
+STRT_storm_list_beta = storm_list_beta[c(314:391)] #78
+VAUL_storm_list_beta = storm_list_beta[c(392:469)] #102
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -3628,17 +3628,17 @@ beta.all.no3.vaul <- VAUL_NO3_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
 
 # CARI # 
-CARI_NO3_storm$storm.ID = c(rep("storm1", 311),
+CARI_NO3_storm$storm.ID = c(rep("storm1", 203),
                             rep("storm2a", 103),
-                            rep("storm2b", 95),
-                            rep("storm2c", 155),
-                            rep("storm3", 356),
+                            rep("storm2b", 251),
+                            
+                            rep("storm3", 291),
                             rep("storm4", 156),
-                            rep("storm5", 219),
-                            rep("storm6", 183),
-                            rep("storm7", 307),
+                            rep("storm5", 220),
+                            rep("storm6", 184),
+                            rep("storm7", 308),
                             rep("storm8a", 111),
-                            rep("storm8b", 515),
+                            rep("storm8b", 481),
                             rep("storm9", 99))
 
 names(CARI_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
@@ -3914,18 +3914,18 @@ beta.all.fDOM.vaul <- VAUL_fDOM_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
 
 # CARI # 
-CARI_fDOM_storm$storm.ID = c(rep("storm1", 311),
-                            rep("storm2a", 103),
-                            rep("storm2b", 95),
-                            rep("storm2c", 155),
-                            rep("storm3", 356),
-                            rep("storm4", 156),
-                            rep("storm5", 219),
-                            rep("storm6", 183),
-                            rep("storm7", 307),
-                            rep("storm8a", 111),
-                            rep("storm8b", 515),
-                            rep("storm9", 99))
+CARI_fDOM_storm$storm.ID = c(rep("storm1", 203),
+                             rep("storm2a", 103),
+                             rep("storm2b", 251),
+                             
+                             rep("storm3", 291),
+                             rep("storm4", 156),
+                             rep("storm5", 220),
+                             rep("storm6", 184),
+                             rep("storm7", 308),
+                             rep("storm8a", 111),
+                             rep("storm8b", 481),
+                             rep("storm9", 99))
 
 
 names(CARI_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
@@ -4033,21 +4033,17 @@ beta.all.SPC <- FRCH_SPC_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # MOOS # 
-MOOS_SPC_storm$storm.ID = c(rep("storm10", 246),
-                            rep("storm1a", 969),
-                            
-                            rep("storm2", 166),
-                            rep("storm3", 386),
-                            rep("storm4a", 140),
-                            rep("storm4b", 322),
-                            rep("storm5", 250),
-                            rep("storm6", 122),
-                            rep("storm7a", 98),
-                            
-                            rep("storm8", 162),
-                            rep("storm9a", 294),
-                            rep("storm9b", 134),
-                            rep("storm9c", 482))
+MOOS_SPC_storm$storm.ID = c(rep("storm1", 723),
+                            rep("storm2", 327),
+                            rep("storm3", 129),
+                            rep("storm4", 321),
+                            rep("storm5", 252),
+                            rep("storm6a", 108),
+                            rep("storm6b", 288),
+                            rep("storm7a", 276),
+                            rep("storm7b", 186),
+                            rep("storm8", 195),
+                            rep("storm9", 405))
 
 names(MOOS_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 MOOS_SPC_storm$site.ID <- "MOOS"
@@ -4122,11 +4118,8 @@ beta.all.SPC.moos.with.all <- POKE_SPC_storm_ascending %>% group_by(storm.ID) %>
 
 # STRT # 
 STRT_SPC_storm$storm.ID = c(rep("storm10", 246),
-                            rep("storm1a", 103),
-                            rep("storm1b", 161),
-                            rep("storm1c", 105),
-                            rep("storm1d", 86),
-                            rep("storm1e", 476),
+                            rep("storm1a", 969),
+                            
                             rep("storm2", 166),
                             rep("storm3", 386),
                             rep("storm4a", 140),
@@ -4134,8 +4127,8 @@ STRT_SPC_storm$storm.ID = c(rep("storm10", 246),
                             rep("storm5", 250),
                             rep("storm6", 122),
                             rep("storm7a", 98),
-                            rep("storm7b", 95),
-                            rep("storm8", 82),
+                            
+                            rep("storm8", 162),
                             rep("storm9a", 294),
                             rep("storm9b", 134),
                             rep("storm9c", 482))
@@ -4205,17 +4198,17 @@ beta.all.SPC.vaul <- VAUL_SPC_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # CARI # 
-CARI_SPC_storm$storm.ID = c(rep("storm1", 311),
+CARI_SPC_storm$storm.ID = c(rep("storm1", 203),
                             rep("storm2a", 103),
-                            rep("storm2b", 95),
-                            rep("storm2c", 155),
-                            rep("storm3", 356),
+                            rep("storm2b", 251),
+                            
+                            rep("storm3", 291),
                             rep("storm4", 156),
-                            rep("storm5", 219),
-                            rep("storm6", 183),
-                            rep("storm7", 307),
+                            rep("storm5", 220),
+                            rep("storm6", 184),
+                            rep("storm7", 308),
                             rep("storm8a", 111),
-                            rep("storm8b", 515),
+                            rep("storm8b", 481),
                             rep("storm9", 99))
 
 names(CARI_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
@@ -4491,18 +4484,18 @@ beta.all.turb.vaul <- VAUL_turb_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
 
 # CARI # 
-CARI_turb_storm$storm.ID = c(rep("storm1", 311),
-                            rep("storm2a", 103),
-                            rep("storm2b", 95),
-                            rep("storm2c", 155),
-                            rep("storm3", 356),
-                            rep("storm4", 156),
-                            rep("storm5", 219),
-                            rep("storm6", 183),
-                            rep("storm7", 307),
-                            rep("storm8a", 111),
-                            rep("storm8b", 515),
-                            rep("storm9", 99))
+CARI_turb_storm$storm.ID = c(rep("storm1", 203),
+                             rep("storm2a", 103),
+                             rep("storm2b", 251),
+                             
+                             rep("storm3", 291),
+                             rep("storm4", 156),
+                             rep("storm5", 220),
+                             rep("storm6", 184),
+                             rep("storm7", 308),
+                             rep("storm8a", 111),
+                             rep("storm8b", 481),
+                             rep("storm9", 99))
 
 names(CARI_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 CARI_turb_storm$site.ID <- "CARI"
@@ -4807,8 +4800,7 @@ beta.all.2020 <- rbind(all.2020.ci.no3, all.2020.ci.fDOM,
                        all.2020.ci.SPC, all.2020.ci.turb,
                        all.2020.ci.abs)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2020.csv"))
-# write.csv(beta.all.2020, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2020.csv")
+write.csv(beta.all.2020, here("Output_from_analysis", "06_BETA", "beta.2020.csv"))
 
 beta.all.2020 <- beta.all.2020 %>% 
   filter(Parameter != "(Intercept)")
