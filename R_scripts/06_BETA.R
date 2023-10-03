@@ -4813,11 +4813,6 @@ storm_file_list_beta <- list.files(path="Test_2/",
                                    pattern=".csv", 
                                    full.names=TRUE)
 
-# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2/", 
-#                                    recursive=F, 
-#                                    pattern=".csv", 
-#                                    full.names=TRUE)
-
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
                                         stringsAsFactors=FALSE, 
@@ -4835,7 +4830,7 @@ FRCH_storm_list_beta = storm_list_beta[c(51:104)]
 MOOS_storm_list_beta = storm_list_beta[c(105:164)] 
 POKE_storm_list_beta = storm_list_beta[c(165:224)] 
 STRT_storm_list_beta = storm_list_beta[c(225:254)] 
-VAUL_storm_list_beta = storm_list_beta[c(255:290)] 
+VAUL_storm_list_beta = storm_list_beta[c(1:36)] #36
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -5252,14 +5247,13 @@ beta.all.no3.strt <- STRT_NO3_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
 
 # VAUL # 
-VAUL_NO3_storm$storm.ID = c(
-  rep("storm1b", 267),
-  
-  rep("storm3", 667),
-  rep("storm4a", 427),
-  rep("storm4b", 319),
-  rep("storm5a", 331),
-  rep("storm5b", 383))
+VAUL_NO3_storm$storm.ID = c(rep("storm1a", 375),
+                            rep("storm1b", 267),
+                            
+                            rep("storm3", 667),
+                            rep("storm4a", 427),
+                            rep("storm4b", 319),
+                            rep("storm5a", 715))
 
 names(VAUL_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
 VAUL_NO3_storm$site.ID <- "VAUL"
@@ -5494,14 +5488,13 @@ beta.all.fDOM.strt <- STRT_fDOM_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
 
 # VAUL # 
-VAUL_fDOM_storm$storm.ID = c(
-  rep("storm1b", 267),
-  
-  rep("storm3", 667),
-  rep("storm4a", 427),
-  rep("storm4b", 319),
-  rep("storm5a", 331),
-  rep("storm5b", 383))
+VAUL_fDOM_storm$storm.ID = c(rep("storm1a", 375),
+                             rep("storm1b", 267),
+                             
+                             rep("storm3", 667),
+                             rep("storm4a", 427),
+                             rep("storm4b", 319),
+                             rep("storm5a", 715))
 
 names(VAUL_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
 VAUL_fDOM_storm$site.ID <- "VAUL"
@@ -5739,14 +5732,13 @@ beta.all.SPC.strt <- STRT_SPC_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # VAUL # 
-VAUL_SPC_storm$storm.ID = c(
-  rep("storm1b", 267),
-  
-  rep("storm3", 667),
-  rep("storm4a", 427),
-  rep("storm4b", 319),
-  rep("storm5a", 331),
-  rep("storm5b", 383))
+VAUL_SPC_storm$storm.ID = c(rep("storm1a", 375),
+                            rep("storm1b", 267),
+                            
+                            rep("storm3", 667),
+                            rep("storm4a", 427),
+                            rep("storm4b", 319),
+                            rep("storm5a", 715))
 
 names(VAUL_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 VAUL_SPC_storm$site.ID <- "VAUL"
@@ -5983,14 +5975,13 @@ beta.all.turb.strt <- STRT_turb_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
 
 # VAUL # 
-VAUL_turb_storm$storm.ID = c(
-  rep("storm1b", 267),
-  
-  rep("storm3", 667),
-  rep("storm4a", 427),
-  rep("storm4b", 319),
-  rep("storm5a", 331),
-  rep("storm5b", 383))
+VAUL_turb_storm$storm.ID = c(rep("storm1a", 375),
+                             rep("storm1b", 267),
+                             
+                             rep("storm3", 667),
+                             rep("storm4a", 427),
+                             rep("storm4b", 319),
+                             rep("storm5a", 715))
 
 names(VAUL_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 VAUL_turb_storm$site.ID <- "VAUL"
@@ -6223,14 +6214,13 @@ beta.all.abs.strt <- STRT_abs_storm_ascending %>% group_by(storm.ID) %>%
   summarize(beta = slope(Q.norm, abs.norm)) # this works just like the beta one that is for an individual site
 
 # VAUL # 
-VAUL_abs_storm$storm.ID = c(
-  rep("storm1b", 267),
-  
-  rep("storm3", 667),
-  rep("storm4a", 427),
-  rep("storm4b", 319),
-  rep("storm5a", 331),
-  rep("storm5b", 383))
+VAUL_abs_storm$storm.ID = c(rep("storm1a", 375),
+                            rep("storm1b", 267),
+                            
+                            rep("storm3", 667),
+                            rep("storm4a", 427),
+                            rep("storm4b", 319),
+                            rep("storm5a", 715))
 
 names(VAUL_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 VAUL_abs_storm$site.ID <- "VAUL"
