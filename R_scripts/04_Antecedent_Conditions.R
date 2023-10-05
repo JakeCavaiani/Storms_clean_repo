@@ -8406,11 +8406,6 @@ MOOSstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="MOOS", 
                                   full.names=TRUE)
 
-# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="MOOS", 
-#                                   full.names=TRUE)
-
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -8421,10 +8416,10 @@ MOOS_storms$storm.num = c(rep("storm1", 191),
                           rep("storm2", 251),
                           rep("storm3a", 115),
                           rep("storm3b", 359),
-                          rep("storm4a", 167),
-                          rep("storm4b", 247),
-                          rep("storm5a", 91),
-                          rep("storm5b", 191),
+                          rep("storm4a", 415),
+                          
+                          rep("storm5a", 315),
+                          
                           rep("storm6", 127),
                           rep("storm7", 259))
 
@@ -8792,9 +8787,7 @@ HI.moos.2021 <- rbind(HI.moos.fDOM.2.2021, HI.moos.SPC.2.2021, HI.moos.turb.2.20
 HI.moos.2021$burn <- "unburned" # adding a burn column
 HI.moos.2021$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.moos.2021.csv"))
-
-# write.csv(HI.moos.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.moos.2021.csv")
+write.csv(HI.moos.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.moos.2021.csv"))
 
 # FRCH ####
 FRCHstorm_file_list <- list.files(path = "All_sites/", 
