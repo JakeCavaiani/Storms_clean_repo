@@ -4819,7 +4819,7 @@ storm_list_beta<-do.call("list", lapply(storm_file_list_beta,
                                         header=T, row.names=1))
 
 storm_file_list_beta = sub("Test_2//", storm_file_list_beta, replacement = "")
-# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2021/Test_2//", storm_file_list_beta, replacement = "")
+
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -4827,10 +4827,10 @@ names(storm_list_beta) = storm_file_list_beta
 #  organize storm data by site and solute 
 CARI_storm_list_beta = storm_list_beta[c(1:50)] # 50
 FRCH_storm_list_beta = storm_list_beta[c(51:104)] 
-MOOS_storm_list_beta = storm_list_beta[c(105:164)] 
+MOOS_storm_list_beta = storm_list_beta[c(1:48)] #48 
 POKE_storm_list_beta = storm_list_beta[c(165:224)] 
 STRT_storm_list_beta = storm_list_beta[c(225:254)] 
-VAUL_storm_list_beta = storm_list_beta[c(1:36)] #36
+VAUL_storm_list_beta = storm_list_beta[c(49:84)] #36
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
@@ -5151,10 +5151,10 @@ MOOS_NO3_storm$storm.ID = c(rep("storm1", 191),
                             rep("storm2", 251),
                             rep("storm3a", 115),
                             rep("storm3b", 359),
-                            rep("storm4a", 167),
-                            rep("storm4b", 247),
-                            rep("storm5a", 91),
-                            rep("storm5b", 191),
+                            rep("storm4a", 415),
+                            
+                            rep("storm5a", 315),
+                            
                             rep("storm6", 127),
                             rep("storm7", 259))
 
@@ -5392,10 +5392,10 @@ MOOS_fDOM_storm$storm.ID = c(rep("storm1", 191),
                              rep("storm2", 251),
                              rep("storm3a", 115),
                              rep("storm3b", 359),
-                             rep("storm4a", 167),
-                             rep("storm4b", 247),
-                             rep("storm5a", 91),
-                             rep("storm5b", 191),
+                             rep("storm4a", 415),
+                             
+                             rep("storm5a", 315),
+                             
                              rep("storm6", 127),
                              rep("storm7", 259))
 
@@ -5636,10 +5636,10 @@ MOOS_SPC_storm$storm.ID = c(rep("storm1", 191),
                             rep("storm2", 251),
                             rep("storm3a", 115),
                             rep("storm3b", 359),
-                            rep("storm4a", 167),
-                            rep("storm4b", 247),
-                            rep("storm5a", 91),
-                            rep("storm5b", 191),
+                            rep("storm4a", 415),
+                            
+                            rep("storm5a", 315),
+                            
                             rep("storm6", 127),
                             rep("storm7", 259))
 
@@ -5879,10 +5879,10 @@ MOOS_turb_storm$storm.ID = c(rep("storm1", 191),
                              rep("storm2", 251),
                              rep("storm3a", 115),
                              rep("storm3b", 359),
-                             rep("storm4a", 167),
-                             rep("storm4b", 247),
-                             rep("storm5a", 91),
-                             rep("storm5b", 191),
+                             rep("storm4a", 415),
+                             
+                             rep("storm5a", 315),
+                             
                              rep("storm6", 127),
                              rep("storm7", 259))
 
@@ -6118,10 +6118,10 @@ MOOS_abs_storm$storm.ID = c(rep("storm1", 191),
                             rep("storm2", 251),
                             rep("storm3a", 115),
                             rep("storm3b", 359),
-                            rep("storm4a", 167),
-                            rep("storm4b", 247),
-                            rep("storm5a", 91),
-                            rep("storm5b", 191),
+                            rep("storm4a", 415),
+                            
+                            rep("storm5a", 315),
+                            
                             rep("storm6", 127),
                             rep("storm7", 259))
 
