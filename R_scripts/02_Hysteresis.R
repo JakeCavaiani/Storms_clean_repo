@@ -3990,26 +3990,12 @@ STRT_storm1a_08_15_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_st
 STRT_storm1a_08_15_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_turb.csv"))
 STRT_storm1a_08_15_abs <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_abs.csv"))
 
-STRT_storm1b_08_17_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_Q.csv"))
-STRT_storm1b_08_17_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_NO3.csv"))
-STRT_storm1b_08_17_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_fDOM.csv"))
-STRT_storm1b_08_17_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_SPC.csv"))
-STRT_storm1b_08_17_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_turb.csv"))
-STRT_storm1b_08_17_abs <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_abs.csv"))
-
 STRT_storm2a_08_19_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_Q.csv"))
 STRT_storm2a_08_19_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_NO3.csv"))
 STRT_storm2a_08_19_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_fDOM.csv"))
 STRT_storm2a_08_19_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_SPC.csv"))
 STRT_storm2a_08_19_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_turb.csv"))
 STRT_storm2a_08_19_abs <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_abs.csv"))
-
-STRT_storm2b_08_20_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_Q.csv"))
-STRT_storm2b_08_20_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_NO3.csv"))
-STRT_storm2b_08_20_fDOM <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_fDOM.csv"))
-STRT_storm2b_08_20_SPC <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_SPC.csv"))
-STRT_storm2b_08_20_turb <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_turb.csv"))
-STRT_storm2b_08_20_abs <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_abs.csv"))
 
 STRT_storm3_08_25_Q <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_Q.csv"))
 STRT_storm3_08_25_NO3 <- read_csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_NO3.csv"))
@@ -4391,37 +4377,37 @@ ggsave("VAUL_HI_Loops_2021.pdf",
 # plot STRT loops #
 # NO3 #
 STRT_storm1a_08_15_NO3.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_NO3, "STRT", "NO3", "0815a")
-STRT_storm1b_08_17_NO3.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_NO3, "STRT", "NO3", "0817a")
+
 STRT_storm2a_08_19_NO3.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_NO3, "STRT", "NO3", "0819a")
-STRT_storm2b_08_20_NO3.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_NO3, "STRT", "NO3", "0820b")
+
 STRT_storm3_08_25_NO3.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_NO3, "STRT", "NO3", "0825")
 
 # fDOM #
 STRT_storm1a_08_15_fDOM.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_fDOM, "STRT", "fDOM", "0815a")
-STRT_storm1b_08_17_fDOM.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_fDOM, "STRT", "fDOM", "0817a")
+
 STRT_storm2a_08_19_fDOM.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_fDOM, "STRT", "fDOM", "0819a")
-STRT_storm2b_08_20_fDOM.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_fDOM, "STRT", "fDOM", "0820b")
+
 STRT_storm3_08_25_fDOM.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_fDOM, "STRT", "fDOM", "0825")
 
 # SPC # 
 STRT_storm1a_08_15_SPC.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_SPC, "STRT", "SPC", "0815a")
-STRT_storm1b_08_17_SPC.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_SPC, "STRT", "SPC", "0817a")
+
 STRT_storm2a_08_19_SPC.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_SPC, "STRT", "SPC", "0819a")
-STRT_storm2b_08_20_SPC.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_SPC, "STRT", "SPC", "0820b")
+
 STRT_storm3_08_25_SPC.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_SPC, "STRT", "SPC", "0825")
 
 # Turb #
 STRT_storm1a_08_15_turb.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_turb, "STRT", "turb", "0815a")
-STRT_storm1b_08_17_turb.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_turb, "STRT", "turb", "0817a")
+
 STRT_storm2a_08_19_turb.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_turb, "STRT", "turb", "0819a")
-STRT_storm2b_08_20_turb.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_turb, "STRT", "turb", "0820b")
+
 STRT_storm3_08_25_turb.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_turb, "STRT", "turb", "0825")
 
 # ABS # 
 STRT_storm1a_08_15_abs.p = hyst_plot(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_abs, "STRT", "abs", "0815a")
-STRT_storm1b_08_17_abs.p = hyst_plot(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_abs, "STRT", "abs", "0817a")
+
 STRT_storm2a_08_19_abs.p = hyst_plot(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_abs, "STRT", "abs", "0819a")
-STRT_storm2b_08_20_abs.p = hyst_plot(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_abs, "STRT", "abs", "0820b")
+
 STRT_storm3_08_25_abs.p = hyst_plot(STRT_storm3_08_25_Q, STRT_storm3_08_25_abs, "STRT", "abs", "0825")
 
 # Multiplots of STRT storms #
@@ -4463,9 +4449,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 
 multiplot(STRT_storm1a_08_15_NO3.p,STRT_storm1a_08_15_fDOM.p,STRT_storm1a_08_15_SPC.p,STRT_storm1a_08_15_turb.p,
-          STRT_storm1b_08_17_NO3.p,STRT_storm1b_08_17_fDOM.p,STRT_storm1b_08_17_SPC.p,STRT_storm1b_08_17_turb.p,
+          
           STRT_storm2a_08_19_NO3.p,STRT_storm2a_08_19_fDOM.p,STRT_storm2a_08_19_SPC.p,STRT_storm2a_08_19_turb.p,
-          STRT_storm2b_08_20_NO3.p,STRT_storm2b_08_20_fDOM.p,STRT_storm2b_08_20_SPC.p,STRT_storm2b_08_20_turb.p,
+        
           STRT_storm3_08_25_NO3.p,STRT_storm3_08_25_fDOM.p,STRT_storm3_08_25_SPC.p,STRT_storm3_08_25_turb.p,
           cols = 7)
 
