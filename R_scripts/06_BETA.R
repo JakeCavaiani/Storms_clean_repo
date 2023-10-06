@@ -5217,10 +5217,10 @@ beta.all.no3.poke.with.all <- POKE_NO3_storm_ascending %>% group_by(storm.ID) %>
   summarize(beta = slope(Q.norm, NO3.norm)) # this works just like the beta one that is for an individual site
 
 # STRT # 
-STRT_NO3_storm$storm.ID = c(rep("storm1a", 191),
-                            rep("storm1b", 255),
-                            rep("storm2a", 95),
-                            rep("storm2b", 211),
+STRT_NO3_storm$storm.ID = c(rep("storm1a", 447),
+                            
+                            rep("storm2a", 307),
+                            
                             rep("storm3", 127))
 
 names(STRT_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
@@ -5458,10 +5458,10 @@ beta.all.fDOM.poke.with.all <- POKE_fDOM_storm_ascending %>% group_by(storm.ID) 
   summarize(beta = slope(Q.norm, fDOM.norm)) # this works just like the beta one that is for an individual site
 
 # STRT # 
-STRT_fDOM_storm$storm.ID = c(rep("storm1a", 191),
-                             rep("storm1b", 255),
-                             rep("storm2a", 95),
-                             rep("storm2b", 211),
+STRT_fDOM_storm$storm.ID = c(rep("storm1a", 447),
+                             
+                             rep("storm2a", 307),
+                             
                              rep("storm3", 127))
 
 names(STRT_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
@@ -5702,10 +5702,10 @@ beta.all.SPC.poke.with.all <- POKE_SPC_storm_ascending %>% group_by(storm.ID) %>
   summarize(beta = slope(Q.norm, SPC.norm)) # this works just like the beta one that is for an individual site
 
 # STRT # 
-STRT_SPC_storm$storm.ID = c(rep("storm1a", 191),
-                            rep("storm1b", 255),
-                            rep("storm2a", 95),
-                            rep("storm2b", 211),
+STRT_SPC_storm$storm.ID = c(rep("storm1a", 447),
+                            
+                            rep("storm2a", 307),
+                            
                             rep("storm3", 127))
 
 names(STRT_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
@@ -5945,10 +5945,10 @@ beta.all.poke.moos.with.all <- POKE_turb_storm_ascending %>% group_by(storm.ID) 
   summarize(beta = slope(Q.norm, turb.norm)) # this works just like the beta one that is for an individual site
 
 # STRT # 
-STRT_turb_storm$storm.ID = c(rep("storm1a", 191),
-                             rep("storm1b", 255),
-                             rep("storm2a", 95),
-                             rep("storm2b", 211),
+STRT_turb_storm$storm.ID = c(rep("storm1a", 447),
+                             
+                             rep("storm2a", 307),
+                             
                              rep("storm3", 127))
 
 names(STRT_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
@@ -6184,10 +6184,10 @@ beta.all.poke.moos.with.all <- POKE_abs_storm_ascending %>% group_by(storm.ID) %
   summarize(beta = slope(Q.norm, abs.norm)) # this works just like the beta one that is for an individual site
 
 # STRT # 
-STRT_abs_storm$storm.ID = c(rep("storm1a", 191),
-                            rep("storm1b", 255),
-                            rep("storm2a", 95),
-                            rep("storm2b", 211),
+STRT_abs_storm$storm.ID = c(rep("storm1a", 447),
+                            
+                            rep("storm2a", 307),
+                            
                             rep("storm3", 127))
 
 names(STRT_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
