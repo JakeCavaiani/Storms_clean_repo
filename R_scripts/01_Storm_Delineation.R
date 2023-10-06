@@ -14021,27 +14021,6 @@ write.csv(MOOS_storm7_08_27_turb, here("Storm_Events", "2021", "MOOS", "MOOS_sto
 write.csv(MOOS_storm7_08_27_abs, here("Storm_Events", "2021", "MOOS", "MOOS_storm7_08_27_abs.csv"))
 
 
-# FRCH # 
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"),
-     ylim = c(7,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-par(mfrow=c(1,1))
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"),
-     ylim = c(20,0), 
-     axes=F, xlab="", ylab="")
-par(new = T)
-
-plot(FRCH.2021$Q ~ FRCH.2021$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"))
-
-
 ### Storms ###
 FRCH <- FRCH.2021 
 FRCH$MeanDischarge <- FRCH$Q
@@ -14051,58 +14030,7 @@ FRCH$fDOM.QSU <- FRCH$fDOM
 FRCH$SpCond.uScm <- FRCH$SPC
 FRCH$Turbidity.FNU <- FRCH$Turb
 
-# No storm in this #
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-07-01 00:00:00","2021-07-15 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-07-01 00:00:00","2021-07-15 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
-# # storm 1 # 
-# plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# 
-# plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"),
-#      ylim = c(5,0), 
-#      axes=F, xlab="", ylab="")
-# axis(side = 4)
-# mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-# abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-# abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-# abline(v= as.POSIXct("2021-07-23 23:30:00", tz="America/Anchorage"), col="purple")
-# abline(v= as.POSIXct("2021-07-25 23:30:00", tz="America/Anchorage"), col="purple")
-# 
-# FRCH_storm1_07_23 = FRCH[FRCH$DateTime > as.POSIXct("2021-07-23 23:30:00", tz="America/Anchorage") &
-#                            FRCH$DateTime < as.POSIXct("2021-07-25 23:30:00", tz="America/Anchorage"),]
-# plot(FRCH_storm1_07_23$MeanDischarge ~ as.POSIXct(FRCH_storm1_07_23$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,400), col="blue", main="FRCH 210723 storm 1",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# plot(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, xlab="", ylab="", col="maroon",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# plot(FRCH$SpCond.uScm * 2 ~ FRCH$DateTime, xlab="", ylab="", col="red",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# plot(FRCH$Turbidity.FNU * 50 ~ FRCH$DateTime, xlab="", ylab="", col="black",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"))
-# par(new = T)
-# plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-#      xlim = as.POSIXct(c("2021-07-15 00:00:00","2021-07-31 23:45:00"), tz="America/Anchorage"),
-#      ylim = c(5,0), 
-#      axes=F, xlab="", ylab="")
-# axis(side = 4)
+STRT.st$DateTime <- STRT.st$datetimeAK
 
 # storm 2 # 
 plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
@@ -14236,50 +14164,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
 abline(v= as.POSIXct("2021-08-15 11:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2021-08-17 09:30:00", tz="America/Anchorage"), col="purple")
-
-FRCH_storm5a_08_15 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-15 11:30:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2021-08-17 09:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm5a_08_15$MeanDischarge ~ as.POSIXct(FRCH_storm5a_08_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,600), col="blue", main="FRCH 210815 storm 5a",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, xlab="", ylab="", col="maroon",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$SpCond.uScm * 2 ~ FRCH$DateTime, xlab="", ylab="", col="red",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$Turbidity.FNU * 50 ~ FRCH$DateTime, xlab="", ylab="", col="black",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# storm 5b # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-abline(v= as.POSIXct("2021-08-17 09:30:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage"), col="purple")
 
-FRCH_storm5b_08_17 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-17 09:30:00", tz="America/Anchorage") &
+FRCH_storm5a_08_15 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-15 11:30:00", tz="America/Anchorage") &
                             FRCH$DateTime < as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm5b_08_17$MeanDischarge ~ as.POSIXct(FRCH_storm5b_08_17$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(300,600), col="blue", main="FRCH 210817 storm 5b",
+plot(FRCH_storm5a_08_15$MeanDischarge ~ as.POSIXct(FRCH_storm5a_08_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,800), col="blue", main="FRCH 210815 storm 5a",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
@@ -14314,50 +14203,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
 abline(v= as.POSIXct("2021-08-20 03:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2021-08-21 07:30:00", tz="America/Anchorage"), col="purple")
-
-FRCH_storm6a_08_19 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-20 03:30:00", tz="America/Anchorage") &
-                            FRCH$DateTime < as.POSIXct("2021-08-21 07:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm6a_08_19$MeanDischarge ~ as.POSIXct(FRCH_storm6a_08_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,600), col="blue", main="FRCH 210819 storm 6a",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$fDOM.QSU * 10 ~ FRCH$DateTime, xlab="", ylab="", col="maroon",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$SpCond.uScm * 2 ~ FRCH$DateTime, xlab="", ylab="", col="red",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(FRCH$Turbidity.FNU * 50 ~ FRCH$DateTime, xlab="", ylab="", col="black",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# storm 6b # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-abline(v= as.POSIXct("2021-08-21 07:30:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2021-08-24 13:30:00", tz="America/Anchorage"), col="purple")
 
-FRCH_storm6b_08_20 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-21 07:30:00", tz="America/Anchorage") &
+FRCH_storm6a_08_19 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-20 03:30:00", tz="America/Anchorage") &
                             FRCH$DateTime < as.POSIXct("2021-08-24 13:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm6b_08_20$MeanDischarge ~ as.POSIXct(FRCH_storm6b_08_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(0,600), col="blue", main="FRCH 210820 storm 6b",
+plot(FRCH_storm6a_08_19$MeanDischarge ~ as.POSIXct(FRCH_storm6a_08_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,700), col="blue", main="FRCH 210819 storm 6a",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
@@ -14396,7 +14246,7 @@ abline(v= as.POSIXct("2021-08-27 09:30:00", tz="America/Anchorage"), col="purple
 
 FRCH_storm7_08_25 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-25 22:30:00", tz="America/Anchorage") &
                            FRCH$DateTime < as.POSIXct("2021-08-27 09:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm7_08_25$MeanDischarge ~ as.POSIXct(FRCH_storm7_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,600), col="blue", main="FRCH 210825 storm 7",
+plot(FRCH_storm7_08_25$MeanDischarge ~ as.POSIXct(FRCH_storm7_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(550,700), col="blue", main="FRCH 210825 storm 7",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
@@ -14435,7 +14285,7 @@ abline(v= as.POSIXct("2021-09-01 07:30:00", tz="America/Anchorage"), col="purple
 
 FRCH_storm8_08_27 = FRCH[FRCH$DateTime > as.POSIXct("2021-08-27 10:30:00", tz="America/Anchorage") &
                            FRCH$DateTime < as.POSIXct("2021-09-01 07:30:00", tz="America/Anchorage"),]
-plot(FRCH_storm8_08_27$MeanDischarge ~ as.POSIXct(FRCH_storm8_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1000), col="blue", main="FRCH 210827 storm 8",
+plot(FRCH_storm8_08_27$MeanDischarge ~ as.POSIXct(FRCH_storm8_08_27$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(400,1500), col="blue", main="FRCH 210827 storm 8",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(FRCH$nitrateuM * 10 ~ FRCH$DateTime, xlab="", ylab="", col="purple",
@@ -14455,21 +14305,6 @@ plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
      ylim = c(5,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
-
-# no more alarms # 
-plot(FRCH$MeanDischarge ~ FRCH$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-08-31 00:00:00","2021-09-30 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-31 00:00:00","2021-09-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-
 
 
 FRCH_storm2_07_27_Q = subset(FRCH_storm2_07_27, select = c("DateTime","MeanDischarge"))
@@ -14526,21 +14361,6 @@ names(FRCH_storm5a_08_15_turb) = c("valuedatetime","datavalue")
 FRCH_storm5a_08_15_abs = subset(FRCH_storm5a_08_15, select = c("DateTime","ABS_254"))
 names(FRCH_storm5a_08_15_abs) = c("valuedatetime","datavalue")
 
-
-FRCH_storm5b_08_17_Q = subset(FRCH_storm5b_08_17, select = c("DateTime","MeanDischarge"))
-names(FRCH_storm5b_08_17_Q) = c("valuedatetime","datavalue")
-FRCH_storm5b_08_17_NO3 = subset(FRCH_storm5b_08_17, select = c("DateTime","nitrateuM"))
-names(FRCH_storm5b_08_17_NO3) = c("valuedatetime","datavalue")
-FRCH_storm5b_08_17_fDOM = subset(FRCH_storm5b_08_17, select = c("DateTime","fDOM.QSU"))
-names(FRCH_storm5b_08_17_fDOM) = c("valuedatetime","datavalue")
-FRCH_storm5b_08_17_SPC = subset(FRCH_storm5b_08_17, select = c("DateTime","SpCond.uScm"))
-names(FRCH_storm5b_08_17_SPC) = c("valuedatetime","datavalue")
-FRCH_storm5b_08_17_turb = subset(FRCH_storm5b_08_17, select = c("DateTime","Turbidity.FNU"))
-names(FRCH_storm5b_08_17_turb) = c("valuedatetime","datavalue")
-FRCH_storm5b_08_17_abs = subset(FRCH_storm5b_08_17, select = c("DateTime","ABS_254"))
-names(FRCH_storm5b_08_17_abs) = c("valuedatetime","datavalue")
-
-
 FRCH_storm6a_08_19_Q = subset(FRCH_storm6a_08_19, select = c("DateTime","MeanDischarge"))
 names(FRCH_storm6a_08_19_Q) = c("valuedatetime","datavalue")
 FRCH_storm6a_08_19_NO3 = subset(FRCH_storm6a_08_19, select = c("DateTime","nitrateuM"))
@@ -14553,21 +14373,6 @@ FRCH_storm6a_08_19_turb = subset(FRCH_storm6a_08_19, select = c("DateTime","Turb
 names(FRCH_storm6a_08_19_turb) = c("valuedatetime","datavalue")
 FRCH_storm6a_08_19_abs = subset(FRCH_storm6a_08_19, select = c("DateTime","ABS_254"))
 names(FRCH_storm6a_08_19_abs) = c("valuedatetime","datavalue")
-
-
-FRCH_storm6b_08_20_Q = subset(FRCH_storm6b_08_20, select = c("DateTime","MeanDischarge"))
-names(FRCH_storm6b_08_20_Q) = c("valuedatetime","datavalue")
-FRCH_storm6b_08_20_NO3 = subset(FRCH_storm6b_08_20, select = c("DateTime","nitrateuM"))
-names(FRCH_storm6b_08_20_NO3) = c("valuedatetime","datavalue")
-FRCH_storm6b_08_20_fDOM = subset(FRCH_storm6b_08_20, select = c("DateTime","fDOM.QSU"))
-names(FRCH_storm6b_08_20_fDOM) = c("valuedatetime","datavalue")
-FRCH_storm6b_08_20_SPC = subset(FRCH_storm6b_08_20, select = c("DateTime","SpCond.uScm"))
-names(FRCH_storm6b_08_20_SPC) = c("valuedatetime","datavalue")
-FRCH_storm6b_08_20_turb = subset(FRCH_storm6b_08_20, select = c("DateTime","Turbidity.FNU"))
-names(FRCH_storm6b_08_20_turb) = c("valuedatetime","datavalue")
-FRCH_storm6b_08_20_abs = subset(FRCH_storm6b_08_20, select = c("DateTime","ABS_254"))
-names(FRCH_storm6b_08_20_abs) = c("valuedatetime","datavalue")
-
 
 FRCH_storm7_08_25_Q = subset(FRCH_storm7_08_25, select = c("DateTime","MeanDischarge"))
 names(FRCH_storm7_08_25_Q) = c("valuedatetime","datavalue")
@@ -14599,150 +14404,63 @@ names(FRCH_storm8_08_27_abs) = c("valuedatetime","datavalue")
 
 
 ### Write csv ###
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_abs.csv"))
+write.csv(FRCH_storm2_07_27, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27.csv"))
+write.csv(FRCH_storm2_07_27_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_Q.csv"))
+write.csv(FRCH_storm2_07_27_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_NO3.csv"))
+write.csv(FRCH_storm2_07_27_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_fDOM.csv"))
+write.csv(FRCH_storm2_07_27_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_SPC.csv"))
+write.csv(FRCH_storm2_07_27_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_turb.csv"))
+write.csv(FRCH_storm2_07_27_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm2_07_27_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_abs.csv"))
+write.csv(FRCH_storm3_08_05, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05.csv"))
+write.csv(FRCH_storm3_08_05_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_Q.csv"))
+write.csv(FRCH_storm3_08_05_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_NO3.csv"))
+write.csv(FRCH_storm3_08_05_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_fDOM.csv"))
+write.csv(FRCH_storm3_08_05_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_SPC.csv"))
+write.csv(FRCH_storm3_08_05_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_turb.csv"))
+write.csv(FRCH_storm3_08_05_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm3_08_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_abs.csv"))
+write.csv(FRCH_storm4_08_08, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08.csv"))
+write.csv(FRCH_storm4_08_08_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_Q.csv"))
+write.csv(FRCH_storm4_08_08_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_NO3.csv"))
+write.csv(FRCH_storm4_08_08_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_fDOM.csv"))
+write.csv(FRCH_storm4_08_08_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_SPC.csv"))
+write.csv(FRCH_storm4_08_08_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_turb.csv"))
+write.csv(FRCH_storm4_08_08_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm4_08_08_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_abs.csv"))
+write.csv(FRCH_storm5a_08_15, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15.csv"))
+write.csv(FRCH_storm5a_08_15_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_Q.csv"))
+write.csv(FRCH_storm5a_08_15_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_NO3.csv"))
+write.csv(FRCH_storm5a_08_15_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_fDOM.csv"))
+write.csv(FRCH_storm5a_08_15_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_SPC.csv"))
+write.csv(FRCH_storm5a_08_15_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_turb.csv"))
+write.csv(FRCH_storm5a_08_15_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm5a_08_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm5b_08_17_abs.csv"))
+write.csv(FRCH_storm6a_08_19, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19.csv"))
+write.csv(FRCH_storm6a_08_19_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_Q.csv"))
+write.csv(FRCH_storm6a_08_19_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_NO3.csv"))
+write.csv(FRCH_storm6a_08_19_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_fDOM.csv"))
+write.csv(FRCH_storm6a_08_19_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_SPC.csv"))
+write.csv(FRCH_storm6a_08_19_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_turb.csv"))
+write.csv(FRCH_storm6a_08_19_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6a_08_19_abs.csv"))
+write.csv(FRCH_storm7_08_25, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25.csv"))
+write.csv(FRCH_storm7_08_25_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_Q.csv"))
+write.csv(FRCH_storm7_08_25_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_NO3.csv"))
+write.csv(FRCH_storm7_08_25_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_fDOM.csv"))
+write.csv(FRCH_storm7_08_25_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_SPC.csv"))
+write.csv(FRCH_storm7_08_25_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_turb.csv"))
+write.csv(FRCH_storm7_08_25_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm6b_08_20_abs.csv"))
-
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm7_08_25_abs.csv"))
-
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_Q.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_turb.csv"))
-write.csv(here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_abs.csv"))
+write.csv(FRCH_storm8_08_27, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27.csv"))
+write.csv(FRCH_storm8_08_27_Q, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_Q.csv"))
+write.csv(FRCH_storm8_08_27_NO3, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_NO3.csv"))
+write.csv(FRCH_storm8_08_27_fDOM, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_fDOM.csv"))
+write.csv(FRCH_storm8_08_27_SPC, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_SPC.csv"))
+write.csv(FRCH_storm8_08_27_turb, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_turb.csv"))
+write.csv(FRCH_storm8_08_27_abs, here("Storm_Events", "2021", "FRCH", "FRCH_storm8_08_27_abs.csv"))
 
 
-# write.csv(FRCH_storm2_07_27, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27.csv")
-# write.csv(FRCH_storm2_07_27_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_Q.csv")
-# write.csv(FRCH_storm2_07_27_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_NO3.csv")
-# write.csv(FRCH_storm2_07_27_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_fDOM.csv")
-# write.csv(FRCH_storm2_07_27_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_SPC.csv")
-# write.csv(FRCH_storm2_07_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_turb.csv")
-# write.csv(FRCH_storm2_07_27_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm2_07_27_abs.csv")
-# 
-# write.csv(FRCH_storm3_08_05, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05.csv")
-# write.csv(FRCH_storm3_08_05_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_Q.csv")
-# write.csv(FRCH_storm3_08_05_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_NO3.csv")
-# write.csv(FRCH_storm3_08_05_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_fDOM.csv")
-# write.csv(FRCH_storm3_08_05_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_SPC.csv")
-# write.csv(FRCH_storm3_08_05_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_turb.csv")
-# write.csv(FRCH_storm3_08_05_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm3_08_05_abs.csv")
-# 
-# write.csv(FRCH_storm4_08_08, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08.csv")
-# write.csv(FRCH_storm4_08_08_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_Q.csv")
-# write.csv(FRCH_storm4_08_08_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_NO3.csv")
-# write.csv(FRCH_storm4_08_08_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_fDOM.csv")
-# write.csv(FRCH_storm4_08_08_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_SPC.csv")
-# write.csv(FRCH_storm4_08_08_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_turb.csv")
-# write.csv(FRCH_storm4_08_08_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm4_08_08_abs.csv")
-# 
-# write.csv(FRCH_storm5a_08_15, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15.csv")
-# write.csv(FRCH_storm5a_08_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_Q.csv")
-# write.csv(FRCH_storm5a_08_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_NO3.csv")
-# write.csv(FRCH_storm5a_08_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_fDOM.csv")
-# write.csv(FRCH_storm5a_08_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_SPC.csv")
-# write.csv(FRCH_storm5a_08_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_turb.csv")
-# write.csv(FRCH_storm5a_08_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5a_08_15_abs.csv")
-# 
-# write.csv(FRCH_storm5b_08_17, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17.csv")
-# write.csv(FRCH_storm5b_08_17_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_Q.csv")
-# write.csv(FRCH_storm5b_08_17_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_NO3.csv")
-# write.csv(FRCH_storm5b_08_17_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_fDOM.csv")
-# write.csv(FRCH_storm5b_08_17_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_SPC.csv")
-# write.csv(FRCH_storm5b_08_17_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_turb.csv")
-# write.csv(FRCH_storm5b_08_17_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm5b_08_17_abs.csv")
-# 
-# write.csv(FRCH_storm6a_08_19, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19.csv")
-# write.csv(FRCH_storm6a_08_19_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_Q.csv")
-# write.csv(FRCH_storm6a_08_19_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_NO3.csv")
-# write.csv(FRCH_storm6a_08_19_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_fDOM.csv")
-# write.csv(FRCH_storm6a_08_19_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_SPC.csv")
-# write.csv(FRCH_storm6a_08_19_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_turb.csv")
-# write.csv(FRCH_storm6a_08_19_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6a_08_19_abs.csv")
-# 
-# write.csv(FRCH_storm6b_08_20, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20.csv")
-# write.csv(FRCH_storm6b_08_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_Q.csv")
-# write.csv(FRCH_storm6b_08_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_NO3.csv")
-# write.csv(FRCH_storm6b_08_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_fDOM.csv")
-# write.csv(FRCH_storm6b_08_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_SPC.csv")
-# write.csv(FRCH_storm6b_08_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_turb.csv")
-# write.csv(FRCH_storm6b_08_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm6b_08_20_abs.csv")
-# 
-# write.csv(FRCH_storm7_08_25, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25.csv")
-# write.csv(FRCH_storm7_08_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_Q.csv")
-# write.csv(FRCH_storm7_08_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_NO3.csv")
-# write.csv(FRCH_storm7_08_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_fDOM.csv")
-# write.csv(FRCH_storm7_08_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_SPC.csv")
-# write.csv(FRCH_storm7_08_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_turb.csv")
-# write.csv(FRCH_storm7_08_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm7_08_25_abs.csv")
-# 
-# write.csv(FRCH_storm8_08_27, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27.csv")
-# write.csv(FRCH_storm8_08_27_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_Q.csv")
-# write.csv(FRCH_storm8_08_27_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_NO3.csv")
-# write.csv(FRCH_storm8_08_27_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_fDOM.csv")
-# write.csv(FRCH_storm8_08_27_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_SPC.csv")
-# write.csv(FRCH_storm8_08_27_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_turb.csv")
-# write.csv(FRCH_storm8_08_27_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/FRCH/FRCH_storm8_08_27_abs.csv")
 
 # STRT # 
 plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
