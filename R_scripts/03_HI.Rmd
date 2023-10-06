@@ -13254,70 +13254,27 @@ write.csv(POKE.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_
 STRT
 ```{python}
 # STRT #
-STRT_storm1a_08_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_Q.csv")
-STRT_storm1a_08_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_NO3.csv")
-STRT_storm1a_08_15_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_fDOM.csv")
-STRT_storm1a_08_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_SPC.csv")
-STRT_storm1a_08_15_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_Turb.csv")
-STRT_storm1a_08_15_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_abs.csv")
+STRT_storm1a_08_15_Q = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_Q.csv'))
+STRT_storm1a_08_15_NO3 = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_NO3.csv'))
+STRT_storm1a_08_15_fDOM = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_fDOM.csv'))
+STRT_storm1a_08_15_SPC = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_SPC.csv'))
+STRT_storm1a_08_15_turb = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_Turb.csv'))
+STRT_storm1a_08_15_abs = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm1a_08_15_abs.csv'))
 
-# STRT_storm1a_08_15_Q = STRT_storm1a_08_15_Q.dropna(subset=['datavalue'])
-# STRT_storm1a_08_15_NO3 = STRT_storm1a_08_15_NO3.dropna(subset=['datavalue'])
-# STRT_storm1a_08_15_fDOM = STRT_storm1a_08_15_fDOM.dropna(subset=['datavalue'])
-# STRT_storm1a_08_15_SPC = STRT_storm1a_08_15_SPC.dropna(subset=['datavalue'])
-# STRT_storm1a_08_15_turb = STRT_storm1a_08_15_turb.dropna(subset=['datavalue'])
+STRT_storm2a_08_19_Q = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_Q.csv'))
+STRT_storm2a_08_19_NO3 = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_NO3.csv'))
+STRT_storm2a_08_19_fDOM = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_fDOM.csv'))
+STRT_storm2a_08_19_SPC = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_SPC.csv'))
+STRT_storm2a_08_19_turb = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_Turb.csv'))
+STRT_storm2a_08_19_abs = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm2a_08_19_abs.csv'))
 
-STRT_storm1b_08_17_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_Q.csv")
-STRT_storm1b_08_17_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_NO3.csv")
-STRT_storm1b_08_17_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_fDOM.csv")
-STRT_storm1b_08_17_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_SPC.csv")
-STRT_storm1b_08_17_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_Turb.csv")
-STRT_storm1b_08_17_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_abs.csv")
+STRT_storm3_08_25_Q = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_Q.csv'))
+STRT_storm3_08_25_NO3 = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_NO3.csv'))
+STRT_storm3_08_25_fDOM = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_fDOM.csv'))
+STRT_storm3_08_25_SPC = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_SPC.csv'))
+STRT_storm3_08_25_turb = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_Turb.csv'))
+STRT_storm3_08_25_abs = pd.read_csv(here('Storm_events/2021/STRT/STRT_storm3_08_25_abs.csv'))
 
-# STRT_storm1b_08_17_Q = STRT_storm1b_08_17_Q.dropna(subset=['datavalue'])
-# STRT_storm1b_08_17_NO3 = STRT_storm1b_08_17_NO3.dropna(subset=['datavalue'])
-# STRT_storm1b_08_17_fDOM = STRT_storm1b_08_17_fDOM.dropna(subset=['datavalue'])
-# STRT_storm1b_08_17_SPC = STRT_storm1b_08_17_SPC.dropna(subset=['datavalue'])
-# STRT_storm1b_08_17_turb = STRT_storm1b_08_17_turb.dropna(subset=['datavalue'])
-
-STRT_storm2a_08_19_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_Q.csv")
-STRT_storm2a_08_19_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_NO3.csv")
-STRT_storm2a_08_19_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_fDOM.csv")
-STRT_storm2a_08_19_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_SPC.csv")
-STRT_storm2a_08_19_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_Turb.csv")
-STRT_storm2a_08_19_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_abs.csv")
-
-# STRT_storm2a_08_19_Q = STRT_storm2a_08_19_Q.dropna(subset=['datavalue'])
-# STRT_storm2a_08_19_NO3 = STRT_storm2a_08_19_NO3.dropna(subset=['datavalue'])
-# STRT_storm2a_08_19_fDOM = STRT_storm2a_08_19_fDOM.dropna(subset=['datavalue'])
-# STRT_storm2a_08_19_SPC = STRT_storm2a_08_19_SPC.dropna(subset=['datavalue'])
-# STRT_storm2a_08_19_turb = STRT_storm2a_08_19_turb.dropna(subset=['datavalue'])
-
-STRT_storm2b_08_20_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_Q.csv")
-STRT_storm2b_08_20_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_NO3.csv")
-STRT_storm2b_08_20_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_fDOM.csv")
-STRT_storm2b_08_20_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_SPC.csv")
-STRT_storm2b_08_20_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_Turb.csv")
-STRT_storm2b_08_20_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_abs.csv")
-
-# STRT_storm2b_08_20_Q = STRT_storm2b_08_20_Q.dropna(subset=['datavalue'])
-# STRT_storm2b_08_20_NO3 = STRT_storm2b_08_20_NO3.dropna(subset=['datavalue'])
-# STRT_storm2b_08_20_fDOM = STRT_storm2b_08_20_fDOM.dropna(subset=['datavalue'])
-# STRT_storm2b_08_20_SPC = STRT_storm2b_08_20_SPC.dropna(subset=['datavalue'])
-# STRT_storm2b_08_20_turb = STRT_storm2b_08_20_turb.dropna(subset=['datavalue'])
-
-STRT_storm3_08_25_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_Q.csv")
-STRT_storm3_08_25_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_NO3.csv")
-STRT_storm3_08_25_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_fDOM.csv")
-STRT_storm3_08_25_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_SPC.csv")
-STRT_storm3_08_25_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_Turb.csv")
-STRT_storm3_08_25_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_abs.csv")
-
-# STRT_storm3_08_25_Q = STRT_storm3_08_25_Q.dropna(subset=['datavalue'])
-# STRT_storm3_08_25_NO3 = STRT_storm3_08_25_NO3.dropna(subset=['datavalue'])
-# STRT_storm3_08_25_fDOM = STRT_storm3_08_25_fDOM.dropna(subset=['datavalue'])
-# STRT_storm3_08_25_SPC = STRT_storm3_08_25_SPC.dropna(subset=['datavalue'])
-# STRT_storm3_08_25_turb = STRT_storm3_08_25_turb.dropna(subset=['datavalue'])
 
 ```
 
@@ -13329,20 +13286,10 @@ STRT_storm1a_08_15_NO3['valuedatetime'] =  pd.to_datetime(STRT_storm1a_08_15_NO3
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm1a_08_15_NO3 = hysteresisMetrics(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-STRT_storm1b_08_17_Q['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm1b_08_17_NO3['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm1b_08_17_NO3 = hysteresisMetrics(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 STRT_storm2a_08_19_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm2a_08_19_NO3['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm2a_08_19_NO3 = hysteresisMetrics(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-STRT_storm2b_08_20_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm2b_08_20_NO3['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm2b_08_20_NO3 = hysteresisMetrics(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 STRT_storm3_08_25_Q['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm3_08_25_NO3['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -13355,20 +13302,10 @@ STRT_storm1a_08_15_fDOM['valuedatetime'] =  pd.to_datetime(STRT_storm1a_08_15_fD
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm1a_08_15_fDOM = hysteresisMetrics(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-STRT_storm1b_08_17_Q['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm1b_08_17_fDOM['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm1b_08_17_fDOM = hysteresisMetrics(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 STRT_storm2a_08_19_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm2a_08_19_fDOM['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm2a_08_19_fDOM = hysteresisMetrics(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-STRT_storm2b_08_20_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm2b_08_20_fDOM['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm2b_08_20_fDOM = hysteresisMetrics(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 STRT_storm3_08_25_Q['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm3_08_25_fDOM['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -13382,20 +13319,10 @@ STRT_storm1a_08_15_SPC['valuedatetime'] =  pd.to_datetime(STRT_storm1a_08_15_SPC
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm1a_08_15_SPC = hysteresisMetrics(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-STRT_storm1b_08_17_Q['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm1b_08_17_SPC['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm1b_08_17_SPC = hysteresisMetrics(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 STRT_storm2a_08_19_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm2a_08_19_SPC['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm2a_08_19_SPC = hysteresisMetrics(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-STRT_storm2b_08_20_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm2b_08_20_SPC['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm2b_08_20_SPC = hysteresisMetrics(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 STRT_storm3_08_25_Q['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm3_08_25_SPC['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -13408,20 +13335,10 @@ STRT_storm1a_08_15_turb['valuedatetime'] =  pd.to_datetime(STRT_storm1a_08_15_tu
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm1a_08_15_turb = hysteresisMetrics(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-STRT_storm1b_08_17_Q['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm1b_08_17_turb['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm1b_08_17_turb = hysteresisMetrics(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 STRT_storm2a_08_19_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm2a_08_19_turb['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm2a_08_19_turb = hysteresisMetrics(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-STRT_storm2b_08_20_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm2b_08_20_turb['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm2b_08_20_turb = hysteresisMetrics(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 STRT_storm3_08_25_Q['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm3_08_25_turb['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -13434,20 +13351,10 @@ STRT_storm1a_08_15_abs['valuedatetime'] =  pd.to_datetime(STRT_storm1a_08_15_abs
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm1a_08_15_abs = hysteresisMetrics(STRT_storm1a_08_15_Q, STRT_storm1a_08_15_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-STRT_storm1b_08_17_Q['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm1b_08_17_abs['valuedatetime'] =  pd.to_datetime(STRT_storm1b_08_17_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm1b_08_17_abs = hysteresisMetrics(STRT_storm1b_08_17_Q, STRT_storm1b_08_17_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 STRT_storm2a_08_19_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm2a_08_19_abs['valuedatetime'] =  pd.to_datetime(STRT_storm2a_08_19_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 5 # 5 minutes between records
 hysdict_STRT_storm2a_08_19_abs = hysteresisMetrics(STRT_storm2a_08_19_Q, STRT_storm2a_08_19_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-STRT_storm2b_08_20_Q['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-STRT_storm2b_08_20_abs['valuedatetime'] =  pd.to_datetime(STRT_storm2b_08_20_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 5 # 5 minutes between records
-hysdict_STRT_storm2b_08_20_abs = hysteresisMetrics(STRT_storm2b_08_20_Q, STRT_storm2b_08_20_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 STRT_storm3_08_25_Q['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 STRT_storm3_08_25_abs['valuedatetime'] =  pd.to_datetime(STRT_storm3_08_25_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -13463,21 +13370,14 @@ STRT.hyst.results.list = list(py$hysdict_STRT_storm1a_08_15_NO3,
                               py$hysdict_STRT_storm1a_08_15_SPC,
                               py$hysdict_STRT_storm1a_08_15_turb,
                               py$hysdict_STRT_storm1a_08_15_abs,
-                              py$hysdict_STRT_storm1b_08_17_NO3,
-                              py$hysdict_STRT_storm1b_08_17_fDOM,
-                              py$hysdict_STRT_storm1b_08_17_SPC,
-                              py$hysdict_STRT_storm1b_08_17_turb,
-                              py$hysdict_STRT_storm1b_08_17_abs,
+                             
+                              
                               py$hysdict_STRT_storm2a_08_19_NO3,
                               py$hysdict_STRT_storm2a_08_19_fDOM,
                               py$hysdict_STRT_storm2a_08_19_SPC,
                               py$hysdict_STRT_storm2a_08_19_turb,
                               py$hysdict_STRT_storm2a_08_19_abs,
-                              py$hysdict_STRT_storm2b_08_20_NO3,
-                              py$hysdict_STRT_storm2b_08_20_fDOM,
-                              py$hysdict_STRT_storm2b_08_20_SPC,
-                              py$hysdict_STRT_storm2b_08_20_turb,
-                              py$hysdict_STRT_storm2b_08_20_abs,
+                              
                               py$hysdict_STRT_storm3_08_25_NO3,
                               py$hysdict_STRT_storm3_08_25_fDOM,
                               py$hysdict_STRT_storm3_08_25_SPC,
@@ -13523,21 +13423,13 @@ STRT.hyst.results.df$storm.ID = c("STRT_storm1a_08_15_NO3",
                                   "STRT_storm1a_08_15_SPC",
                                   "STRT_storm1a_08_15_turb",
                                   "STRT_storm1a_08_15_abs",
-                                  "STRT_storm1b_08_17_NO3",
-                                  "STRT_storm1b_08_17_fDOM",
-                                  "STRT_storm1b_08_17_SPC",
-                                  "STRT_storm1b_08_17_turb",
-                                  "STRT_storm1b_08_17_abs",
+                                  
                                   "STRT_storm2a_08_19_NO3",
                                   "STRT_storm2a_08_19_fDOM",
                                   "STRT_storm2a_08_19_SPC",
                                   "STRT_storm2a_08_19_turb",
                                   "STRT_storm2a_08_19_abs",
-                                  "STRT_storm2b_08_20_NO3",
-                                  "STRT_storm2b_08_20_fDOM",
-                                  "STRT_storm2b_08_20_SPC",
-                                  "STRT_storm2b_08_20_turb",
-                                  "STRT_storm2b_08_20_abs",
+                                  
                                   "STRT_storm3 08_25_NO3",
                                   "STRT_storm3 08_25_fDOM",
                                   "STRT_storm3 08_25_SPC",
@@ -13550,7 +13442,7 @@ STRT.hyst.results.df$storm.ID = c("STRT_storm1a_08_15_NO3",
 
 STRT.hyst.results.df$site.ID = "STRT"
 
-write.csv(STRT.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.hyst.results.csv")
+write_csv(STRT.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2021", "STRT", "STRT.hyst.results.csv"))
 
 
 # plot HI by normalized discharge
@@ -13589,21 +13481,13 @@ STRT.HI.df$storm.ID = c(rep("STRT_storm1a_08_15_NO3", 50),
                         rep("STRT_storm1a_08_15_SPC", 50),
                         rep("STRT_storm1a_08_15_turb", 50),
                         rep("STRT_storm1a_08_15_abs", 50),
-                        rep("STRT_storm1b_08_17_NO3", 50),
-                        rep("STRT_storm1b_08_17_fDOM", 50),
-                        rep("STRT_storm1b_08_17_SPC", 50),
-                        rep("STRT_storm1b_08_17_turb", 50),
-                        rep("STRT_storm1b_08_17_abs", 50),
+                        
                         rep("STRT_storm2a_08_19_NO3", 50),
                         rep("STRT_storm2a_08_19_fDOM", 50),
                         rep("STRT_storm2a_08_19_SPC", 50),
                         rep("STRT_storm2a_08_19_turb", 50),
                         rep("STRT_storm2a_08_19_abs", 50),
-                        rep("STRT_storm2b_08_20_NO3", 50),
-                        rep("STRT_storm2b_08_20_fDOM", 50),
-                        rep("STRT_storm2b_08_20_SPC", 50),
-                        rep("STRT_storm2b_08_20_turb", 50),
-                        rep("STRT_storm2b_08_20_abs", 50),
+                        
                         rep("STRT_storm3_08_25_NO3", 50),
                         rep("STRT_storm3_08_25_fDOM", 50),
                         rep("STRT_storm3_08_25_SPC", 50),
@@ -13636,8 +13520,12 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2021/STRT/STRT.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(STRT.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.HI.df.csv")
+ggsave(here("plots", "HI_plots", "2021", "STRT", "STRT.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(STRT.HI.df, here("Output_from_analysis", "03_HI_FI", "2021", "STRT", "STRT.HI.df.csv"))
+
+
 
 STRT.HI.df$date <- as.Date(with(STRT.HI.df, paste(month, day, sep = "-")), "%m-%d")
 STRT.HI.df$doy <- yday(STRT.HI.df$date) 
@@ -13652,8 +13540,11 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2021/STRT/STRT.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(STRT.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/STRT/STRT.HI.df.doy.csv")
+ggsave(here("plots", "HI_plots", "2021", "STRT", "STRT.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(STRT.HI.df, here("Output_from_analysis", "03_HI_FI", "2021", "STRT", "STRT.HI.df.doy.csv"))
+
 ```
 
 CARI
