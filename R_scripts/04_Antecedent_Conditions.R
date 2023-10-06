@@ -10266,21 +10266,16 @@ STRTstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="STRT", 
                                   full.names=TRUE)
 
-# STRTstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="STRT", 
-#                                   full.names=TRUE)
-
 STRT_storms<-do.call("rbind", lapply(STRTstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
                                      stringsAsFactors=FALSE, 
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
-STRT_storms$storm.num = c(rep("storm1a", 191),
-                          rep("storm1b", 255),
-                          rep("storm2a", 95),
-                          rep("storm2b", 211),
+STRT_storms$storm.num = c(rep("storm1a", 447),
+                          
+                          rep("storm2a", 307),
+                          
                           rep("storm3", 127))
 
 
@@ -10747,9 +10742,7 @@ HI.strt.2021 <- rbind(HI.strt.no3.2.2021, HI.strt.fDOM.2.2021,
 HI.strt.2021$burn <- "burned" # adding a burn column
 HI.strt.2021$pf <- "high" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.strt.2021.csv"))
-
-# write.csv(HI.strt.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.strt.2021.csv")
+write.csv(HI.strt.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.strt.2021.csv"))
 
 # CARI ####
 CARIstorm_file_list <- list.files(path = "All_sites/", 
