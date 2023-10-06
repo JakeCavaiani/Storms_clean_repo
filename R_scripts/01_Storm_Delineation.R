@@ -14462,26 +14462,6 @@ write.csv(FRCH_storm8_08_27_abs, here("Storm_Events", "2021", "FRCH", "FRCH_stor
 
 
 
-# STRT # 
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"),
-     ylim = c(7,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-par(mfrow=c(1,1))
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.1)
-
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"),
-     ylim = c(20,0), 
-     axes=F, xlab="", ylab="")
-par(new = T)
-
-plot(STRT.2021$Q ~ STRT.2021$datetimeAK, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-05-01 0:00:00","2021-10-01 00:00:00"), tz="America/Anchorage"))
-
 ### Storms ###
 # renaming to save me lots of time because I changed the names of columns with the updated data 
 STRT <- STRT.2021 
@@ -14491,6 +14471,7 @@ STRT$nitrateuM <- STRT$NO3
 STRT$fDOM.QSU <- STRT$fDOM
 STRT$SpCond.uScm <- STRT$SPC
 STRT$Turbidity.FNU <- STRT$Turb
+STRT.st$DateTime <- STRT.st$datetimeAK
 
 # storm 1a # 
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
@@ -14506,52 +14487,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
 abline(v= as.POSIXct("2021-08-15 10:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2021-08-17 10:30:00", tz="America/Anchorage"), col="purple")
-
-STRT_storm1a_08_15 = STRT[STRT$DateTime > as.POSIXct("2021-08-15 10:30:00", tz="America/Anchorage") &
-                            STRT$DateTime < as.POSIXct("2021-08-17 10:30:00", tz="America/Anchorage"),]
-plot(STRT_storm1a_08_15$MeanDischarge ~ as.POSIXct(STRT_storm1a_08_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1500), col="blue", main="FRCH 210815 storm 1a",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$nitrateuM * 10 ~ STRT$DateTime, xlab="", ylab="", col="purple",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$fDOM.QSU * 10 ~ STRT$DateTime, xlab="", ylab="", col="maroon",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$SpCond.uScm * 2 ~ STRT$DateTime, xlab="", ylab="", col="red",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$Turbidity.FNU * 50 ~ STRT$DateTime, xlab="", ylab="", col="black",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# storm 1b # 
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-abline(v= as.POSIXct("2021-08-17 10:30:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage"), col="purple")
 
-STRT_storm1b_08_17 = STRT[STRT$DateTime > as.POSIXct("2021-08-17 10:30:00", tz="America/Anchorage") &
+STRT_storm1a_08_15 = STRT[STRT$DateTime > as.POSIXct("2021-08-15 10:30:00", tz="America/Anchorage") &
                             STRT$DateTime < as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage"),]
-plot(STRT_storm1b_08_17$MeanDischarge ~ as.POSIXct(STRT_storm1b_08_17$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,1500), col="blue", main="FRCH 210817 storm 1b",
+plot(STRT_storm1a_08_15$MeanDischarge ~ as.POSIXct(STRT_storm1a_08_15$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(600,2000), col="blue", main="FRCH 210815 storm 1a",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(STRT$nitrateuM * 10 ~ STRT$DateTime, xlab="", ylab="", col="purple",
@@ -14571,12 +14511,12 @@ plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
      ylim = c(5,0), 
      axes=F, xlab="", ylab="")
 axis(side = 4)
+
 
 # storm 2a # 
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
@@ -14588,52 +14528,11 @@ mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)')
 abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
 abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
 abline(v= as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage"), col="purple")
-abline(v= as.POSIXct("2021-08-21 02:30:00", tz="America/Anchorage"), col="purple")
-
-STRT_storm2a_08_19 = STRT[STRT$DateTime > as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage") &
-                            STRT$DateTime < as.POSIXct("2021-08-21 02:30:00", tz="America/Anchorage"),]
-plot(STRT_storm2a_08_19$MeanDischarge ~ as.POSIXct(STRT_storm2a_08_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1500), col="blue", main="FRCH 210819 storm 2a",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$nitrateuM * 10 ~ STRT$DateTime, xlab="", ylab="", col="purple",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$fDOM.QSU * 10 ~ STRT$DateTime, xlab="", ylab="", col="maroon",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$SpCond.uScm * 2 ~ STRT$DateTime, xlab="", ylab="", col="red",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT$Turbidity.FNU * 50 ~ STRT$DateTime, xlab="", ylab="", col="black",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-par(new = T)
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-
-# storm 2b # 
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
-abline(v= as.POSIXct("2021-08-21 02:30:00", tz="America/Anchorage"), col="purple")
 abline(v= as.POSIXct("2021-08-23 07:30:00", tz="America/Anchorage"), col="purple")
 
-STRT_storm2b_08_20 = STRT[STRT$DateTime > as.POSIXct("2021-08-21 02:30:00", tz="America/Anchorage") &
+STRT_storm2a_08_19 = STRT[STRT$DateTime > as.POSIXct("2021-08-20 02:30:00", tz="America/Anchorage") &
                             STRT$DateTime < as.POSIXct("2021-08-23 07:30:00", tz="America/Anchorage"),]
-plot(STRT_storm2b_08_20$MeanDischarge ~ as.POSIXct(STRT_storm2b_08_20$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(800,1500), col="blue", main="FRCH 2108120 storm 2b",
+plot(STRT_storm2a_08_19$MeanDischarge ~ as.POSIXct(STRT_storm2a_08_19$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1800), col="blue", main="FRCH 210819 storm 2a",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(STRT$nitrateuM * 10 ~ STRT$DateTime, xlab="", ylab="", col="purple",
@@ -14657,8 +14556,7 @@ axis(side = 4)
 # storm 3 # 
 plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
-abline(h=STRT_bfQ_mn*2, col="red", lty=2)
-abline(h=STRT_bfQ_mn, col="red")
+
 par(new = T)
 
 plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
@@ -14674,7 +14572,7 @@ abline(v= as.POSIXct("2021-08-27 07:30:00", tz="America/Anchorage"), col="purple
 
 STRT_storm3_08_25 = STRT[STRT$DateTime > as.POSIXct("2021-08-25 23:30:00", tz="America/Anchorage") &
                            STRT$DateTime < as.POSIXct("2021-08-27 07:30:00", tz="America/Anchorage"),]
-plot(STRT_storm3_08_25$MeanDischarge ~ as.POSIXct(STRT_storm3_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(900,1300), col="blue", main="FRCH 210825 storm 3",
+plot(STRT_storm3_08_25$MeanDischarge ~ as.POSIXct(STRT_storm3_08_25$DateTime, tz="America/Anchorage"), type="l", xlab="", ylab="Q (L/sec)",ylim = c(1200,1600), col="blue", main="FRCH 210825 storm 3",
      xlim = as.POSIXct(c("2021-08-13 00:00:00","2021-08-31 23:45:00"), tz="America/Anchorage"))
 par(new = T)
 plot(STRT$nitrateuM * 10 ~ STRT$DateTime, xlab="", ylab="", col="purple",
@@ -14695,21 +14593,6 @@ plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
      axes=F, xlab="", ylab="")
 axis(side = 4)
 
-# No more storms # 
-plot(STRT$MeanDischarge ~ STRT$DateTime, type="l", xlab="", ylab="Q (L/sec)",
-     xlim = as.POSIXct(c("2021-09-01 00:00:00","2021-09-30 23:45:00"), tz="America/Anchorage"))
-abline(h=FRCH_bfQ_mn*2, col="red", lty=2)
-abline(h=FRCH_bfQ_mn, col="red")
-par(new = T)
-
-plot(STRT.st$inst_rainfall_mm ~ STRT.st$DateTime, type="h",
-     xlim = as.POSIXct(c("2021-09-01 00:00:00","2021-09-30 23:45:00"), tz="America/Anchorage"),
-     ylim = c(5,0), 
-     axes=F, xlab="", ylab="")
-axis(side = 4)
-mtext(side = 4, line = 3, 'CRREL Met Station precip. (mm)') 
-abline(v = as.POSIXct(strt.five.fourty.eight$DateTime), col = "yellow", lwd = 0.1)
-abline(v = as.POSIXct(strt.five.twenty.four$DateTime), col="green", lwd = 0.05)
 
 # Modify #
 STRT_storm1a_08_15_Q = subset(STRT_storm1a_08_15, select = c("DateTime","MeanDischarge"))
@@ -14725,20 +14608,6 @@ names(STRT_storm1a_08_15_turb) = c("valuedatetime","datavalue")
 STRT_storm1a_08_15_abs = subset(STRT_storm1a_08_15, select = c("DateTime","ABS_254"))
 names(STRT_storm1a_08_15_abs) = c("valuedatetime","datavalue")
 
-STRT_storm1b_08_17_Q = subset(STRT_storm1b_08_17, select = c("DateTime","MeanDischarge"))
-names(STRT_storm1b_08_17_Q) = c("valuedatetime","datavalue")
-STRT_storm1b_08_17_NO3 = subset(STRT_storm1b_08_17, select = c("DateTime","nitrateuM"))
-names(STRT_storm1b_08_17_NO3) = c("valuedatetime","datavalue")
-STRT_storm1b_08_17_fDOM = subset(STRT_storm1b_08_17, select = c("DateTime","fDOM.QSU"))
-names(STRT_storm1b_08_17_fDOM) = c("valuedatetime","datavalue")
-STRT_storm1b_08_17_SPC = subset(STRT_storm1b_08_17, select = c("DateTime","SpCond.uScm"))
-names(STRT_storm1b_08_17_SPC) = c("valuedatetime","datavalue")
-STRT_storm1b_08_17_turb = subset(STRT_storm1b_08_17, select = c("DateTime","Turbidity.FNU"))
-names(STRT_storm1b_08_17_turb) = c("valuedatetime","datavalue")
-STRT_storm1b_08_17_abs = subset(STRT_storm1b_08_17, select = c("DateTime","ABS_254"))
-names(STRT_storm1b_08_17_abs) = c("valuedatetime","datavalue")
-
-
 STRT_storm2a_08_19_Q = subset(STRT_storm2a_08_19, select = c("DateTime","MeanDischarge"))
 names(STRT_storm2a_08_19_Q) = c("valuedatetime","datavalue")
 STRT_storm2a_08_19_NO3 = subset(STRT_storm2a_08_19, select = c("DateTime","nitrateuM"))
@@ -14751,21 +14620,6 @@ STRT_storm2a_08_19_turb = subset(STRT_storm2a_08_19, select = c("DateTime","Turb
 names(STRT_storm2a_08_19_turb) = c("valuedatetime","datavalue")
 STRT_storm2a_08_19_abs = subset(STRT_storm2a_08_19, select = c("DateTime","ABS_254"))
 names(STRT_storm2a_08_19_abs) = c("valuedatetime","datavalue")
-
-
-STRT_storm2b_08_20_Q = subset(STRT_storm2b_08_20, select = c("DateTime","MeanDischarge"))
-names(STRT_storm2b_08_20_Q) = c("valuedatetime","datavalue")
-STRT_storm2b_08_20_NO3 = subset(STRT_storm2b_08_20, select = c("DateTime","nitrateuM"))
-names(STRT_storm2b_08_20_NO3) = c("valuedatetime","datavalue")
-STRT_storm2b_08_20_fDOM = subset(STRT_storm2b_08_20, select = c("DateTime","fDOM.QSU"))
-names(STRT_storm2b_08_20_fDOM) = c("valuedatetime","datavalue")
-STRT_storm2b_08_20_SPC = subset(STRT_storm2b_08_20, select = c("DateTime","SpCond.uScm"))
-names(STRT_storm2b_08_20_SPC) = c("valuedatetime","datavalue")
-STRT_storm2b_08_20_turb = subset(STRT_storm2b_08_20, select = c("DateTime","Turbidity.FNU"))
-names(STRT_storm2b_08_20_turb) = c("valuedatetime","datavalue")
-STRT_storm2b_08_20_abs = subset(STRT_storm2b_08_20, select = c("DateTime","ABS_254"))
-names(STRT_storm2b_08_20_abs) = c("valuedatetime","datavalue")
-
 
 STRT_storm3_08_25_Q = subset(STRT_storm3_08_25, select = c("DateTime","MeanDischarge"))
 names(STRT_storm3_08_25_Q) = c("valuedatetime","datavalue")
@@ -14781,85 +14635,29 @@ STRT_storm3_08_25_abs = subset(STRT_storm3_08_25, select = c("DateTime","ABS_254
 names(STRT_storm3_08_25_abs) = c("valuedatetime","datavalue")
 
 # Write CSV # 
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_Q.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_turb.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_abs.csv"))
+write.csv(STRT_storm1a_08_15, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15.csv"))
+write.csv(STRT_storm1a_08_15_Q, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_Q.csv"))
+write.csv(STRT_storm1a_08_15_NO3, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_NO3.csv"))
+write.csv(STRT_storm1a_08_15_fDOM, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_fDOM.csv"))
+write.csv(STRT_storm1a_08_15_SPC, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_SPC.csv"))
+write.csv(STRT_storm1a_08_15_turb, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_turb.csv"))
+write.csv(STRT_storm1a_08_15_abs, here("Storm_Events", "2021", "STRT", "STRT_storm1a_08_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_Q.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_turb.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm1b_08_17_abs.csv"))
+write.csv(STRT_storm2a_08_19, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19.csv"))
+write.csv(STRT_storm2a_08_19_Q, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_Q.csv"))
+write.csv(STRT_storm2a_08_19_NO3, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_NO3.csv"))
+write.csv(STRT_storm2a_08_19_fDOM, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_fDOM.csv"))
+write.csv(STRT_storm2a_08_19_SPC, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_SPC.csv"))
+write.csv(STRT_storm2a_08_19_turb, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_turb.csv"))
+write.csv(STRT_storm2a_08_19_abs, here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_abs.csv"))
 
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_Q.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_turb.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2a_08_19_abs.csv"))
-
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_Q.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_turb.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm2b_08_20_abs.csv"))
-
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_Q.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_NO3.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_fDOM.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_SPC.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_turb.csv"))
-write.csv(here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_abs.csv"))
-
-# write.csv(STRT_storm1a_08_15, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15.csv")
-# write.csv(STRT_storm1a_08_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_Q.csv")
-# write.csv(STRT_storm1a_08_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_NO3.csv")
-# write.csv(STRT_storm1a_08_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_fDOM.csv")
-# write.csv(STRT_storm1a_08_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_SPC.csv")
-# write.csv(STRT_storm1a_08_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_turb.csv")
-# write.csv(STRT_storm1a_08_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1a_08_15_abs.csv")
-# 
-# write.csv(STRT_storm1b_08_17, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17.csv")
-# write.csv(STRT_storm1b_08_17_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_Q.csv")
-# write.csv(STRT_storm1b_08_17_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_NO3.csv")
-# write.csv(STRT_storm1b_08_17_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_fDOM.csv")
-# write.csv(STRT_storm1b_08_17_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_SPC.csv")
-# write.csv(STRT_storm1b_08_17_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_turb.csv")
-# write.csv(STRT_storm1b_08_17_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm1b_08_17_abs.csv")
-# 
-# write.csv(STRT_storm2a_08_19, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19.csv")
-# write.csv(STRT_storm2a_08_19_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_Q.csv")
-# write.csv(STRT_storm2a_08_19_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_NO3.csv")
-# write.csv(STRT_storm2a_08_19_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_fDOM.csv")
-# write.csv(STRT_storm2a_08_19_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_SPC.csv")
-# write.csv(STRT_storm2a_08_19_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_turb.csv")
-# write.csv(STRT_storm2a_08_19_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2a_08_19_abs.csv")
-# 
-# write.csv(STRT_storm2b_08_20, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20.csv")
-# write.csv(STRT_storm2b_08_20_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_Q.csv")
-# write.csv(STRT_storm2b_08_20_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_NO3.csv")
-# write.csv(STRT_storm2b_08_20_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_fDOM.csv")
-# write.csv(STRT_storm2b_08_20_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_SPC.csv")
-# write.csv(STRT_storm2b_08_20_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_turb.csv")
-# write.csv(STRT_storm2b_08_20_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm2b_08_20_abs.csv")
-# 
-# write.csv(STRT_storm3_08_25, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25.csv")
-# write.csv(STRT_storm3_08_25_Q, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_Q.csv")
-# write.csv(STRT_storm3_08_25_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_NO3.csv")
-# write.csv(STRT_storm3_08_25_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_fDOM.csv")
-# write.csv(STRT_storm3_08_25_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_SPC.csv")
-# write.csv(STRT_storm3_08_25_turb, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_turb.csv")
-# write.csv(STRT_storm3_08_25_abs, "~/Documents/Storms_clean_repo/Storm_Events/2021/STRT/STRT_storm3_08_25_abs.csv")
+write.csv(STRT_storm3_08_25, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25.csv"))
+write.csv(STRT_storm3_08_25_Q, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_Q.csv"))
+write.csv(STRT_storm3_08_25_NO3, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_NO3.csv"))
+write.csv(STRT_storm3_08_25_fDOM, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_fDOM.csv"))
+write.csv(STRT_storm3_08_25_SPC, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_SPC.csv"))
+write.csv(STRT_storm3_08_25_turb, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_turb.csv"))
+write.csv(STRT_storm3_08_25_abs, here("Storm_Events", "2021", "STRT", "STRT_storm3_08_25_abs.csv"))
 
 
 # POKE # 
