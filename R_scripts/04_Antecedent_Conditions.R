@@ -8795,10 +8795,6 @@ FRCHstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="FRCH", 
                                   full.names=TRUE)
 
-# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="FRCH", 
-#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -8810,10 +8806,10 @@ FRCH_storms$storm.num = c(
                           rep("storm2", 304),
                           rep("storm3", 208),
                           rep("storm4", 224),
-                          rep("storm5a", 184),
-                          rep("storm5b", 260),
-                          rep("storm6a", 112),
-                          rep("storm6b", 312),
+                          rep("storm5a", 444),
+                         
+                          rep("storm6a", 424),
+                          
                           rep("storm7", 140),
                           rep("storm8", 468))
 
@@ -9283,9 +9279,7 @@ HI.frch.2021 <- rbind(HI.frch.no3.2.2021, HI.frch.fDOM.2.2021,
 HI.frch.2021$burn <- "unburned" # adding a burn column
 HI.frch.2021$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.frch.2021.csv"))
-
-# write.csv(HI.frch.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.frch.2021.csv")
+write.csv(HI.frch.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.frch.2021.csv"))
 
 # POKE #### 
 POKEstorm_file_list <- list.files(path = "All_sites/", 
