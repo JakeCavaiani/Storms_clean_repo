@@ -4061,13 +4061,6 @@ POKE_storm7b_08_19_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_st
 POKE_storm7b_08_19_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_turb.csv"))
 POKE_storm7b_08_19_abs <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7b_08_19_abs.csv"))
 
-POKE_storm7c_08_23_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_Q.csv"))
-POKE_storm7c_08_23_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_NO3.csv"))
-POKE_storm7c_08_23_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_fDOM.csv"))
-POKE_storm7c_08_23_SPC <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_SPC.csv"))
-POKE_storm7c_08_23_turb <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_turb.csv"))
-POKE_storm7c_08_23_abs <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7c_08_23_abs.csv"))
-
 POKE_storm7d_08_26_Q <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_Q.csv"))
 POKE_storm7d_08_26_NO3 <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_NO3.csv"))
 POKE_storm7d_08_26_fDOM <- read_csv(here("Storm_Events", "2021", "POKE", "POKE_storm7d_08_26_fDOM.csv"))
@@ -4472,7 +4465,7 @@ POKE_storm5_07_27_NO3.p = hyst_plot(POKE_storm5_07_27_Q, POKE_storm5_07_27_NO3, 
 POKE_storm6_08_08_NO3.p = hyst_plot(POKE_storm6_08_08_Q, POKE_storm6_08_08_NO3, "POKE", "NO3", "0808")
 POKE_storm7a_08_14_NO3.p = hyst_plot(POKE_storm7a_08_14_Q, POKE_storm7a_08_14_NO3, "POKE", "NO3", "0814a")
 POKE_storm7b_08_19_NO3.p = hyst_plot(POKE_storm7b_08_19_Q, POKE_storm7b_08_19_NO3, "POKE", "NO3", "0819b")
-POKE_storm7c_08_23_NO3.p = hyst_plot(POKE_storm7c_08_23_Q, POKE_storm7c_08_23_NO3, "POKE", "NO3", "0823c")
+
 POKE_storm7d_08_26_NO3.p = hyst_plot(POKE_storm7d_08_26_Q, POKE_storm7d_08_26_NO3, "POKE", "NO3", "0826d")
 
 # fDOM # 
@@ -4554,7 +4547,7 @@ multiplot(POKE_storm1_05_16_NO3.p, POKE_storm1_05_16_fDOM.p,POKE_storm1_05_16_SP
           POKE_storm6_08_08_NO3.p,POKE_storm6_08_08_fDOM.p,POKE_storm6_08_08_SPC.p,POKE_storm6_08_08_turb.p,
           POKE_storm7a_08_14_NO3.p,
           POKE_storm7b_08_19_NO3.p,
-          POKE_storm7c_08_23_NO3.p,
+        
           POKE_storm7d_08_26_NO3.p,
           cols = 7)
 
