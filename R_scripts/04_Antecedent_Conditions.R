@@ -10743,11 +10743,6 @@ CARIstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="CARI", 
                                   full.names=TRUE)
 
-# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="CARI", 
-#                                   full.names=TRUE)
-
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -11210,9 +11205,7 @@ HI.cari.2021 <- rbind(HI.cari.no3.2.2021, HI.cari.fDOM.2.2021, HI.cari.SPC.2.202
 HI.cari.2021$burn <- "burned" # adding a burn column
 HI.cari.2021$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.cari.2021.csv"))
-
-# write.csv(HI.cari.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.cari.2021.csv")
+write.csv(HI.cari.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.cari.2021.csv"))
 
 HI.cari.2021 <- HI.cari.2021[c("site.ID", "year", "storm.num", "response",
                                "HI", "precip", "temp", "precip.week", "precip.month",
@@ -11229,9 +11222,7 @@ HI.2021$date <- as.Date(HI.2021$doy, origin = "2021-01-01")
 origin_date <- as.Date("2021-05-12")
 HI.2021$TimeSinceChena <- julian(HI.2021$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
-
-# write.csv(HI.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
+write.csv(HI.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
 
 
 ####################################### 2022 ############################################################
