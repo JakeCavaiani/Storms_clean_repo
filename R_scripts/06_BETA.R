@@ -4808,7 +4808,7 @@ beta.all.2020 <- beta.all.2020 %>%
 
 ########################################## 2021 ##########################################################
 setwd("Storm_Events/2021")
-storm_file_list_beta <- list.files(path="Test_2/", 
+storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
                                    full.names=TRUE)
@@ -4818,7 +4818,7 @@ storm_list_beta<-do.call("list", lapply(storm_file_list_beta,
                                         stringsAsFactors=FALSE, 
                                         header=T, row.names=1))
 
-storm_file_list_beta = sub("Test_2//", storm_file_list_beta, replacement = "")
+storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
 
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
@@ -4826,11 +4826,11 @@ names(storm_list_beta) = storm_file_list_beta
 
 #  organize storm data by site and solute 
 CARI_storm_list_beta = storm_list_beta[c(1:50)] # 50
-FRCH_storm_list_beta = storm_list_beta[c(1:42)] # 42 
-MOOS_storm_list_beta = storm_list_beta[c(1:48)] #48 
-POKE_storm_list_beta = storm_list_beta[c(165:224)] 
-STRT_storm_list_beta = storm_list_beta[c(225:254)] 
-VAUL_storm_list_beta = storm_list_beta[c(49:84)] #36
+FRCH_storm_list_beta = storm_list_beta[c(51:92)] # 42 
+MOOS_storm_list_beta = storm_list_beta[c(93:140)] #48 
+POKE_storm_list_beta = storm_list_beta[c(141:193)] 
+STRT_storm_list_beta = storm_list_beta[c(194:211)] 
+VAUL_storm_list_beta = storm_list_beta[c(212:247)] #36
 
 
 CARI_NO3_storm_list_beta = CARI_storm_list_beta[c(grep("NO3", names(CARI_storm_list_beta)))]
