@@ -5190,7 +5190,7 @@ POKE_NO3_storm$storm.ID = c(rep("storm1", 235),
                             rep("storm6", 159),
                             rep("storm7a", 451),
                             rep("storm7b", 263),
-                            rep("storm7c", 99),
+                            
                             rep("storm7d", 147))
 
 names(POKE_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
@@ -5431,7 +5431,7 @@ POKE_fDOM_storm$storm.ID = c(rep("storm1", 235),
                              rep("storm6", 159),
                              rep("storm7a", 451),
                              rep("storm7b", 263),
-                             rep("storm7c", 99),
+                             
                              rep("storm7d", 147))
 
 names(POKE_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
@@ -5675,7 +5675,7 @@ POKE_SPC_storm$storm.ID = c(rep("storm1", 235),
                             rep("storm6", 159),
                             rep("storm7a", 451),
                             rep("storm7b", 263),
-                            rep("storm7c", 99),
+                            
                             rep("storm7d", 147))
 
 names(POKE_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
@@ -5918,7 +5918,7 @@ POKE_turb_storm$storm.ID = c(rep("storm1", 235),
                              rep("storm6", 159),
                              rep("storm7a", 451),
                              rep("storm7b", 263),
-                             rep("storm7c", 99),
+                            
                              rep("storm7d", 147))
 
 names(POKE_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
@@ -6157,7 +6157,7 @@ POKE_abs_storm$storm.ID = c(rep("storm1", 235),
                             rep("storm6", 159),
                             rep("storm7a", 451),
                             rep("storm7b", 263),
-                            rep("storm7c", 99),
+                            
                             rep("storm7d", 147))
 
 names(POKE_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
