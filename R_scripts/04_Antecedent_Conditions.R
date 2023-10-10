@@ -9287,11 +9287,6 @@ POKEstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="POKE", 
                                   full.names=TRUE)
 
-# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2021/All_Sites/", 
-#                                   recursive=F, 
-#                                   pattern="POKE", 
-#                                   full.names=TRUE)
-
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -9306,7 +9301,7 @@ POKE_storms$storm.num = c(rep("storm1", 235),
                           rep("storm6", 159),
                           rep("storm7a", 451),
                           rep("storm7b", 263),
-                          rep("storm7c", 99),
+                         
                           rep("storm7d", 147))
 
 
@@ -9772,9 +9767,7 @@ HI.poke.2021 <- rbind(HI.poke.no3.2.2021, HI.poke.fDOM.2.2021,
 HI.poke.2021$burn <- "burned" # adding a burn column
 HI.poke.2021$pf <- "medium" # adding a pf column
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.poke.2021.csv"))
-
-# write.csv(HI.poke.2021, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.poke.2021.csv")
+write.csv(HI.poke.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.poke.2021.csv"))
 
 # VAUL #### 
 VAULstorm_file_list <- list.files(path = "All_sites/", 
