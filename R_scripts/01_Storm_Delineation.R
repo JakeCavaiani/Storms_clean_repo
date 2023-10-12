@@ -15934,7 +15934,6 @@ DOD.2022 <- rbind(FRCH.2022, MOOS.2022, POKE.2022,
 
 DOD.2022 <- full_join(DOD.2022, Q.2022) # merging chem and discharge data
 
-write.csv(DOD.2022, "~/Documents/Storms_clean_repo/Q/Q_chem/DOD.2022.csv")
 
 # 
 frch.final.discharge.2022 <- subset(Q.2022, site.ID == "FRCH")
@@ -15984,60 +15983,6 @@ plot(cari.final.discharge.2022$Discharge ~ cari.final.discharge.2022$DateTimeAK,
      xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
      ylim = c(0,2000), col="blue")
 
-
-# 
-# ### Hydrograph Separation ###
-# #
-# any(is.na(frch.final.discharge.2022$Q))
-# FRCH_Q_bf = BaseflowSeparation(frch.final.discharge.2022$Q, filter_parameter = 0.95, passes = 3)
-# 
-# any(is.na(strt.final.discharge.2022$Q))
-# STRT_Q_bf = BaseflowSeparation(strt.final.discharge.2022$Q, filter_parameter = 0.95, passes = 3)
-# 
-# any(is.na(poke.final.discharge.2022$Q))
-# POKE_Q_bf = BaseflowSeparation(poke.final.discharge.2022$Q, filter_parameter = 0.95, passes = 3)
-# 
-# any(is.na(vaul.final.discharge.2022$Q))
-# VAUL_Q_bf = BaseflowSeparation(vaul.final.discharge.2022$Q, filter_parameter = 0.95, passes = 3)
-# 
-# any(is.na(moos.final.discharge.2022$Q))
-# MOOS_Q_bf = BaseflowSeparation(moos.final.discharge.2022$Q, filter_parameter = 0.95, passes = 3)
-# 
-# any(is.na(cari.final.discharge.2022$Discharge))
-# cari.final.discharge.2022 <- na.omit(cari.final.discharge.2022) # removed 16640 - 11766 
-# CARI_Q_bf = BaseflowSeparation(cari.final.discharge.2022$MeanDischarge, filter_parameter = 0.95, passes = 3)
-
-
-# ##Deliniate storms in FRCH ##
-# 
-# # ID storms: Any events where Q reached 2X mean base flow 
-# # Pick starting points: manually select inflection pt when Q began to rise
-# # Pick ending points: manually select pt when Q reached pre-storm baseflow OR when another event occurred
-# 
-# 
-# FRCH_bfQ_mn = mean(FRCH_Q_bf$bt)
-# FRCH_bfQ_mn
-# FRCH_bfQ_mn*2
-# 
-# STRT_bfQ_mn = mean(STRT_Q_bf$bt)
-# STRT_bfQ_mn
-# STRT_bfQ_mn*2
-# 
-# VAUL_bfQ_mn = mean(VAUL_Q_bf$bt)
-# VAUL_bfQ_mn
-# VAUL_bfQ_mn*2
-# 
-# POKE_bfQ_mn = mean(POKE_Q_bf$bt)
-# POKE_bfQ_mn
-# POKE_bfQ_mn*2
-# 
-# MOOS_bfQ_mn = mean(MOOS_Q_bf$bt)
-# MOOS_bfQ_mn
-# MOOS_bfQ_mn*2
-# 
-# CARI_bfQ_mn = mean(CARI_Q_bf$bt)
-# CARI_bfQ_mn
-# CARI_bfQ_mn*2
 
 ### Merge Discharge and Precip ###
 CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2022.final.csv"))
@@ -16365,71 +16310,38 @@ FRCH_storm4_09_19_abs = subset(FRCH_storm4_09_19, select = c("datetimeAK","ABS_2
 names(FRCH_storm4_09_19_abs) = c("valuedatetime","datavalue")
 
 # Write CSV # 
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_Q.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_turb.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_abs.csv"))
+write.csv(FRCH_storm1_07_10, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10.csv"))
+write.csv(FRCH_storm1_07_10_Q, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_Q.csv"))
+write.csv(FRCH_storm1_07_10_NO3, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_NO3.csv"))
+write.csv(FRCH_storm1_07_10_fDOM, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_fDOM.csv"))
+write.csv(FRCH_storm1_07_10_SPC, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_SPC.csv"))
+write.csv(FRCH_storm1_07_10_turb, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_turb.csv"))
+write.csv(FRCH_storm1_07_10_abs, here("Storm_Events", "2022", "FRCH", "FRCH_storm1_07_10_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_Q.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_turb.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_abs.csv"))
+write.csv(FRCH_storm2_08_05, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05.csv"))
+write.csv(FRCH_storm2_08_05_Q, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_Q.csv"))
+write.csv(FRCH_storm2_08_05_NO3, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_NO3.csv"))
+write.csv(FRCH_storm2_08_05_fDOM, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_fDOM.csv"))
+write.csv(FRCH_storm2_08_05_SPC, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_SPC.csv"))
+write.csv(FRCH_storm2_08_05_turb, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_turb.csv"))
+write.csv(FRCH_storm2_08_05_abs, here("Storm_Events", "2022", "FRCH", "FRCH_storm2_08_05_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_Q.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_turb.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_abs.csv"))
+write.csv(FRCH_storm3_09_14, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14.csv"))
+write.csv(FRCH_storm3_09_14_Q, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_Q.csv"))
+write.csv(FRCH_storm3_09_14_NO3, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_NO3.csv"))
+write.csv(FRCH_storm3_09_14_fDOM, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_fDOM.csv"))
+write.csv(FRCH_storm3_09_14_SPC, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_SPC.csv"))
+write.csv(FRCH_storm3_09_14_turb, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_turb.csv"))
+write.csv(FRCH_storm3_09_14_abs, here("Storm_Events", "2022", "FRCH", "FRCH_storm3_09_14_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_Q.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_turb.csv"))
-write.csv(here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_abs.csv"))
+write.csv(FRCH_storm4_09_19, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19.csv"))
+write.csv(FRCH_storm4_09_19_Q, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_Q.csv"))
+write.csv(FRCH_storm4_09_19_NO3, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_NO3.csv"))
+write.csv(FRCH_storm4_09_19_fDOM, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_fDOM.csv"))
+write.csv(FRCH_storm4_09_19_SPC, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_SPC.csv"))
+write.csv(FRCH_storm4_09_19_turb, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_turb.csv"))
+write.csv(FRCH_storm4_09_19_abs, here("Storm_Events", "2022", "FRCH", "FRCH_storm4_09_19_abs.csv"))
 
-
-# write.csv(FRCH_storm1_07_10, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10.csv")
-# write.csv(FRCH_storm1_07_10_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_Q.csv")
-# write.csv(FRCH_storm1_07_10_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_NO3.csv")
-# write.csv(FRCH_storm1_07_10_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_fDOM.csv")
-# write.csv(FRCH_storm1_07_10_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_SPC.csv")
-# write.csv(FRCH_storm1_07_10_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_turb.csv")
-# write.csv(FRCH_storm1_07_10_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm1_07_10_abs.csv")
-# 
-# write.csv(FRCH_storm2_08_05, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05.csv")
-# write.csv(FRCH_storm2_08_05_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_Q.csv")
-# write.csv(FRCH_storm2_08_05_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_NO3.csv")
-# write.csv(FRCH_storm2_08_05_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_fDOM.csv")
-# write.csv(FRCH_storm2_08_05_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_SPC.csv")
-# write.csv(FRCH_storm2_08_05_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_turb.csv")
-# write.csv(FRCH_storm2_08_05_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm2_08_05_abs.csv")
-# 
-# write.csv(FRCH_storm3_09_14, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14.csv")
-# write.csv(FRCH_storm3_09_14_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_Q.csv")
-# write.csv(FRCH_storm3_09_14_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_NO3.csv")
-# write.csv(FRCH_storm3_09_14_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_fDOM.csv")
-# write.csv(FRCH_storm3_09_14_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_SPC.csv")
-# write.csv(FRCH_storm3_09_14_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_turb.csv")
-# write.csv(FRCH_storm3_09_14_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm3_09_14_abs.csv")
-# 
-# write.csv(FRCH_storm4_09_19, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19.csv")
-# write.csv(FRCH_storm4_09_19_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_Q.csv")
-# write.csv(FRCH_storm4_09_19_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_NO3.csv")
-# write.csv(FRCH_storm4_09_19_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_fDOM.csv")
-# write.csv(FRCH_storm4_09_19_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_SPC.csv")
-# write.csv(FRCH_storm4_09_19_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_turb.csv")
-# write.csv(FRCH_storm4_09_19_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH/FRCH_storm4_09_19_abs.csv")
-# 
 
 
 # MOOS # 
