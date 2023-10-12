@@ -119,7 +119,6 @@ HI.dat_2022$year <- "2022"
 
 
 
-HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021)
 HI.dat <- rbind(HI.dat_2015, HI.dat_2018, HI.dat_2019, HI.dat_2020, HI.dat_2021, HI.dat_2022)
 # write.csv(HI.dat, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/HI.dat.csv")
 
@@ -11242,10 +11241,6 @@ FRCHstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="FRCH", 
                                   full.names=TRUE)
 
-# FRCHstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
-#                                   recursive=F, 
-#                                   pattern="FRCH", 
-#                                   full.names=TRUE)
 
 FRCH_storms<-do.call("rbind", lapply(FRCHstorm_file_list, 
                                      read.csv, 
@@ -11483,9 +11478,8 @@ HI.frch.2022$date <- as.Date(HI.frch.2022$doy, origin = "2022-01-01")
 origin_date <- as.Date("2022-05-13")
 HI.frch.2022$TimeSinceChena <- julian(HI.frch.2022$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.frch.2022.csv"))
+write.csv(HI.frch.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.frch.2022.csv"))
 
-# write.csv(HI.frch.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.frch.2022.csv")
 
 ### MOOS ####
 MOOSstorm_file_list <- list.files(path = "All_sites/", 
