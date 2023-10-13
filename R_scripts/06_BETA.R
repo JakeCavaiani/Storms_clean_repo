@@ -6292,10 +6292,6 @@ storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/",
                                    pattern=".csv", 
                                    full.names=TRUE)
 
-# storm_file_list_beta <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
-#                                    recursive=F, 
-#                                    pattern=".csv", 
-#                                    full.names=TRUE)
 
 storm_list_beta<-do.call("list", lapply(storm_file_list_beta, 
                                         read.csv, 
