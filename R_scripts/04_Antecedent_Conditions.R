@@ -11487,11 +11487,6 @@ MOOSstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="MOOS", 
                                   full.names=TRUE)
 
-# MOOSstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
-#                                   recursive=F, 
-#                                   pattern="MOOS", 
-#                                   full.names=TRUE)
-
 MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -11499,8 +11494,8 @@ MOOS_storms<-do.call("rbind", lapply(MOOSstorm_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 MOOS_storms$storm.num = c(rep("storm1", 199),
-                          rep("storm2a", 71),
-                          rep("storm2b", 151),
+                          rep("storm2a", 223),
+                          
                           rep("storm3", 99),
                           rep("storm4", 215))
 
@@ -11708,9 +11703,7 @@ HI.moos.2022$date <- as.Date(HI.moos.2022$doy, origin = "2022-01-01")
 origin_date <- as.Date("2022-05-13")
 HI.moos.2022$TimeSinceChena <- julian(HI.moos.2022$date, origin_date)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.moos.2022.csv"))
-
-# write.csv(HI.moos.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.moos.2022.csv")
+write.csv(HI.moos.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.moos.2022.csv"))
 
 ### POKE ####
 POKEstorm_file_list <- list.files(path = "All_sites/", 
