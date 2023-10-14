@@ -16627,10 +16627,6 @@ write.csv(MOOS_storm4_09_15_SPC, here("Storm_Events", "2022", "MOOS", "MOOS_stor
 write.csv(MOOS_storm4_09_15_turb, here("Storm_Events", "2022", "MOOS", "MOOS_storm4_09_15_turb.csv"))
 write.csv(MOOS_storm4_09_15_abs, here("Storm_Events", "2022", "MOOS", "MOOS_storm4_09_15_abs.csv"))
 
-
-
-
-
 # POKE # 
 plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
      xlim = as.POSIXct(c("2022-05-01 0:00:00","2022-10-15 00:00:00"), tz="America/Anchorage"),
@@ -16648,7 +16644,6 @@ plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
 par(new = T)
 plot(POKE$fDOM ~ POKE$datetimeAK, xlab="", ylab="", col="maroon",
      xlim = as.POSIXct(c("2022-05-01 00:00:00","2022-10-31 23:45:00"), tz="America/Anchorage"))
-
 
 # storm 1 # 
 plot(POKE$Q ~ POKE$datetimeAK, type="p", xlab="", ylab="Q (L/sec)",
@@ -16870,71 +16865,37 @@ POKE_storm4_09_14_abs = subset(POKE_storm4_09_14, select = c("datetimeAK","ABS_2
 names(POKE_storm4_09_14_abs) = c("valuedatetime","datavalue")
 
 # Write CSV # 
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_Q.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_turb.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_abs.csv"))
+write.csv(POKE_storm1_07_15, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15.csv"))
+write.csv(POKE_storm1_07_15_Q, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_Q.csv"))
+write.csv(POKE_storm1_07_15_NO3, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_NO3.csv"))
+write.csv(POKE_storm1_07_15_fDOM, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_fDOM.csv"))
+write.csv(POKE_storm1_07_15_SPC, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_SPC.csv"))
+write.csv(POKE_storm1_07_15_turb, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_turb.csv"))
+write.csv(POKE_storm1_07_15_abs, here("Storm_Events", "2022", "POKE", "POKE_storm1_07_15_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_Q.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_turb.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_abs.csv"))
+write.csv(POKE_storm2_09_03, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03.csv"))
+write.csv(POKE_storm2_09_03_Q, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_Q.csv"))
+write.csv(POKE_storm2_09_03_NO3, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_NO3.csv"))
+write.csv(POKE_storm2_09_03_fDOM, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_fDOM.csv"))
+write.csv(POKE_storm2_09_03_SPC, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_SPC.csv"))
+write.csv(POKE_storm2_09_03_turb, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_turb.csv"))
+write.csv(POKE_storm2_09_03_abs, here("Storm_Events", "2022", "POKE", "POKE_storm2_09_03_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_Q.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_turb.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_abs.csv"))
+write.csv(POKE_storm3_09_09, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09.csv"))
+write.csv(POKE_storm3_09_09_Q, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_Q.csv"))
+write.csv(POKE_storm3_09_09_NO3, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_NO3.csv"))
+write.csv(POKE_storm3_09_09_fDOM, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_fDOM.csv"))
+write.csv(POKE_storm3_09_09_SPC, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_SPC.csv"))
+write.csv(POKE_storm3_09_09_turb, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_turb.csv"))
+write.csv(POKE_storm3_09_09_abs, here("Storm_Events", "2022", "POKE", "POKE_storm3_09_09_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_Q.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_turb.csv"))
-write.csv(here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_abs.csv"))
-
-
-# write.csv(POKE_storm1_07_15, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15.csv")
-# write.csv(POKE_storm1_07_15_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_Q.csv")
-# write.csv(POKE_storm1_07_15_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_NO3.csv")
-# write.csv(POKE_storm1_07_15_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_fDOM.csv")
-# write.csv(POKE_storm1_07_15_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_SPC.csv")
-# write.csv(POKE_storm1_07_15_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_turb.csv")
-# write.csv(POKE_storm1_07_15_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm1_07_15_abs.csv")
-# 
-# write.csv(POKE_storm2_09_03, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03.csv")
-# write.csv(POKE_storm2_09_03_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_Q.csv")
-# write.csv(POKE_storm2_09_03_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_NO3.csv")
-# write.csv(POKE_storm2_09_03_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_fDOM.csv")
-# write.csv(POKE_storm2_09_03_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_SPC.csv")
-# write.csv(POKE_storm2_09_03_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_turb.csv")
-# write.csv(POKE_storm2_09_03_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm2_09_03_abs.csv")
-# 
-# write.csv(POKE_storm3_09_09, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09.csv")
-# write.csv(POKE_storm3_09_09_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_Q.csv")
-# write.csv(POKE_storm3_09_09_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_NO3.csv")
-# write.csv(POKE_storm3_09_09_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_fDOM.csv")
-# write.csv(POKE_storm3_09_09_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_SPC.csv")
-# write.csv(POKE_storm3_09_09_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_turb.csv")
-# write.csv(POKE_storm3_09_09_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm3_09_09_abs.csv")
-# 
-# write.csv(POKE_storm4_09_14, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14.csv")
-# write.csv(POKE_storm4_09_14_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_Q.csv")
-# write.csv(POKE_storm4_09_14_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_NO3.csv")
-# write.csv(POKE_storm4_09_14_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_fDOM.csv")
-# write.csv(POKE_storm4_09_14_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_SPC.csv")
-# write.csv(POKE_storm4_09_14_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_turb.csv")
-# write.csv(POKE_storm4_09_14_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/POKE/POKE_storm4_09_14_abs.csv")
-
+write.csv(POKE_storm4_09_14, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14.csv"))
+write.csv(POKE_storm4_09_14_Q, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_Q.csv"))
+write.csv(POKE_storm4_09_14_NO3, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_NO3.csv"))
+write.csv(POKE_storm4_09_14_fDOM, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_fDOM.csv"))
+write.csv(POKE_storm4_09_14_SPC, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_SPC.csv"))
+write.csv(POKE_storm4_09_14_turb, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_turb.csv"))
+write.csv(POKE_storm4_09_14_abs, here("Storm_Events", "2022", "POKE", "POKE_storm4_09_14_abs.csv"))
 
 # VAUL # 
 plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",

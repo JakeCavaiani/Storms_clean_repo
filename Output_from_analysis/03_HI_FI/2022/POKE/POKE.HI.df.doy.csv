@@ -53,14 +53,14 @@
 "Interpolated HI for 4% discharge...52","2",-0.444941030032668,4,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 6% discharge...53","2",-0.460884256633536,6,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 8% discharge...54","2",-0.458512323398705,8,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
-"Interpolated HI for 10% discharge...55","2",-0.447046493089541,10,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
+"Interpolated HI for 10% discharge...55","2",-0.44704649308954,10,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 12% discharge...56","2",-0.433887787257018,12,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 14% discharge...57","2",-0.433887787257018,14,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 16% discharge...58","2",-0.433887787257018,16,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 18% discharge...59","2",-0.406945416367185,18,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 20% discharge...60","2",-0.396280794780244,20,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
-"Interpolated HI for 22% discharge...61","2",-0.370966131675091,22,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
-"Interpolated HI for 24% discharge...62","2",-0.370966131675091,24,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
+"Interpolated HI for 22% discharge...61","2",-0.37096613167509,22,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
+"Interpolated HI for 24% discharge...62","2",-0.37096613167509,24,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 26% discharge...63","2",-0.345198201187188,26,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 28% discharge...64","2",-0.345198201187188,28,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 30% discharge...65","2",-0.345198201187188,30,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
@@ -88,7 +88,7 @@
 "Interpolated HI for 74% discharge...87","2",-0.339676550021949,74,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 76% discharge...88","2",-0.418831208373633,76,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 78% discharge...89","2",-0.413105955729287,78,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
-"Interpolated HI for 80% discharge...90","2",-0.411960431213721,80,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
+"Interpolated HI for 80% discharge...90","2",-0.41196043121372,80,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 82% discharge...91","2",-0.444256376103913,82,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 84% discharge...92","2",-0.460775603167495,84,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
 "Interpolated HI for 86% discharge...93","2",-0.446273916390304,86,"POKE_storm1_07_15_fDOM","POKE","storm1","07","15","fDOM",2023-07-15,196
@@ -142,7 +142,7 @@
 "Interpolated HI for 82% discharge...141","3",0.561403508771968,82,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
 "Interpolated HI for 84% discharge...142","3",0.548245614035088,84,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
 "Interpolated HI for 86% discharge...143","3",0.542982456140397,86,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
-"Interpolated HI for 88% discharge...144","3",0.538596491228071,88,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
+"Interpolated HI for 88% discharge...144","3",0.53859649122807,88,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
 "Interpolated HI for 90% discharge...145","3",0.528947368421053,90,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
 "Interpolated HI for 92% discharge...146","3",0.504385964912229,92,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
 "Interpolated HI for 94% discharge...147","3",0.549122807017554,94,"POKE_storm1_07_15_SPC","POKE","storm1","07","15","SPC",2023-07-15,196
@@ -395,7 +395,7 @@
 "Interpolated HI for 88% discharge...394","8",0.467280163599081,88,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
 "Interpolated HI for 90% discharge...395","8",0.398773006134976,90,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
 "Interpolated HI for 92% discharge...396","8",0.398773006134976,92,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
-"Interpolated HI for 94% discharge...397","8",0.539877300613441,94,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
+"Interpolated HI for 94% discharge...397","8",0.53987730061344,94,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
 "Interpolated HI for 96% discharge...398","8",0.496932515337391,96,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
 "Interpolated HI for 98% discharge...399","8",0.485685071574612,98,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
 "Interpolated HI for 100% discharge...400","8",0.485685071574612,100,"POKE_storm2_09_03_SPC","POKE","storm2","09","03","SPC",2023-09-03,246
@@ -701,7 +701,7 @@
 "Interpolated HI for 100% discharge...700","14",0.0836856113981521,100,"POKE_storm3_09_09_turb","POKE","storm3","09","09","turb",2023-09-09,252
 "Interpolated HI for 2% discharge...701","15",-0.316267454697143,2,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 4% discharge...702","15",-0.299942950870076,4,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
-"Interpolated HI for 6% discharge...703","15",-0.283789798726891,6,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
+"Interpolated HI for 6% discharge...703","15",-0.28378979872689,6,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 8% discharge...704","15",-0.232748703179302,8,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 10% discharge...705","15",-0.279779888419666,10,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 12% discharge...706","15",-0.279779888419666,12,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
@@ -724,7 +724,7 @@
 "Interpolated HI for 46% discharge...723","15",-0.194501909256132,46,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 48% discharge...724","15",-0.125138345984388,48,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 50% discharge...725","15",-0.462052879997896,50,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
-"Interpolated HI for 52% discharge...726","15",-0.458182145052391,52,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
+"Interpolated HI for 52% discharge...726","15",-0.45818214505239,52,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 54% discharge...727","15",-0.408353119501527,54,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 56% discharge...728","15",-0.315180610037532,56,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
 "Interpolated HI for 58% discharge...729","15",-0.318305065554716,58,"POKE_storm3_09_09_abs","POKE","storm3","09","09","abs",2023-09-09,252
@@ -759,7 +759,7 @@
 "Interpolated HI for 16% discharge...758","16",0.48358294930877,16,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 18% discharge...759","16",0.479838709677446,18,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 20% discharge...760","16",0.45766129032264,20,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
-"Interpolated HI for 22% discharge...761","16",0.451036866359491,22,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
+"Interpolated HI for 22% discharge...761","16",0.45103686635949,22,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 24% discharge...762","16",0.448156682027702,24,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 26% discharge...763","16",0.428571428571469,26,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 28% discharge...764","16",0.417050691244245,28,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
@@ -790,7 +790,7 @@
 "Interpolated HI for 78% discharge...789","16",0.0996543778802358,78,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 80% discharge...790","16",0.0809331797235028,80,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 82% discharge...791","16",0.0682603686635985,82,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
-"Interpolated HI for 84% discharge...792","16",0.0913018433179421,84,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
+"Interpolated HI for 84% discharge...792","16",0.091301843317942,84,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 86% discharge...793","16",0.0889976958525125,86,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 88% discharge...794","16",0.116359447004572,88,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
 "Interpolated HI for 90% discharge...795","16",0.141705069124382,90,"POKE_storm4_09_14_NO3","POKE","storm4","09","14","NO3",2023-09-14,257
@@ -931,7 +931,7 @@
 "Interpolated HI for 60% discharge...930","19",0.122061482820977,60,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 62% discharge...931","19",0.171609403254973,62,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 64% discharge...932","19",0.11618444846293,64,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
-"Interpolated HI for 66% discharge...933","19",-0.0757685352622069,66,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
+"Interpolated HI for 66% discharge...933","19",-0.075768535262207,66,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 68% discharge...934","19",-0.27007233273056,68,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 70% discharge...935","19",-0.0564195298372525,70,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 72% discharge...936","19",-0.343580470162749,72,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
@@ -942,7 +942,7 @@
 "Interpolated HI for 82% discharge...941","19",-0.200180831826402,82,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 84% discharge...942","19",-0.149819168173599,84,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 86% discharge...943","19",-0.0650994575045213,86,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
-"Interpolated HI for 88% discharge...944","19",-0.0686256781193501,88,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
+"Interpolated HI for 88% discharge...944","19",-0.06862567811935,88,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 90% discharge...945","19",-0.0990958408679931,90,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 92% discharge...946","19",-0.137160940325497,92,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
 "Interpolated HI for 94% discharge...947","19",-0.109132007233274,94,"POKE_storm4_09_14_turb","POKE","storm4","09","14","turb",2023-09-14,257
@@ -952,7 +952,7 @@
 "Interpolated HI for 2% discharge...951","20",-0.231768183878566,2,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
 "Interpolated HI for 4% discharge...952","20",-0.231768183878566,4,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
 "Interpolated HI for 6% discharge...953","20",-0.231768183878566,6,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
-"Interpolated HI for 8% discharge...954","20",-0.246448288250429,8,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
+"Interpolated HI for 8% discharge...954","20",-0.24644828825043,8,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
 "Interpolated HI for 10% discharge...955","20",-0.228516192821475,10,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
 "Interpolated HI for 12% discharge...956","20",-0.222604154283779,12,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
 "Interpolated HI for 14% discharge...957","20",-0.230461250405696,14,"POKE_storm4_09_14_abs","POKE","storm4","09","14","abs",2023-09-14,257
