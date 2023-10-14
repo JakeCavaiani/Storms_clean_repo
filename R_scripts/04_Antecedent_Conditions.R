@@ -11711,11 +11711,6 @@ POKEstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="POKE", 
                                   full.names=TRUE)
 
-# POKEstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
-#                                   recursive=F, 
-#                                   pattern="POKE", 
-#                                   full.names=TRUE)
-
 POKE_storms<-do.call("rbind", lapply(POKEstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -11932,10 +11927,7 @@ origin_date <- as.Date("2022-05-13")
 HI.poke.2022$TimeSinceChena <- julian(HI.poke.2022$date, origin_date)
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.poke.2022.csv"))
-
-# write.csv(HI.poke.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.poke.2022.csv")
-
+write.csv(HI.poke.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.poke.2022.csv"))
 
 ### STRT ####
 STRTstorm_file_list <- list.files(path = "All_sites/", 
