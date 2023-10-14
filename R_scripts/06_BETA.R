@@ -6311,7 +6311,7 @@ for(i in 1:length(storm_list_beta)){
 #  organize storm data by site and solute 
 CARI_storm_list_beta = storm_list_beta[c(1:45)] #45
 FRCH_storm_list_beta = storm_list_beta[c(46:69)] #24
-MOOS_storm_list_beta = storm_list_beta[c(70:99)] #30
+MOOS_storm_list_beta = storm_list_beta[c(70:93)] #30
 POKE_storm_list_beta = storm_list_beta[c(100:123)]# 24
 STRT_storm_list_beta = storm_list_beta[c(124:141)] #18
 VAUL_storm_list_beta = storm_list_beta[c(142:153)] #12
@@ -6625,8 +6625,8 @@ beta.all.no3 <- FRCH_NO3_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_NO3_storm$storm.ID = c(rep("storm1", 199),
-                            rep("storm2a", 71),
-                            rep("storm2b", 151),
+                            rep("storm2a", 223),
+                            
                             rep("storm3", 99),
                             rep("storm4", 215))
 
@@ -6843,8 +6843,8 @@ beta.all.fDOM <- FRCH_fDOM_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_fDOM_storm$storm.ID = c(rep("storm1", 199),
-                             rep("storm2a", 71),
-                             rep("storm2b", 151),
+                             rep("storm2a", 223),
+                             
                              rep("storm3", 99),
                              rep("storm4", 215))
 
@@ -7064,8 +7064,8 @@ beta.all.SPC <- FRCH_SPC_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_SPC_storm$storm.ID = c(rep("storm1", 199),
-                            rep("storm2a", 71),
-                            rep("storm2b", 151),
+                            rep("storm2a", 223),
+                            
                             rep("storm3", 99),
                             rep("storm4", 215))
 
@@ -7284,8 +7284,8 @@ beta.all.turb <- FRCH_turb_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_turb_storm$storm.ID = c(rep("storm1", 199),
-                             rep("storm2a", 71),
-                             rep("storm2b", 151),
+                             rep("storm2a", 223),
+                             
                              rep("storm3", 99),
                              rep("storm4", 215))
 
@@ -7501,8 +7501,8 @@ beta.all.abs <- FRCH_abs_storm_ascending %>% group_by(storm.ID) %>%
 
 # MOOS # 
 MOOS_abs_storm$storm.ID = c(rep("storm1", 199),
-                            rep("storm2a", 71),
-                            rep("storm2b", 151),
+                            rep("storm2a", 223),
+                            
                             rep("storm3", 99),
                             rep("storm4", 215))
 
