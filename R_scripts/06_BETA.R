@@ -6312,7 +6312,7 @@ for(i in 1:length(storm_list_beta)){
 CARI_storm_list_beta = storm_list_beta[c(1:45)] #45
 FRCH_storm_list_beta = storm_list_beta[c(46:69)] #24
 MOOS_storm_list_beta = storm_list_beta[c(70:93)] #30
-POKE_storm_list_beta = storm_list_beta[c(100:123)]# 24
+POKE_storm_list_beta = storm_list_beta[c(94:117)]# 24
 STRT_storm_list_beta = storm_list_beta[c(124:141)] #18
 VAUL_storm_list_beta = storm_list_beta[c(142:153)] #12
 
