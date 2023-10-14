@@ -14351,44 +14351,33 @@ write.csv(FRCH.HI.df, here("Output_from_analysis", "03_HI_FI", "2022", "FRCH", "
 ### MOOS
 ```{python}
 # MOOS #
-MOOS_storm1_07_10_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_Q.csv")
-MOOS_storm1_07_10_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_NO3.csv")
-MOOS_storm1_07_10_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_fDOM.csv")
-MOOS_storm1_07_10_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_SPC.csv")
-MOOS_storm1_07_10_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_turb.csv")
-MOOS_storm1_07_10_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm1_07_10_abs.csv")
+MOOS_storm1_07_10_Q = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_Q.csv'))
+MOOS_storm1_07_10_NO3 = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_NO3.csv'))
+MOOS_storm1_07_10_fDOM = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_fDOM.csv'))
+MOOS_storm1_07_10_SPC = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_SPC.csv'))
+MOOS_storm1_07_10_turb = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_turb.csv'))
+MOOS_storm1_07_10_abs = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm1_07_10_abs.csv'))
 
+MOOS_storm2a_08_05_Q = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_Q.csv'))
+MOOS_storm2a_08_05_NO3 = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_NO3.csv'))
+MOOS_storm2a_08_05_fDOM = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_fDOM.csv'))
+MOOS_storm2a_08_05_SPC = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_SPC.csv'))
+MOOS_storm2a_08_05_turb = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_turb.csv'))
+MOOS_storm2a_08_05_abs = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm2a_08_05_abs.csv'))
 
-MOOS_storm2a_08_05_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_Q.csv")
-MOOS_storm2a_08_05_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_NO3.csv")
-MOOS_storm2a_08_05_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_fDOM.csv")
-MOOS_storm2a_08_05_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_SPC.csv")
-MOOS_storm2a_08_05_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_turb.csv")
-MOOS_storm2a_08_05_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2a_08_05_abs.csv")
+MOOS_storm3_08_19_Q = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_Q.csv'))
+MOOS_storm3_08_19_NO3 = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_NO3.csv'))
+MOOS_storm3_08_19_fDOM = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_fDOM.csv'))
+MOOS_storm3_08_19_SPC = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_SPC.csv'))
+MOOS_storm3_08_19_turb = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_turb.csv'))
+MOOS_storm3_08_19_abs = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm3_08_19_abs.csv'))
 
-
-MOOS_storm2b_08_06_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_Q.csv")
-MOOS_storm2b_08_06_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_NO3.csv")
-MOOS_storm2b_08_06_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_fDOM.csv")
-MOOS_storm2b_08_06_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_SPC.csv")
-MOOS_storm2b_08_06_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_turb.csv")
-MOOS_storm2b_08_06_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm2b_08_06_abs.csv")
-
-
-MOOS_storm3_08_19_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_Q.csv")
-MOOS_storm3_08_19_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_NO3.csv")
-MOOS_storm3_08_19_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_fDOM.csv")
-MOOS_storm3_08_19_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_SPC.csv")
-MOOS_storm3_08_19_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_turb.csv")
-MOOS_storm3_08_19_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm3_08_19_abs.csv")
-
-MOOS_storm4_09_15_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_Q.csv")
-MOOS_storm4_09_15_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_NO3.csv")
-MOOS_storm4_09_15_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_fDOM.csv")
-MOOS_storm4_09_15_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_SPC.csv")
-MOOS_storm4_09_15_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_turb.csv")
-MOOS_storm4_09_15_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/MOOS/MOOS_storm4_09_15_abs.csv")
-
+MOOS_storm4_09_15_Q = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_Q.csv'))
+MOOS_storm4_09_15_NO3 = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_NO3.csv'))
+MOOS_storm4_09_15_fDOM = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_fDOM.csv'))
+MOOS_storm4_09_15_SPC = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_SPC.csv'))
+MOOS_storm4_09_15_turb = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_turb.csv'))
+MOOS_storm4_09_15_abs = pd.read_csv(here('Storm_events/2022/MOOS/MOOS_storm4_09_15_abs.csv'))
 ```
 
 MOOS_storms
@@ -14403,11 +14392,6 @@ MOOS_storm2a_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_Q['va
 MOOS_storm2a_08_05_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_08_05_NO3 = hysteresisMetrics(MOOS_storm2a_08_05_Q, MOOS_storm2a_08_05_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2b_08_06_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_08_06_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_08_06_NO3 = hysteresisMetrics(MOOS_storm2b_08_06_Q, MOOS_storm2b_08_06_NO3, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm3_08_19_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_08_19_NO3['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_NO3['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -14430,11 +14414,6 @@ MOOS_storm2a_08_05_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_fD
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_08_05_fDOM = hysteresisMetrics(MOOS_storm2a_08_05_Q, MOOS_storm2a_08_05_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_08_06_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_08_06_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_08_06_fDOM = hysteresisMetrics(MOOS_storm2b_08_06_Q, MOOS_storm2b_08_06_fDOM, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm3_08_19_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_08_19_fDOM['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_fDOM['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -14455,11 +14434,6 @@ MOOS_storm2a_08_05_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_Q['va
 MOOS_storm2a_08_05_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_08_05_SPC = hysteresisMetrics(MOOS_storm2a_08_05_Q, MOOS_storm2a_08_05_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
-MOOS_storm2b_08_06_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_08_06_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_08_06_SPC = hysteresisMetrics(MOOS_storm2b_08_06_Q, MOOS_storm2b_08_06_SPC, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm3_08_19_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_08_19_SPC['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_SPC['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -14482,11 +14456,6 @@ MOOS_storm2a_08_05_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_tu
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_08_05_turb = hysteresisMetrics(MOOS_storm2a_08_05_Q, MOOS_storm2a_08_05_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_08_06_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_08_06_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_08_06_turb = hysteresisMetrics(MOOS_storm2b_08_06_Q, MOOS_storm2b_08_06_turb, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
-
 MOOS_storm3_08_19_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_08_19_turb['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_turb['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 timespacing = 15 # 15 minutes between records
@@ -14508,10 +14477,6 @@ MOOS_storm2a_08_05_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm2a_08_05_abs
 timespacing = 15 # 15 minutes between records
 hysdict_MOOS_storm2a_08_05_abs = hysteresisMetrics(MOOS_storm2a_08_05_Q, MOOS_storm2a_08_05_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
-MOOS_storm2b_08_06_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-MOOS_storm2b_08_06_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm2b_08_06_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
-timespacing = 15 # 15 minutes between records
-hysdict_MOOS_storm2b_08_06_abs = hysteresisMetrics(MOOS_storm2b_08_06_Q, MOOS_storm2b_08_06_abs, timespacing, timespacing, debug=False, interpall=True, discharge_time_spacing_units='minutes', response_time_spacing_units='minutes', discharge_units='Lsec')
 
 MOOS_storm3_08_19_Q['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_Q['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
 MOOS_storm3_08_19_abs['valuedatetime'] =  pd.to_datetime(MOOS_storm3_08_19_abs['valuedatetime'], format='%Y-%m-%d %H:%M:%S')
@@ -14537,11 +14502,7 @@ MOOS.hyst.results.list = list(py$hysdict_MOOS_storm1_07_10_NO3,
                               py$hysdict_MOOS_storm2a_08_05_SPC,
                               py$hysdict_MOOS_storm2a_08_05_turb,
                               py$hysdict_MOOS_storm2a_08_05_abs,
-                              py$hysdict_MOOS_storm2b_08_06_NO3,
-                              py$hysdict_MOOS_storm2b_08_06_fDOM,
-                              py$hysdict_MOOS_storm2b_08_06_SPC,
-                              py$hysdict_MOOS_storm2b_08_06_turb,
-                              py$hysdict_MOOS_storm2b_08_06_abs,
+                              
                               py$hysdict_MOOS_storm3_08_19_NO3,
                               py$hysdict_MOOS_storm3_08_19_fDOM,
                               py$hysdict_MOOS_storm3_08_19_SPC,
@@ -14599,11 +14560,7 @@ MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_07_10_NO3",
                                   "MOOS_storm2a_08_05_SPC",
                                   "MOOS_storm2a_08_05_turb",
                                   "MOOS_storm2a_08_05_abs",
-                                  "MOOS_storm2b_08_06_NO3",
-                                  "MOOS_storm2b_08_06_fDOM",
-                                  "MOOS_storm2b_08_06_SPC",
-                                  "MOOS_storm2b_08_06_turb",
-                                  "MOOS_storm2b_08_06_abs",
+                                  
                                   "MOOS_storm3_08_19_NO3",
                                   "MOOS_storm3_08_19_fDOM",
                                   "MOOS_storm3_08_19_SPC",
@@ -14619,7 +14576,8 @@ MOOS.hyst.results.df$storm.ID = c("MOOS_storm1_07_10_NO3",
 
 MOOS.hyst.results.df$site.ID = "MOOS"
 
-write.csv(MOOS.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/MOOS/MOOS.hyst.results.csv")
+write_csv(MOOS.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2022", "MOOS", "MOOS.hyst.results.csv"))
+
 
 # plot HI by normalized discharge
 # HIs.Q.list =list()
@@ -14662,11 +14620,7 @@ MOOS.HI.df$storm.ID = c(rep("MOOS_storm1_07_10_NO3", 50),
                         rep("MOOS_storm2a_08_05_SPC", 50),
                         rep("MOOS_storm2a_08_05_turb", 50),
                         rep("MOOS_storm2a_08_05_abs", 50),
-                        rep("MOOS_storm2b_08_06_NO3", 50),
-                        rep("MOOS_storm2b_08_06_fDOM", 50),
-                        rep("MOOS_storm2b_08_06_SPC", 50),
-                        rep("MOOS_storm2b_08_06_turb", 50),
-                        rep("MOOS_storm2b_08_06_abs", 50),
+                        
                         rep("MOOS_storm3_08_19_NO3", 50),
                         rep("MOOS_storm3_08_19_fDOM", 50),
                         rep("MOOS_storm3_08_19_SPC", 50),
@@ -14703,8 +14657,10 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2022/MOOS/MOOS.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(MOOS.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/MOOS/MOOS.HI.df.csv")
+ggsave(here("plots", "HI_plots", "2022", "MOOS", "MOOS.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2022", "MOOS", "MOOS.HI.df.csv"))
 
 
 MOOS.HI.df$date <- as.Date(with(MOOS.HI.df, paste(month, day, sep = "-")), "%m-%d")
@@ -14720,9 +14676,10 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2022/MOOS/MOOS.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(MOOS.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/MOOS/MOOS.HI.df.doy.csv")
+ggsave(here("plots", "HI_plots", "2022", "MOOS", "MOOS.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
 
+write.csv(MOOS.HI.df, here("Output_from_analysis", "03_HI_FI", "2022", "MOOS", "MOOS.HI.df.doy.csv"))
 
 ```
 
