@@ -12160,11 +12160,6 @@ VAULstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="VAUL", 
                                   full.names=TRUE)
 
-# VAULstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
-#                                   recursive=F, 
-#                                   pattern="VAUL", 
-#                                   full.names=TRUE)
-
 VAUL_storms<-do.call("rbind", lapply(VAULstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -12381,10 +12376,7 @@ origin_date <- as.Date("2022-05-13")
 HI.vaul.2022$TimeSinceChena <- julian(HI.vaul.2022$date, origin_date)
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.vaul.2022.csv"))
-
-# write.csv(HI.vaul.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.vaul.2022.csv")
-
+write.csv(HI.vaul.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.vaul.2022.csv"))
 
 ### CARI ####
 CARIstorm_file_list <- list.files(path = "All_sites/", 
