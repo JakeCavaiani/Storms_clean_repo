@@ -1,5 +1,5 @@
 "","column_label","HI","Q_interval","storm.ID","site.ID","storm.num","month","day","response","date","doy"
-"Interpolated HI for 2% discharge...1","1",0.431657848324509,2,"VAUL_storm1_08_01_NO3","VAUL","storm1","08","01","NO3",2023-08-01,213
+"Interpolated HI for 2% discharge...1","1",0.43165784832451,2,"VAUL_storm1_08_01_NO3","VAUL","storm1","08","01","NO3",2023-08-01,213
 "Interpolated HI for 4% discharge...2","1",0.850617283950596,4,"VAUL_storm1_08_01_NO3","VAUL","storm1","08","01","NO3",2023-08-01,213
 "Interpolated HI for 6% discharge...3","1",0.800088183421521,6,"VAUL_storm1_08_01_NO3","VAUL","storm1","08","01","NO3",2023-08-01,213
 "Interpolated HI for 8% discharge...4","1",0.855820105820095,8,"VAUL_storm1_08_01_NO3","VAUL","storm1","08","01","NO3",2023-08-01,213
@@ -127,11 +127,11 @@
 "Interpolated HI for 52% discharge...126","3",0.135977970781972,52,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 54% discharge...127","3",0.0899902426607792,54,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 56% discharge...128","3",-0.00127076809157567,56,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
-"Interpolated HI for 58% discharge...129","3",0.027312836493215,58,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
+"Interpolated HI for 58% discharge...129","3",0.0273128364932153,58,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 60% discharge...130","3",0.0760455393918762,60,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
-"Interpolated HI for 62% discharge...131","3",0.0849312743933466,62,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
+"Interpolated HI for 62% discharge...131","3",0.0849312743933465,62,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 64% discharge...132","3",0.088078305539696,64,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
-"Interpolated HI for 66% discharge...133","3",0.0721580303287443,66,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
+"Interpolated HI for 66% discharge...133","3",0.0721580303287444,66,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 68% discharge...134","3",0.051517208398247,68,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 70% discharge...135","3",0.041150517563208,70,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
 "Interpolated HI for 72% discharge...136","3",0.0334680591765247,72,"VAUL_storm2_09_14_NO3","VAUL","storm2","09","14","NO3",2023-09-14,257
@@ -158,11 +158,11 @@
 "Interpolated HI for 14% discharge...157","4",0.260075850929611,14,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 16% discharge...158","4",0.221813191749795,16,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 18% discharge...159","4",0.193056542976161,18,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
-"Interpolated HI for 20% discharge...160","4",0.149835856659865,20,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
+"Interpolated HI for 20% discharge...160","4",0.149835856659864,20,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 22% discharge...161","4",0.0766337297655164,22,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 24% discharge...162","4",0.0226495019631312,24,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 26% discharge...163","4",-0.446368291419568,26,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
-"Interpolated HI for 28% discharge...164","4",-0.499608451558566,28,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
+"Interpolated HI for 28% discharge...164","4",-0.499608451558565,28,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 30% discharge...165","4",-0.471841175295508,30,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 32% discharge...166","4",-0.468043455615248,32,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 34% discharge...167","4",-0.451624644272922,34,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
@@ -185,19 +185,19 @@
 "Interpolated HI for 68% discharge...184","4",-0.286705698353379,68,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 70% discharge...185","4",-0.260492621969325,70,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 72% discharge...186","4",-0.258359040540488,72,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
-"Interpolated HI for 74% discharge...187","4",-0.237421434192068,74,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
+"Interpolated HI for 74% discharge...187","4",-0.237421434192067,74,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 76% discharge...188","4",-0.170821124043398,76,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 78% discharge...189","4",-0.201743056137572,78,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 80% discharge...190","4",-0.206138023107087,80,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 82% discharge...191","4",-0.150787768114124,82,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 84% discharge...192","4",-0.0845268673159312,84,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 86% discharge...193","4",-0.0206713992325038,86,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
-"Interpolated HI for 88% discharge...194","4",-0.00170555012882989,88,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
+"Interpolated HI for 88% discharge...194","4",-0.00170555012883,88,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 90% discharge...195","4",0.00329472446311208,90,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 92% discharge...196","4",0.0264891396223801,92,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 94% discharge...197","4",0.0565111283011701,94,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 96% discharge...198","4",0.0650940461843673,96,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
-"Interpolated HI for 98% discharge...199","4",0.0613706658649769,98,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
+"Interpolated HI for 98% discharge...199","4",0.0613706658649771,98,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 100% discharge...200","4",0.376128575158332,100,"VAUL_storm2_09_14_fDOM","VAUL","storm2","09","14","fDOM",2023-09-14,257
 "Interpolated HI for 2% discharge...201","5",0.387733101065197,2,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 4% discharge...202","5",0.84948739183825,4,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
@@ -225,7 +225,7 @@
 "Interpolated HI for 48% discharge...224","5",0.400376959762401,48,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 50% discharge...225","5",0.410215038409916,50,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 52% discharge...226","5",0.413970357255048,52,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
-"Interpolated HI for 54% discharge...227","5",0.416162149812947,54,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
+"Interpolated HI for 54% discharge...227","5",0.416162149812948,54,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 56% discharge...228","5",0.416790416083618,56,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 58% discharge...229","5",0.41344918182597,58,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
 "Interpolated HI for 60% discharge...230","5",0.413727618014108,60,"VAUL_storm2_09_14_SPC","VAUL","storm2","09","14","SPC",2023-09-14,257
@@ -257,7 +257,7 @@
 "Interpolated HI for 12% discharge...256","6",0.140547372794108,12,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 14% discharge...257","6",0.176172887682902,14,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 16% discharge...258","6",0.29454916160727,16,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
-"Interpolated HI for 18% discharge...259","6",0.370523807651159,18,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
+"Interpolated HI for 18% discharge...259","6",0.37052380765116,18,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 20% discharge...260","6",0.423909897864214,20,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 22% discharge...261","6",0.48411445177515,22,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 24% discharge...262","6",0.497327872108934,24,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
@@ -279,7 +279,7 @@
 "Interpolated HI for 56% discharge...278","6",0.323855850296303,56,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 58% discharge...279","6",0.363498632173025,58,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 60% discharge...280","6",0.349790111916783,60,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
-"Interpolated HI for 62% discharge...281","6",0.298774652900671,62,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
+"Interpolated HI for 62% discharge...281","6",0.29877465290067,62,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 64% discharge...282","6",0.297516736091574,64,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 66% discharge...283","6",0.288760223410059,66,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
 "Interpolated HI for 68% discharge...284","6",0.28865787587008,68,"VAUL_storm2_09_14_turb","VAUL","storm2","09","14","turb",2023-09-14,257
@@ -342,7 +342,7 @@
 "Interpolated HI for 82% discharge...341","7",0.0871243376681827,82,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
 "Interpolated HI for 84% discharge...342","7",0.0476572036470002,84,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
 "Interpolated HI for 86% discharge...343","7",-0.00755245804379578,86,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
-"Interpolated HI for 88% discharge...344","7",-0.0279423899182343,88,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
+"Interpolated HI for 88% discharge...344","7",-0.0279423899182345,88,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
 "Interpolated HI for 90% discharge...345","7",-0.0550869129370379,90,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
 "Interpolated HI for 92% discharge...346","7",-0.0679482545809178,92,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
 "Interpolated HI for 94% discharge...347","7",-0.0868856595358733,94,"VAUL_storm2_09_14_abs","VAUL","storm2","09","14","abs",2023-09-14,257
