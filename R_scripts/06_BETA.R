@@ -6313,7 +6313,7 @@ CARI_storm_list_beta = storm_list_beta[c(1:45)] #45
 FRCH_storm_list_beta = storm_list_beta[c(46:69)] #24
 MOOS_storm_list_beta = storm_list_beta[c(70:93)] #30
 POKE_storm_list_beta = storm_list_beta[c(94:117)]# 24
-STRT_storm_list_beta = storm_list_beta[c(124:141)] #18
+STRT_storm_list_beta = storm_list_beta[c(118:135)] #18
 VAUL_storm_list_beta = storm_list_beta[c(142:153)] #12
 
 FRCH_NO3_storm_list_beta = FRCH_storm_list_beta[c(grep("NO3", names(FRCH_storm_list_beta)))]
