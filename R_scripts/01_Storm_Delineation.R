@@ -17028,40 +17028,21 @@ VAUL_storm2_09_14_abs = subset(VAUL_storm2_09_14, select = c("datetimeAK","ABS_2
 names(VAUL_storm2_09_14_abs) = c("valuedatetime","datavalue")
 
 # Write CSV # 
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_Q.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_turb.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_abs.csv"))
+write.csv(VAUL_storm1_08_01, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01.csv"))
+write.csv(VAUL_storm1_08_01_Q, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_Q.csv"))
+write.csv(VAUL_storm1_08_01_NO3, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_NO3.csv"))
+write.csv(VAUL_storm1_08_01_fDOM, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_fDOM.csv"))
+write.csv(VAUL_storm1_08_01_SPC, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_SPC.csv"))
+write.csv(VAUL_storm1_08_01_turb, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_turb.csv"))
+write.csv(VAUL_storm1_08_01_abs, here("Storm_Events", "2022", "VAUL", "VAUL_storm1_08_01_abs.csv"))
 
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_Q.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_NO3.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_fDOM.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_SPC.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_turb.csv"))
-write.csv(here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_abs.csv"))
-
-
-# write.csv(VAUL_storm1_08_01, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01.csv")
-# write.csv(VAUL_storm1_08_01_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_Q.csv")
-# write.csv(VAUL_storm1_08_01_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_NO3.csv")
-# write.csv(VAUL_storm1_08_01_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_fDOM.csv")
-# write.csv(VAUL_storm1_08_01_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_SPC.csv")
-# write.csv(VAUL_storm1_08_01_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_turb.csv")
-# write.csv(VAUL_storm1_08_01_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm1_08_01_abs.csv")
-# 
-# write.csv(VAUL_storm2_09_14, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14.csv")
-# write.csv(VAUL_storm2_09_14_Q, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_Q.csv")
-# write.csv(VAUL_storm2_09_14_NO3, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_NO3.csv")
-# write.csv(VAUL_storm2_09_14_fDOM, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_fDOM.csv")
-# write.csv(VAUL_storm2_09_14_SPC, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_SPC.csv")
-# write.csv(VAUL_storm2_09_14_turb, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_turb.csv")
-# write.csv(VAUL_storm2_09_14_abs, "~/Documents/Storms_clean_repo/Storm_Events/2022/VAUL/VAUL_storm2_09_14_abs.csv")
-
-
+write.csv(VAUL_storm2_09_14, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14.csv"))
+write.csv(VAUL_storm2_09_14_Q, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_Q.csv"))
+write.csv(VAUL_storm2_09_14_NO3, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_NO3.csv"))
+write.csv(VAUL_storm2_09_14_fDOM, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_fDOM.csv"))
+write.csv(VAUL_storm2_09_14_SPC, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_SPC.csv"))
+write.csv(VAUL_storm2_09_14_turb, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_turb.csv"))
+write.csv(VAUL_storm2_09_14_abs, here("Storm_Events", "2022", "VAUL", "VAUL_storm2_09_14_abs.csv"))
 
 # STRT # 
 plot(CPCRW$mean ~ CPCRW$datetimeAK, type="h",
