@@ -17,7 +17,7 @@
 "Interpolated HI for 32% discharge...16","1",0.748755913251853,32,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
 "Interpolated HI for 34% discharge...17","1",0.750353259200058,34,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
 "Interpolated HI for 36% discharge...18","1",0.7531486146096,36,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
-"Interpolated HI for 38% discharge...19","1",0.762333353812141,38,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
+"Interpolated HI for 38% discharge...19","1",0.76233335381214,38,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
 "Interpolated HI for 40% discharge...20","1",0.748755913251853,40,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
 "Interpolated HI for 42% discharge...21","1",0.686459421269403,42,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
 "Interpolated HI for 44% discharge...22","1",0.694845487497843,44,"STRT_storm1_08_19_NO3","STRT","storm1","08","19","NO3",2023-08-19,231
@@ -116,7 +116,7 @@
 "Interpolated HI for 30% discharge...115","3",0.82013201320149,30,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
 "Interpolated HI for 32% discharge...116","3",0.808580858085858,32,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
 "Interpolated HI for 34% discharge...117","3",0.80198019801997,34,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
-"Interpolated HI for 36% discharge...118","3",0.775577557755855,36,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
+"Interpolated HI for 36% discharge...118","3",0.775577557755854,36,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
 "Interpolated HI for 38% discharge...119","3",0.768976897689961,38,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
 "Interpolated HI for 40% discharge...120","3",0.750825082508446,40,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
 "Interpolated HI for 42% discharge...121","3",0.683168316831918,42,"STRT_storm1_08_19_SPC","STRT","storm1","08","19","SPC",2023-08-19,231
@@ -155,7 +155,7 @@
 "Interpolated HI for 8% discharge...154","4",-0.262402088772846,8,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
 "Interpolated HI for 10% discharge...155","4",-0.462513987318164,10,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
 "Interpolated HI for 12% discharge...156","4",-0.459903021260723,12,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
-"Interpolated HI for 14% discharge...157","4",-0.456919060052219,14,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
+"Interpolated HI for 14% discharge...157","4",-0.45691906005222,14,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
 "Interpolated HI for 16% discharge...158","4",-0.414957105557629,16,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
 "Interpolated HI for 18% discharge...159","4",-0.58970533383066,18,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
 "Interpolated HI for 20% discharge...160","4",-0.398918314061918,20,"STRT_storm1_08_19_turb","STRT","storm1","08","19","turb",2023-08-19,231
@@ -287,7 +287,7 @@
 "Interpolated HI for 72% discharge...286","6",0.602825382121454,72,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
 "Interpolated HI for 74% discharge...287","6",0.528948587309016,74,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
 "Interpolated HI for 76% discharge...288","6",0.517618555599177,76,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
-"Interpolated HI for 78% discharge...289","6",0.473135710977351,78,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
+"Interpolated HI for 78% discharge...289","6",0.47313571097735,78,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
 "Interpolated HI for 80% discharge...290","6",0.464335340435426,80,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
 "Interpolated HI for 82% discharge...291","6",0.416164891153426,82,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
 "Interpolated HI for 84% discharge...292","6",0.405868101329031,84,"STRT_storm2_09_04_NO3","STRT","storm2","09","04","NO3",2023-09-04,247
@@ -315,7 +315,7 @@
 "Interpolated HI for 28% discharge...314","7",-0.682117648800312,28,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
 "Interpolated HI for 30% discharge...315","7",-0.691357617092582,30,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
 "Interpolated HI for 32% discharge...316","7",-0.706196290704434,32,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
-"Interpolated HI for 34% discharge...317","7",-0.715983378513339,34,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
+"Interpolated HI for 34% discharge...317","7",-0.71598337851334,34,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
 "Interpolated HI for 36% discharge...318","7",-0.724929521581935,36,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
 "Interpolated HI for 38% discharge...319","7",-0.742079130238431,38,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
 "Interpolated HI for 40% discharge...320","7",-0.751269602780596,40,"STRT_storm2_09_04_fDOM","STRT","storm2","09","04","fDOM",2023-09-04,247
@@ -551,7 +551,7 @@
 "Interpolated HI for 100% discharge...550","11",-0.00974770642205657,100,"STRT_storm3_09_22_NO3","STRT","storm3","09","22","NO3",2023-09-22,265
 "Interpolated HI for 2% discharge...551","12",-0.258995795137624,2,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
 "Interpolated HI for 4% discharge...552","12",-0.719162167438618,4,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
-"Interpolated HI for 6% discharge...553","12",-0.725903286430669,6,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
+"Interpolated HI for 6% discharge...553","12",-0.72590328643067,6,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
 "Interpolated HI for 8% discharge...554","12",-0.694201367095692,8,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
 "Interpolated HI for 10% discharge...555","12",-0.40228814043784,10,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
 "Interpolated HI for 12% discharge...556","12",-0.352177195290389,12,"STRT_storm3_09_22_fDOM","STRT","storm3","09","22","fDOM",2023-09-22,265
@@ -700,7 +700,7 @@
 "Interpolated HI for 98% discharge...699","14",0.00220558063192569,98,"STRT_storm3_09_22_turb","STRT","storm3","09","22","turb",2023-09-22,265
 "Interpolated HI for 100% discharge...700","14",0.00220558063192569,100,"STRT_storm3_09_22_turb","STRT","storm3","09","22","turb",2023-09-22,265
 "Interpolated HI for 2% discharge...701","15",-0.199118165784833,2,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
-"Interpolated HI for 4% discharge...702","15",-0.387566137566131,4,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
+"Interpolated HI for 4% discharge...702","15",-0.38756613756613,4,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 6% discharge...703","15",-0.381393298059964,6,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 8% discharge...704","15",-0.498941798941795,8,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 10% discharge...705","15",-0.389065255731913,10,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
@@ -708,7 +708,7 @@
 "Interpolated HI for 14% discharge...707","15",-0.457671957671954,14,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 16% discharge...708","15",-0.426102292768946,16,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 18% discharge...709","15",-0.445238095238085,18,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
-"Interpolated HI for 20% discharge...710","15",-0.350176366843021,20,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
+"Interpolated HI for 20% discharge...710","15",-0.35017636684302,20,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 22% discharge...711","15",-0.406878306878295,22,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 24% discharge...712","15",-0.350881834215161,24,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265
 "Interpolated HI for 26% discharge...713","15",-0.342592592592596,26,"STRT_storm3_09_22_abs","STRT","storm3","09","22","abs",2023-09-22,265

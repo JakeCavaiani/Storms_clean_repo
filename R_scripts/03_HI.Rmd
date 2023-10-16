@@ -15252,27 +15252,26 @@ write.csv(VAUL.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_
 ### STRT ###
 ```{python}
 # STRT #
-STRT_storm1_08_19_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_Q.csv")
-STRT_storm1_08_19_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_NO3.csv")
-STRT_storm1_08_19_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_fDOM.csv")
-STRT_storm1_08_19_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_SPC.csv")
-STRT_storm1_08_19_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_Turb.csv")
-STRT_storm1_08_19_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm1_08_19_abs.csv")
+STRT_storm1_08_19_Q = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_Q.csv'))
+STRT_storm1_08_19_NO3 = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_NO3.csv'))
+STRT_storm1_08_19_fDOM = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_fDOM.csv'))
+STRT_storm1_08_19_SPC = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_SPC.csv'))
+STRT_storm1_08_19_turb = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_turb.csv'))
+STRT_storm1_08_19_abs = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm1_08_19_abs.csv'))
 
-STRT_storm2_09_04_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_Q.csv")
-STRT_storm2_09_04_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_NO3.csv")
-STRT_storm2_09_04_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_fDOM.csv")
-STRT_storm2_09_04_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_SPC.csv")
-STRT_storm2_09_04_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_Turb.csv")
-STRT_storm2_09_04_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm2_09_04_abs.csv")
+STRT_storm2_09_04_Q = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_Q.csv'))
+STRT_storm2_09_04_NO3 = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_NO3.csv'))
+STRT_storm2_09_04_fDOM = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_fDOM.csv'))
+STRT_storm2_09_04_SPC = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_SPC.csv'))
+STRT_storm2_09_04_turb = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_turb.csv'))
+STRT_storm2_09_04_abs = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm2_09_04_abs.csv'))
 
-STRT_storm3_09_22_Q = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_Q.csv")
-STRT_storm3_09_22_NO3 = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_NO3.csv")
-STRT_storm3_09_22_fDOM = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_fDOM.csv")
-STRT_storm3_09_22_SPC = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_SPC.csv")
-STRT_storm3_09_22_turb = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_Turb.csv")
-STRT_storm3_09_22_abs = pd.read_csv("~/Documents/Storms_clean_repo/Storm_Events/2022/STRT/STRT_storm3_09_22_abs.csv")
-
+STRT_storm3_09_22_Q = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_Q.csv'))
+STRT_storm3_09_22_NO3 = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_NO3.csv'))
+STRT_storm3_09_22_fDOM = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_fDOM.csv'))
+STRT_storm3_09_22_SPC = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_SPC.csv'))
+STRT_storm3_09_22_turb = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_turb.csv'))
+STRT_storm3_09_22_abs = pd.read_csv(here('Storm_events/2022/STRT/STRT_storm3_09_22_abs.csv'))
 
 ```
 
@@ -15431,7 +15430,7 @@ STRT.hyst.results.df$storm.ID = c("STRT_storm1_08_19_NO3",
 
 STRT.hyst.results.df$site.ID = "STRT"
 
-write.csv(STRT.hyst.results.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/STRT/STRT.hyst.results.csv")
+write_csv(STRT.hyst.results.df, here("Output_from_analysis", "03_HI_FI", "2022", "STRT", "STRT.hyst.results.csv"))
 
 
 # plot HI by normalized discharge
@@ -15508,8 +15507,10 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2022/STRT/STRT.HI.median.boot.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(STRT.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/STRT/STRT.HI.df.csv")
+ggsave(here("plots", "HI_plots", "2022", "STRT", "STRT.HI.median.boot.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(STRT.HI.df, here("Output_from_analysis", "03_HI_FI", "2022", "STRT", "STRT.HI.df.csv"))
 
 STRT.HI.df$date <- as.Date(with(STRT.HI.df, paste(month, day, sep = "-")), "%m-%d")
 STRT.HI.df$doy <- yday(STRT.HI.df$date) 
@@ -15524,8 +15525,10 @@ g2 <- g1 +
   stat_summary(fun.y = median, geom = "point", 
                colour = "black", size = 3)
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2022/STRT/STRT.HI.median.boot.doy.pdf", plot=g2, width = 8, height = 6, units ="in")
-write.csv(STRT.HI.df, "~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2022/STRT/STRT.HI.df.doy.csv")
+ggsave(here("plots", "HI_plots", "2022", "STRT", "STRT.HI.median.boot.doy.pdf"), plot = g2,
+       width = 8, height = 6, units = "in")
+
+write.csv(STRT.HI.df, here("Output_from_analysis", "03_HI_FI", "2022", "STRT", "STRT.HI.df.doy.csv"))
 ```
 
 
