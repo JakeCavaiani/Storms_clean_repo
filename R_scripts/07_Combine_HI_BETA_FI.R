@@ -31,8 +31,6 @@ FRCH.HI.boot$storm.ID = storm.list
 # MOOS #
 MOOS.HI.df <- read.csv(here("Output_from_analysis", "03_HI_FI", "2015", "MOOS", "MOOS.HI.df.csv"))
 
-# MOOS.HI.df <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2021/MOOS/MOOS.HI.df.csv")
-
 storm.list = unique(MOOS.HI.df$storm.ID)
 MOOS.HI.boot <- do.call(rbind.data.frame,
                         lapply(storm.list, function(i){
@@ -110,10 +108,7 @@ antecedent_2015$year <- as.character(antecedent_2015$year)
 HI_BETA = left_join(HI, beta_2015, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_BETA_AMC_2015 <- left_join(HI_BETA, antecedent_2015, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2015.csv"))
-
-# write.csv(HI_BETA_AMC_2015, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2015.csv")
-
+write.csv(HI_BETA_AMC_2015, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2015.csv"))
 
 
 ########################################## COMBINE YEARS ################################################
@@ -197,7 +192,7 @@ names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month",
 
 HI_FI = left_join(HI, FI, by=c("site.ID", "storm.ID", "response_var"))
 HI_FI$year <- "2018"
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2018.csv")
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "HI_FI.diff_results.2018.csv"))
 
 ### BETA ####
 beta_2018 <- read.csv(here("Output_from_analysis","06_BETA","beta.2018.csv"))
@@ -227,7 +222,7 @@ HI_FI = left_join(HI_FI, beta_2018, by=c("site.ID", "storm.ID", "response_var", 
 HI_FI <- left_join(HI_FI, antecedent_2018, by = c("site.ID", "storm.ID", "response_var", "year"))
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2018.csv"))
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2018.csv"))
 
 # write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2018.csv")
 
@@ -497,7 +492,8 @@ names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month",
 
 HI_FI = left_join(HI, FI, by=c("site.ID", "storm.ID", "response_var"))
 HI_FI$year <- "2019"
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2019.csv")
+
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "HI_FI.diff_results.2019.csv"))
 
 
 ### BETA ####
@@ -514,7 +510,7 @@ names(beta_2019) = c("X1", "site.ID", "storm.ID","Parameter",
                      "year")
 ### ANTECEDENT ####
 antecedent_2019 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
-antecedent_2019 <-  subset(antecedent_2019, select=-c(X1))
+antecedent_2019 <-  subset(antecedent_2019, select=-c(X))
 # antecedent_2019 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2019/HI.2019.csv")
 # antecedent_2019 <- antecedent_2019[,-c(1)]
 
@@ -526,9 +522,7 @@ HI_FI = left_join(HI_FI, beta_2019, by=c("site.ID", "storm.ID", "response_var", 
 HI_FI <- left_join(HI_FI, antecedent_2019, by = c("site.ID", "storm.ID", "response_var", "year"))
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2019.csv"))
-
-# write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2019.csv")
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2019.csv"))
 
 
 ######################### 2020 ####
@@ -652,7 +646,8 @@ names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month",
 
 HI_FI = left_join(HI, FI, by=c("site.ID", "storm.ID", "response_var"))
 HI_FI$year <- "2020"
-write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/HI_FI.diff_results.2020.csv")
+
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "HI_FI.diff_results.2020.csv"))
 
 ### BETA ####
 beta_2020 <- read.csv(here("Output_from_analysis", "06_BETA", "beta.2020.csv"))
@@ -670,7 +665,7 @@ names(beta_2020) = c("X1", "site.ID", "storm.ID","Parameter",
 
 ### ANTECEDENT ####
 antecedent_2020 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.2020.csv"))
-antecedent_2020 <-  subset(antecedent_2020, select=-c(X1))
+antecedent_2020 <-  subset(antecedent_2020, select=-c(X))
 # antecedent_2020 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2020/HI.2020.csv")
 # antecedent_2020 <- antecedent_2020[,-c(1)]
 
@@ -682,7 +677,7 @@ HI_FI = left_join(HI_FI, beta_2020, by=c("site.ID", "storm.ID", "response_var", 
 HI_FI <- left_join(HI_FI, antecedent_2020, by = c("site.ID", "storm.ID", "response_var", "year"))
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2020.csv"))
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2020.csv"))
 
 # write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
 
@@ -826,7 +821,7 @@ names(beta_2021) = c("X1", "site.ID", "storm.ID","Parameter",
 
 ### ANTECEDENT ####
 antecedent_2021 <- read.csv(here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
-antecedent_2021 <-  subset(antecedent_2021, select=-c(X1))
+antecedent_2021 <-  subset(antecedent_2021, select=-c(X))
 # antecedent_2021 <- read_csv("~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2021/HI.2021.csv")
 # antecedent_2021 <- antecedent_2021[,-c(1)]
 
@@ -841,7 +836,7 @@ antecedent_2021$year <- as.character(antecedent_2021$year)
 HI_FI = left_join(HI_FI, beta_2021, by=c("site.ID", "storm.ID", "response_var", "year"))
 HI_FI <- left_join(HI_FI, antecedent_2021, by = c("site.ID", "storm.ID", "response_var", "year"))
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2021.csv"))
+write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2021.csv"))
 
 
 # write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv")
@@ -1014,7 +1009,7 @@ HI_BETA = left_join(HI, beta_2022, by=c("site.ID", "storm.ID", "response_var", "
 HI_BETA_AMC_2022 <- left_join(HI_BETA, antecedent_2022, by = c("site.ID", "storm.ID", "response_var", "year"))
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2022.csv"))
+write.csv(HI_BETA_AMC_2022, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2022.csv"))
 
 # write.csv(HI_BETA_AMC_2022, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv")
 
@@ -1041,7 +1036,7 @@ write.csv(here("Storms_clean_repo", "Output_from_analysis", "07_Combine_HI_BETA_
 #                               71.25, AMC_2019$TOTAL.TIME)
 #                       
 
-AMC_2015 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2015.csv")
+AMC_2015 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2015.csv"))
 # this is all to make up for the analysis i didnt do to get this out quickly
 names(AMC_2015)[names(AMC_2015) == 'month'] <- 'month.x'
 names(AMC_2015)[names(AMC_2015) == 'day'] <- 'day.x'
@@ -1066,13 +1061,12 @@ AMC_2015 <- AMC_2015[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
                        "HI", "precip", "temp", "precip.week", "precip.month",
                        "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy",
                        "burn", "pf", "date", "TimeSinceChena")]
-AMC_2018 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2018.csv")
-AMC_2019 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2019.csv")
-AMC_2020 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2020.csv")
-AMC_2021 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2021.csv", 
-                                  col_types = cols(date = col_date(format = "%m/%d/%Y")))
-AMC_2021 <- AMC_2021[,-c(16)]
-names(AMC_2021)[names(AMC_2021) == 'X1_1'] <- 'X1'
+AMC_2018 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2018.csv"))
+AMC_2019 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2019.csv"))
+AMC_2020 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2020.csv"))
+AMC_2021 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2021.csv"))
+# AMC_2021 <- AMC_2021[,-c(16)]
+# names(AMC_2021)[names(AMC_2021) == 'X1_1'] <- 'X1'
 
 AMC_2021 <- AMC_2021[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
                        "storm.ID", "month.x", "day.x", "response_var", "Flush_index",
@@ -1083,8 +1077,8 @@ AMC_2021 <- AMC_2021[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
                        "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy",
                        "burn", "pf", "date", "TimeSinceChena")]
 
-AMC_2022 <- read_csv("Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2022.csv", 
-                     col_types = cols(date = col_date(format = "%m/%d/%Y")))
+AMC_2022 <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_2022.csv"))
+                     
 
 # this is all to make up for the analysis i didnt do to get this out quickly
 names(AMC_2022)[names(AMC_2022) == 'month'] <- 'month.x'
@@ -1134,7 +1128,7 @@ AMC <- AMC %>%
   mutate(across(c(Hyst_index, Beta_index), 
                 ~ifelse(site.ID == "MOOS" & storm.ID == "storm2" & year == "2020", NA, .)))
 
-write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_AllYears.csv")
+write.csv(AMC, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
 
 
