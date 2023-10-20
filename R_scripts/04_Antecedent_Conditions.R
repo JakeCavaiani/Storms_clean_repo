@@ -12384,11 +12384,6 @@ CARIstorm_file_list <- list.files(path = "All_sites/",
                                   pattern="CARI", 
                                   full.names=TRUE)
 
-# CARIstorm_file_list <- list.files(path="~/Documents/Storms_clean_repo/Storm_Events/2022/All_sites/", 
-#                                   recursive=F, 
-#                                   pattern="CARI", 
-#                                   full.names=TRUE)
-
 CARI_storms<-do.call("rbind", lapply(CARIstorm_file_list, 
                                      read.csv, 
                                      check.names = FALSE,
@@ -12616,10 +12611,7 @@ origin_date <- as.Date("2022-05-13")
 HI.cari.2022$TimeSinceChena <- julian(HI.cari.2022$date, origin_date)
 
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.cari.2022.csv"))
-
-# write.csv(HI.cari.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.cari.2022.csv")
-
+write.csv(HI.cari.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.cari.2022.csv"))
 
 
 # all sites 
@@ -12627,9 +12619,8 @@ HI.2022 <- rbind(HI.frch.2022, HI.moos.2022,
                  HI.poke.2022, HI.vaul.2022, 
                  HI.strt.2022, HI.cari.2022) # bind all 2022 together
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.2022.csv"))
+write.csv(HI.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.2022.csv"))
 
-# write.csv(HI.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/04_Antecedent_Conditions/2022/HI.2022.csv")
 
 
 
