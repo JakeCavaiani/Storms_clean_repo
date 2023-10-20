@@ -6299,7 +6299,7 @@ storm_list_beta<-do.call("list", lapply(storm_file_list_beta,
                                         header=T, row.names=1))
 
 storm_file_list_beta = sub("FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
-# storm_file_list_beta = sub("~/Documents/Storms_clean_repo/Storm_Events/2022/FRCH_MOOS_VAUL_POKE_STRT_CARI//", storm_file_list_beta, replacement = "")
+
 storm_file_list_beta = sub(".csv", storm_file_list_beta, replacement = "")
 names(storm_list_beta) = storm_file_list_beta
 
@@ -7646,9 +7646,8 @@ beta.all.2022 <- rbind(all.2022.ci.no3, all.2022.ci.fDOM,
                        all.2022.ci.SPC, all.2022.ci.turb,
                        all.2022.ci.abs)
 
-write.csv(here("Storms_clean_repo", "Output_from_analysis", "06_BETA", "beta.2022.csv"))
+write.csv(beta.all.2022, here("Output_from_analysis", "06_BETA", "beta.2022.csv"))
 
-# write.csv(beta.all.2022, "~/Documents/Storms_clean_repo/Output_from_analysis/06_BETA/beta.2022.csv")
 
 beta.all.2022 <- beta.all.2022 %>% 
   filter(Parameter != "(Intercept)")
