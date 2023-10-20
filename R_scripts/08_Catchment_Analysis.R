@@ -3182,7 +3182,7 @@ AMC <- AMC %>%
 # 2019 - 2022 # 
 
 AMC <- AMC %>% 
-  subset(year == "2019" | year == "2020" | year == "2021" | year == "2022")
+  subset(year == "2015" | year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
 # only Poker
 AMC.POKE <- AMC %>% 
   subset(site.ID == "POKE")
@@ -3200,9 +3200,9 @@ ggplot(AMC.POKE, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year
         axis.text.y = element_text(size = 30),
         axis.title.x = element_text(size = 35),
         axis.title.y = element_text(size = 32)) +
-  annotate("text", x = 1, y=60, size = 7.5, label= "n = 13", col = "#1B9E77") +
-  annotate("text", x = 2, y=60, size = 7.5, label= "n = 25", col = "#D95F02") +
-  annotate("text", x = 3, y=60, size = 7.5, label= "n = 10", col = "#7570B3") +
+  annotate("text", x = 1, y=60, size = 7.5, label= "n = 11", col = "#1B9E77") +
+  annotate("text", x = 2, y=60, size = 7.5, label= "n = 18", col = "#D95F02") +
+  annotate("text", x = 3, y=60, size = 7.5, label= "n = 9", col = "#7570B3") +
   annotate("text", x = 4, y=60, size = 7.5, label= "n = 4", col = "#E7298A")
 
 
@@ -3220,10 +3220,12 @@ ggplot(AMC, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year))) +
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 25),
         axis.title.y = element_text(size = 22)) +
-  annotate("text", x = 1, y=60, size = 7.5, label= "n = 82", col = "#1B9E77") +
-  annotate("text", x = 2, y=60, size = 7.5, label= "n = 101", col = "#D95F02") +
-  annotate("text", x = 3, y=60, size = 7.5, label= "n = 53", col = "#7570B3") +
-  annotate("text", x = 4, y=60, size = 7.5, label= "n = 27", col = "#E7298A")
+  annotate("text", x = 1, y=60, size = 7.5, label= "n = 13", col = "#1B9E77") +
+  annotate("text", x = 2, y=60, size = 7.5, label= "n = 34", col = "#D95F02") +
+  annotate("text", x = 3, y=60, size = 7.5, label= "n = 65", col = "#7570B3") +
+  annotate("text", x = 4, y=60, size = 7.5, label= "n = 80", col = "#E7298A") +
+  annotate("text", x = 5, y=60, size = 7.5, label= "n = 43", col = "#66A61E") +
+  annotate("text", x = 6, y=60, size = 7.5, label= "n = 26", col = "#E6AB02")
 
 ggplot(AMC, aes(x = as.factor(year), y = StormPrecip, fill = as.factor(year))) + 
   geom_boxplot() +
