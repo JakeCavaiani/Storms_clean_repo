@@ -51,7 +51,7 @@ DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Pred
 # 
 AMC <- full_join(AMC, DOD_catchment)
 # 
-write.csv(AMC, "~/Documents/Storms_clean_repo/Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
+write.csv(AMC, here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
 # 
 # 
 AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
@@ -209,6 +209,9 @@ library(gridExtra)
 library(here)
 library(tidyverse)
 library(zoo)
+library(ggExtra)
+library(ggpmisc)
+library(ggpubr)
 
 # Load in Antecedent moisture conditions dataframe
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
@@ -245,199 +248,15 @@ HI_FI_SPC = subset(AMC, response_var == "SPC")
 # turb #
 HI_FI_turb = subset(AMC, response_var == "turb")
 
-### Outlier check ### By site
-
-# SPC
-MOOS_SPC = subset(HI_FI_SPC, site.ID == "MOOS")
-
-ggplot(MOOS_SPC, aes(Beta_index, Hyst_index)) +
-  geom_point(aes(colour = factor(year)), size = 2.5) 
-
-### 2015 Test ###
-HI_FI_NO3_2015 = subset(HI_FI_NO3, year == "2015")
-
-ggplot(HI_FI_NO3_2015, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle(vn)+ 
-  ylab("") +
-  xlab("") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") +
-  labs(
-    colour = "Catchment",
-    shape = "PF Extent")
-
-HI_FI_fDOM_2015 = subset(HI_FI_fDOM, year == "2015")
-
-ggplot(HI_FI_fDOM_2015, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle("fDOM")+ 
-  ylab("HI") +
-  xlab("") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") +
-  guides(shape=guide_legend("Permafrost Extent"),
-         col=guide_legend("Catchment"))
-
-HI_FI_SPC_2015 = subset(HI_FI_SPC, year == "2015")
-
-
-ggplot(HI_FI_SPC_2015, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle("SPC")+ 
-  ylab("HI") +
-  xlab("ß") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") 
-
-HI_FI_turb_2015 = subset(HI_FI_turb, year == "2015")
-
-ggplot(HI_FI_turb_2015, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#FF7F00","#A6761D")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + 
-  xlim(-1.5, 1.5) +
-  ggtitle("Turbidity")+ 
-  ylab("") +
-  xlab("ß") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") 
-
-### 2022 Test ###
-HI_FI_NO3_2022 = subset(HI_FI_NO3, year == "2022")
-
-ggplot(HI_FI_NO3_2022, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle(vn)+ 
-  ylab("") +
-  xlab("") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") +
-  labs(
-    colour = "Catchment",
-    shape = "PF Extent")
-
-HI_FI_fDOM_2022 = subset(HI_FI_fDOM, year == "2022")
-
-ggplot(HI_FI_fDOM_2022, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle("fDOM")+ 
-  ylab("HI") +
-  xlab("") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") +
-  guides(shape=guide_legend("Permafrost Extent"),
-         col=guide_legend("Catchment"))
-
-HI_FI_SPC_2022 = subset(HI_FI_SPC, year == "2022")
-
- 
-ggplot(HI_FI_SPC_2022, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
-  ggtitle("SPC")+ 
-  ylab("HI") +
-  xlab("ß") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") 
-
-HI_FI_turb_2022 = subset(HI_FI_turb, year == "2022")
-
-ggplot(HI_FI_turb_2022, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = pf), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Permafrost Extent") + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + 
-  xlim(-1.5, 1.5) +
-  ggtitle("Turbidity")+ 
-  ylab("") +
-  xlab("ß") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "none") 
-
 
 
 #### PLOTS ####
 
-# 2018-2022 # 
-HI_FI_NO3 <- subset(HI_FI_NO3, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
-HI_FI_fDOM <- subset(HI_FI_fDOM, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
-HI_FI_SPC <- subset(HI_FI_SPC, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
-HI_FI_turb <- subset(HI_FI_turb, year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+# 2015-2022 # 
+HI_FI_NO3 <- subset(HI_FI_NO3, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_fDOM <- subset(HI_FI_fDOM, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_SPC <- subset(HI_FI_SPC, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_turb <- subset(HI_FI_turb, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
 
 # plots 
 # NO3
@@ -469,23 +288,11 @@ a <- ggMarginal(HI_BETA_NO3.p, groupColour = TRUE, groupFill = TRUE)
   
   
 # fDOM
-# which()
-# HI_FI_fDOM <- HI_FI_fDOM %>%
-#   mutate(across(c(Hyst_index), 
-#                 ~ifelse(Hyst_index > 0.25 & Beta_index > 0.4, NA, .)))
-
 HI_FI_fDOM <- HI_FI_fDOM[-c(131, 190, 219,237), ]
-
-View(HI_FI_fDOM)
 
 HI_FI_fDOM <- HI_FI_fDOM %>% 
   mutate(across(c(pf),
                 ~ifelse(pf == "medium", "Moderate", "High")))
-
-# CARI_2020 <- CARI_2020 %>% # common window 
-#   mutate(across(c(DateTimeAK), 
-#                 ~ifelse(DateTimeAK >= "2020-06-17" & DateTimeAK <= "2020-09-30", NA, .)))
-
 
 HI_BETA_fDOM.p = 
     ggplot(HI_FI_fDOM, aes(Beta_index, Hyst_index)) + 
@@ -572,10 +379,6 @@ ggarrange(b,a,
 ggsave("HI_BETA.pdf",
        path = here("plots", "HI_BETA"),
        width = 9, height = 9)
-
-
-
-
 
 
 #### Storm summary stats ####
@@ -2713,13 +2516,6 @@ chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.l
 chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
 chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
 
-# chem_2015 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2015/SUNA.EXO.int.corr.lab_2015.csv")
-# chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
-# chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
-# chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
-# chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
-# chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
-
 #
 chem_2015 <- chem_2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
                          "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
@@ -2779,33 +2575,6 @@ DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 DOD_chem$day <- as.character(DOD_chem$datetimeAK)
 
 
-
-
-
-# DOD_2018 <- read.csv(here("Q", "Q_chem", "DOD.2018.csv"))
-# DOD_2019 <- read.csv(here("Q", "Q_chem", "DOD.2019.csv"))
-# DOD_2019 <-  subset(DOD_2019, select=-c(X))
-# DOD_2020 <- read.csv(here("Q", "Q_chem", "DOD.2020.csv"))
-# DOD_2020 <-  subset(DOD_2020, select=-c(X))
-# 
-# colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day")
-# names(DOD_2020)<- colNames # renaming columns 
-# DOD_2021 <- read.csv(here("Q", "Q_chem", "DOD.2021.csv"))
-# DOD_2022 <- read.csv(here("Q", "Q_chem", "DOD.2022.csv"))
-# DOD_2022 <-  subset(DOD_2022, select=-c(X, ABS_254))
-# DOD_2022$day <- as.Date(DOD_2022$datetimeAK)
-# DOD_2022 <- DOD_2022[c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3",
-#                        "Q", "day")]
-# 
-# DOD_2018$year <- "2018"
-# DOD_2019$year <- "2019"
-# DOD_2020$year <- "2020"
-# DOD_2021$year <- "2021"
-# DOD_2022$year <- "2022"
-# 
-# 
-# DOD_chem <- rbind(DOD_2018, DOD_2019, DOD_2020, DOD_2021, DOD_2022)
-
 # read in Caribou data 
 CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
 CARI_2018 <-  subset(CARI_2018, select=-c(site.ID.y))
@@ -2847,21 +2616,6 @@ CARI_chem <- CARI_chem[c("DateTimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", 
 
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
 names(CARI_chem)<- colNames # renaming columns 
-
-# # plotting
-# CARI_2018_pl <- CARI_2018
-# CARI_2018_pl$DateTimeAK <- ymd_hms(CARI_2018_pl$DateTimeAK)
-# ggplot(CARI_2018_pl, aes(DateTimeAK, Turb)) +
-#   geom_point()
-# 
-# CARI_2018_pl$day <- yday(CARI_2018_pl$DateTimeAK)
-# 
-# mean_cari <- CARI_2018_pl %>% 
-#   group_by(day) %>% 
-#   summarise(dailyfDOM = mean(fDOM, na.rm = TRUE),
-#             dailyNO3 = mean(NO3, na.rm = TRUE),
-#             dailySPC = mean(SPC, na.rm = TRUE),
-#             dailyTurb = mean(Turb, na.rm = TRUE))
 
 
 # merge CARI and DOD sites 
@@ -2908,7 +2662,7 @@ DOD_chem <- DOD_chem %>%
                         site.ID == "SUNA leaf" | site.ID == "Sycamore" | site.ID == "VAUL upwell lake"|
                         site.ID == "NA" | site.ID == "Salcha", NA, .))) # removing all sites that arent the DOD sites 
 
-DOD_chem <- DOD_chem[-c(401196:408943), ] # removing the bottom of the df that has no datetime associated with chems
+DOD_chem <- DOD_chem[-c(406532:414301), ] # removing the bottom of the df that has no datetime associated with chems
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
@@ -3096,28 +2850,28 @@ ggplot(mean_daily, aes(x = site.ID, y = dailyTurb, fill = site.ID)) +
 
 ## Time Series ##
 # NO3-
-ggplot(mean_daily, aes(x = TSC, y = dailyNO3, col = site.ID)) +
+ggplot(mean_daily, aes(x = julian, y = dailyNO3, col = site.ID)) +
   geom_line() +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   facet_wrap(~year) +
   theme_classic()
 
 # fDOM
-ggplot(mean_daily, aes(x = TSC, y = dailyfDOM, col = site.ID)) +
+ggplot(mean_daily, aes(x = julian, y = dailyfDOM, col = site.ID)) +
   geom_line() +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   facet_wrap(~year) +
   theme_classic()
 
 # SPC
-ggplot(mean_daily, aes(x = TSC, y = dailySPC, col = site.ID)) +
+ggplot(mean_daily, aes(x = julian, y = dailySPC, col = site.ID)) +
   geom_line() +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   facet_wrap(~year) +
   theme_classic()
 
 # turb
-ggplot(mean_daily, aes(x = TSC, y = dailyTurb, col = site.ID)) +
+ggplot(mean_daily, aes(x = julian, y = dailyTurb, col = site.ID)) +
   geom_line() +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   facet_wrap(~year) +
@@ -3239,13 +2993,6 @@ chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.l
 chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
 chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
 
-
-# chem_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/SUNA.EXO.int.corr.lab_2018.csv")
-# chem_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/SUNA.EXO.int.corr.lab_2019.csv")
-# chem_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/SUNA.EXO.int.corr.lab_2020.csv")
-# chem_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/SUNA.EXO.int.corr.lab_2021.csv")
-# chem_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/SUNA.EXO.int.corr.lab_2022.csv")
-
 chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
 chem_2018$datetimeAK <- ymd_hms(chem_2018$datetimeAK)
@@ -3280,11 +3027,14 @@ names(DOD_chem) <- c("datetimeAK", "site.ID", "fDOM", "SPC",
                      "Turb", "NO3", "ABS_254", "year", "julian", "day")
 
 # MERGE IN DISCHARGE # 
-Q_daily_2018 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2018/Q.daily.2018.csv")
-Q_daily_2019 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2019/Q.daily.2019.csv")
-Q_daily_2020 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2020/Q.daily.2020.csv")
-Q_daily_2021 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2021/Q.daily.2021.csv")
-Q_daily_2022 <- read_csv("~/Documents/DoD_Discharge/Predicted_Discharge/2022/Q.daily.2022.csv")
+Q_daily_2015 <- read_csv(here("processed_sensor_data", "2015", "Q.daily.2015.csv"))
+Q_daily_2015 <- Q_daily_2015 %>% 
+  select(-"...1")
+Q_daily_2018 <- read_csv(here("processed_sensor_data", "2018", "Q.daily.2018.csv"))
+Q_daily_2019 <- read_csv(here("processed_sensor_data", "2019", "Q.daily.2019.csv"))
+Q_daily_2020 <- read_csv(here("processed_sensor_data", "2020", "Q.daily.2020.csv"))
+Q_daily_2021 <- read_csv(here("processed_sensor_data", "2021", "Q.daily.2021.csv"))
+Q_daily_2022 <- read_csv(here("processed_sensor_data", "2022", "Q.daily.2022.csv"))
 
 Q_DOD <- rbind(Q_daily_2018, Q_daily_2019, Q_daily_2020, Q_daily_2021, Q_daily_2022)
 names(Q_DOD) <- c("site.ID", "day", "dailyQ")
@@ -3316,12 +3066,6 @@ CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality
 CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
 CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
 CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
-
-# CARI_2018 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2018/NEON_Q_WaterQuality2018.csv")
-# CARI_2019 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2019/NEON_Q_WaterQuality2019.csv")
-# CARI_2020 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2020/NEON_Q_WaterQuality2020.csv")
-# CARI_2021 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2021/NEON_Q_WaterQuality2021.csv")
-# CARI_2022 <- read.csv("~/Documents/Storms_clean_repo/processed_sensor_data/2022/NEON_Q_WaterQuality2022.csv")
 
 CARI_total <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
 
