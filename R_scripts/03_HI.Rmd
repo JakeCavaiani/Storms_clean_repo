@@ -15968,7 +15968,7 @@ CARI.HI.df$storm.ID = c(rep("CARI_storm1_07_15_NO3", 50),
                         rep("CARI_storm8_09_04_NO3", 50),
                         rep("CARI_storm8_09_04_fDOM", 50),
                         rep("CARI_storm8_09_04_SPC", 50),
-                        rep("CARI_storm8_09_04_turb", 50))
+                        rep("CARI_storm8_09_04_turb", 49))
                         
 
 
