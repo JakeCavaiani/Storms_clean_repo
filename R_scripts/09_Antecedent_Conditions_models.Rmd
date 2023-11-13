@@ -325,11 +325,14 @@ scale_y_discrete(labels= c("Seasonality",
         legend.position = "none",
         plot.title = element_text(size=20))
   
-
-
-ggsave("HI_NO3.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
+ggsave("HI_NO3_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 7, height = 7)
+
+
+# ggsave("HI_NO3.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 ### fDOM ###
@@ -532,9 +535,13 @@ scale_y_discrete(labels= c("Seasonality",
         legend.position = "none",
         plot.title = element_text(size=20))
 
-ggsave("HI_fDOM.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
+ggsave("HI_fDOM_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 7, height = 7)
+
+# ggsave("HI_fDOM.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 ### SPC ###
@@ -721,6 +728,9 @@ scale_y_discrete(labels= c("Seasonality",
         legend.position = "none",
         plot.title = element_text(size = 20))
   
+ggsave("HI_SPC_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
 
 ggsave("HI_SPC.pdf",
        path = here("plots", "Coefficient_Plots", "HI"),
@@ -907,9 +917,13 @@ turb_hi <- Plot_1 +
         plot.title = element_text(size = 20))
   
 
-ggsave("HI_turb.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
+ggsave("HI_turb_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 7, height = 7)
+
+# ggsave("HI_turb.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 
@@ -1106,10 +1120,13 @@ theme(axis.text.x=element_text(size=15),
         legend.position = "none",
         plot.title = element_text(size = 20))
  
-
-ggsave("BETA_NO3.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
+ggsave("BETA_NO3_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 7, height = 7)
+
+# ggsave("BETA_NO3.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 
 
 ```
@@ -1273,11 +1290,15 @@ theme(axis.text.x=element_text(size=15),
         axis.title.y = element_text(size = 20),
         legend.position = "none",
       plot.title = element_text(size = 20)) 
+
+ggsave("BETA_fDOM_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
  
 
-ggsave("BETA_fDOM.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
-       width = 7, height = 7)
+# ggsave("BETA_fDOM.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 ### SPC ###
@@ -1469,11 +1490,14 @@ scale_y_discrete(labels= c("Seasonality",
         axis.title.y = element_text(size = 20),
         legend.position = "none",
         plot.title = element_text(size = 20))
- 
 
-ggsave("BETA_SPC.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
+ggsave("BETA_SPC_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 7, height = 7)
+ 
+# ggsave("BETA_SPC.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 ### turb ###
@@ -1676,11 +1700,15 @@ turb_beta <- Plot_1 +
         axis.title.y = element_text(size = 20),
         legend.position = "none", 
         plot.title = element_text(size = 20))
+
+ggsave("BETA_turb_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
   
 
-ggsave("BETA_turb.pdf",
-       path = here("plots", "Coefficient_Plots", "HI"),
-       width = 7, height = 7)
+# ggsave("BETA_turb.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
 ```
 
 
@@ -1697,8 +1725,8 @@ ggarrange(fDOM_hi,no3_hi,
           align = "hv")
 
 
-ggsave("HIs.pdf",
-       path = here("plots", "Coefficient_Plots"),
+ggsave("HIs_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 12, height = 12)
 
 ggarrange(fDOM_beta, no3_beta, 
@@ -1710,8 +1738,8 @@ ggarrange(fDOM_beta, no3_beta,
           legend = "bottom",
           align = "hv")
 
-ggsave("BETAs.pdf",
-       path = here("plots", "Coefficient_Plots"),
+ggsave("BETAs_AMC.pdf",
+       path = here("plots", "Publication"),
        width = 12, height = 12)
 # 
 # ggsave("NO3_fDOM.pdf",

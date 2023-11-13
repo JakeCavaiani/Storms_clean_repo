@@ -114,9 +114,10 @@ AMC_new$facets = factor(AMC_new$response_var, labels = c(
     "fDOM",
     "NO3~^{-})",
     "SPC", 
-    "Turbidity"))
+    "Turbidity",
+    "ABS"))
 
-my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+my_labeller <- as_labeller(c(abs = "ABS_254", fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
                            default = label_parsed)
 
 ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
@@ -235,7 +236,7 @@ emmeans(SPC.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 
 # getting the letter designation for significance 
-anova <- aov(meanHI ~ site.ID, data = HI_FI_turb)
+anova <- aov(meanHI ~ site.ID, data = HI_FI_SPC)
 summary(anova)
 
 #tukeys test
@@ -298,6 +299,7 @@ ggplot(AMC_new, aes(x = site.ID, y = meanBETA, pattern = PF, fill = site.ID)) +
   scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5")) +
   xlab("") +
   ylab("Mean ß") +
+  ylim(-1.5,2) +
   theme_classic() +
   facet_wrap(~response_var, labeller = my_labeller) +
   theme(axis.text.x=element_text(size=20, angle = 90, vjust = 0.5, hjust = 1), 
@@ -336,8 +338,8 @@ emmeans(NO3.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
-summary(NO3) # nothing is significant 
-summary.lm(NO3)
+summary(NO3.CV.BETA.mod) # nothing is significant 
+summary.lm(NO3.CV.BETA.mod)
 
 ```
 
