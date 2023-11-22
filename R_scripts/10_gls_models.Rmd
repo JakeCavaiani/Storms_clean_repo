@@ -6,6 +6,8 @@ output:
   word_document: default
   html_document: default
   pdf_document: default
+editor_options: 
+  chunk_output_type: console
 ---
 The purpose of this script is to compare mean concentrations of measured constituents across catchments over a common period of observation (TSC 32-145) within each year using generalized least square models (GLS) that accounted for temporal autocorrelation of daily observations
 
