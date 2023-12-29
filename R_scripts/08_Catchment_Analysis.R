@@ -27,6 +27,18 @@ catchment <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
 
 catchment <- catchment[c("site","SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean")] # selecting the columns that I want
 
+# Manually adjusting the PF extent from the most updated torre and Neal PF maps (11/1/2023)
+
+catchment <- catchment %>% 
+  mutate(Pf_Prob_1m_mean_x = case_when(site == 'Caribou_CJ' ~ 29.3,
+                                       site == 'French' ~ 32.9,
+                                       site == 'Poker_PJ' ~ 25.3,
+                                       site == 'Moose' ~ 38.4,
+                                       site == 'Vault' ~ 58.4,
+                                       site == 'Stuart' ~ 30.8,
+                                       TRUE ~ Pf_Prob_1m_mean_x))
+
+
 ggpairs(catchment,
         columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
         title="Correlation matrix: All sites") 
@@ -48,6 +60,19 @@ catchment %>%
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
 DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
+
+# Manually adjusting the PF extent from the most updated torre and Neal PF maps (11/1/2023)
+
+DOD_catchment <- DOD_catchment %>% 
+  mutate(Pf_Prob_1m_mean_x = case_when(site.ID == 'CARI' ~ 29.3,
+                                       site.ID == 'FRCH' ~ 32.9,
+                                       site.ID == 'POKE' ~ 25.3,
+                                       site.ID == 'MOOS' ~ 38.4,
+                                       site.ID == 'VAUL' ~ 58.4,
+                                       site.ID == 'STRT' ~ 30.8,
+                                       TRUE ~ Pf_Prob_1m_mean_x))
+
+
 # 
 AMC <- full_join(AMC, DOD_catchment)
 # 

@@ -3,8 +3,10 @@ title: "09_Antecedent_Conditions_models"
 author: "Jake Cavaiani"
 date: "9/2/2022"
 output:
-  word_document: default
+  html_document:
+    df_print: paged
   pdf_document: default
+  word_document: default
 ---
 The purpose of this script is to model HI/BETA against storm attributes, antecedent moisture conditions, and seasonality for each individual catchment and constituent using linear regression 
 
@@ -66,10 +68,10 @@ colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month"
 
 names(AMC)<- colNames # renaming columns 
 
-# making sure that every year has the same pf extnet and burn extent 
+# making sure that every year has the same pf extent and burn extent 
 AMC <- AMC %>% 
   dplyr::mutate(across(c(pf),
-                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "high", "medium")))
+                       ~ifelse(site.ID == "MOOS" | site.ID == "VAUL", "high", "low")))
 
 AMC <- AMC %>% 
   dplyr::mutate(across(c(burn),
@@ -79,13 +81,6 @@ AMC <- AMC %>%
 AMC <- AMC %>% 
   dplyr::mutate(across(c(Intensity),
                        ~ifelse(year == "2022", 1, .)))
-
-
-# removing outliers identified in 08_catchment_analysis
-# 2018 #
-# 2019 #
-# 2020 #
-# Moos storm 2_2020
 
 
 ##subsetting by solute 

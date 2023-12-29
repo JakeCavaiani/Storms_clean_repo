@@ -1,5 +1,31 @@
 ### The purpose of this script is to combine all HI, BETA, FI into a singular dataframe so I can do my model analysis
 
+library(here)
+library(tidyverse)
+library(boot)
+library(broom)
+library(purrr)
+library(viridis)
+library(readr)
+library(lubridate)
+library(data.table)
+library(rio)
+library(ggplot2)
+library(scales)
+library(psych)
+library(googledrive)
+library(readxl)
+library(cowplot)
+library(zoo)
+library(dplyr)
+library(RColorBrewer)
+library(gridExtra)
+library(ggpmisc)
+library(SLOPE)
+library(wesanderson)
+library(ggpubr)
+library(dataRetrieval)
+
 ######################### 2015 ####
 # HI ####
 # calculate 95% bootstrap around median of Hyst. Indicies for each site and storm #
@@ -92,7 +118,7 @@ antecedent_2015 <-  subset(antecedent_2015, select=-c(X))
 # antecedent_2021 <- antecedent_2021[,-c(1)]
 
 antecedent_2015$date <- as.Date(antecedent_2015$doy, origin = "2015-01-01")
-origin_date <- as.Date("2015-05-12")
+origin_date <- as.Date("2015-04-29")
 antecedent_2015$TimeSinceChena <- julian(antecedent_2015$date, origin_date)
 
 names(antecedent_2015)[names(antecedent_2015) == "storm.num"] <- "storm.ID"
@@ -225,6 +251,7 @@ HI_FI <- left_join(HI_FI, antecedent_2018, by = c("site.ID", "storm.ID", "respon
 write.csv(HI_FI, here("Output_from_analysis", "07_Combine_HI_BETA_FI","antecedent_HI_FI_2018.csv"))
 
 # write.csv(HI_FI, "~/Documents/Storms_clean_repo/Output_from_analysis/07_Combine_HI_BETA_FI/antecedent_HI_FI_2018.csv")
+
 
 
 
@@ -826,7 +853,7 @@ antecedent_2021 <-  subset(antecedent_2021, select=-c(X))
 # antecedent_2021 <- antecedent_2021[,-c(1)]
 
 antecedent_2021$date <- as.Date(antecedent_2021$doy, origin = "2021-01-01")
-origin_date <- as.Date("2021-05-08")
+origin_date <- as.Date("2021-04-29")
 antecedent_2021$TimeSinceChena <- julian(antecedent_2021$date, origin_date)
 
 names(antecedent_2021)[names(antecedent_2021) == "storm.num"] <- "storm.ID"
@@ -948,7 +975,7 @@ STRT.HI.boot$site.ID = "STRT"
 HI = rbind(FRCH.HI.boot, MOOS.HI.boot, CARI.HI.boot,
            POKE.HI.boot, VAUL.HI.boot, STRT.HI.boot)
 
-HI = SALCHA.HI.boot
+
 
 HI = separate(HI, storm.ID, into=c("site.ID", "storm.ID", "month", "day", "response_var"), sep = "_")
 names(HI) = c("Hyst_index", "HI_ymin", "HI_ymax","site.ID", "storm.ID", "month", "day", "response_var")
@@ -992,7 +1019,7 @@ antecedent_2022 <-  subset(antecedent_2022, select=-c(X))
 # antecedent_2021 <- antecedent_2021[,-c(1)]
 
 antecedent_2022$date <- as.Date(antecedent_2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 antecedent_2022$TimeSinceChena <- julian(antecedent_2022$date, origin_date)
 
 names(antecedent_2022)[names(antecedent_2022) == "storm.num"] <- "storm.ID"

@@ -18,9 +18,9 @@
 # Permafrost extent # 
 # Poker Creek Low
 # Vault Creek: High- continuous (100%)
-# French Creek: Medium
-# Moose Creek: Medium
-# Stuart Creek: High
+# French Creek: Low
+# Moose Creek: High
+# Stuart Creek: Low
 
 library(here)
 library(tidyverse)
@@ -201,29 +201,29 @@ no3.hi %>%
   ylab("HI-Solute Storage")
 
 # Permafrost #
-FRCH.fDOM$pf <- "Moderate"
+FRCH.fDOM$pf <- "Low"
 
-POKE.fDOM$pf <- "Moderate"
+POKE.fDOM$pf <- "Low"
 
-MOOS.fDOM$pf <- "Moderate"
+MOOS.fDOM$pf <- "High"
 
-STRT.fDOM$pf <- "High"
+STRT.fDOM$pf <- "Low"
 
 VAUL.fDOM$pf <- "High"
 
-CARI.fDOM$pf <- "Moderate"
+CARI.fDOM$pf <- "Low"
 
-FRCH.NO3$pf <- "Moderate"
+FRCH.NO3$pf <- "Low"
 
-POKE.NO3$pf <- "Moderate"
+POKE.NO3$pf <- "Low"
 
-MOOS.NO3$pf <- "Moderate"
+MOOS.NO3$pf <- "High"
 
-STRT.NO3$pf <- "High"
+STRT.NO3$pf <- "Low"
 
 VAUL.NO3$pf <- "High"
 
-CARI.NO3$pf <- "Moderate"
+CARI.NO3$pf <- "Low"
 
 
 pf.fdom.hi <- rbind(FRCH.fDOM, POKE.fDOM, MOOS.fDOM, STRT.fDOM, VAUL.fDOM, CARI.fDOM)
@@ -273,7 +273,18 @@ HI.mean.precip.response <- HI.dat %>% group_by(site.ID, year, storm.num, respons
 # 2018-05-22
 # 2019-05-12
 # 2020-05-12
-#2021-05-12
+# 2021-05-12
+
+# Karen then took the average snow free day from 4 sites and for each year got:
+# 2015 - 119 - 04-29
+# 2018 - 130 - 05-10
+# 2019 - 115 - 04-25
+# 2020 - 130 - 05-09
+# 2021 - 119 - 04-29
+# 2022 - 131 - 05-11
+
+# these updated day of years that Karen got will be the updated seasonal starting point  
+
 ##############################################################################################################
 #################################### Antecedent conditions #####################################################################
 ##############################################################################################################
@@ -533,7 +544,7 @@ HI.frch.2015 <- rbind(HI.frch.no3.2.2015, HI.frch.fDOM.2.2015, HI.frch.SPC.2.201
 
 
 HI.frch.2015$date <- as.Date(HI.frch.2015$doy, origin = "2015-01-01")
-origin_date <- as.Date("2015-05-12")
+origin_date <- as.Date("2015-04-29")
 HI.frch.2015$TimeSinceChena <- julian(HI.frch.2015$date, origin_date)
 
 write.csv(HI.frch.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.frch.2015.csv"))
@@ -765,7 +776,7 @@ HI.moos.2015 <- rbind(HI.moos.no3.2.2015, HI.moos.fDOM.2.2015, HI.moos.SPC.2.201
 
 
 HI.moos.2015$date <- as.Date(HI.moos.2015$doy, origin = "2015-01-01")
-origin_date <- as.Date("2015-05-12")
+origin_date <- as.Date("2015-04-29")
 HI.moos.2015$TimeSinceChena <- julian(HI.moos.2015$date, origin_date)
 
 write.csv(HI.moos.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "2015", "HI.moos.2015.csv"))
@@ -778,7 +789,8 @@ write.csv(HI.2015, here("Output_from_analysis", "04_Antecedent_Conditions", "201
 
 
 ######################################## 2018 #####################################################################
-setwd("Storm_Events/2018")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2018")
+# This will bre
 ## Step 1) Read in list of all sites storms and filter by site
 ## Step 2) Assign storm number to each individual storm
 ## Step 3) read in Rain gauge data and summarize storm characteristics (Total precip/Intensity) and 
@@ -2338,7 +2350,7 @@ write.csv(HI.cari.2018, here("Output_from_analysis", "04_Antecedent_Conditions",
 # MERGE and add time since peak  Q in chena #
 HI.2018 <- rbind(HI.moos.2018, HI.frch.2018, HI.cari.2018) # bind all 2018 together
 HI.2018$date <- as.Date(HI.2018$doy, origin = "2018-01-01")
-origin_date <- as.Date("2018-05-22")
+origin_date <- as.Date("2018-05-10")
 HI.2018$TimeSinceChena <- julian(HI.2018$date, origin_date)
 
 
@@ -2346,7 +2358,7 @@ write.csv(HI.2018, here("Output_from_analysis", "04_Antecedent_Conditions", "201
 
 
 ######################################## 2019 ############################################
-setwd("Storm_Events/2019")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2019")
 # import rain gauge data #
 FRCH_RainGauge_2019 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2019.csv"))
 POKE_RainGauge_2019 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2019.csv"))
@@ -5335,7 +5347,7 @@ HI.2019 <- rbind(HI.moos.2019, HI.frch.2019, HI.poke.2019,
 
 # add time since peak  Q in chena #
 HI.2019$date <- as.Date(HI.2019$doy, origin = "2019-01-01")
-origin_date <- as.Date("2019-05-12")
+origin_date <- as.Date("2019-04-25")
 HI.2019$TimeSinceChena <- julian(HI.2019$date, origin_date)
 
 write.csv(HI.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "2019", "HI.2019.csv"))
@@ -5344,7 +5356,7 @@ write.csv(HI.2019, here("Output_from_analysis", "04_Antecedent_Conditions", "201
 
 
 ######################################## 2020 ####
-setwd("Storm_Events/2020")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2020")
 # import rain gauge data #
 FRCH_RainGauge_2020 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
 POKE_RainGauge_2020 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
@@ -8359,14 +8371,14 @@ HI.2020 <- rbind(HI.moos.2020, HI.frch.2020, HI.poke.2020, HI.vaul.2020,
 
 # add time since peak  Q in chena #
 HI.2020$date <- as.Date(HI.2020$doy, origin = "2020-01-01")
-origin_date <- as.Date("2020-05-13")
+origin_date <- as.Date("2020-05-09")
 HI.2020$TimeSinceChena <- julian(HI.2020$date, origin_date)
 
 write.csv(HI.2020, here("Output_from_analysis", "04_Antecedent_Conditions", "2020", "HI.2020.csv"))
 
 
 ####################################### 2021 ############################################################
-setwd("Storm_Events/2021")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2021")
 # import rain gauge data #
 FRCH_RainGauge_2020 <- read.csv(here("Climate", "Precip", "FRCH.RainGauge.2020.csv"))
 POKE_RainGauge_2020 <- read.csv(here("Climate", "Precip", "POKE.RainGauge.2020.csv"))
@@ -11218,14 +11230,14 @@ HI.2021 <- rbind(HI.moos.2021, HI.frch.2021,
 
 # add time since peak  Q in chena #
 HI.2021$date <- as.Date(HI.2021$doy, origin = "2021-01-01")
-origin_date <- as.Date("2021-05-12")
+origin_date <- as.Date("2021-04-29")
 HI.2021$TimeSinceChena <- julian(HI.2021$date, origin_date)
 
 write.csv(HI.2021, here("Output_from_analysis", "04_Antecedent_Conditions", "2021", "HI.2021.csv"))
 
 
 ####################################### 2022 ############################################################
-setwd("Storm_Events/2022")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2022")
 ### Import climate ###
 CPCRW <- read_csv(here("Climate", "Precip", "CPCRW.RainGauge.2022.final.csv"))
 CPCRW$datetimeAK <- force_tz(CPCRW$datetimeAK, "America/Anchorage") # it already is in AK time so I want to make it recognize it without changing the actually time value 
@@ -11475,7 +11487,7 @@ HI.frch.2022 <- rbind(HI.frch.no3.2.2022, HI.frch.fDOM.2.2022, HI.frch.SPC.2.202
 
 
 HI.frch.2022$date <- as.Date(HI.frch.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.frch.2022$TimeSinceChena <- julian(HI.frch.2022$date, origin_date)
 
 write.csv(HI.frch.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.frch.2022.csv"))
@@ -11700,7 +11712,7 @@ HI.moos.2022 <- rbind(HI.moos.no3.2.2022, HI.moos.fDOM.2.2022, HI.moos.SPC.2.202
 
 
 HI.moos.2022$date <- as.Date(HI.moos.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.moos.2022$TimeSinceChena <- julian(HI.moos.2022$date, origin_date)
 
 write.csv(HI.moos.2022, here("Output_from_analysis", "04_Antecedent_Conditions", "2022", "HI.moos.2022.csv"))
@@ -11923,7 +11935,7 @@ HI.poke.2022 <- rbind(HI.poke.no3.2.2022, HI.poke.fDOM.2.2022, HI.poke.SPC.2.202
 
 
 HI.poke.2022$date <- as.Date(HI.poke.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.poke.2022$TimeSinceChena <- julian(HI.poke.2022$date, origin_date)
 
 
@@ -12147,7 +12159,7 @@ HI.strt.2022 <- rbind(HI.strt.no3.2.2022, HI.strt.fDOM.2.2022, HI.strt.SPC.2.202
 
 
 HI.strt.2022$date <- as.Date(HI.strt.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.strt.2022$TimeSinceChena <- julian(HI.strt.2022$date, origin_date)
 
 
@@ -12372,7 +12384,7 @@ HI.vaul.2022 <- rbind(HI.vaul.no3.2.2022, HI.vaul.fDOM.2.2022, HI.vaul.SPC.2.202
 
 
 HI.vaul.2022$date <- as.Date(HI.vaul.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.vaul.2022$TimeSinceChena <- julian(HI.vaul.2022$date, origin_date)
 
 
@@ -12607,7 +12619,7 @@ HI.cari.2022 <- rbind(HI.cari.no3.2.2022, HI.cari.fDOM.2.2022, HI.cari.SPC.2.202
 
 
 HI.cari.2022$date <- as.Date(HI.cari.2022$doy, origin = "2022-01-01")
-origin_date <- as.Date("2022-05-13")
+origin_date <- as.Date("2022-05-11")
 HI.cari.2022$TimeSinceChena <- julian(HI.cari.2022$date, origin_date)
 
 
