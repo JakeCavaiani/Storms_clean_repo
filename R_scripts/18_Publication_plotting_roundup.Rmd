@@ -14,6 +14,8 @@ library(lubridate)
 library(tidyverse)
 library(ggpattern)
 library(ggsignif)
+library(tidyquant)
+library(ggpubr)
 ```
 
 
@@ -216,45 +218,273 @@ ggsave("NO3_facet_year_1.pdf",
        path = here("plots", "Publication"),
        width = 10, height = 10)
 
-ggplot(chem_2015_2018, aes(x = site.ID, y = dailyNO3, pattern = Burn, fill = PF)) +
+# with hatch for WF #
+ggplot(chem_2015_2018, aes(x = site.ID, y = dailyNO3, pattern = Burn, fill = site.ID)) +
   ggdist::stat_halfeye(adjust = 0.5, 
                        justification = -.2,
                        .width = -0,
-                       point_colour = NA) +
+                       point_colour = NA,
+                       scale = 0.5) +
    geom_boxplot(width = .25,
                  outlier.colour = NA,
                  alpha = 0.5) +
-   geom_boxplot_pattern(position = position_dodge(preserve = "single"), color = "black", pattern_fill = "white", pattern_angle = 45, pattern_density = 0.1, pattern_spacing = 0.025, pattern_key_scale_factor = 0.6) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .25,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
   scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
-  scale_fill_manual(values = c("grey","white"),name = "Permafrost") +
+  scale_fill_manual(values=c("#FF7F00", "#A6761D", "#3288BD"), guide = "none") +
   geom_signif(comparisons = list(c("CARI", "FRCH"), c("FRCH", "MOOS"), c("CARI", "MOOS")), 
               map_signif_level = TRUE,
-                step_increase = 0.2) +
+              step_increase = 0.2) +
+  scale_x_discrete(labels = c("FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "CARI" = "CARI\n(29%)")) +
+                              
   facet_wrap(~year) +
-  theme_bw() +
+  theme_tq() +
   labs(x= "", y = vn) 
   
 ggsave("NO3_facet_year_1.pdf",
        path = here("plots", "Publication"),
        width = 10, height = 10)
-  
 
+# all years attempt #
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
 
-# Density plot with significance 
-ggplot(chem_2018, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
-   ggdist::stat_halfeye(adjust = 0.5, 
-                       justification = -0,
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = Burn, fill = site.ID)) +
+        ggdist::stat_halfeye(adjust = 0.5, 
+                       justification = -.2,
                        .width = -0,
-                       point_colour = NA) +
+                       point_colour = NA,
+                       scale = 0.5) +
+   geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .25,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  geom_signif(comparisons = list(c("CARI", "FRCH"), c("CARI", "VAUL"), c("CARI", "MOOS"), c("CARI", "POKE"), c("CARI", "STRT"),
+                                 c("FRCH", "VAUL"), c("FRCH", "MOOS"), c("FRCH", "POKE"), c("FRCH", "STRT"),
+                                 c("VAUL", "MOOS"), c("VAUL", "POKE"), c("VAUL", "STRT"),
+                                 c("MOOS", "POKE"), c("MOOS", "STRT"),
+                                 c("POKE", "STRT")), 
+              map_signif_level = TRUE,
+              step_increase = 0.2) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+                              
+  facet_wrap(~year) +
+  theme_tq() +
+  labs(x= "", y = vn) 
+
+ggsave("NO3_facet_year_2.pdf",
+       path = here("plots", "Publication"),
+       width = 10, height = 10)
+
+# with letters # 
+annotations <- data.frame(
+  year = c("2015", "2015",
+           "2018", "2018", "2018", 
+           "2019", "2019", "2019", "2019", "2019", "2019",
+           "2020", "2020", "2020", "2020", "2020", "2020",
+           "2021", "2021", "2021", "2021", "2021", "2021",
+           "2022", "2022", "2022", "2022", "2022", "2022"),
+  site.ID = c("FRCH", "MOOS",
+              "CARI",  "FRCH", "MOOS",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+  Label = c("", "", 
+            "", "", "", 
+            "", "", "", "", "", "", 
+            "a", "a", "ab", "a", "b", "c", 
+            "ab", "b", "a", "a", "ab", "ab", 
+            "a", "ac", "bc", "ac", "b", "b"),
+  y_position = c(50, 50, 
+                 50, 50, 50, 
+                 50, 50, 50, 50, 50, 50,
+                 37, 31, 36, 45, 30, 23,
+                 45, 40, 28, 28, 35, 32,
+                 40, 32, 29, 37, 25, 30))
+
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = Burn, fill = site.ID)) +
+        ggdist::stat_halfeye(adjust = 0.5, 
+                       justification = -.2,
+                       .width = -0,
+                       point_colour = NA,
+                       scale = 0.5) +
+   geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .25,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+                              
+  facet_wrap(~year) +
+  geom_text(data = annotations, aes(label = Label, y = y_position, pattern = Burn), 
+            position = position_dodge(width = 0.75), size = 5) +
+  theme_tq() +
+  labs(x= "", y = vn) 
+
+
+# Take 2 #
+annotations <- data.frame(
+  year = c("2015", "2015",
+           "2018", "2018", "2018", 
+           "2019", "2019", "2019", "2019", "2019", "2019",
+           "2020", "2020", "2020", "2020", "2020", "2020",
+           "2021", "2021", "2021", "2021", "2021", "2021",
+           "2022", "2022", "2022", "2022", "2022", "2022"),
+  site.ID = c("FRCH", "MOOS",
+              "CARI",  "FRCH", "MOOS",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+  Label = c("", "", 
+            "", "", "", 
+            "", "", "", "", "", "", 
+            "a", "a", "ab", "a", "b", "c", 
+            "ab", "b", "a", "a", "ab", "ab", 
+            "a", "ac", "bc", "ac", "b", "b"),
+  y_position = c(50, 50, 
+                 50, 50, 50, 
+                 50, 50, 50, 50, 50, 50,
+                 37, 31, 36, 45, 33, 23,
+                 45, 40, 28, 28, 35, 32,
+                 40, 32, 29, 40, 25, 36),
+  Burn = c("unburned", "burned",
+           "unburned", "unburned", "burned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned"))
+
+ggplot(mean_daily_new, aes(x = site.ID, y = dailyNO3, pattern = Burn, fill = site.ID)) +
+        ggdist::stat_halfeye(adjust = 0.5, 
+                       justification = -.3,
+                       .width = -0,
+                       point_colour = NA,
+                       scale = 0.5) +
   geom_boxplot(width = .25,
                  outlier.colour = NA,
                  alpha = 0.5) +
-  geom_signif(comparisons = list(c("CARI", "FRCH"), c("FRCH", "MOOS"), c("CARI", "MOOS")), 
-              map_signif_level = TRUE,
-                step_increase = 0.2) +
-  theme_bw() 
-  
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .25,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+                              
+  facet_wrap(~year) +
+  geom_text(data = annotations, aes(label = Label, y = y_position), 
+            position = position_dodge(width = 0.75), size = 8) +
+  theme_tq() +
+  theme(axis.text.x = element_text(size = 16),
+        axis.title.y = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
+        strip.text = element_text(size = 20), 
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 20)) +
+  labs(x= "", y = vn) 
+
+ggsave("NO3_facet_year_3.pdf",
+       path = here("plots", "Publication"),
+       width = 15, height = 12)
 
 
+# Chat gpt letter code #
+
+# Generate example data
+set.seed(123)
+data <- data.frame(
+  Group = rep(c("A", "B", "C", "D"), each = 25),
+  Value = c(rnorm(25, mean = 10, sd = 2),
+            rnorm(25, mean = 12, sd = 2),
+            rnorm(25, mean = 15, sd = 2),
+            rnorm(25, mean = 10, sd = 2)),
+  Facet = rep(c("X", "Y"), each = 50)
+)
+
+# Create a facet wrap plot
+p <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot() +
+  facet_wrap(~Facet, scales = "free_y") +
+  theme_minimal()
+
+# Define the labels and positions for annotation
+annotations <- data.frame(
+  Facet = c("X", "X", "Y", "Y"),
+  Group = c("A", "B", "C", "D"),
+  Label = c("a", "b", "c", "d"),
+  y_position = c(16, 14, 22, 20)
+)
+
+# Add annotations to the plot
+p + 
+  geom_text(data = annotations, aes(label = Label, y = y_position), 
+            position = position_dodge(width = 0.75), size = 5)
+
+p <- ggplot(data, aes(x = Group, y = Value)) +
+  geom_boxplot() +
+  facet_wrap(~Facet, scales = "free_y") +
+  theme_minimal()
+p
 
 ```
