@@ -19,9 +19,75 @@ library(ggpubr)
 library(extrafont)
 ```
 
+### Time series daily stream concentration by year: 10_gls_models for TKH 4/12/2024 ###
+```{r}
+# 10_gls_models plotting ####
+mean_daily <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
+
+mean_daily$datetimeAK <- ymd(mean_daily$day)
+mean_daily <- mean_daily[order(mean_daily$year, mean_daily$site.ID), ]
+
+mean_daily$year <- as.character(mean_daily$year)
+
+mean_daily$Burn <- NA
+
+mean_daily <- mean_daily %>% 
+  mutate(across(c(Burn),
+                ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
+
+mean_daily$PF <- NA
+
+mean_daily <- mean_daily %>% 
+  mutate(across(c(PF),
+                ~ifelse(site.ID == "VAUL" | site.ID == "STRT", "High", "Moderate")))
 
 
-```{r - daily stream concentration by year: 10_gls_models}
+vn = expression(paste(N*O[3]^"-"))
+# mean concentration across years for each site 
+mean_daily_site <- mean_daily %>% 
+  group_by(site.ID) %>% 
+  dplyr::summarise(meanNO3 = mean(dailyNO3, na.rm = TRUE),
+                   meanfDOM = mean(dailyfDOM, na.rm = TRUE),
+                   meanSPC = mean(dailySPC, na.rm = TRUE),
+                   meanTurb = mean(dailyTurb, na.rm = TRUE))
+
+
+mean_daily_long <- mean_daily %>%
+  pivot_longer(
+    cols = starts_with("daily"),
+    names_to = "response_var",
+    names_prefix = "wk",
+    values_to = "concentration") # converting to a long format so each response_var is within a single column
+
+
+mean_daily_long$response_var <- factor(mean_daily_long$response_var, levels = c("dailyfDOM", "dailyNO3", "dailySPC", "dailyTurb", "dailyABS"), 
+                  labels = c("fDOM (QSU)", "NO3- (µM)", "SPC(µS/cm)", "Turbidity (FNU)", "ABS @ 254nm"))
+
+
+# Plotting #
+ggplot(mean_daily_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+  geom_line() +
+  scale_color_manual(values = c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), 
+                     guide = guide_legend(title = "Site")) +
+  xlab("Month") +
+  ylab("") +
+  facet_grid(response_var~year, scales = "free") +
+  theme_classic() +
+  theme(strip.text = element_text(size = 14),
+        axis.text.x = element_text(size = 13),
+        axis.title.x = element_text(size = 20),
+        axis.text.y = element_text(size = 20))
+
+ggsave("DoD_2018_2022.pdf",
+       path = here("plots", "Chems_year"),
+       width = 10, height = 8, units = "in")
+
+
+```
+
+
+### daily stream concentration by year: 10_gls_models ###
+```{r - load in data}
 mean_daily <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
 
 mean_daily$datetimeAK <- ymd(mean_daily$day)
@@ -444,20 +510,190 @@ ggsave("Turb_facet_year.pdf",
 
 ```
 
+### storm metrics for all sites and constituents - 11_HI_Anova_models ###
+```{r - load in the data }
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- AMC[c("Hyst_index","site.ID", "storm.ID", "response_var", "Flush_index", "month.y", "day.y", "year", "Beta_index", "doy", "burn", "pf", "date")] # selecting the columns that I want
+
+colNames <- c("Hyst_index", "site.ID", "storm.ID", "response_var", "Flush_index", "month", "day", "year", "Beta_index", "doy", "burn", "pf", "date")
+
+names(AMC)<- colNames # renaming columns 
+
+AMC <- AMC %>% 
+  group_by(site.ID, response_var, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE),
+                   CVhi = sdHI/meanHI,
+                   CVbeta = sdBETA/meanBETA,
+                   response_var = paste(response_var),
+                   Date = as.Date(date),
+                   DOY = as.numeric(doy),
+                   burn = paste(burn),
+                   PF = paste(pf))
+
+AMC <- AMC[!duplicated(AMC$meanHI), ] # removing duplicated rows 
+
+AMC$year <- as.character(AMC$year)
+
+
+AMC <- AMC %>% 
+  mutate(across(c(burn),
+                ~ifelse(site.ID == "CARI" | site.ID == "FRCH" | site.ID == "VAUL", "unburned", "burned")))
+
+AMC <- AMC %>% 
+  mutate(across(c(PF),
+                ~ifelse(site.ID == "VAUL" | site.ID == "MOOS", "High", "Low")))
+
+
+##subsetting by solute 
+# NO3 #
+HI_FI_NO3 = subset(AMC, response_var == "NO3")
+# fDOM #
+HI_FI_fDOM = subset(AMC, response_var == "fDOM")
+# SPC #
+HI_FI_SPC = subset(AMC, response_var == "SPC")
+# turb #
+
+AMC_new <- AMC # reordering the sites to group by burn categorization 
+AMC_new$site.ID <- factor(AMC_new$site.ID,     # Reorder factor levels
+                         c("CARI", "FRCH", "VAUL", "MOOS", "POKE", "STRT"))
+
+AMC_new$Burn <- AMC_new$burn
+
+vn = expression(paste(N*O[3]^"-"))
+
+supp.labs <- c("fDOM","NO3-", "SPC", "Turbidity")
+names(supp.labs) <- c("fDOM", "NO3", "SPC", "turb")
+
+AMC_new <- AMC_new %>% 
+  filter(response_var != "abs") 
+
+AMC_new$facets = factor(AMC_new$response_var, labels = c(
+    "fDOM",
+    "NO3~^{-})",
+    "SPC", 
+    "Turbidity"))
+
+
+my_labeller <- as_labeller(c(NO3 = "NO[3]", fDOM="fDOM", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
+
+my_labeller <- as_labeller(c(NO3 = expression(paste("NO"[3]^"-")), fDOM="fDOM", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
+
+```
+
+### PLOTTING ####
+```{r - meanHI}
+# all years  #
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+annotations <- data.frame(
+  response_var = c("fDOM", "fDOM","fDOM", "fDOM", "fDOM", "fDOM",
+                   "NO3", "NO3","NO3", "NO3", "NO3", "NO3",
+                   "SPC", "SPC","SPC", "SPC", "SPC", "SPC",
+                   "turb", "turb","turb", "turb", "turb", "turb"),
+  site.ID = c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL",
+              "POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+  Label = c("c", "c", "bc", "bc", "ab", "a",  # fDOM
+            "", "", "", "", "", "",  # NO3
+            "", "", "", "", "", "",  # SPC
+            "", "", "", "", "", ""  # Turb
+            ),
+  y_position = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+                 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+                 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 
+                 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+  Burn = c("burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned",
+           "burned", "unburned", "burned", "unburned", "burned", "unburned"))
+
+ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = Burn, fill = site.ID)) +
+        ggdist::stat_halfeye(adjust = 0.5, 
+                       justification = -.3,
+                       .width = -0,
+                       point_colour = NA,
+                       scale = 0.5) +
+  geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .25,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  geom_hline(yintercept= 0, linetype="dashed", color = "red") +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  coord_cartesian(xlim = c(1, 6.05)) +
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  xlab("") +
+  ylab("Mean HI") +
+  theme_tq() +
+  geom_text(data = annotations, aes(label = Label, y = y_position), 
+            position = position_dodge(width = 0.75), size = 8) +
+  facet_wrap(~response_var, labeller = my_labeller) +
+  theme(axis.text.x=element_text(size=18), 
+        axis.text.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "bottom",
+        legend.text = element_text(size = 20),
+        legend.title = element_text(size = 20),
+        strip.text = element_text(size = 20)) 
+
+ggsave("mean_HI_facet_constituent.pdf",
+       path = here("plots", "Publication"),
+       width = 10, height = 10)
+```
+
+
 
 ### Graveyard code ####
 ```{r code graveyard}
-# Sample data
-x <- 1:10
-y <- x^2
+# Install and load the ggplot2 package if you haven't already
+# install.packages("ggplot2")
+library(ggplot2)
 
-# Create a plot
-plot(x, y, type = "l", main = "Example Plot")
+# Create a sample dataset
+data <- data.frame(
+  x = rnorm(100),
+  y = rnorm(100),
+  facet_var = rep(c("Group 1", "Group 2"), each = 50)
+)
 
-# Save the plot as a PDF using Cairo_pdf
-cairo_pdf("output_plot.pdf", width = 6, height = 4)
-dev.off()
-cair
+# Create a ggplot with facets and superscript in facet labels
+ggplot(data, aes(x, y)) +
+  geom_point() +
+  facet_wrap(~facet_var, labeller = label_parsed) +
+  labs(
+    title = "Scatter plot with Facets",
+    x = "X-axis",
+    y = "Y-axis",
+    caption = "Source: Your Data Source"
+  )
+
 
 # Jacob code #
 # ggplot(mean_daily_new, aes(x = interaction(PF, Burn), y = dailyNO3)) +
