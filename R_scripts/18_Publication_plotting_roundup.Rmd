@@ -65,11 +65,13 @@ mean_daily_long$response_var <- factor(mean_daily_long$response_var, levels = c(
 
 
 # Plotting #
-ggplot(mean_daily_long, aes(x = datetimeAK, y = concentration, color = site.ID)) +
+mean_daily_long %>% 
+  filter(!year == 2015) %>% 
+ggplot(aes(x = datetimeAK, y = concentration, color = site.ID)) +
   geom_line() +
   scale_color_manual(values = c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), 
                      guide = guide_legend(title = "Site")) +
-  xlab("Month") +
+  xlab("") +
   ylab("") +
   facet_grid(response_var~year, scales = "free") +
   theme_classic() +
