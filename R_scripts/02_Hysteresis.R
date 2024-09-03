@@ -4343,7 +4343,6 @@ multiplot(VAUL_storm3_08_08_NO3.p, VAUL_storm3_08_08_fDOM.p, VAUL_storm3_08_08_S
 multiplot(VAUL_storm4a_08_15_NO3.p, VAUL_storm4a_08_15_fDOM.p, VAUL_storm4a_08_15_SPC.p, VAUL_storm4a_08_15_turb.p) # works 
 multiplot(VAUL_storm4b_08_20_NO3.p, VAUL_storm4b_08_20_fDOM.p, VAUL_storm4b_08_20_SPC.p, VAUL_storm4b_08_20_turb.p) # works 
 multiplot(VAUL_storm5a_08_23_NO3.p, VAUL_storm5a_08_23_fDOM.p, VAUL_storm5a_08_23_SPC.p, VAUL_storm5a_08_23_turb.p) # works 
-multiplot(VAUL_storm5b_08_26_NO3.p, VAUL_storm5b_08_26_fDOM.p, VAUL_storm5b_08_26_SPC.p, VAUL_storm5b_08_26_turb.p) # works 
 
 
 multiplot(
@@ -4353,13 +4352,13 @@ multiplot(
           VAUL_storm4a_08_15_NO3.p, VAUL_storm4a_08_15_fDOM.p, VAUL_storm4a_08_15_SPC.p, VAUL_storm4a_08_15_turb.p,
           VAUL_storm4b_08_20_NO3.p, VAUL_storm4b_08_20_fDOM.p, VAUL_storm4b_08_20_SPC.p, VAUL_storm4b_08_20_turb.p,
           VAUL_storm5a_08_23_NO3.p, VAUL_storm5a_08_23_fDOM.p, VAUL_storm5a_08_23_SPC.p, VAUL_storm5a_08_23_turb.p,
-          VAUL_storm5b_08_26_NO3.p, VAUL_storm5b_08_26_fDOM.p, VAUL_storm5b_08_26_SPC.p, VAUL_storm5b_08_26_turb.p,
+          
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("VAUL_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "VAUL"),
-       width = 20, height = 30, units = "in")
+# ggsave("VAUL_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "VAUL"),
+#        width = 20, height = 30, units = "in")
 
 
 # STRT #
@@ -4446,9 +4445,9 @@ multiplot(STRT_storm1a_08_15_NO3.p,STRT_storm1a_08_15_fDOM.p,STRT_storm1a_08_15_
 
 
 # export pdf 20 x 30 #
-ggsave("STRT_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "STRT"),
-       width = 20, height = 30, units = "in")
+# ggsave("STRT_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "STRT"),
+#        width = 20, height = 30, units = "in")
 
 # POKE #
 # plot STRT loops #
@@ -4548,9 +4547,9 @@ multiplot(POKE_storm1_05_16_NO3.p, POKE_storm1_05_16_fDOM.p,POKE_storm1_05_16_SP
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("POKE_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "POKE"),
-       width = 20, height = 30, units = "in")
+# ggsave("POKE_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "POKE"),
+#        width = 20, height = 30, units = "in")
 
 
 # plot MOOS loops #
@@ -4665,9 +4664,9 @@ multiplot(MOOS_storm1_07_23_fDOM.p, MOOS_storm1_07_23_SPC.p, MOOS_storm1_07_23_t
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("MOOS_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "MOOS"),
-       width = 20, height = 30, units = "in")
+# ggsave("MOOS_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "MOOS"),
+#        width = 20, height = 30, units = "in")
 
 # plot VAUL loops #
 # NO3
@@ -4776,9 +4775,9 @@ multiplot(
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("FRCH_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "FRCH"),
-       width = 20, height = 30, units = "in")
+# ggsave("FRCH_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "FRCH"),
+#        width = 20, height = 30, units = "in")
 
 
 # plot CARI loops #
@@ -4844,9 +4843,9 @@ multiplot(CARI_storm1_05_16_NO3.p, CARI_storm1_05_16_fDOM.p, CARI_storm1_05_16_S
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("CARI_HI_Loops_2021.pdf",
-       path = here("plots", "HI_plots", "2021", "CARI"),
-       width = 20, height = 30, units = "in")
+# ggsave("CARI_HI_Loops_2021.pdf",
+#        path = here("plots", "HI_plots", "2021", "CARI"),
+#        width = 20, height = 30, units = "in")
 
 
 ######################################## 2022 ####################################
