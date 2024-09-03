@@ -2810,9 +2810,9 @@ write.csv(CARI.HI.df, here("Output_from_analysis", "03_HI_FI", "2018", "CARI", "
 # ALL results
 
 ```{r}
-FRCH.HI.2018 <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.hyst.results.csv")
-MOOS.HI.2018 <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.hyst.results.csv")
-CARI.HI.2018 <- read.csv("~/Documents/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.hyst.results.csv")
+FRCH.HI.2018 <- read.csv("~/GitHub/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/FRCH/FRCH.hyst.results.csv")
+MOOS.HI.2018 <- read.csv("~/GitHub/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/MOOS/MOOS.hyst.results.csv")
+CARI.HI.2018 <- read.csv("~/GitHub/Storms_clean_repo/Output_from_analysis/03_HI_FI/2018/CARI/CARI.hyst.results.csv")
 
 HI.2018 <- rbind(FRCH.HI.2018, MOOS.HI.2018, CARI.HI.2018)
 
@@ -2861,7 +2861,7 @@ all.HI.p = ggplot(all.results) +
                     ymax=HI_mean_Interp+(HI_sd_with_Interp*2)), colour="black", alpha=0.5, size=.5) +
   geom_hline(yintercept=0) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggsave("~/Documents/Storms_clean_repo/plots/HI_plots/2018/all.HI.p.pdf", plot=all.HI.p, width = 20, height = 10, units ="in")
+ggsave("~/GitHub/Storms_clean_repo/plots/HI_plots/2018/all.HI.p.pdf", plot=all.HI.p, width = 20, height = 10, units ="in")
 
 
 
