@@ -12913,24 +12913,34 @@ ggplot(chem.2021_long, aes(x = datetimeAK, y = concentration, color = site.ID)) 
 # deleting dates that are NAs and remerging 
 FRCH.2021 <-  subset(chem.2021, site.ID == "FRCH")
 FRCH.2021 <- FRCH.2021[order(FRCH.2021$datetimeAK),]
-FRCH.2021 <- FRCH.2021[-c(14090:14359), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+FRCH.2021 <- FRCH.2021 %>% 
+  drop_na(datetimeAK)
+# FRCH.2021 <- FRCH.2021[-c(14090:14359), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 
 MOOS.2021 <-  subset(chem.2021, site.ID == "MOOS")
 MOOS.2021 <- MOOS.2021[order(MOOS.2021$datetimeAK),]
-MOOS.2021 <- MOOS.2021[-c(14001:14304), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2021 <- MOOS.2021 %>% 
+  drop_na(datetimeAK)
+# MOOS.2021 <- MOOS.2021[-c(14001:14304), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 POKE.2021 <-  subset(chem.2021, site.ID == "POKE")
 POKE.2021 <- POKE.2021[order(POKE.2021$datetimeAK),]
-POKE.2021 <- POKE.2021[-c(14004:14376), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+POKE.2021 <- POKE.2021 %>% 
+  drop_na(datetimeAK)
+#POKE.2021 <- POKE.2021[-c(14004:14376), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 STRT.2021 <-  subset(chem.2021, site.ID == "STRT")
 STRT.2021 <- STRT.2021[order(STRT.2021$datetimeAK),]
-STRT.2021 <- STRT.2021[-c(12567:12845), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+STRT.2021 <- STRT.2021 %>% 
+  drop_na(datetimeAK)
+# STRT.2021 <- STRT.2021[-c(12567:12845), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 VAUL.2021 <-  subset(chem.2021, site.ID == "VAUL")
 VAUL.2021 <- VAUL.2021[order(VAUL.2021$datetimeAK),]
-VAUL.2021 <- VAUL.2021[-c(13446:13788), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+VAUL.2021 <- VAUL.2021 %>% 
+  drop_na(datetimeAK)
+#VAUL.2021 <- VAUL.2021[-c(13446:13788), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 chem.2021 <- rbind(FRCH.2021, MOOS.2021, POKE.2021, STRT.2021, VAUL.2021)
 
@@ -15933,19 +15943,29 @@ ggplot(cari_2022_long, aes(x = DateTimeAK, y = concentration, color = site.ID)) 
 
 # # subset data by site #
 FRCH.2022 <-  subset(chem.2022, site.ID == "FRCH")
-FRCH.2022 <- FRCH.2022[-c(14573:14900), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+FRCH.2022 <- FRCH.2022 %>% 
+  drop_na(datetimeAK)
+#FRCH.2022 <- FRCH.2022[-c(14573:14900), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 MOOS.2022 <-  subset(chem.2022, site.ID == "MOOS")
-MOOS.2022 <- MOOS.2022[-c(14666:15037), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2022 <- MOOS.2022 %>% 
+  drop_na(datetimeAK)
+#MOOS.2022 <- MOOS.2022[-c(14666:15037), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 POKE.2022 <-  subset(chem.2022, site.ID == "POKE")
-POKE.2022 <- POKE.2022[-c(14481:14857), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+POKE.2022 <- POKE.2022 %>% 
+  drop_na(datetimeAK)
+#POKE.2022 <- POKE.2022[-c(14481:14857), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 VAUL.2022 <-  subset(chem.2022, site.ID == "VAUL")
-VAUL.2022 <- VAUL.2022[-c(14198:14548), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+VAUL.2022 <- VAUL.2022 %>% 
+  drop_na(datetimeAK)
+#VAUL.2022 <- VAUL.2022[-c(14198:14548), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 STRT.2022 <-  subset(chem.2022, site.ID == "STRT")
-STRT.2022 <- STRT.2022[-c(12278:12787), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+STRT.2022 <- STRT.2022 %>% 
+  drop_na(datetimeAK)
+#STRT.2022 <- STRT.2022[-c(12278:12787), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 DOD.2022 <- rbind(FRCH.2022, MOOS.2022, POKE.2022,
                   VAUL.2022, STRT.2022)
