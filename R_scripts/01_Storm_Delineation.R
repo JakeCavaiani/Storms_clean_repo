@@ -1129,11 +1129,15 @@ ggplot(chem_2018_long, aes(x = datetimeAK, y = concentration, color = site.ID)) 
 # subset data by site #
 FRCH.2018 <-  subset(chem.2018, site.ID == "FRCH")
 FRCH.2018 <- FRCH.2018[order(FRCH.2018$datetimeAK),]
-FRCH.2018 <- FRCH.2018[-c(11616:11629), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+FRCH.2018 <- FRCH.2018 %>% 
+  drop_na(datetimeAK)
+# FRCH.2018 <- FRCH.2018[-c(11616:11629), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 MOOS.2018 <-  subset(chem.2018, site.ID == "MOOS")
 MOOS.2018 <- MOOS.2018[order(MOOS.2018$datetimeAK),]
-MOOS.2018 <- MOOS.2018[-c(12942:12949), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2018 <- MOOS.2018 %>% 
+  drop_na(datetimeAK)
+# MOOS.2018 <- MOOS.2018[-c(12942:12949), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 DOD.2018 <- rbind(FRCH.2018, MOOS.2018)
 
@@ -3468,23 +3472,33 @@ ggplot(chem_total, aes(x = datetimeAK, y = concentration, color = site.ID)) +
 # subset data by site #
 FRCH.2019 <-  subset(chem.2019, site.ID == "FRCH")
 FRCH.2019 <- FRCH.2019[order(FRCH.2019$datetimeAK),]
-FRCH.2019 <- FRCH.2019[-c(15721 :16069), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+FRCH.2019 <- FRCH.2019 %>% 
+  drop_na(datetimeAK)
+# FRCH.2019 <- FRCH.2019[-c(15721 :16069), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 MOOS.2019 <-  subset(chem.2019, site.ID == "MOOS")
 MOOS.2019 <- MOOS.2019[order(MOOS.2019$datetimeAK),]
-MOOS.2019 <- MOOS.2019[-c(15909:16300), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2019 <- MOOS.2019 %>% 
+  drop_na(datetimeAK)
+# MOOS.2019 <- MOOS.2019[-c(15909:16300), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 POKE.2019 <-  subset(chem.2019, site.ID == "POKE")
 POKE.2019 <- POKE.2019[order(POKE.2019$datetimeAK),]
-POKE.2019 <- POKE.2019[-c(15340:15757), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+POKE.2019 <- POKE.2019 %>% 
+  drop_na(datetimeAK)
+# POKE.2019 <- POKE.2019[-c(15340:15757), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 VAUL.2019 <-  subset(chem.2019, site.ID == "VAUL")
 VAUL.2019 <- VAUL.2019[order(VAUL.2019$datetimeAK),]
-VAUL.2019 <- VAUL.2019[-c(14728:15133), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+VAUL.2019 <- VAUL.2019 %>% 
+  drop_na(datetimeAK)
+# VAUL.2019 <- VAUL.2019[-c(14728:15133), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 STRT.2019 <-  subset(chem.2019, site.ID == "STRT")
 STRT.2019 <- STRT.2019[order(STRT.2019$datetimeAK),]
-STRT.2019 <- STRT.2019[-c(14714:15099), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+STRT.2019 <- STRT.2019 %>% 
+  drop_na(datetimeAK)
+# STRT.2019 <- STRT.2019[-c(14714:15099), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 DOD.2019 <- rbind(FRCH.2019, MOOS.2019, POKE.2019,
                   VAUL.2019, STRT.2019)
