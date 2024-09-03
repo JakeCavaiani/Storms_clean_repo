@@ -88,10 +88,14 @@ ggplot(chem_2015_long, aes(x = datetimeAK, y = concentration, color = site.ID)) 
 
 # subset data by site #
 FRCH.2015 <-  subset(chem.2015, site.ID == "FRCH")
-FRCH.2015 <- FRCH.2015[-c(12519:12849), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+FRCH.2015 <- FRCH.2015 %>% 
+  drop_na(datetimeAK)
+# FRCH.2015 <- FRCH.2015[-c(12519:12849), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 MOOS.2015 <-  subset(chem.2015, site.ID == "MOOS")
-MOOS.2015 <- MOOS.2015[-c(12540:12796), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2015 <- MOOS.2015 %>% 
+  drop_na(datetimeAK)
+# MOOS.2015 <- MOOS.2015[-c(12540:12796), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
 
 ## TKH: need clean-up line 90 & 93. Figure out what the additional rows are and explain them in the notes when removing (maybe "remove rows containing all NA")
 
