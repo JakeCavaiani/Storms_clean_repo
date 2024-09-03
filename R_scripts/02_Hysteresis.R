@@ -506,7 +506,7 @@ MOOS_HI_Loop <- multiplot(MOOS_storm1_07_01_NO3.p,MOOS_storm1_07_01_fDOM.p, MOOS
                           MOOS_storm6_09_14_NO3.p, MOOS_storm6_09_14_fDOM.p,  MOOS_storm6_09_14_SPC.p, MOOS_storm6_09_14_turb.p, MOOS_storm6_09_14_abs.p)
                           
 # export pdf 20 x 30 #
-ggsave("FRCH_HI_Loops_2015.pdf",
+ggsave("MOOS_HI_Loops_2015.pdf",
        path = here("plots", "02_Hysteresis", "2015"),
        width = 20, height = 30, units = "in")
 
@@ -614,7 +614,7 @@ MOOS_storm3_07_10_turb <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_st
 MOOS_storm3_07_10_abs <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm3_07_10_abs.csv"))
 
 MOOS_storm5_08_05_Q <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_Q.csv"))
-MOOS_storm5_08_05_NO3 <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_NO3,csv"))
+MOOS_storm5_08_05_NO3 <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_NO3.csv"))
 MOOS_storm5_08_05_fDOM <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_fDOM.csv"))
 MOOS_storm5_08_05_SPC <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_SPC.csv"))
 MOOS_storm5_08_05_turb <- read_csv(here("Storm_Events", "2018", "MOOS", "MOOS_storm5_08_05_Turb.csv"))
@@ -676,17 +676,17 @@ CARI_storm5a_08_04_fDOM <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_s
 CARI_storm5a_08_04_SPC <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_SPC.csv"))
 CARI_storm5a_08_04_turb <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5a_08_04_turb.csv"))
 
-CARI_storm5b_08_05_Q <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_Q.csv"))
-CARI_storm5b_08_05_NO3 <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_NO3.csv"))
-CARI_storm5b_08_05_fDOM <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_fDOM.csv"))
-CARI_storm5b_08_05_SPC <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_SPC.csv"))
-CARI_storm5b_08_05_turb <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_turb.csv"))
-
-CARI_storm5c_08_06_Q <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_Q.csv"))
-CARI_storm5c_08_06_NO3 <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_NO3.csv"))
-CARI_storm5c_08_06_fDOM <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_fDOM.csv"))
-CARI_storm5c_08_06_SPC <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_SPC.csv"))
-CARI_storm5c_08_06_turb <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_turb.csv"))
+# CARI_storm5b_08_05_Q <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_Q.csv"))
+# CARI_storm5b_08_05_NO3 <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_NO3.csv"))
+# CARI_storm5b_08_05_fDOM <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_fDOM.csv"))
+# CARI_storm5b_08_05_SPC <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_SPC.csv"))
+# CARI_storm5b_08_05_turb <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5b_08_05_turb.csv"))
+# 
+# CARI_storm5c_08_06_Q <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_Q.csv"))
+# CARI_storm5c_08_06_NO3 <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_NO3.csv"))
+# CARI_storm5c_08_06_fDOM <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_fDOM.csv"))
+# CARI_storm5c_08_06_SPC <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_SPC.csv"))
+# CARI_storm5c_08_06_turb <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm5c_08_06_turb.csv"))
 
 CARI_storm6_08_13_Q <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_Q.csv"))
 CARI_storm6_08_13_NO3 <- read_csv(here("Storm_Events", "2018", "CARI", "CARI_storm6_08_13_NO3.csv"))
@@ -1251,12 +1251,12 @@ STRT_storm6_09_20_SPC <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_sto
 STRT_storm6_09_20_turb <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_Turb.csv"))
 STRT_storm6_09_20_abs <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm6_09_20_abs.csv"))
 
-STRT_storm7_10_01_Q <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Q.csv"))
-STRT_storm7_10_01_NO3 <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_NO3.csv"))
-STRT_storm7_10_01_fDOM <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_fDOM.csv"))
-STRT_storm7_10_01_SPC <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_SPC.csv"))
-STRT_storm7_10_01_turb <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_Turb.csv"))
-STRT_storm7_10_01_abs <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7_10_01_abs.csv"))
+STRT_storm7_10_01_Q <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_Q.csv"))
+STRT_storm7_10_01_NO3 <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_NO3.csv"))
+STRT_storm7_10_01_fDOM <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_fDOM.csv"))
+STRT_storm7_10_01_SPC <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_SPC.csv"))
+STRT_storm7_10_01_turb <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_Turb.csv"))
+STRT_storm7_10_01_abs <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7a_10_01_abs.csv"))
 
 STRT_storm7b_10_04_Q <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_Q.csv"))
 STRT_storm7b_10_04_NO3 <- read_csv(here("Storm_Events", "2019", "STRT", "STRT_storm7b_10_04_NO3.csv"))
@@ -1793,9 +1793,9 @@ multiplot(STRT_storm1_05_31_NO3.p, STRT_storm1_05_31_fDOM.p, STRT_storm1_05_31_S
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("STRT_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "STRT"),
-       width = 20, height = 30, units = "in")
+# ggsave("STRT_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "STRT"),
+#        width = 20, height = 30, units = "in")
 
 # Make MOOS loops #
 # NO3
@@ -1925,9 +1925,9 @@ multiplot(MOOS_storm1_06_01_NO3.p, MOOS_storm1_06_01_fDOM.p, MOOS_storm1_06_01_S
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("MOOS_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "MOOS"),
-       width = 20, height = 30, units = "in")
+# ggsave("MOOS_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "MOOS"),
+#        width = 20, height = 30, units = "in")
 
 # Make FRCH loops #
 # NO3
@@ -1959,7 +1959,6 @@ FRCH_storm6_07_12_fDOM.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_fDOM
 
 FRCH_storm10a_08_01_fDOM.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_fDOM, "FRCH", "fDOM", "0801a")
 
-FRCH_storm10c_08_03_fDOM.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_fDOM, "FRCH", "fDOM", "0803c")
 FRCH_storm11_08_05_fDOM.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_fDOM, "FRCH", "fDOM", "0805")
 FRCH_storm12a_08_12_fDOM.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_fDOM, "FRCH", "fDOM", "0812a")
 
@@ -1978,7 +1977,6 @@ FRCH_storm6_07_12_SPC.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_SPC, 
 
 FRCH_storm10a_08_01_SPC.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_SPC, "FRCH", "SPC", "0801a")
 
-FRCH_storm10c_08_03_SPC.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_SPC, "FRCH", "SPC", "0803c")
 FRCH_storm11_08_05_SPC.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_SPC, "FRCH", "SPC", "0805")
 FRCH_storm12a_08_12_SPC.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_SPC, "FRCH", "SPC", "0812a")
 
@@ -1997,7 +1995,6 @@ FRCH_storm6_07_12_turb.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_turb
 
 FRCH_storm10a_08_01_turb.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_turb, "FRCH", "turb", "0801a")
 
-FRCH_storm10c_08_03_turb.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_turb, "FRCH", "turb", "0803c")
 FRCH_storm11_08_05_turb.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_turb, "FRCH", "turb", "0805")
 FRCH_storm12a_08_12_turb.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_turb, "FRCH", "turb", "0812a")
 
@@ -2016,7 +2013,6 @@ FRCH_storm6_07_12_abs.p = hyst_plot(FRCH_storm6_07_12_Q, FRCH_storm6_07_12_abs, 
 
 FRCH_storm10a_08_01_abs.p = hyst_plot(FRCH_storm10a_08_01_Q, FRCH_storm10a_08_01_abs, "FRCH", "abs", "0801a")
 
-FRCH_storm10c_08_03_abs.p = hyst_plot(FRCH_storm10c_08_03_Q, FRCH_storm10c_08_03_abs, "FRCH", "abs", "0803c")
 FRCH_storm11_08_05_abs.p = hyst_plot(FRCH_storm11_08_05_Q, FRCH_storm11_08_05_abs, "FRCH", "abs", "0805")
 FRCH_storm12a_08_12_abs.p = hyst_plot(FRCH_storm12a_08_12_Q, FRCH_storm12a_08_12_abs, "FRCH", "abs", "0812a")
 
@@ -2073,7 +2069,7 @@ multiplot(FRCH_storm1_05_31_NO3.p, FRCH_storm1_05_31_fDOM.p,FRCH_storm1_05_31_SP
           FRCH_storm10a_08_01_NO3.p, FRCH_storm10a_08_01_fDOM.p,FRCH_storm10a_08_01_SPC.p, FRCH_storm10a_08_01_turb.p,
           
         
-          FRCH_storm10c_08_03_fDOM.p,FRCH_storm10c_08_03_SPC.p, FRCH_storm10c_08_03_turb.p,
+          
           FRCH_storm11_08_05_NO3.p, FRCH_storm11_08_05_fDOM.p,FRCH_storm11_08_05_SPC.p, FRCH_storm11_08_05_turb.p,
           FRCH_storm12a_08_12_NO3.p, FRCH_storm12a_08_12_fDOM.p,FRCH_storm12a_08_12_SPC.p, FRCH_storm12a_08_12_turb.p,
           
@@ -2084,9 +2080,9 @@ multiplot(FRCH_storm1_05_31_NO3.p, FRCH_storm1_05_31_fDOM.p,FRCH_storm1_05_31_SP
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("FRCH_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "FRCH"),
-       width = 20, height = 30, units = "in")
+# ggsave("FRCH_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "FRCH"),
+#        width = 20, height = 30, units = "in")
 
 # Make VAUL loops #
 # NO3
@@ -2233,9 +2229,9 @@ multiplot(VAUL_storm1_07_13_NO3.p, VAUL_storm1_07_13_fDOM.p,VAUL_storm1_07_13_SP
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("VAUL_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "VAUL"),
-       width = 20, height = 30, units = "in")
+# ggsave("VAUL_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "VAUL"),
+#        width = 20, height = 30, units = "in")
 
 # Make POKE loops #
 # NO3
@@ -2368,9 +2364,9 @@ multiplot(POKE_storm1_06_30_NO3.p, POKE_storm1_06_30_fDOM.p,POKE_storm1_06_30_SP
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("POKE_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "POKE"),
-       width = 20, height = 30, units = "in")
+# ggsave("POKE_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "POKE"),
+#        width = 20, height = 30, units = "in")
 
 
 # Multiplots of CARI storms #
@@ -2485,9 +2481,9 @@ multiplot(CARI_storm1_05_08_NO3.p, CARI_storm1_05_08_fDOM.p,CARI_storm1_05_08_SP
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("CARI_HI_Loops_2019.pdf",
-       path = here("plots", "HI_plots", "2019", "CARI"),
-       width = 20, height = 30, units = "in")
+# ggsave("CARI_HI_Loops_2019.pdf",
+#        path = here("plots", "HI_plots", "2019", "CARI"),
+#        width = 20, height = 30, units = "in")
 
 
 
@@ -3210,13 +3206,13 @@ multiplot(STRT_storm1a_06_18_NO3.p, STRT_storm1a_06_18_fDOM.p, STRT_storm1a_06_1
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("STRT_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "STRT"),
-       width = 20, height = 30, units = "in")
+# ggsave("STRT_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "STRT"),
+#        width = 20, height = 30, units = "in")
 
 
 # Make MOOS loops #
-MOOS_storm1_06_21_NO3 <- filter(MOOS_storm1_06_21_NO3, datavalue >= 10)
+# MOOS_storm1_06_21_NO3 <- filter(MOOS_storm1_06_21_NO3, datavalue >= 10)
 # NO3
 MOOS_storm1_06_20_NO3.p = hyst_plot(MOOS_storm1_06_20_Q, MOOS_storm1_06_20_NO3, "MOOS", "NO3", "0620")
 MOOS_storm2_06_28_NO3.p = hyst_plot(MOOS_storm2_06_28_Q, MOOS_storm2_06_28_NO3, "MOOS", "NO3", "0628")
@@ -3357,9 +3353,9 @@ multiplot(MOOS_storm1_06_20_NO3.p, MOOS_storm1_06_20_fDOM.p, MOOS_storm1_06_20_S
           cols = 7) # works
 
 # export pdf 20 x 30 #
-ggsave("MOOS_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "MOOS"),
-       width = 20, height = 30, units = "in")
+# ggsave("MOOS_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "MOOS"),
+#        width = 20, height = 30, units = "in")
 
 
 #### Make FRCH loops ####
@@ -3501,9 +3497,9 @@ multiplot(FRCH_storm1_06_13_NO3.p, FRCH_storm1_06_13_fDOM.p, FRCH_storm1_06_13_S
           cols = 7) # works
 
 # export pdf 20 x 30 #
-ggsave("FRCH_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "FRCH"),
-       width = 20, height = 30, units = "in")
+# ggsave("FRCH_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "FRCH"),
+#        width = 20, height = 30, units = "in")
 
 
 #### Make POKE loops ####
@@ -3679,9 +3675,9 @@ multiplot(
           cols = 7) # works
 
 # export pdf 20 x 30 #
-ggsave("POKE_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "POKE"),
-       width = 20, height = 30, units = "in")
+# ggsave("POKE_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "POKE"),
+#        width = 20, height = 30, units = "in")
 
 
 #### VAUL Hysteresis ####
@@ -3801,9 +3797,9 @@ multiplot(VAUL_storm1a_06_19_NO3.p, VAUL_storm1a_06_19_fDOM.p, VAUL_storm1a_06_1
           cols = 7)
 
 # export pdf 20 x 30 #
-ggsave("VAUL_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "VAUL"),
-       width = 20, height = 30, units = "in")
+# ggsave("VAUL_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "VAUL"),
+#        width = 20, height = 30, units = "in")
 
 
 #### CARI Hysteresis ####
@@ -3929,9 +3925,9 @@ multiplot(
 
 
 # export pdf 20 x 30 #
-ggsave("CARI_HI_Loops_2020.pdf",
-       path = here("plots", "HI_plots", "2020", "CARI"),
-       width = 20, height = 30, units = "in")
+# ggsave("CARI_HI_Loops_2020.pdf",
+#        path = here("plots", "HI_plots", "2020", "CARI"),
+#        width = 20, height = 30, units = "in")
 
 
 
