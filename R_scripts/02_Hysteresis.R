@@ -5025,9 +5025,9 @@ FRCH_HI_Loop <- multiplot(FRCH_storm1_07_10_NO3.p,FRCH_storm1_07_10_fDOM.p, FRCH
                           FRCH_storm4_09_19_NO3.p,FRCH_storm4_09_19_fDOM.p, FRCH_storm4_09_19_SPC.p,FRCH_storm4_09_19_turb.p,FRCH_storm4_09_19_abs.p)
                           
 # export pdf 20 x 30 #
-ggsave("FRCH_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
+# ggsave("FRCH_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
 
 
 # MOOS #
@@ -5162,7 +5162,7 @@ MOOS_storm3_08_19_turb.p = hyst_plot(MOOS_storm3_08_19_Q, MOOS_storm3_08_19_Turb
 MOOS_storm4_09_15_turb.p = hyst_plot(MOOS_storm4_09_15_Q, MOOS_storm4_09_15_Turb, "MOOS", "Turb", "0919")
 
 multiplot(MOOS_storm1_07_10_turb.p) 
-multiplot(MOOS_storm2b_08_06_turb.p) 
+
 multiplot(MOOS_storm3_08_19_turb.p) 
 multiplot(MOOS_storm4_09_15_turb.p)
 
@@ -5185,10 +5185,10 @@ MOOS_HI_Loop <- multiplot(MOOS_storm1_07_10_NO3.p,MOOS_storm1_07_10_fDOM.p, MOOS
                           MOOS_storm4_09_15_NO3.p,MOOS_storm4_09_15_fDOM.p, MOOS_storm4_09_15_SPC.p,MOOS_storm4_09_15_turb.p,MOOS_storm4_09_15_abs.p)
 
 # export pdf 20 x 30 #
-ggsave("MOOS_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
-
+# ggsave("MOOS_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
+# 
 
 # POKE #
 # POKE_storm1_07_15 <- read_csv(here("Storm_events", "2022", "POKE", "POKE_storm1_07_15.csv"))
@@ -5354,9 +5354,9 @@ POKE_HI_Loop <- multiplot(POKE_storm1_07_15_NO3.p,POKE_storm1_07_15_fDOM.p, POKE
                           POKE_storm4_09_14_NO3.p,POKE_storm4_09_14_fDOM.p, POKE_storm4_09_14_SPC.p,POKE_storm4_09_14_turb.p,POKE_storm4_09_14_abs.p)
 
 # export pdf 20 x 30 #
-ggsave("POKE_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
+# ggsave("POKE_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
 
 
 # VAUL #
@@ -5485,9 +5485,9 @@ VAUL_HI_Loop <- multiplot(VAUL_storm1_08_01_NO3.p,VAUL_storm1_08_01_fDOM.p, VAUL
                           VAUL_storm2_09_14_NO3.p,VAUL_storm2_09_14_fDOM.p, VAUL_storm2_09_14_SPC.p,VAUL_storm2_09_14_turb.p, VAUL_storm2_09_14_abs.p)
                           
 # export pdf 20 x 30 #
-ggsave("VAUL_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
+# ggsave("VAUL_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
 
 
 # STRT #
@@ -5632,9 +5632,9 @@ STRT_HI_Loop <- multiplot(STRT_storm1_08_19_NO3.p,STRT_storm1_08_19_fDOM.p, STRT
                           STRT_storm3_09_22_NO3.p,STRT_storm3_09_22_fDOM.p, STRT_storm3_09_22_SPC.p,STRT_storm3_09_22_turb.p, STRT_storm3_09_22_abs.p)
 
 # export pdf 20 x 30 #
-ggsave("STRT_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
+# ggsave("STRT_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
 
 
 # CARI #
@@ -5863,9 +5863,9 @@ CARI_HI_Loop <- multiplot(CARI_storm1_07_15_NO3.p,CARI_storm1_07_15_fDOM.p, CARI
                           CARI_storm8_09_04_NO3.p,CARI_storm8_09_04_fDOM.p, CARI_storm8_09_04_SPC.p,CARI_storm8_09_04_turb.p)
 
 # export pdf 20 x 30 #
-ggsave("CARI_HI_Loops_2022.pdf",
-       path = here("plots", "02_Hysteresis", "2022"),
-       width = 20, height = 30, units = "in")
+# ggsave("CARI_HI_Loops_2022.pdf",
+#        path = here("plots", "02_Hysteresis", "2022"),
+#        width = 20, height = 30, units = "in")
 
 
 
