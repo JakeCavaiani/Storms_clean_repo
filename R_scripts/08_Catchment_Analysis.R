@@ -2687,7 +2687,7 @@ DOD_chem <- DOD_chem %>%
                         site.ID == "SUNA leaf" | site.ID == "Sycamore" | site.ID == "VAUL upwell lake"|
                         site.ID == "NA" | site.ID == "Salcha", NA, .))) # removing all sites that arent the DOD sites 
 
-DOD_chem <- DOD_chem[-c(406532:414301), ] # removing the bottom of the df that has no datetime associated with chems
+DOD_chem <- DOD_chem[-c(409859:419367), ] # removing the bottom of the df that has no datetime associated with chems
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
@@ -3054,7 +3054,7 @@ names(DOD_chem) <- c("datetimeAK", "site.ID", "fDOM", "SPC",
 # MERGE IN DISCHARGE # 
 Q_daily_2015 <- read_csv(here("processed_sensor_data", "2015", "Q.daily.2015.csv"))
 Q_daily_2015 <- Q_daily_2015 %>% 
-  select(-"...1")
+  dplyr::select(-"...1")
 Q_daily_2018 <- read_csv(here("processed_sensor_data", "2018", "Q.daily.2018.csv"))
 Q_daily_2019 <- read_csv(here("processed_sensor_data", "2019", "Q.daily.2019.csv"))
 Q_daily_2020 <- read_csv(here("processed_sensor_data", "2020", "Q.daily.2020.csv"))
@@ -4189,7 +4189,7 @@ Q.sum <- rbind(Q.sum.2018, Q.sum.2019,
                Q.sum.2022)
 
 Q.sum.site.year <- Q.sum %>% 
-  group_by(site.ID, year) %>% 
+  dplyr::group_by(site.ID, year) %>% 
   dplyr::summarise(Q = sum(MeanDischarge, na.rm = TRUE)) # totaling by year and snow/rain 
 
 Q.sum.site.year <- na.omit(Q.sum.site.year)
