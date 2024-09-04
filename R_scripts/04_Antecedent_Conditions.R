@@ -320,11 +320,11 @@ FRCH_storms$storm.num = c(rep("storm1", 287),
                           rep("storm2", 331),
                           rep("storm3", 383),
                           rep("storm4", 299),
-                          rep("storm5a", 449),
+                          rep("storm5a", 448),
                           
                           rep("storm6a", 1295),
                           
-                          rep("storm7", 240))
+                          rep("storm7", 239))
 
 FRCH_storms$datetimeAK <- as.POSIXct(FRCH_storms$datetimeAK, tz = "America/Anchorage", format = "%Y-%m-%d %H:%M") 
 FRCH.2015.storms.1<- left_join(FRCH_storms, CPCRW, by = "datetimeAK")
