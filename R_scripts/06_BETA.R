@@ -645,7 +645,7 @@ beta.all.2015 <- beta.all.2015 %>%
   filter(Parameter != "(Intercept)")
 
 ########################################## 2018 ##########################################################
-setwd("Storm_Events/2018")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2018")
 storm_file_list_beta <- list.files(path="FRCH_MOOS_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
@@ -1489,7 +1489,7 @@ beta.all.2018 <- beta.all.2018 %>%
 
 
 ########################################## 2019 ##########################################################
-setwd("Storm_Events/2019")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2019")
 storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
