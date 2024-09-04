@@ -905,6 +905,11 @@ plot(print(confint(site.ID.comp)))
 anova(no3.mod.arma.1.1)
 
 ```
+None are significantly different
+F-value: 0.06314
+p-value: 0.9388
+Denom DF: 214
+
 
 ### fDOM ### 
 ```{r}
@@ -1117,7 +1122,10 @@ tab_model(fDOM.mod.arma.1.2)
 anova(fDOM.mod.arma.1.2)
 
 ```
-This shows that FRCH and CARI are significantly different from MOOS
+This shows that there is overlap in CI for each comp (FRCH:CARI, MOOS:CARI, MOOS:FRCH)
+F-value: 3.443
+p-value: 0.0335
+Denon DF: 244
 
 
 ### SPC ### 
@@ -1134,6 +1142,7 @@ spc.2018 <- ggplot(mean_daily_2018, aes(x = site.ID, y = dailySPC, fill = site.I
   xlab("") +
   ylab("Daily SPC (µS/cm)") +
   theme_classic()
+spc.2018
 ```
 #gls
 ```{r}
@@ -1276,6 +1285,9 @@ anova(SPC.mod.arma.1.1)
 
 ```
 This shows that MOOS is significantly different than CARI and FRCH 
+Fvalue: 15.9083
+p-value: <0.0001
+Denom DF: 243
 
 ### Turb ### 
 ```{r}
@@ -1402,7 +1414,10 @@ plot(print(confint(site.ID.comp)))
 anova(turb.mod.arma.1.1)
 
 ```
-This shows no significance for any of the sites 
+This shows no significance for any of the sites as CI overlap 0 for all comps
+F-value: 0.95907
+p-value: 0.3851
+Denom DF: 188
 
 
 # 2019 #
