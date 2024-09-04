@@ -98,7 +98,7 @@ mean_daily_site <- mean_daily %>%
                    meanSPC = mean(dailySPC, na.rm = TRUE),
                    meanTurb = mean(dailyTurb, na.rm = TRUE))
 
-write.csv(mean_daily_site, "~/Documents/Storms_clean_repo/Output_from_analysis/10_gls_models/mean_daily_site.csv")
+write.csv(mean_daily_site, "~/GitHub/Storms_clean_repo/Output_from_analysis/10_gls_models/mean_daily_site.csv")
 
 
 
@@ -267,8 +267,8 @@ no3.mod.arma.2.2 <- gls(dailyNO3 ~ site.ID,
 # ACF plot 
 ```{r}
 Ear1<-residuals(no3.mod.arma.2.2, type="normalized")
-I1<-!is.na(mean_daily_2018$dailyNO3)
-Efulla<-vector(length = length(mean_daily_2018$dailyNO3))
+I1<-!is.na(mean_daily_2015$dailyNO3)
+Efulla<-vector(length = length(mean_daily_2015$dailyNO3))
 Efulla<-NA
 Efulla[I1]<-Ear1
 acf(Efulla, na.action=na.pass)
@@ -276,12 +276,12 @@ pacf(Efulla, na.action=na.pass)
 ```
 # AIC 
 ```{r}
-models <- list(no3.mod.ar1.2018,no3.mod.arma.1.1, no3.mod.arma.1.2, no3.mod.arma.2.1, no3.mod.arma.2.2)
+models <- list(no3.mod.ar1.2015,no3.mod.arma.1.1, no3.mod.arma.1.2, no3.mod.arma.2.1, no3.mod.arma.2.2)
 aictab(cand.set = models) # no3.mod.arma.1.1 is the best model
 ```
 # generalized linear hypotheses
 ```{r}
-mean_daily_2018$site.ID <-as.factor(mean_daily_2018$site.ID)
+mean_daily_2015$site.ID <-as.factor(mean_daily_2015$site.ID)
 site.ID.comp <- glht(no3.mod.arma.1.1, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp) # no site is significantly different 
 summary(no3.mod.arma.1.1)
@@ -306,6 +306,7 @@ fDOM.2015 <- ggplot(mean_daily_2015, aes(x = site.ID, y = dailyfDOM, fill = site
   ylab("Daily fDOM (QSU)") +
   theme_classic()
 
+fDOM.2015
 ```
 
 
@@ -335,7 +336,7 @@ qqnorm(fDOM.mod.2015, ~ resid(., type = "p"), abline = c(0, 1))
 varfixed <- varIdent(form = ~ 1 | site.ID)
 fDOM.mod.ar1.log <- gls(logDailyfDOM ~ site.ID, 
                na.action = na.omit, 
-               data = mean_daily_2018,
+               data = mean_daily_2015,
                weights = varfixed)
 
 
@@ -393,9 +394,9 @@ anova(fDOM.mod.arma.1.1)
 
 ```
 FRCH and MOOS Significantly different from each other 
-F-value: 10.52
-P-value: 0.0014
-Denom DF: 174
+F-value: 10.65087
+P-value: 0.0013
+Denom DF: 172
 
 
 ### SPC ### 
@@ -554,9 +555,9 @@ anova(SPC.mod.arma.1.1)
 
 ```
 This shows that MOOS is not significantly different from FRCH
-F-Value: 3.61
-p-value: 0.06
-Denom DF: 167
+F-Value: 3.6897
+p-value: 0.0565
+Denom DF: 165
 
 ### Turb ### 
 ```{r}
@@ -728,9 +729,9 @@ anova(turb.mod.arma.1.1)
 
 ```
 MOOS and FRCH are significantly different
-F-value: 4.91
-p-value: 0.03
-Denom DF: 167
+F-value: 5.15064
+p-value: 0.0245
+Denom DF: 165
 
 ### 2018 ###
 # NO3 # 
