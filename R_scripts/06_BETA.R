@@ -3077,7 +3077,7 @@ write.csv(beta.all.2019, here("Output_from_analysis", "06_BETA", "beta.2019.csv"
 
 
 ########################################## 2020 ##########################################################
-setwd("Storm_Events/2020")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2020")
 storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
@@ -4807,7 +4807,8 @@ beta.all.2020 <- beta.all.2020 %>%
 
 
 ########################################## 2021 ##########################################################
-setwd("Storm_Events/2021")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2021")
+
 storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
@@ -6286,7 +6287,7 @@ write.csv(beta.all.2021, here("Output_from_analysis", "06_BETA", "beta.2021.csv"
 
 
 ################################### 2022 ################################################
-setwd("Storm_Events/2022")
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2022")
 storm_file_list_beta <- list.files(path="FRCH_MOOS_VAUL_POKE_STRT_CARI/", 
                                    recursive=F, 
                                    pattern=".csv", 
