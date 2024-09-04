@@ -34,7 +34,7 @@ library(ggpubr)
 library(dataRetrieval)
 
 ########################################### 2015 ##########################################
-
+setwd("~/GitHub/Storms_clean_repo/Storm_Events/2015")
 storm_file_list_beta <- list.files(path="FRCH_MOOS/", 
                                    recursive=F, 
                                    pattern=".csv", 
@@ -170,11 +170,11 @@ FRCH_NO3_storm$storm.ID = c(rep("storm1", 287),
                             rep("storm2", 331),
                             rep("storm3", 383),
                             rep("storm4", 299),
-                            rep("storm5a", 453),
+                            rep("storm5a", 448),
                     
                             rep("storm6a", 1295),
                             
-                            rep("storm7", 242)) 
+                            rep("storm7", 241)) 
 
 
 names(FRCH_NO3_storm) <- c("DateTime", "Q", "Q.norm", "NO3", "NO3.norm", "storm.ID")
@@ -266,11 +266,11 @@ FRCH_fDOM_storm$storm.ID = c(rep("storm1", 287),
                              rep("storm2", 331),
                              rep("storm3", 383),
                              rep("storm4", 299),
-                             rep("storm5a", 453),
+                             rep("storm5a", 448),
                              
                              rep("storm6a", 1295),
                              
-                             rep("storm7", 242))
+                             rep("storm7", 241))
 
 names(FRCH_fDOM_storm) <- c("DateTime", "Q", "Q.norm", "fDOM", "fDOM.norm", "storm.ID")
 FRCH_fDOM_storm$site.ID <- "FRCH"
@@ -358,11 +358,11 @@ FRCH_SPC_storm$storm.ID = c(rep("storm1", 287),
                             rep("storm2", 331),
                             rep("storm3", 383),
                             rep("storm4", 299),
-                            rep("storm5a", 453),
+                            rep("storm5a", 448),
                             
                             rep("storm6a", 1295),
                             
-                            rep("storm7", 242))
+                            rep("storm7", 241))
 
 names(FRCH_SPC_storm) <- c("DateTime", "Q", "Q.norm", "SPC", "SPC.norm", "storm.ID")
 FRCH_SPC_storm$site.ID <- "FRCH"
@@ -453,11 +453,11 @@ FRCH_turb_storm$storm.ID = c(rep("storm1", 287),
                              rep("storm2", 331),
                              rep("storm3", 383),
                              rep("storm4", 299),
-                             rep("storm5a", 453),
+                             rep("storm5a", 448),
                              
                              rep("storm6a", 1295),
                              
-                             rep("storm7", 242))
+                             rep("storm7", 241))
 
 names(FRCH_turb_storm) <- c("DateTime", "Q", "Q.norm", "turb", "turb.norm", "storm.ID")
 FRCH_turb_storm$site.ID <- "FRCH"
@@ -546,11 +546,11 @@ FRCH_abs_storm$storm.ID = c(rep("storm1", 287),
                             rep("storm2", 331),
                             rep("storm3", 383),
                             rep("storm4", 299),
-                            rep("storm5a", 453),
+                            rep("storm5a", 448),
                             
                             rep("storm6a", 1295),
                             
-                            rep("storm7", 242))
+                            rep("storm7", 241))
 
 names(FRCH_abs_storm) <- c("DateTime", "Q", "Q.norm", "abs", "abs.norm", "storm.ID")
 FRCH_abs_storm$site.ID <- "FRCH"
