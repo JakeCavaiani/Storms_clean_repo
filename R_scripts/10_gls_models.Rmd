@@ -3776,28 +3776,28 @@ pacf(Efulla, na.action=na.pass)
 # AIC 
 ```{r}
 models <- list(NO3.mod.arma.1.1, NO3.mod.arma.1.2, NO3.mod.arma.2.1, NO3.mod.arma.2.2)
-aictab(cand.set = models) # NO3.mod.arma.1.2 is the best model
+aictab(cand.set = models) # NO3.mod.arma.2.2 is the best model
 ```
 
 # generalized linear hypotheses
 ```{r}
-site.ID.comp <- glht(NO3.mod.arma.1.2, linfct = mcp(site.ID = "Tukey"))
+site.ID.comp <- glht(NO3.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
-summary(NO3.mod.arma.1.1)
-intervals(NO3.mod.arma.1.1)
-plot(print(confint(site.ID.comp)))
-anova(NO3.mod.arma.1.1)
+summary(NO3.mod.arma.2.2)
+intervals(NO3.mod.arma.2.2)
+plot(print(confint(NO3.mod.arma.2.2)))
+anova(NO3.mod.arma.2.2)
 
 ```
-VAUL:CARI
-VAUL:FRCH
-VAUL:POKE
-MOOS:POKE
-MOOS:FRCH
-STRT:POKE
+<!-- VAUL:CARI -->
+<!-- VAUL:FRCH -->
+<!-- VAUL:POKE -->
+<!-- MOOS:POKE -->
+<!-- MOOS:FRCH -->
+<!-- STRT:POKE -->
 
-F-value: 8.7808
-P-value: <0.0001
+<!-- F-value: 8.7808 -->
+<!-- P-value: <0.0001 -->
 
 
 ### fDOM ### 
@@ -4000,21 +4000,23 @@ aictab(cand.set = models) # fDOM.mod.arma.1.2 is the best model
 
 # generalized linear hypotheses
 ```{r}
-site.ID.comp <- glht(fDOM.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
+site.ID.comp <- glht(fDOM.mod.arma.1.2, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
-summary(fDOM.mod.arma.2.2)
-intervals(fDOM.mod.arma.2.2)
+summary(fDOM.mod.arma.1.2)
+intervals(fDOM.mod.arma.1.2)
 plot(print(confint(site.ID.comp)))
-anova(fDOM.mod.arma.2.2)
+anova(fDOM.mod.arma.1.2)
 
 ```
 MOOS:CARI
 MOOS:POKE
 MOOS:STRT
 
-VAUL:CARI
-VAUL:POKE
-VAUL:STRT
+F-value: 4.35781
+p-value: 7e-04
+Denom DF: 588
+
+
 
 
 ### SPC ### 
@@ -4184,17 +4186,23 @@ aictab(cand.set = models) # SPC.mod.arma.2.2 is the best model
 
 # generalized linear hypotheses
 ```{r}
-site.ID.comp <- glht(SPC.mod.arma.1.1, linfct = mcp(site.ID = "Tukey"))
+site.ID.comp <- glht(SPC.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
-summary(SPC.mod.arma.1.1)
+summary(SPC.mod.arma.2.2)
 plot(print(confint(site.ID.comp)))
-anova(SPC.mod.arma.1.1)
+anova(SPC.mod.arma.2.2)
 
 ```
 
 F-value: 0.06
 p-value: 0.9972
 DF:613, 6
+
+9/5/2024:
+F-value:0.051151
+p-value: 0.9984
+Denom DF: 613
+
 
 ### Turb ### 
 ```{r}
@@ -4367,7 +4375,7 @@ plot(print(confint(site.ID.comp)))
 anova(turb.mod.arma.2.2)
 ```
 DF:604
-F-Value: 7.97
+F-Value: 7.90876
 p-value: <0.0001
 
 VAUL:CARI
