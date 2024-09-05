@@ -3034,8 +3034,10 @@ plot(print(confint(site.ID.comp)))
 anova(NO3.mod.arma.1.1)
 
 ```
-FRCH:CARI
-STRT:CARI
+None are significantly different
+F-value: 0.6799
+p-value: 0.6388
+Denom DF: 558
 
 ### fDOM ### 
 ```{r}
@@ -3246,16 +3248,18 @@ anova(fDOM.mod.arma.2.2)
 
 ```
 
-STRT:POKE
-
-MOOS:FRCH
 MOOS:POKE
 MOOS:STRT
 
 VAUL:POKE
 VAUL:STRT
+VAUL:MOOS
 VAUL:CARI
 VAUL:FRCH
+
+F-value: 8.71472
+p-value: <0.0001
+Denom: 554
 
 ### SPC ### 
 ```{r}
@@ -3435,14 +3439,20 @@ anova(SPC.mod.arma.1.1)
 CARI:MOOS
 CARI:POKE
 CARI:STRT
+CARI:VAUL
 
-POKE:FRCH
+FRCH:POKE
+FRCH:STRT
+FRCH:VAUL
 
-VAUL:CARI
 VAUL:FRCH
 VAUL:MOOS
 VAUL:POKE
 VAUL:STRT
+
+F-value:13.6724
+p-value: <0.0001
+Denom DF: 554
 
 ### Turb ### 
 ```{r}
@@ -3612,12 +3622,17 @@ summary(site.ID.comp)
 summary(turb.mod.arma.2.1)
 intervals(turb.mod.arma.2.1)
 plot(print(confint(site.ID.comp)))
+anova(turb.mod.arma.2.1)
 ```
 CARI:FRCH
 CARI:MOOS
 
 VAUL:CARI
 VAUL:POKE
+
+F-value:6.6138
+p-value: <0.0001
+Denom DF: 561
 
 # 2022 #
 ```{r}
