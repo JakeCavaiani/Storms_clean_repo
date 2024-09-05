@@ -190,13 +190,13 @@ emmeans(fDOM.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
 normality looks good 
-CARI:FRCH
+<!-- CARI:FRCH -->
 CARI:VAUL
-FRCH:MOOS
+<!-- FRCH:MOOS -->
 FRCH:VAUL
-MOOS:POKE
+<!-- MOOS:POKE -->
 POKE:VAUL
-STRT:VAUL
+<!-- STRT:VAUL -->
 
 ```{r}
 # getting the letter designation for significance 
@@ -211,7 +211,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
-
+VAUL:a
+MOOS:ab
+STRT:ab
+CARI:b
+POKE:b
+FRCH:b
 
 
 ```{r}
@@ -249,6 +254,12 @@ print(cld)
 
 
 ```
+POKE:a
+MOOS:a
+FRCH:a
+VAUL:a
+STRT:a
+CARI:a
 
 
 
@@ -287,6 +298,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+VAUL:a
+POKE:ab
+CARI:ab
+STRT:ab
+FRCH:ab
+MOOS:b
 
 ### BETA ###
 
@@ -379,6 +396,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+STRT:a
+FRCH:a
+POKE:a
+CARI:a
+MOOS:ab
+VAUL:b
 
 ```{r}
 #SPC
@@ -415,6 +438,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+FRCH:a
+MOOS:a
+STRT:a
+POKE:a
+CARI:a
+VAUL:a
 
 ```{r}
 #turb
@@ -449,6 +478,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+CARI:a
+VAUL:a
+MOOS:a
+STRT:a
+POKE:a
+FRCH:a
 
 ### SDs of storm metrics ###
 
@@ -521,6 +556,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+STRT:a
+CARI:a
+VAUL:a
+POKE:a
+FRCH:a
+MOOS:a
 
 ```{r}
 ggplot(HI_FI_fDOM, aes(site.ID, sdHI, fill = site.ID)) +
@@ -554,6 +595,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+MOOS:a
+STRT:ab
+VAUL:ab
+FRCH:ab
+POKE:ab
+CARI:b
 
 # SPC
 ```{r}
@@ -588,6 +635,13 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+VAUL:a
+FRCH:a
+MOOS:a
+STRT:a
+CARI:a
+POKE:a
+
 # turb
 ```{r}
 ggplot(HI_FI_turb, aes(site.ID, sdHI, fill = site.ID)) +
@@ -631,6 +685,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+CARI:a
+POKE:a
+FRCH:a
+VAUL:a
+MOOS:a
+STRT:a
 
 # BETA 
 ```{r}
@@ -684,6 +744,13 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+CARI:a
+STRT:a
+POKE:a
+VAUL:a
+FRCH:a
+MOOS:a
+
 # fDOM
 ```{r}
 fDOM.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
@@ -708,6 +775,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+MOOS:a
+POKE:a
+FRCH:a
+STRT:a
+CARI:a
+VAUL:a
 
 # SPC
 ```{r}
@@ -733,6 +806,12 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+VAUL:a
+CARI:a
+POKE:a
+MOOS:a
+FRCH:a
+STRT:a
 
 # turb 
 ```{r}
@@ -758,4 +837,10 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+CARI:a
+POKE:a
+VAUL:a
+STRT:a
+MOOS:a
+FRCH:a
 
