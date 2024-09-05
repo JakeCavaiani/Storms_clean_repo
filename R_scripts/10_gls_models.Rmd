@@ -1609,6 +1609,9 @@ anova(NO3.mod.arma.2.2)
 
 ```
 This shows no significance for any of the sites 
+F-value: 0.25508
+p-value: 0.9372
+Denom DF: 573
 
 
 ### fDOM ### 
@@ -1816,11 +1819,17 @@ anova(fDOM.mod.arma.2.1)
 MOOS:CARI
 MOOS:POKE
 MOOS:STRT
+MOOS:VAUL
 
 VAUL:POKE
 VAUL:STRT
 VAUL:CARI
 VAUL:FRCH
+
+F-value: 15.673
+p-value: <0.0001
+Denom DF: 613
+
 
 
 ### SPC ### 
@@ -2005,6 +2014,9 @@ anova(SPC.mod.arma.2.1)
 ```
 VAUL:CARI
 VAUL:FRCH
+F-value: 2.52532
+p-value: 0.0282
+Denom DF: 609
 
 
 ### Turb ### 
@@ -2195,20 +2207,27 @@ Still autocorrelation
 # AIC 
 ```{r}
 models <- list(turb.mod.arma.1.1, turb.mod.arma.1.2, turb.mod.arma.2.1, turb.mod.arma.2.2)
-aictab(cand.set = models) # no3.mod.arma.1.1 is the best model
+aictab(cand.set = models) # turb.mod.arma.1.2 is the best model
 ```
 
 # generalized linear hypotheses
 ```{r}
-site.ID.comp <- glht(turb.mod.arma.2.2, linfct = mcp(site.ID = "Tukey"))
+site.ID.comp <- glht(turb.mod.arma.1.2, linfct = mcp(site.ID = "Tukey"))
 summary(site.ID.comp)
-summary(turb.mod.arma.2.2)
-intervals(turb.mod.arma.2.2)
+summary(turb.mod.arma.1.2)
+intervals(turb.mod.arma.1.2)
 plot(print(confint(site.ID.comp)))
-anova(turb.mod.arma.2.2)
+anova(turb.mod.arma.1.2)
 
 ```
 FRCH:CARI
+MOOS:CARI
+
+POKE:FRCH
+
+F-value: 213.46766
+p-value: 0.0012
+Denom DF: 613
 
 
 # 2020 #
