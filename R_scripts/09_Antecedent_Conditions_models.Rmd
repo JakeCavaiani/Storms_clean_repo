@@ -293,12 +293,16 @@ summary(STRT.model.log)
 Doesnt look much better -  do we need to further transform?
 
 ```{r}
-Plot_1 <- plot_summs(MOOS.model, FRCH.model,
-           CARI.model, POKE.model,
-           VAUL.model, STRT.model, scale = TRUE,
-           model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
-           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) + 
-  xlim(-0.5, 0.75)
+no3hireg <- AMC %>% filter(response_var == "NO3") %>%
+                      group_by(site.ID) %>%
+                      do(glance(lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, .)))
+
+Plot_1 <- plot_summs(CARI.model, FRCH.model,
+           MOOS.model, POKE.model, STRT.model, 
+           VAUL.model, scale = TRUE,
+           model.names = c("CARI", "FRCH", "MOOS", "POKE", "STRT", "VAUL"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) #+ 
+  #xlim(-0.5, 0.75)
 
 vn = expression(paste(HI*-N*O[3]^"-"))
 no3_hi <- Plot_1 + 
@@ -307,9 +311,10 @@ no3_hi <- Plot_1 +
              colour = "grey80",
              linetype = 1) +
 scale_y_discrete(labels= c("Seasonality", 
-                             "Precipitation Month", 
-                             "Storm Precipitation")) +
-  annotate()
+                             "Antecedent precipitation\n(1 month)", 
+                             "Storm precipitation")) +
+  geom_text(data = no3hireg, aes(x = -0.3, y = c(1.5, 1.35, 1.2, 1.05, 0.9, 0.75), color = site.ID, size = 15, hjust = 0,
+           label = paste("R[adj]^2", "==", round(adj.r.squared, 2))), parse = TRUE) +
   theme_bw() +
   ggtitle(vn) +
   theme(axis.text.x=element_text(size=15), 
@@ -318,7 +323,7 @@ scale_y_discrete(labels= c("Seasonality",
         axis.title.y = element_text(size = 20),
         legend.position = "none",
         plot.title = element_text(size=20))
-  
+
 ggsave("HI_NO3_AMC.pdf",
        path = here("plots", "Publication"),
        width = 7, height = 7)
