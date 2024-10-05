@@ -8,7 +8,6 @@
 library(tidyverse)
 library(stats)
 library(readr)
-library(ggplot2)
 library(plotly)
 library(GGally)
 library(ggpmisc)
@@ -19,7 +18,10 @@ library(nlme)
 library(MuMIn)
 library(multcomp)
 library(here)
-library(dplyr)
+library(dataRetrieval)
+library(RColorBrewer)
+library(gridExtra)
+library(zoo)
 
 ###### CATCHMENT CHARACTERISTICS ####
 # Read in polygon data 
@@ -43,9 +45,16 @@ ggpairs(catchment,
         columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
         title="Correlation matrix: All sites") 
 # this shows that slope and PF are highly correlated
+###***TKH: Slope & pfrost r = -0.34. Coefficients <0.5 are weak. This is across the full dataset though. Let's look at just the 6 catchments we are addressing here.
 
 highlight_df <- filter(catchment, site %in% c("Caribou_CJ", "French", "Poker_PJ",
                                               "Moose", "Vault", "Stuart"))
+
+ggpairs(highlight_df,
+        columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
+        title="Correlation matrix: All sites") 
+## pfrost & slope negatively correlated, but driven largely by one point with strong leverage (VAUL)
+## pfrost & NDVI also negatively correlated, one major outlier
 
 catchment %>% 
   ggplot(aes(x = SLOPE_MEAN, y = NDVI_p50__mean)) + 
@@ -60,6 +69,9 @@ catchment %>%
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
 DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
+
+# filter to 2020 attributes only. NDVI was available beginning 1984.
+DOD_catchment <- DOD_catchment %>% filter(Year == 2020)
 
 # Manually adjusting the PF extent from the most updated torre and Neal PF maps (11/1/2023)
 
@@ -83,30 +95,41 @@ AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "An
 
 # AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 
-HI.median<- AMC %>% group_by(site.ID, response_var) %>%  
-  dplyr::summarise_at(vars(Hyst_index), list(HI = median)) # takes the median by site response and year 
+## Fill missing pf & burn categories
+AMC <- AMC %>% mutate(burn = ifelse(site.ID %in% c("POKE","STRT","MOOS"), "burned", "unburned")) %>%
+               mutate(pf = ifelse(site.ID == "POKE", "low",
+                              ifelse(site.ID %in% c("VAUL", "MOOS"), "high", "medium")))
 
-HI.median <- AMC %>% group_by(response_var,site.ID, year) %>%
-  summarize(MedianHI = mean(Hyst_index),
-            MedianFI = mean(Flush_index, na.rm = TRUE),
-            MedianBETA = mean(Beta_index, na.rm = TRUE),
-            sdHI = sd(Hyst_index),
-            sdFI = sd(Flush_index, na.rm = TRUE),
-            sdBETA = sd(Beta_index, na.rm = TRUE),
-            CVhi = sdHI/MedianHI,
-            CVfi = sdFI/MedianFI,
-            CVbeta = sdBETA/MedianBETA,
-            pf = paste(pf),
-            burn = paste(burn),
-            Pf_Prob_1m_mean_x = paste(Pf_Prob_1m_mean_x),
-            pctburn_lg = paste(pctburn_lg),
-            Slope = paste(SLOPE_MEAN),
-            NDVI = paste(NDVI_p50__mean))
+########################################
+### Summary statistics across storms ###
+########################################
+## Function to calculate CV
+cv <- function(x) 100*( sd(x, na.rm = TRUE)/mean(x, na.rm = TRUE))
 
+## Across all years
+st.all <- AMC %>% group_by(response_var, site.ID, pf, burn, Pf_Prob_1m_mean_x, pctburn_lg, SLOPE_MEAN, NDVI_p50__mean) %>%
+                    summarize(across(c(Hyst_index, Flush_index, Beta_index), 
+                                list(mn = ~ mean(.x, na.rm = TRUE),
+                                     md = ~ median(.x, na.rm = TRUE),
+                                     SD = ~ sd(.x, na.rm = TRUE),
+                                     CV = ~ cv(.x))
+                                    ))
 
-HI.median$pf <- ifelse(HI.median$site.ID == "MOOS"| HI.median$site.ID == "FRCH"| HI.median$site.ID == "STRT",
-                       "Moderate", "High")
+## Within years
+yr.st <- AMC %>% group_by(response_var, site.ID, year, pf, burn, Pf_Prob_1m_mean_x, pctburn_lg, SLOPE_MEAN, NDVI_p50__mean) %>%
+                     summarize(across(c(Hyst_index, Flush_index, Beta_index), 
+                                  list(mn = ~ mean(.x, na.rm = TRUE),
+                                       md = ~ median(.x, na.rm = TRUE),
+                                       SD = ~ sd(.x, na.rm = TRUE),
+                                       CV = ~ cv(.x))
+                                      ))
 
+# Output summarized data
+dir.create("summary_tables")                               
+write.csv(st.all, here("summary_tables", "storms_summ_allyears.csv"), row.names = FALSE)
+write.csv(yr.st, here("summary_tables", "storms_summ_byyear.csv"), row.names = FALSE)
+
+###***TKH: replaced by st.all?
 CV.all <- HI.median[!duplicated(HI.median$MedianHI), ] # removing duplicated rows 
 CV.average.pf <- HI.median %>% 
   group_by(pf, response_var) %>% 
@@ -122,9 +145,10 @@ fDOM.catchment <- subset(HI.median, HI.median$response_var == "fDOM")
 SPC.catchment <- subset(HI.median, HI.median$response_var == "SPC")
 turb.catchment <- subset(HI.median, HI.median$response_var == "turb")
 
+###***TKH: I'm not following the analyses lines 148-247. These seem to be using annual values as replicates within each catchment. Would need a random effect of year.
 #### HI ###
 # PF 
-ggplot(HI.median, aes(x = Pf_Prob_1m_mean_x, y = MedianHI, fill = site.ID)) +
+ggplot(yr.st, aes(x = as.character(Pf_Prob_1m_mean_x), y = Hyst_index_md, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
   theme_classic() +
@@ -450,6 +474,9 @@ ggplot(HI_FI_turb_year, aes(Beta_index, Hyst_index)) +
         text = element_text(size = 15),
         legend.position = "bottom") 
 
+#######################################################
+### Count storms in each of the 4 FI_Beta quadrants ###
+#######################################################
 # this is telling me what percentage of storms fall in each quadrant and tells me how many cross 0 which are non-significant
 
 #NO3
@@ -1833,22 +1860,9 @@ table(sign(HI_FI_turb_VAUL_2022$Beta_index))
 which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index > 0)
 which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index < 0)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Figuring out how many days are missing from the record  ####
+###############################################################
+### Figuring out how many days are missing from the record  ###
+###############################################################
 # 2015 ####
 chem.2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"), na.strings = "NA")
 
@@ -2532,8 +2546,9 @@ mean_duration_site <- AMC %>%
   dplyr::summarise(Duration = mean(TOTAL.TIME, na.rm = TRUE))
 
 
-
-#### MEAN SOLUTE CONCENTRATIONS ####
+##################################
+### MEAN SOLUTE CONCENTRATIONS ###
+##################################
 chem_2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"))
 chem_2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"))
 chem_2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"))
@@ -2653,18 +2668,22 @@ DOD_chem <- full_join(DOD_chem, CARI_chem, by = c("datetimeAK", "site.ID", "fDOM
 DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
 DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 
+DOD_chem %>% filter(julian < 305) %>%
+             ggplot(aes(x = julian, y = fDOM, group = year)) +
+               geom_point(aes(color = year)) +
+               facet_wrap(~site.ID, scales = "free_y")
+
 # check for outliers
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(Turb), 
-                ~ifelse(Turb > 1250, NA, .)))
+#DOD_chem <- DOD_chem %>% mutate(across(c(Turb), 
+#                ~ifelse(Turb > 1250, NA, .)))
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(NO3), 
-                ~ifelse(site.ID == "STRT" & year == 2019 & NO3 > 40, NA, .)))
+#DOD_chem <- DOD_chem %>%
+#  mutate(across(c(NO3), 
+#                ~ifelse(site.ID == "STRT" & year == 2019 & NO3 > 40, NA, .)))
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(NO3), 
-                ~ifelse(site.ID == "VAUL" & year == 2019 & NO3 < 2, NA, .)))
+#DOD_chem <- DOD_chem %>%
+#  mutate(across(c(NO3), 
+#                ~ifelse(site.ID == "VAUL" & year == 2019 & NO3 < 2, NA, .)))
 
 DOD_chem <- DOD_chem %>%
   mutate(across(c(NO3), 
@@ -2674,20 +2693,11 @@ DOD_chem <- DOD_chem %>%
   mutate(across(c(NO3), 
                 ~ifelse(site.ID == "STRT" & year == 2020 & NO3 < 10, NA, .)))
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(fDOM), 
-                ~ifelse(year == 2021 & fDOM < 1, NA, .)))
+#DOD_chem <- DOD_chem %>%
+#  mutate(across(c(fDOM), 
+#                ~ifelse(year == 2021 & fDOM < 1, NA, .)))
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(site.ID), 
-                ~ifelse(site.ID == "C2" | site.ID == "C3" | site.ID == "CRBU" |
-                        site.ID == "EM" | site.ID == "EPSCoR" | site.ID == "EPSCOR" |
-                        site.ID == "Evan" | site.ID == "Fox well" | site.ID == "N Fork Chena" |
-                        site.ID == "Nitgeo" | site.ID == "SALCHA" | site.ID == "STD"|
-                        site.ID == "SUNA leaf" | site.ID == "Sycamore" | site.ID == "VAUL upwell lake"|
-                        site.ID == "NA" | site.ID == "Salcha", NA, .))) # removing all sites that arent the DOD sites 
-
-DOD_chem <- DOD_chem[-c(409859:419367), ] # removing the bottom of the df that has no datetime associated with chems
+#DOD_chem <- DOD_chem[-c(409859:419367), ] # removing the bottom of the df that has no datetime associated with chems
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
@@ -2963,8 +2973,11 @@ year.strt <- STRT_year %>%
 write.table(year.strt, file = "strt.csv", sep = ",", col.names = NA,
             qmethod = "double")
 
+#########################################
+### ANOVA: Comparing catchments*years ###
+#########################################
+###***TKH: Are we using these catchment*year comparisons? These analysis are treating each daily value as independent. Would need to account for temporal autocorrelation.
 
-### ANOVA ####
 #fDOM
 
 fDOM <- aov(dailyfDOM ~ site.ID*year, data = mean_daily)

@@ -44,10 +44,6 @@ library(car)
 library(MuMIn)
 library(ggeffects)
 library(dotwhisker)
-
-library(ggeffects)
-library(dotwhisker)
-library(broom)
 library(jtools)
 library(GGally)
 
@@ -141,6 +137,8 @@ ggsave("NO3_pairs.pdf",
 
 5) Three month is correlated with Time since Chena (0.619) but time since chena is more correlated with HI (0.251 vs. 0.220)
 
+###***TKH: correlated pairs to avoid in same model- intensity & stormppt, month & 3month, week & month, TSC & 3month
+
 * to sum up this makes me want to drop storm temperature and three month precipitation.....but lets run the model with all of the candidate predictors first and go from there 
 
 
@@ -164,7 +162,7 @@ ggsave("NO3_pairs_MOOS.pdf",
        width = 10, height = 10)
 
 
-MOOS.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_MOOS)
+MOOS.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_MOOS)
 
 vif(MOOS.model)
 plot(MOOS.model)
@@ -184,7 +182,7 @@ ggsave("NO3_pairs_FRCH.pdf",
        width = 10, height = 10)
 
 
-FRCH.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_FRCH)
+FRCH.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_FRCH)
 
 vif(FRCH.model)
 plot(FRCH.model)
@@ -204,7 +202,7 @@ ggsave("NO3_pairs_CARI.pdf",
        width = 10, height = 10)
 
 
-CARI.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_CARI)
+CARI.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_CARI)
 
 vif(CARI.model)
 plot(CARI.model)
@@ -222,7 +220,7 @@ ggsave("NO3_pairs_POKE.pdf",
        width = 10, height = 10)
 
 
-POKE.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_POKE)
+POKE.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_POKE)
 
 vif(POKE.model)
 plot(POKE.model)
@@ -240,7 +238,7 @@ ggsave("NO3_pairs_VAUL.pdf",
        width = 10, height = 10)
 
 
-VAUL.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
+VAUL.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
 
 vif(VAUL.model)
 plot(VAUL.model)
@@ -250,7 +248,7 @@ summary(VAUL.model)
 
 ```
 normality doesnt look great....lets try and log transform 
-
+###***TKH: this is fine
 ```{r}
 HI_FI_NO3_VAUL$logHI <- log(abs(HI_FI_NO3_VAUL$Hyst_index))
 VAUL.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
@@ -273,7 +271,7 @@ ggsave("NO3_pairs_VAUL.pdf",
        width = 10, height = 10)
 
 
-STRT.model <- lm(Hyst_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
+STRT.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
 
 vif(STRT.model)
 plot(STRT.model)
@@ -281,6 +279,7 @@ summary(STRT.model)
 
 ```
 lets log transform 
+###***TKH: this is fine
 
 ```{r}
 HI_FI_NO3_STRT$logHI <- log(abs(HI_FI_NO3_STRT$Hyst_index))
@@ -309,8 +308,8 @@ no3_hi <- Plot_1 +
              linetype = 1) +
 scale_y_discrete(labels= c("Seasonality", 
                              "Precipitation Month", 
-                             "Precipitation Week",
                              "Storm Precipitation")) +
+  annotate()
   theme_bw() +
   ggtitle(vn) +
   theme(axis.text.x=element_text(size=15), 
@@ -393,7 +392,7 @@ plot(FRCH.model)
 summary(FRCH.model)
 ```
 what does a log transform look like 
-
+###***TKH: this is fine
 ```{r}
 FRCH.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_FRCH)
 
@@ -421,7 +420,7 @@ plot(CARI.model)
 summary(CARI.model)
 ```
 lets log transform
-
+###***TKH: this is fine
 ```{r}
 CARI.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_CARI)
 
@@ -466,6 +465,7 @@ plot(VAUL.model)
 summary(VAUL.model)
 ```
 Vifs may be a little high for precipweek 
+###***TKH: 2 is a good rule of thumb
 ```{r}
 ggpairs(HI_FI_fDOM_STRT,
         columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
@@ -483,7 +483,7 @@ vif(STRT.model)
 plot(STRT.model)
 summary(STRT.model)
 ```
-
+###***TKH: ppt week &  month too strongly correlated
 ```{r}
 Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
            CARI.model, POKE.model, 
