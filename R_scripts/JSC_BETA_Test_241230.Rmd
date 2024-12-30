@@ -82,62 +82,6 @@ combined_vector <- outliers_stats %>%
 
 ```
 
-# Try and pull in each storm using this vector
-```{r}
-# # Define the base directory
-# base_dir <- "~/GitHub/Storms_clean_repo/Storm_Events"
-# 
-# # List of years and sites
-# years <- c("2015", "2018", "2019", "2020", "2021", "2022")
-# 
-# # Assume `combined_vector` is your vector of filenames without '.csv'
-# combined_vector <- c("CARI_storm12b_09_25_NO3", "POKE_storm5d_08_10_turb",  
-#                      "POKE_storm5d_08_10_abs",  "STRT_storm2_07_12_abs",   
-#                      "STRT_storm3b_08_05_NO3",   "FRCH_storm4b_07_09_SPC",  
-#                      "FRCH_storm6_07_18_abs",    "FRCH_storm10b_08_12_fDOM", 
-#                      "MOOS_storm3_07_18_SPC",   "MOOS_storm3_07_18_abs",    
-#                      "POKE_storm4a_06_19_abs",   "POKE_storm4c_06_21_NO3",  
-#                      "POKE_storm4c_06_21_SPC",   "POKE_storm8_07_09_SPC",   
-#                      "VAUL_storm6b_08_02_NO3",   "VAUL_storm6b_08_02_abs",   
-#                      "VAUL_storm8_08_11_NO3",    "CARI_storm4_07_24_NO3",   
-#                      "CARI_storm4_07_24_SPC",    "CARI_storm5_07_27_SPC",    
-#                      "CARI_storm9_08_23_NO3",    "CARI_storm9_08_23_turb",   
-#                      "VAUL_storm4b_08_20_SPC")
-# 
-# # Append '.csv' to each element in the combined_vector
-# combined_vector_with_csv <- paste0(combined_vector, ".csv")
-# 
-# # Function to construct file paths and read CSVs
-# read_matching_csv <- function(base_dir, years, filename) {
-#   site <- strsplit(filename, "_")[[1]][1]  # Extract the site from the filename
-#   for (year in years) {
-#     file_path <- file.path(base_dir, year, site, filename)
-#     message("Checking file: ", file_path)  # Debug message
-#     if (file.exists(file_path)) {
-#       message("Reading file: ", file_path)
-#       return(read_csv(file_path))
-#     }
-#   }
-#   warning("File not found for: ", filename)
-#   return(NULL)
-# }
-# 
-# # Loop through combined_vector to create data frames dynamically
-# imap(combined_vector_with_csv, ~{
-#   csv_filename <- .x
-#   df_name <- str_remove(csv_filename, ".csv")
-#   df <- read_matching_csv(base_dir, years, csv_filename)
-#   if (!is.null(df)) {
-#     assign(df_name, df, envir = .GlobalEnv)
-#   } else {
-#     warning("Data frame for ", df_name, " was not created because the file was not found.")
-#   }
-# })
-# 
-# # Example: Check one of the created data frames (uncomment the following line to check a specific data frame)
-# # print(CARI_storm12b_09_25_NO3)
-
-```
 
 # Read in the Q data frames for each of these 
 ```{r}
@@ -212,6 +156,60 @@ imap(combined_vector_with_csv, ~{
 # }
 # list2env(dfList ,.GlobalEnv)
 
+# Define the plotting function
+# Define the plotting function
+hyst_plot <- function(dat_Q, dat_response, plot_title) {
+  dat.p <- ggplot(data = dat_Q, 
+                  aes(x = dat_Q$datavalue, 
+                      y = dat_response$datavalue, 
+                      color = as.numeric(dat_Q$valuedatetime))) +
+    geom_point() +
+    scale_colour_gradientn(colors = rainbow(3)) +
+    theme_bw() +
+    theme(legend.position = "none") + 
+    theme(axis.text = element_text(size = 12),
+          axis.title = element_text(size = 14, face = "bold")) +
+    ylab(plot_title) +  # E.g., 'CARI_storm12b_09_25_NO3'
+    xlab("Normalized Discharge") +
+    ggtitle(plot_title)  # E.g., 'CARI_storm12b_09_25_NO3'
+  return(dat.p)
+}
+
+# Define the directory to save plots
+plot_dir <- normalizePath("~/GitHub/Storms_clean_repo/plots/JSC_BETA_OUTLIER_TEST_241230")
+
+# Create the directory if it doesn't exist
+if (!dir.exists(plot_dir)) {
+  dir.create(plot_dir, recursive = TRUE)
+}
+
+# Assume combined_vector is already defined and used previously
+
+# Loop through the combined_vector to create and save plots
+imap(combined_vector, ~{
+  filename_base <- .x
+  
+  q_filename <- str_replace(filename_base, "NO3|turb|abs|SPC|fDOM", "Q")
+  
+  # Assign data for plotting
+  dat_Q <- get(q_filename)
+  dat_response <- get(filename_base)
+  
+  # Create the plot
+  plot <- hyst_plot(dat_Q, dat_response, filename_base)
+  
+  # Save the plot to a file in the specified directory
+  file_name <- paste0(plot_dir, "/", filename_base, ".png")
+  ggsave(file_name, plot = plot, width = 8, height = 6)
+  
+  # Optionally assign the plot to the environment for later access
+  assign(paste0(filename_base, ".p"), plot, envir = .GlobalEnv)
+})
+
+```
+
+# Lets try to normalize
+```{r}
 #fxn: plot hysteresis loop #
 hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
   dat.p = ggplot(data = dat_Q, 
@@ -230,49 +228,12 @@ hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
   return(dat.p)
 }
 
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
-  
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-  
-  numPlots = length(plots)
-  
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                     ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-  
-  if (numPlots==1) {
-    print(plots[[1]])
-    
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-    
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-      
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
+# Define function to normalize data
+normalize <- function(df) {
+  df$datavalue <- (df$datavalue - min(df$datavalue)) / (max(df$datavalue) - min(df$datavalue))
+  return(df)
 }
 
-# PLOT # 
-CARI_storm12b_09_25_NO3.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_NO3,"CARI", "NO3", "0925")
-
-multiplot(CARI_storm12b_09_25_NO3.p) 
-
-
-### CHAT GPT ###
 # Define the directory to save plots
 plot_dir <- normalizePath("~/GitHub/Storms_clean_repo/plots/JSC_BETA_OUTLIER_TEST_241230")
 
@@ -281,9 +242,7 @@ if (!dir.exists(plot_dir)) {
   dir.create(plot_dir, recursive = TRUE)
 }
 
-# Assume combined_vector is already defined and used previously
-
-# Loop through the combined_vector to create and save plots
+# Loop through the combined_vector to create, normalize data frames, and save plots
 imap(combined_vector, ~{
   filename_base <- .x
   site <- strsplit(filename_base, "_")[[1]][1]
@@ -292,9 +251,13 @@ imap(combined_vector, ~{
   
   q_filename <- str_replace(filename_base, "NO3|turb|abs|SPC|fDOM", "Q")
   
-  # Assign data for plotting
+  # Assign data for normalization and plotting
   dat_Q <- get(q_filename)
   dat_response <- get(filename_base)
+  
+  # Normalize the data frames
+  dat_Q <- normalize(dat_Q)
+  dat_response <- normalize(dat_response)
   
   # Create the plot
   plot <- hyst_plot(dat_Q, dat_response, site, response_var, storm_num)
@@ -308,8 +271,8 @@ imap(combined_vector, ~{
 })
 
 
-```
 
+```
 
 
 
