@@ -1,0 +1,341 @@
+---
+title: "JSC_BETA_Test_241230"
+output: html_document
+date: "2024-12-30"
+editor_options: 
+  chunk_output_type: console
+---
+
+The purpose of this script is to check any outliers for HI or beta values 
+
+#load libraries 
+```{r}
+library(here)
+library(tidyverse)
+library(purrr)
+
+```
+
+# Read in antecedent moisture conditions with all years from 07_script
+```{r}
+outliers <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "outliers_241230_antecedent_HI_FI_AllYears.csv"))
+
+```
+
+# Check for outliers
+```{r}
+# CHECK FOR OUTLIERS #
+ggplot(outliers, aes(x = date, y = Beta_index)) +
+  geom_point() +
+  ylim(0,10)
+
+# # Filter rows where Beta_index > 10 and select necessary columns
+# big_beta <- outliers %>%
+#   filter(Beta_index > 10) %>%
+#   select(site.ID, storm.ID, response_var, Beta_index) 
+# # CARI, Storm 9, 08/2023, Turbidity
+
+### OUTLIER FUNCTION ###
+
+find_outliers <- function(outliers, Beta_index) {
+  # Calculate Q1 (25th percentile) and Q3 (75th percentile)
+  Q1 <- quantile(outliers[[Beta_index]], 0.25, na.rm = TRUE)
+  Q3 <- quantile(outliers[[Beta_index]], 0.75, na.rm = TRUE)
+  
+  # Calculate Interquartile Range (IQR)
+  IQR <- Q3 - Q1
+  
+  # Define outlier boundaries
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  
+  # Filter outliers
+  outliers_stats <- outliers %>% 
+    filter(!!sym(Beta_index) < lower_bound | !!sym(Beta_index) > upper_bound)
+  
+  return(outliers_stats)
+}
+
+# Find outliers in the Beta_index column
+# This is the list of all the storms that have beta outliers. 
+outliers_stats <- find_outliers(outliers, "Beta_index") %>% 
+  select(site.ID, storm.ID, month.x, day.x, year, response_var, Beta_index) # 23 storms 
+
+### I want to plot this for fun ### 
+# Use anti_join to remove rows in 'outliers' that are also in 'outliers_stats'
+filtered_outliers <- outliers %>%
+  anti_join(outliers_stats, by = names(outliers_stats))
+
+ggplot(filtered_outliers, aes(x = date, y = Beta_index)) +
+  geom_point() +
+  theme_bw()
+
+
+```
+
+# Create a vector to pull individual storms 
+```{r}
+# Create a vector to ultimately pull out these 23 storms 
+combined_vector <- outliers_stats %>%
+  transmute(combined_string = paste(site.ID, storm.ID, month.x, day.x, response_var, sep = "_")) %>%
+  pull(combined_string)
+
+```
+
+# Try and pull in each storm using this vector
+```{r}
+# # Define the base directory
+# base_dir <- "~/GitHub/Storms_clean_repo/Storm_Events"
+# 
+# # List of years and sites
+# years <- c("2015", "2018", "2019", "2020", "2021", "2022")
+# 
+# # Assume `combined_vector` is your vector of filenames without '.csv'
+# combined_vector <- c("CARI_storm12b_09_25_NO3", "POKE_storm5d_08_10_turb",  
+#                      "POKE_storm5d_08_10_abs",  "STRT_storm2_07_12_abs",   
+#                      "STRT_storm3b_08_05_NO3",   "FRCH_storm4b_07_09_SPC",  
+#                      "FRCH_storm6_07_18_abs",    "FRCH_storm10b_08_12_fDOM", 
+#                      "MOOS_storm3_07_18_SPC",   "MOOS_storm3_07_18_abs",    
+#                      "POKE_storm4a_06_19_abs",   "POKE_storm4c_06_21_NO3",  
+#                      "POKE_storm4c_06_21_SPC",   "POKE_storm8_07_09_SPC",   
+#                      "VAUL_storm6b_08_02_NO3",   "VAUL_storm6b_08_02_abs",   
+#                      "VAUL_storm8_08_11_NO3",    "CARI_storm4_07_24_NO3",   
+#                      "CARI_storm4_07_24_SPC",    "CARI_storm5_07_27_SPC",    
+#                      "CARI_storm9_08_23_NO3",    "CARI_storm9_08_23_turb",   
+#                      "VAUL_storm4b_08_20_SPC")
+# 
+# # Append '.csv' to each element in the combined_vector
+# combined_vector_with_csv <- paste0(combined_vector, ".csv")
+# 
+# # Function to construct file paths and read CSVs
+# read_matching_csv <- function(base_dir, years, filename) {
+#   site <- strsplit(filename, "_")[[1]][1]  # Extract the site from the filename
+#   for (year in years) {
+#     file_path <- file.path(base_dir, year, site, filename)
+#     message("Checking file: ", file_path)  # Debug message
+#     if (file.exists(file_path)) {
+#       message("Reading file: ", file_path)
+#       return(read_csv(file_path))
+#     }
+#   }
+#   warning("File not found for: ", filename)
+#   return(NULL)
+# }
+# 
+# # Loop through combined_vector to create data frames dynamically
+# imap(combined_vector_with_csv, ~{
+#   csv_filename <- .x
+#   df_name <- str_remove(csv_filename, ".csv")
+#   df <- read_matching_csv(base_dir, years, csv_filename)
+#   if (!is.null(df)) {
+#     assign(df_name, df, envir = .GlobalEnv)
+#   } else {
+#     warning("Data frame for ", df_name, " was not created because the file was not found.")
+#   }
+# })
+# 
+# # Example: Check one of the created data frames (uncomment the following line to check a specific data frame)
+# # print(CARI_storm12b_09_25_NO3)
+
+```
+
+# Read in the Q data frames for each of these 
+```{r}
+# Define the base directory
+base_dir <- "~/GitHub/Storms_clean_repo/Storm_Events"
+
+# List of years and sites
+years <- c("2015", "2018", "2019", "2020", "2021", "2022")
+
+# Assume `combined_vector` is your vector of filenames without '.csv'
+combined_vector <- c("CARI_storm12b_09_25_NO3", "POKE_storm5d_08_10_turb",  
+                     "POKE_storm5d_08_10_abs",  "STRT_storm2_07_12_abs",   
+                     "STRT_storm3b_08_05_NO3",   "FRCH_storm4b_07_09_SPC",  
+                     "FRCH_storm6_07_18_abs",    "FRCH_storm10b_08_12_fDOM", 
+                     "MOOS_storm3_07_18_SPC",   "MOOS_storm3_07_18_abs",    
+                     "POKE_storm4a_06_19_abs",   "POKE_storm4c_06_21_NO3",  
+                     "POKE_storm4c_06_21_SPC",   "POKE_storm8_07_09_SPC",   
+                     "VAUL_storm6b_08_02_NO3",   "VAUL_storm6b_08_02_abs",   
+                     "VAUL_storm8_08_11_NO3",    "CARI_storm4_07_24_NO3",   
+                     "CARI_storm4_07_24_SPC",    "CARI_storm5_07_27_SPC",    
+                     "CARI_storm9_08_23_NO3",    "CARI_storm9_08_23_turb",   
+                     "VAUL_storm4b_08_20_SPC")
+
+# Append '.csv' to each element in the combined_vector
+combined_vector_with_csv <- paste0(combined_vector, ".csv")
+
+# Function to construct file paths and read CSVs
+read_matching_csv <- function(base_dir, years, filename) {
+  site <- strsplit(filename, "_")[[1]][1]  # Extract the site from the filename
+  for (year in years) {
+    file_path <- file.path(base_dir, year, site, filename)
+    message("Checking file: ", file_path)  # Debug message
+    if (file.exists(file_path)) {
+      message("Reading file: ", file_path)
+      return(read_csv(file_path))
+    }
+  }
+  warning("File not found for: ", filename)
+  return(NULL)
+}
+
+# Loop through combined_vector to read associated _Q.csv and assign to global environment
+imap(combined_vector_with_csv, ~{
+  csv_filename <- .x
+  df_name <- str_remove(csv_filename, ".csv")
+
+  # Construct the associated _Q.csv filename
+  q_filename <- str_replace(df_name, "NO3|turb|abs|SPC|fDOM", "Q")
+  q_csv_filename <- paste0(q_filename, ".csv")
+  
+  # Read the associated _Q.csv file
+  q_df <- read_matching_csv(base_dir, years, q_csv_filename)
+  if (!is.null(q_df)) {
+    message("Assigning Q data frame to global environment: ", q_filename)
+    assign(q_filename, q_df, envir = .GlobalEnv)
+  } else {
+    warning("Q Data frame for ", q_filename, " was not created because the file was not found.")
+  }
+})
+
+
+```
+
+# Plot each storm that is identified as a BETA outlier
+```{r}
+# normalize
+# dfList <- Filter(function(x) is(x, "data.frame"), mget(ls()))
+# 
+# for(i in 1:length(dfList)) {
+#   dfList[[i]][["datavalue"]] = 
+#     (dfList[[i]][["datavalue"]] - min(dfList[[i]][["datavalue"]], na.rm=T)) / (max(dfList[[i]][["datavalue"]], na.rm=T) - min(dfList[[i]][["datavalue"]], na.rm=T))
+# }
+# list2env(dfList ,.GlobalEnv)
+
+#fxn: plot hysteresis loop #
+hyst_plot = function(dat_Q, dat_response, site, response_var, storm_num) {
+  dat.p = ggplot(data = dat_Q, 
+                 aes(x=(dat_Q$datavalue), 
+                     y=(dat_response$datavalue), 
+                     color = as.numeric(dat_Q$valuedatetime))) +
+    geom_point() +
+    scale_colour_gradientn(colors = rainbow(3)) +
+    theme_bw() +
+    theme(legend.position="none") + 
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14,face="bold")) +
+    ylab(paste(site, response_var))+
+    xlab("Normalized Discharge") +
+    ggtitle(paste("Storm", storm_num))
+  return(dat.p)
+}
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+# PLOT # 
+CARI_storm12b_09_25_NO3.p = hyst_plot(CARI_storm12b_09_25_Q, CARI_storm12b_09_25_NO3,"CARI", "NO3", "0925")
+
+multiplot(CARI_storm12b_09_25_NO3.p) 
+
+
+### CHAT GPT ###
+# Define the directory to save plots
+plot_dir <- normalizePath("~/GitHub/Storms_clean_repo/plots/JSC_BETA_OUTLIER_TEST_241230")
+
+# Create the directory if it doesn't exist
+if (!dir.exists(plot_dir)) {
+  dir.create(plot_dir, recursive = TRUE)
+}
+
+# Assume combined_vector is already defined and used previously
+
+# Loop through the combined_vector to create and save plots
+imap(combined_vector, ~{
+  filename_base <- .x
+  site <- strsplit(filename_base, "_")[[1]][1]
+  response_var <- strsplit(filename_base, "_")[[1]][4]
+  storm_num <- strsplit(filename_base, "_")[[1]][3]
+  
+  q_filename <- str_replace(filename_base, "NO3|turb|abs|SPC|fDOM", "Q")
+  
+  # Assign data for plotting
+  dat_Q <- get(q_filename)
+  dat_response <- get(filename_base)
+  
+  # Create the plot
+  plot <- hyst_plot(dat_Q, dat_response, site, response_var, storm_num)
+  
+  # Save the plot to a file in the specified directory
+  file_name <- paste0(plot_dir, "/", filename_base, ".png")
+  ggsave(file_name, plot = plot, width = 8, height = 6)
+  
+  # Optionally assign the plot to the environment for later access
+  assign(paste0(filename_base, ".p"), plot, envir = .GlobalEnv)
+})
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
