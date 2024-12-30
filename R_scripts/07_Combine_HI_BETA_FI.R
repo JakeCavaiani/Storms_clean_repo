@@ -1135,6 +1135,9 @@ AMC_2022 <- AMC_2022[c("...1", "Hyst_index", "HI_ymin", "HI_ymax", "site.ID",
 
 AMC <- rbind(AMC_2015, AMC_2018, AMC_2019, AMC_2020, AMC_2021, AMC_2022)
 
+write.csv(AMC, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "outliers_241230_antecedent_HI_FI_AllYears.csv"))
+
+
 # CHECK FOR OUTLIERS #
 ggplot(AMC, aes(x = date, y = Beta_index)) +
   geom_point()
