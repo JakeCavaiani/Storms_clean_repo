@@ -1137,28 +1137,74 @@ AMC <- rbind(AMC_2015, AMC_2018, AMC_2019, AMC_2020, AMC_2021, AMC_2022)
 
 write.csv(AMC, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "outliers_241230_antecedent_HI_FI_AllYears.csv"))
 
+AMC <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "outliers_241230_antecedent_HI_FI_AllYears.csv"))
 
 # CHECK FOR OUTLIERS #
 ggplot(AMC, aes(x = date, y = Beta_index)) +
   geom_point()
 
-which(AMC$Beta_index > 10) # 616 (CARI 2C, 2020), 617 (CARI 2C, 2020), 828 (STRT 1e,2020)
 
-which(AMC$Beta_index < -10) # 580 (MOOS 2, 2020), 825, 827 (STRT 1e 2020)
+# From JSC_BETA_TEST_241230 script we identified 8 storms to remove from analysis:
+  #POKE_storm4a_06_19_abs - not enough rising limb
+  #POKE_storm5d_08_10_turb - jump/little change in turb
+  #POKE_storm8_07_09_SPC - no data on rising limb?
+  #STRT_storm3b_08_05_NO3 - no data on rising limb?
+  #VAUL_storm8_08_08_11_NO3 - noisy/no change in conc
+  #CARI_storm9_08_23_turb - BETA > 10
+  #POKE_storm4c_06_21_SPC - gaps in data
+  #VAUL_storm6b_08_02_NO3 - gaps in data 
 
+# Lets remove these 8 storms from the analysis
+# Create a new column within the AMC data frame with the desired format
 AMC <- AMC %>%
-  mutate(across(c(Hyst_index, Beta_index), 
-                ~ifelse(site.ID == "CARI" & storm.ID == "storm2c" & year == "2020", NA, .))) # storm 2c CARI 2020
+  mutate(combined_string = paste(site.ID, storm.ID, month.x, day.x, response_var, sep = "_"))
 
-AMC <- AMC %>%
-  mutate(across(c(Hyst_index, Beta_index), 
-                ~ifelse(site.ID == "STRT" & storm.ID == "storm1e" & year == "2020", NA, .)))
+bad_storms <- c("POKE_storm4a_06_19_abs", "POKE_storm5d_08_10_turb",
+                "POKE_storm8_07_09_SPC", "STRT_storm3b_08_05_NO3",
+                "VAUL_storm8_08_08_11_NO3", "CARI_storm9_08_23_turb",
+                "POKE_storm4c_06_21_SPC", "VAUL_storm6b_08_02_NO3")
 
-AMC <- AMC %>%
-  mutate(across(c(Hyst_index, Beta_index), 
-                ~ifelse(site.ID == "MOOS" & storm.ID == "storm2" & year == "2020", NA, .)))
+AMC_filter <- AMC %>% 
+  filter(!combined_string %in% bad_storms)
 
-write.csv(AMC, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+# Plot again to see if we got rid of the outliers:
+ggplot(AMC_filter, aes(x = date, y = Beta_index)) +
+  geom_point() +
+  theme_bw()
+
+write.csv(AMC_filter, here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+
+### Total storms by Year ####
+AMC_filter <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC_filter <- AMC_filter %>%
+  mutate(combined_string_year = paste(combined_string, year, sep = "_"))
+
+# Extract the site, storm, and year information with variations (e.g., storm1a, storm1b)
+AMC_filter <- AMC_filter %>%
+  mutate(
+    site = sub("_storm.*", "", combined_string_year), # Extract everything before _storm
+    storm = sub(".*_(storm\\d+[a-z]*).*", "\\1", combined_string_year), # Extract storm part
+    year = sub(".*_(\\d{4})$", "\\1", combined_string_year), # Extract year part
+    site_storm_year = paste0(site, "_", storm, "_", year) # Combine site, storm, and year
+  )
+# Remove duplicates based on site, storm, and year
+AMC_unique <- AMC_filter %>%
+  dplyr::select(site_storm_year) %>%
+  distinct()
+
+# Count the number of unique storms for each site per year
+storm_counts <- AMC_unique %>%
+  mutate(site = sub("_storm.*", "", site_storm_year),
+         year = sub(".*_(\\d{4})$", "\\1", site_storm_year)) %>%
+  group_by(site, year) %>%
+  summarise(storm_count = n())
+
+# Print the result
+print(storm_counts)
+
+
 
 
 

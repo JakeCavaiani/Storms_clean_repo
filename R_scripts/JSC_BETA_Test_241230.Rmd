@@ -274,7 +274,16 @@ imap(combined_vector, ~{
 
 ```
 
+Based off this script we are going to eliminate some storms from our final analysis due to outliers/gaps in data during storms:
 
+*POKE_storm4a_06_19_abs - not enough rising limb
+*POKE_storm5d_08_10_turb - jump/little change in turb
+*POKE_storm8_07_09_SPC - no data on rising limb?
+*STRT_storm3b_08_05_NO3 - no data on rising limb?
+*VAUL_storm8_08_08_11_NO3 - noisy/no change in conc
+*CARI_storm9_08_23_turb - BETA > 10
+*POKE_storm4c_06_21_SPC - gaps in data
+*VAUL_storm6b_08_02_NO3 - gaps in data 
 
 
 

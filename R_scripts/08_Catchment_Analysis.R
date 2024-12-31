@@ -100,9 +100,9 @@ AMC <- AMC %>% mutate(burn = ifelse(site.ID %in% c("POKE","STRT","MOOS"), "burne
                mutate(pf = ifelse(site.ID == "POKE", "low",
                               ifelse(site.ID %in% c("VAUL", "MOOS"), "high", "medium")))
 
-########################################
+
 ### Summary statistics across storms ###
-########################################
+
 ## Function to calculate CV
 cv <- function(x) 100*( sd(x, na.rm = TRUE)/mean(x, na.rm = TRUE))
 
@@ -130,20 +130,20 @@ write.csv(st.all, here("summary_tables", "storms_summ_allyears.csv"), row.names 
 write.csv(yr.st, here("summary_tables", "storms_summ_byyear.csv"), row.names = FALSE)
 
 ###***TKH: replaced by st.all?
-CV.all <- HI.median[!duplicated(HI.median$MedianHI), ] # removing duplicated rows 
-CV.average.pf <- HI.median %>% 
-  group_by(pf, response_var) %>% 
-  dplyr::summarise(AverageCVHI = mean(CVhi, na.rm = TRUE),
-                   AverageCVFI = mean(CVfi, na.rm = TRUE),
-                   AverageCVBETA = mean(CVbeta, na.rm = TRUE))
-CV.average.pf <- CV.average.pf[!duplicated(CV.average.pf$AverageCVHI), ] # removing duplicated rows 
-write.table(CV.average.pf, file = "CV.average.pf.csv", sep = ",", col.names = NA,
-            qmethod = "double")
-
-NO3.catchment <- subset(HI.median, HI.median$response_var == "NO3")
-fDOM.catchment <- subset(HI.median, HI.median$response_var == "fDOM")
-SPC.catchment <- subset(HI.median, HI.median$response_var == "SPC")
-turb.catchment <- subset(HI.median, HI.median$response_var == "turb")
+# CV.all <- HI.median[!duplicated(HI.median$MedianHI), ] # removing duplicated rows 
+# CV.average.pf <- HI.median %>% 
+#   group_by(pf, response_var) %>% 
+#   dplyr::summarise(AverageCVHI = mean(CVhi, na.rm = TRUE),
+#                    AverageCVFI = mean(CVfi, na.rm = TRUE),
+#                    AverageCVBETA = mean(CVbeta, na.rm = TRUE))
+# CV.average.pf <- CV.average.pf[!duplicated(CV.average.pf$AverageCVHI), ] # removing duplicated rows 
+# write.table(CV.average.pf, file = "CV.average.pf.csv", sep = ",", col.names = NA,
+#             qmethod = "double")
+# 
+# NO3.catchment <- subset(HI.median, HI.median$response_var == "NO3")
+# fDOM.catchment <- subset(HI.median, HI.median$response_var == "fDOM")
+# SPC.catchment <- subset(HI.median, HI.median$response_var == "SPC")
+# turb.catchment <- subset(HI.median, HI.median$response_var == "turb")
 
 ###***TKH: I'm not following the analyses lines 148-247. These seem to be using annual values as replicates within each catchment. Would need a random effect of year.
 #### HI ###
@@ -337,10 +337,8 @@ a <- ggMarginal(HI_BETA_NO3.p, groupColour = TRUE, groupFill = TRUE)
   
   
 # fDOM
-HI_FI_fDOM <- HI_FI_fDOM[-c(131, 190, 219,237), ]
-
 HI_FI_fDOM <- HI_FI_fDOM %>% 
-  mutate(across(c(pf),
+  mutate(across(c(PF),
                 ~ifelse(pf == "medium", "Moderate", "High")))
 
 HI_BETA_fDOM.p = 
@@ -433,108 +431,121 @@ ggsave("HI_BETA.pdf",
 #### Storm summary stats ####
 ### Investigating which storms are negative beta for Turbidity ####
 # by year 
-HI_FI_turb_year <- HI_FI_turb
-HI_FI_turb_year$year <- as.character(HI_FI_turb_year$year)
+# HI_FI_turb_year <- HI_FI_turb
+# HI_FI_turb_year$year <- as.character(HI_FI_turb_year$year)
+# 
+# HI_FI_turb_year_2021 <- subset(HI_FI_turb_year, year == "2021")
+# 
+# ggplot(HI_FI_turb_year_2021, aes(Beta_index, Hyst_index)) + 
+#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+#   geom_point(aes(colour = factor(site.ID)), size = 2.5) +
+#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+#   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+#   theme_bw() +
+#   ylim(-1.5, 1.5) + xlim(-5, 5)+
+#   ggtitle("Turb")+ 
+#   ylab("") +
+#   xlab("BETA") +
+#   theme(panel.border = element_blank(), 
+#         panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(), 
+#         axis.line = element_line(colour = "black"), 
+#         text = element_text(size = 15),
+#         legend.position = "bottom") 
+# 
+# ggplot(HI_FI_turb_year, aes(Beta_index, Hyst_index)) + 
+#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+#   geom_point(aes(colour = factor(site.ID), shape = year), size = 2.5) +
+#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+#   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+#   theme_bw() +
+#   ylim(-1.5, 1.5) + xlim(-5, 5)+
+#   ggtitle("Turb")+ 
+#   ylab("") +
+#   xlab("BETA") +
+#   theme(panel.border = element_blank(), 
+#         panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(), 
+#         axis.line = element_line(colour = "black"), 
+#         text = element_text(size = 15),
+#         legend.position = "bottom") 
 
-HI_FI_turb_year_2021 <- subset(HI_FI_turb_year, year == "2021")
 
-ggplot(HI_FI_turb_year_2021, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID)), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-5, 5)+
-  ggtitle("Turb")+ 
-  ylab("") +
-  xlab("BETA") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "bottom") 
-
-ggplot(HI_FI_turb_year, aes(Beta_index, Hyst_index)) + 
-  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
-  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
-  geom_point(aes(colour = factor(site.ID), shape = year), size = 2.5) +
-  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
-  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
-  theme_bw() +
-  ylim(-1.5, 1.5) + xlim(-5, 5)+
-  ggtitle("Turb")+ 
-  ylab("") +
-  xlab("BETA") +
-  theme(panel.border = element_blank(), 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), 
-        axis.line = element_line(colour = "black"), 
-        text = element_text(size = 15),
-        legend.position = "bottom") 
-
-#######################################################
 ### Count storms in each of the 4 FI_Beta quadrants ###
-#######################################################
+
 # this is telling me what percentage of storms fall in each quadrant and tells me how many cross 0 which are non-significant
 
 #NO3
 table(sign(HI_FI_NO3$Hyst_index))
-which(HI_FI_NO3$HI_ymin < 0 & HI_FI_NO3$HI_ymax > 0 & HI_FI_NO3$Hyst_index > 0)
-which(HI_FI_NO3$HI_ymin < 0 & HI_FI_NO3$HI_ymax > 0 & HI_FI_NO3$Hyst_index < 0)
+sum(HI_FI_NO3$HI_ymin < 0 & HI_FI_NO3$HI_ymax > 0 & HI_FI_NO3$Hyst_index > 0)
+sum(HI_FI_NO3$HI_ymin < 0 & HI_FI_NO3$HI_ymax > 0 & HI_FI_NO3$Hyst_index < 0)
 
 table(sign(HI_FI_NO3$Beta_index))
-which(HI_FI_NO3$Beta_ymin < 0 & HI_FI_NO3$Beta_ymax > 0 & HI_FI_NO3$Beta_index > 0)
-which(HI_FI_NO3$Beta_ymin < 0 & HI_FI_NO3$Beta_ymax > 0 & HI_FI_NO3$Beta_index < 0)
+sum(HI_FI_NO3$Beta_ymin < 0 & HI_FI_NO3$Beta_ymax > 0 & HI_FI_NO3$Beta_index > 0, na.rm = T)
+sum(HI_FI_NO3$Beta_ymin < 0 & HI_FI_NO3$Beta_ymax > 0 & HI_FI_NO3$Beta_index < 0, na.rm = T)
 
 
 
 #fDOM
 table(sign(HI_FI_fDOM$Hyst_index))
-which(HI_FI_fDOM$HI_ymin < 0 & HI_FI_fDOM$HI_ymax > 0 & HI_FI_fDOM$Hyst_index > 0)
-which(HI_FI_fDOM$HI_ymin < 0 & HI_FI_fDOM$HI_ymax > 0 & HI_FI_fDOM$Hyst_index < 0)
+sum(HI_FI_fDOM$HI_ymin < 0 & HI_FI_fDOM$HI_ymax > 0 & HI_FI_fDOM$Hyst_index > 0, na.rm = T)
+sum(HI_FI_fDOM$HI_ymin < 0 & HI_FI_fDOM$HI_ymax > 0 & HI_FI_fDOM$Hyst_index < 0, na.rm = T)
 
 table(sign(HI_FI_fDOM$Beta_index))
-which(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index > 0)
-which(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index < 0)
+sum(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index > 0)
+sum(HI_FI_fDOM$Beta_ymin < 0 & HI_FI_fDOM$Beta_ymax > 0 & HI_FI_fDOM$Beta_index < 0)
 
+# MOOS fDOM
 MOOS.fDOM <- subset(HI_FI_fDOM, site.ID == "MOOS")
+
+table(sign(MOOS.fDOM$Hyst_index))
+sum(MOOS.fDOM$HI_ymin < 0 & MOOS.fDOM$HI_ymax > 0 & MOOS.fDOM$Hyst_index > 0, na.rm = T)
+sum(MOOS.fDOM$HI_ymin < 0 & MOOS.fDOM$HI_ymax > 0 & MOOS.fDOM$Hyst_index < 0, na.rm = T)
+
 table(sign(MOOS.fDOM$Beta_index))
-which(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index > 0)
-which(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index < 0)
+sum(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index > 0)
+sum(MOOS.fDOM$Beta_ymin < 0 & MOOS.fDOM$Beta_ymax > 0 & MOOS.fDOM$Beta_index < 0)
 
+# VAUL
 VAUL.fDOM <- subset(HI_FI_fDOM, site.ID == "VAUL")
-table(sign(VAUL.fDOM$Beta_index))
-which(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index > 0)
-which(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index < 0)
 
-CARI.fDOM <- subset(HI_FI_fDOM, site.ID == "CARI")
-table(sign(CARI.fDOM$Beta_index))
-which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index > 0)
-which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index < 0)
+table(sign(VAUL.fDOM$Hyst_index))
+sum(VAUL.fDOM$HI_ymin < 0 & VAUL.fDOM$HI_ymax > 0 & VAUL.fDOM$Hyst_index > 0, na.rm = T)
+sum(VAUL.fDOM$HI_ymin < 0 & VAUL.fDOM$HI_ymax > 0 & VAUL.fDOM$Hyst_index < 0, na.rm = T)
+
+
+table(sign(VAUL.fDOM$Beta_index))
+sum(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index > 0, na.rm = T)
+sum(VAUL.fDOM$Beta_ymin < 0 & VAUL.fDOM$Beta_ymax > 0 & VAUL.fDOM$Beta_index < 0, na.rm = T)
+
+# CARI.fDOM <- subset(HI_FI_fDOM, site.ID == "CARI")
+# table(sign(CARI.fDOM$Beta_index))
+# which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index > 0)
+# which(CARI.fDOM$Beta_ymin < 0 & CARI.fDOM$Beta_ymax > 0 & CARI.fDOM$Beta_index < 0)
 
 #SPC
 table(sign(HI_FI_SPC$Hyst_index))
-which(HI_FI_SPC$HI_ymin < 0 & HI_FI_SPC$HI_ymax > 0 & HI_FI_SPC$Hyst_index > 0)
-which(HI_FI_SPC$HI_ymin < 0 & HI_FI_SPC$HI_ymax > 0 & HI_FI_SPC$Hyst_index < 0)
+sum(HI_FI_SPC$HI_ymin < 0 & HI_FI_SPC$HI_ymax > 0 & HI_FI_SPC$Hyst_index > 0)
+sum(HI_FI_SPC$HI_ymin < 0 & HI_FI_SPC$HI_ymax > 0 & HI_FI_SPC$Hyst_index < 0)
 
 table(sign(HI_FI_SPC$Beta_index))
-which(HI_FI_SPC$Beta_ymin < 0 & HI_FI_SPC$Beta_ymax > 0 & HI_FI_SPC$Beta_index > 0)
-which(HI_FI_SPC$Beta_ymin < 0 & HI_FI_SPC$Beta_ymax > 0 & HI_FI_SPC$Beta_index < 0)
+sum(HI_FI_SPC$Beta_ymin < 0 & HI_FI_SPC$Beta_ymax > 0 & HI_FI_SPC$Beta_index > 0, na.rm = T)
+sum(HI_FI_SPC$Beta_ymin < 0 & HI_FI_SPC$Beta_ymax > 0 & HI_FI_SPC$Beta_index < 0, na.rm = T)
 
 
 #Turb
 table(sign(HI_FI_turb$Hyst_index))
-which(HI_FI_turb$HI_ymin < 0 & HI_FI_turb$HI_ymax > 0 & HI_FI_turb$Hyst_index > 0)
-which(HI_FI_turb$HI_ymin < 0 & HI_FI_turb$HI_ymax > 0 & HI_FI_turb$Hyst_index < 0)
+sum(HI_FI_turb$HI_ymin < 0 & HI_FI_turb$HI_ymax > 0 & HI_FI_turb$Hyst_index > 0)
+sum(HI_FI_turb$HI_ymin < 0 & HI_FI_turb$HI_ymax > 0 & HI_FI_turb$Hyst_index < 0)
 
 table(sign(HI_FI_turb$Beta_index))
-which(HI_FI_turb$Beta_ymin < 0 & HI_FI_turb$Beta_ymax > 0 & HI_FI_turb$Beta_index > 0)
-which(HI_FI_turb$Beta_ymin < 0 & HI_FI_turb$Beta_ymax > 0 & HI_FI_turb$Beta_index < 0)
+sum(HI_FI_turb$Beta_ymin < 0 & HI_FI_turb$Beta_ymax > 0 & HI_FI_turb$Beta_index > 0, na.rm = T)
+sum(HI_FI_turb$Beta_ymin < 0 & HI_FI_turb$Beta_ymax > 0 & HI_FI_turb$Beta_index < 0, na.rm = T)
 
 
-# by site and year  ####
+# (+) (-) HI and BETA by site and year  ####
 # 2015  ####
 # FRCH ####
 # NO3
@@ -1860,9 +1871,9 @@ table(sign(HI_FI_turb_VAUL_2022$Beta_index))
 which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index > 0)
 which(HI_FI_turb_VAUL_2022$Beta_ymin < 0 & HI_FI_turb_VAUL_2022$Beta_ymax > 0 & HI_FI_turb_VAUL_2022$Beta_index < 0)
 
-###############################################################
-### Figuring out how many days are missing from the record  ###
-###############################################################
+
+### Figuring out how many days are missing from the record  ####
+
 # 2015 ####
 chem.2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"), na.strings = "NA")
 
@@ -1875,10 +1886,13 @@ chem.2015$datetimeAK <- force_tz(chem.2015$datetimeAK, "America/Anchorage") # co
 names(chem.2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
 
 FRCH.2015 <-  subset(chem.2015, site.ID == "FRCH")
-FRCH.2015 <- FRCH.2015[-c(12519:12849), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+# Remove rows where datetimeAK is NA
+FRCH.2015 <- FRCH.2015 %>%
+  filter(!is.na(datetimeAK))
 
 MOOS.2015 <-  subset(chem.2015, site.ID == "MOOS")
-MOOS.2015 <- MOOS.2015[-c(12540:12796), ] # removing unnecessary rows that correspond to when I merge the file the NO3 from the lab merges weird with datetimes from another section within the dataframe
+MOOS.2015 <- MOOS.2015 %>%
+  filter(!is.na(datetimeAK))
 
 #plot
 ggplot(MOOS.2015, aes(x = datetimeAK, y = MOOS.2015$NO3)) +
@@ -1910,8 +1924,19 @@ my_dat[my_dat$over_thresh==T,]
 
 
 # 2018 ####
-MOOS_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_MOOS_final_formatted.csv"))
-FRCH_2018 <- read.csv(here("processed_sensor_data", "2018", "EXO_FRCH_final_formatted.csv"))
+chem.2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"), na.strings = "NA")
+
+chem.2018 <- chem.2018[c("datetimeAK", "Site", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+
+chem.2018$datetimeAK <- ymd_hms(chem.2018$datetimeAK) # converting character to datetime
+chem.2018$datetimeAK <- force_tz(chem.2018$datetimeAK, "America/Anchorage") # converting character to datetime
+
+names(chem.2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+
+MOOS_2018 <-  subset(chem.2018, site.ID == "MOOS")
+FRCH_2018 <-  subset(chem.2018, site.ID == "FRCH")
+
 CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
 
 # converting to datetime 
@@ -1919,27 +1944,30 @@ MOOS_2018$datetimeAK <- ymd_hms(MOOS_2018$datetimeAK)
 FRCH_2018$datetimeAK <- ymd_hms(FRCH_2018$datetimeAK)
 CARI_2018$DateTimeAK <- ymd_hms(CARI_2018$DateTimeAK)
 
-# CARI_2018 <- CARI_2018 %>% # common window 
-#   mutate(across(c(DateTimeAK), 
-#                 ~ifelse(DateTimeAK >= "2018-06-27" & DateTimeAK <= "2018-10-12", NA, .)))
+# # removing not within the common window
+start_date <- as.POSIXct("2018-06-27")
+end_date <- as.POSIXct("2018-10-12")
 
-CARI_2018 <- CARI_2018[-c(1:3793),]  # removing not within the common window
+# Filter the data frame to include only rows within the date range
+CARI_2018 <- CARI_2018 %>%
+  filter(DateTimeAK >= start_date & DateTimeAK <= end_date)
+
 
 #plot
 ggplot(CARI_2018, aes(x = DateTimeAK, y = NO3)) +
   geom_point()
 
 #  MOOS
-MOOS_2018$DOY <- yday(FRCH_2018$datetimeAK)
-MOOS_fDOM <- MOOS_2018[c("datetimeAK", "fDOM.QSU.mn.adj")]
-MOOS_SPC <- MOOS_2018[c("datetimeAK", "SpCond.uScm.mn.adj")]
-MOOS_turb <- MOOS_2018[c("datetimeAK", "Turbidity.FNU.mn.adj")]
+MOOS_2018$DOY <- yday(MOOS_2018$datetimeAK)
+MOOS_fDOM <- MOOS_2018[c("datetimeAK", "fDOM")]
+MOOS_SPC <- MOOS_2018[c("datetimeAK", "SPC")]
+MOOS_turb <- MOOS_2018[c("datetimeAK", "Turb")]
 
 #  FRCH
 FRCH_2018$DOY <- yday(FRCH_2018$datetimeAK)
-FRCH_fDOM <- FRCH_2018[c("datetimeAK", "fDOM.QSU.mn.adj")]
-FRCH_SPC <- FRCH_2018[c("datetimeAK", "SpCond.uScm.mn.adj")]
-FRCH_turb <- FRCH_2018[c("datetimeAK", "Turbidity.FNU.mn.adj")]
+FRCH_fDOM <- FRCH_2018[c("datetimeAK", "fDOM")]
+FRCH_SPC <- FRCH_2018[c("datetimeAK", "SPC")]
+FRCH_turb <- FRCH_2018[c("datetimeAK", "Turb")]
 
 # CARI
 CARI_2018$DOY <- yday(CARI_2018$DateTimeAK)
@@ -2523,7 +2551,7 @@ my_dat[which(my_dat$over_thresh==T)-1,]
 my_dat[my_dat$over_thresh==T,]
 
 # Duration 
-AMC <- read.csv("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv")
+AMC <- read_csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
 
 mean_duration <-  AMC %>% 
   group_by(storm.ID, site.ID, year) %>% 
@@ -2533,11 +2561,11 @@ mean_duration <- mean_duration %>%
   mutate(across(c(Duration), 
                 ~ifelse(Duration > 500, NA, .)))
 range(mean_duration$Duration, na.rm = TRUE)
-mean(mean_duration$Duration, na.rm = TRUE) #65.40994
-65.40994/24 # 2.725414
+mean(mean_duration$Duration, na.rm = TRUE) #77.72396
+77.72396/24 # 3.238498
 
-sd(mean_duration$Duration, na.rm = TRUE) # 53.486
-53.486/24
+sd(mean_duration$Duration, na.rm = TRUE) # 64.72869
+64.72869/24 #2.697029
 
 
 
@@ -2546,122 +2574,93 @@ mean_duration_site <- AMC %>%
   dplyr::summarise(Duration = mean(TOTAL.TIME, na.rm = TRUE))
 
 
-##################################
-### MEAN SOLUTE CONCENTRATIONS ###
-##################################
-chem_2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"))
-chem_2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"))
-chem_2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"))
-chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
-chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
-chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
 
-#
-chem_2015 <- chem_2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
-                         "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
-
-chem_2015$datetimeAK <- ymd_hms(chem_2015$datetimeAK) # converting character to datetime
-chem_2015$datetimeAK <- force_tz(chem_2015$datetimeAK, "America/Anchorage") # converting character to datetime
-
-names(chem_2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2015$year <- format(chem_2015$datetimeAK, format = "%Y")
-
-#
-chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
-                         "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
-                         "nitrateuM.mn", "abs254.adj.mn")] # reading in the only columns I want
-
-chem_2018$datetimeAK <- ymd_hms(chem_2018$datetimeAK) # converting character to datetime
-chem_2018$datetimeAK <- force_tz(chem_2018$datetimeAK, "America/Anchorage") # converting character to datetime
-
-names(chem_2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2018$year <- format(chem_2018$datetimeAK, format = "%Y")
-
-#
-chem_2019 <- chem_2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
-                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
-chem_2019$datetimeAK <- ymd_hms(chem_2019$datetimeAK)
-chem_2019$datetimeAK <- force_tz(chem_2019$datetimeAK, "America/Anchorage") # converting character to datetime
-names(chem_2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2019$year <- format(chem_2019$datetimeAK, format = "%Y")
-
-#
-chem_2020 <- chem_2020[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
-                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
-chem_2020$datetimeAK <- ymd_hms(chem_2020$datetimeAK)
-chem_2020$datetimeAK <- force_tz(chem_2020$datetimeAK, "America/Anchorage") # converting character to datetime
-names(chem_2020) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2020$year <- format(chem_2020$datetimeAK, format = "%Y")
-
-#
-chem_2021 <- chem_2021[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
-                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
-chem_2021$datetimeAK <- ymd_hms(chem_2021$datetimeAK)
-chem_2021$datetimeAK <- force_tz(chem_2021$datetimeAK, "America/Anchorage") # converting character to datetime
-names(chem_2021) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2021$year <- format(chem_2021$datetimeAK, format = "%Y")
-
-#
-chem_2022 <- chem_2022[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
-                         "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
-chem_2022$datetimeAK <- ymd_hms(chem_2022$datetimeAK)
-chem_2022$datetimeAK <- force_tz(chem_2022$datetimeAK, "America/Anchorage") # converting character to datetime
-names(chem_2022) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
-chem_2022$year <- format(chem_2022$datetimeAK, format = "%Y")
+### MEAN SOLUTE CONCENTRATIONS ####
 
 
-DOD_chem <- rbind(chem_2015, chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
-DOD_chem$julian <- yday(DOD_chem$datetimeAK)
-DOD_chem$day <- as.character(DOD_chem$datetimeAK)
+### JSC 241231 ###
+# Define a function to read, process, and format the data frame
+process_chem_data <- function(year) {
+  file_path <- here("processed_sensor_data", as.character(year), paste0("SUNA.EXO.int.corr.lab_", year, ".csv"))
+  df <- read.csv(file_path)
+  
+  # Select the appropriate columns based on the year
+  if(year == 2015) {
+    df <- df %>% dplyr::select(datetimeAK, Site, fDOM.QSU.adj.T.turb.int, SpCond.uScm.adj, Turbidity.FNU.adj, nitrateuM.mn.lab, abs254.adj.mn)
+    names(df) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+  } else {
+    df <- df %>% dplyr::select(datetimeAK, site.ID, fDOM.QSU.mn.adj, SpCond.uScm.mn.adj, Turbidity.FNU.mn.adj, nitrateuM.mn, abs254.adj.mn)
+    names(df) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+  }
+  
+  # Convert datetime character to POSIXct and set timezone
+  df <- df %>% mutate(
+    datetimeAK = force_tz(ymd_hms(datetimeAK), "America/Anchorage"),
+    year = format(datetimeAK, format = "%Y"),
+    julian = yday(datetimeAK),
+    day = as.Date(datetimeAK)
+  )
+  
+  return(df)
+}
+
+# List of years to process
+years <- c(2015, 2018, 2019, 2020, 2021, 2022)
+
+# Apply the process_chem_data function to each year
+DOD_chem_list <- lapply(years, process_chem_data)
+
+# Optionally, combine all data frames into one
+DOD_chem <- bind_rows(DOD_chem_list)
 
 
-# read in Caribou data 
-CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
-CARI_2018 <-  subset(CARI_2018, select=-c(site.ID.y))
-names(CARI_2018)[names(CARI_2018) == 'site.ID.x'] <- 'site.ID'
-CARI_2018$site.ID <- "CARI"
+# Print the structure of the combined data frame to confirm
+str(chem_data_combined)
 
-CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
-CARI_2019 <-  subset(CARI_2019, select=-c(site.ID.y))
-names(CARI_2019)[names(CARI_2019) == 'site.ID.x'] <- 'site.ID'
-CARI_2019$site.ID <- "CARI"
+# Read in Caribou data 
 
-CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
-CARI_2020 <-  subset(CARI_2020, select=-c(site.ID.y))
-names(CARI_2020)[names(CARI_2020) == 'site.ID.x'] <- 'site.ID'
-CARI_2020$site.ID <- "CARI"
+# Define a function to read and process the data frame
+process_caribou_data <- function(year) {
+  file_path <- here("processed_sensor_data", as.character(year), paste0("NEON_Q_WaterQuality", year, ".csv"))
+  df <- read.csv(file_path)
+  
+  # Remove the site.ID.y column if it exists and rename site.ID.x to site.ID
+  df <- df %>% dplyr::select(-site.ID.y)
+  df <- df %>% rename(site.ID = site.ID.x)
+  df$site.ID <- "CARI"
+  
+  # Convert DateTimeAK to POSIXct and set timezone
+  df <- df %>% mutate(
+    DateTimeAK = force_tz(ymd_hms(DateTimeAK), "America/Anchorage"),
+    year = as.character(year),
+    day = as.Date(DateTimeAK) # Extract only the date part
+  )
+  
+  return(df)
+}
 
-CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
-CARI_2021 <-  subset(CARI_2021, select=-c(site.ID.y))
-names(CARI_2021)[names(CARI_2021) == 'site.ID.x'] <- 'site.ID'
-CARI_2021$site.ID <- "CARI"
+# List of years to process
+years <- c(2018, 2019, 2020, 2021, 2022)
 
-CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
-CARI_2022 <-  subset(CARI_2022, select=-c(site.ID.y))
-names(CARI_2022)[names(CARI_2022) == 'site.ID.x'] <- 'site.ID'
-CARI_2022$site.ID <- "CARI"
+# Apply the process_caribou_data function to each year
+CARI_data_list <- lapply(years, process_caribou_data)
 
+# Combine all data frames into one
+CARI_chem <- bind_rows(CARI_data_list)
 
-CARI_2018$year <- "2018"
-CARI_2019$year <- "2019"
-CARI_2020$year <- "2020"
-CARI_2021$year <- "2021"
-CARI_2022$year <- "2022"
+# Select and reorganize columns
+CARI_chem <- CARI_chem %>% dplyr::select(
+  DateTimeAK, site.ID, fDOM, SPC, Turb, NO3, Discharge, day, year
+)
 
-CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
-CARI_chem$day <- as.character(CARI_chem$DateTimeAK)
-CARI_chem <- CARI_chem[c("DateTimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Discharge",
-                         "day", "year")] # reorganizing column headers
-
-
+# Rename columns
 colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
-names(CARI_chem)<- colNames # renaming columns 
+names(CARI_chem) <- colNames
 
+# Print the structure of the final data frame to confirm
+str(CARI_chem)
 
 # merge CARI and DOD sites 
-CARI_chem$datetimeAK <- ymd_hms(CARI_chem$datetimeAK)
-DOD_chem$datetimeAK <- ymd_hms(DOD_chem$datetimeAK)
-
 DOD_chem <- full_join(DOD_chem, CARI_chem, by = c("datetimeAK", "site.ID", "fDOM",
                                                   "SPC", "Turb", "NO3", "year",
                                                   "day"))
@@ -2669,35 +2668,139 @@ DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
 DOD_chem$julian <- yday(DOD_chem$datetimeAK)
 
 DOD_chem %>% filter(julian < 305) %>%
-             ggplot(aes(x = julian, y = fDOM, group = year)) +
-               geom_point(aes(color = year)) +
-               facet_wrap(~site.ID, scales = "free_y")
+  ggplot(aes(x = julian, y = fDOM, group = year)) +
+  geom_point(aes(color = year)) +
+  facet_wrap(~site.ID, scales = "free_y")
 
-# check for outliers
-#DOD_chem <- DOD_chem %>% mutate(across(c(Turb), 
-#                ~ifelse(Turb > 1250, NA, .)))
 
-#DOD_chem <- DOD_chem %>%
-#  mutate(across(c(NO3), 
-#                ~ifelse(site.ID == "STRT" & year == 2019 & NO3 > 40, NA, .)))
+###
 
-#DOD_chem <- DOD_chem %>%
-#  mutate(across(c(NO3), 
-#                ~ifelse(site.ID == "VAUL" & year == 2019 & NO3 < 2, NA, .)))
+## OLD CODE ##
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(NO3), 
-                ~ifelse(site.ID == "MOOS" & year == 2020 & NO3 > 40, NA, .)))
+# chem_2015 <- read.csv(here("processed_sensor_data", "2015", "SUNA.EXO.int.corr.lab_2015.csv"))
+# chem_2018 <- read.csv(here("processed_sensor_data", "2018", "SUNA.EXO.int.corr.lab_2018.csv"))
+# chem_2019 <- read.csv(here("processed_sensor_data", "2019", "SUNA.EXO.int.corr.lab_2019.csv"))
+# chem_2020 <- read.csv(here("processed_sensor_data", "2020", "SUNA.EXO.int.corr.lab_2020.csv"))
+# chem_2021 <- read.csv(here("processed_sensor_data", "2021", "SUNA.EXO.int.corr.lab_2021.csv"))
+# chem_2022 <- read.csv(here("processed_sensor_data", "2022", "SUNA.EXO.int.corr.lab_2022.csv"))
+# 
+# #
+# chem_2015 <- chem_2015[c("datetimeAK", "Site", "fDOM.QSU.adj.T.turb.int", "SpCond.uScm.adj",
+#                          "Turbidity.FNU.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+# 
+# chem_2015$datetimeAK <- ymd_hms(chem_2015$datetimeAK) # converting character to datetime
+# chem_2015$datetimeAK <- force_tz(chem_2015$datetimeAK, "America/Anchorage") # converting character to datetime
+# 
+# names(chem_2015) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2015$year <- format(chem_2015$datetimeAK, format = "%Y")
+# 
+# #
+# chem_2018 <- chem_2018[c("datetimeAK", "site.ID", "fDOM.QSU.mn.adj", 
+#                          "SpCond.uScm.mn.adj", "Turbidity.FNU.mn.adj",
+#                          "nitrateuM.mn", "abs254.adj.mn")] # reading in the only columns I want
+# 
+# chem_2018$datetimeAK <- ymd_hms(chem_2018$datetimeAK) # converting character to datetime
+# chem_2018$datetimeAK <- force_tz(chem_2018$datetimeAK, "America/Anchorage") # converting character to datetime
+# 
+# names(chem_2018) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2018$year <- format(chem_2018$datetimeAK, format = "%Y")
+# 
+# #
+# chem_2019 <- chem_2019[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+#                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+# chem_2019$datetimeAK <- ymd_hms(chem_2019$datetimeAK)
+# chem_2019$datetimeAK <- force_tz(chem_2019$datetimeAK, "America/Anchorage") # converting character to datetime
+# names(chem_2019) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2019$year <- format(chem_2019$datetimeAK, format = "%Y")
+# 
+# #
+# chem_2020 <- chem_2020[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+#                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+# chem_2020$datetimeAK <- ymd_hms(chem_2020$datetimeAK)
+# chem_2020$datetimeAK <- force_tz(chem_2020$datetimeAK, "America/Anchorage") # converting character to datetime
+# names(chem_2020) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2020$year <- format(chem_2020$datetimeAK, format = "%Y")
+# 
+# #
+# chem_2021 <- chem_2021[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+#                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+# chem_2021$datetimeAK <- ymd_hms(chem_2021$datetimeAK)
+# chem_2021$datetimeAK <- force_tz(chem_2021$datetimeAK, "America/Anchorage") # converting character to datetime
+# names(chem_2021) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2021$year <- format(chem_2021$datetimeAK, format = "%Y")
+# 
+# #
+# chem_2022 <- chem_2022[c("datetimeAK", "site.ID", "fDOM.QSU.T.turb.col", "SpCond.uScm.mn.adj",
+#                          "Turbidity.FNU.mn.adj", "nitrateuM.mn.lab", "abs254.adj.mn")]
+# chem_2022$datetimeAK <- ymd_hms(chem_2022$datetimeAK)
+# chem_2022$datetimeAK <- force_tz(chem_2022$datetimeAK, "America/Anchorage") # converting character to datetime
+# names(chem_2022) <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "ABS_254")
+# chem_2022$year <- format(chem_2022$datetimeAK, format = "%Y")
+# 
+# 
+# DOD_chem <- rbind(chem_2015, chem_2018, chem_2019, chem_2020, chem_2021, chem_2022)
+# DOD_chem$julian <- yday(DOD_chem$datetimeAK)
+# DOD_chem$day <- as.character(DOD_chem$datetimeAK)
 
-DOD_chem <- DOD_chem %>%
-  mutate(across(c(NO3), 
-                ~ifelse(site.ID == "STRT" & year == 2020 & NO3 < 10, NA, .)))
 
-#DOD_chem <- DOD_chem %>%
-#  mutate(across(c(fDOM), 
-#                ~ifelse(year == 2021 & fDOM < 1, NA, .)))
+# read in Caribou data 
+# CARI_2018 <- read.csv(here("processed_sensor_data", "2018", "NEON_Q_WaterQuality2018.csv"))
+# CARI_2018 <-  subset(CARI_2018, select=-c(site.ID.y))
+# names(CARI_2018)[names(CARI_2018) == 'site.ID.x'] <- 'site.ID'
+# CARI_2018$site.ID <- "CARI"
+# 
+# CARI_2019 <- read.csv(here("processed_sensor_data", "2019", "NEON_Q_WaterQuality2019.csv"))
+# CARI_2019 <-  subset(CARI_2019, select=-c(site.ID.y))
+# names(CARI_2019)[names(CARI_2019) == 'site.ID.x'] <- 'site.ID'
+# CARI_2019$site.ID <- "CARI"
+# 
+# CARI_2020 <- read.csv(here("processed_sensor_data", "2020", "NEON_Q_WaterQuality2020.csv"))
+# CARI_2020 <-  subset(CARI_2020, select=-c(site.ID.y))
+# names(CARI_2020)[names(CARI_2020) == 'site.ID.x'] <- 'site.ID'
+# CARI_2020$site.ID <- "CARI"
+# 
+# CARI_2021 <- read.csv(here("processed_sensor_data", "2021", "NEON_Q_WaterQuality2021.csv"))
+# CARI_2021 <-  subset(CARI_2021, select=-c(site.ID.y))
+# names(CARI_2021)[names(CARI_2021) == 'site.ID.x'] <- 'site.ID'
+# CARI_2021$site.ID <- "CARI"
+# 
+# CARI_2022 <- read.csv(here("processed_sensor_data", "2022", "NEON_Q_WaterQuality2022.csv"))
+# CARI_2022 <-  subset(CARI_2022, select=-c(site.ID.y))
+# names(CARI_2022)[names(CARI_2022) == 'site.ID.x'] <- 'site.ID'
+# CARI_2022$site.ID <- "CARI"
+# 
+# 
+# CARI_2018$year <- "2018"
+# CARI_2019$year <- "2019"
+# CARI_2020$year <- "2020"
+# CARI_2021$year <- "2021"
+# CARI_2022$year <- "2022"
+# 
+# CARI_chem <- rbind(CARI_2018, CARI_2019, CARI_2020, CARI_2021, CARI_2022)
+# CARI_chem$day <- as.character(CARI_chem$DateTimeAK)
+# CARI_chem <- CARI_chem[c("DateTimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Discharge",
+#                          "day", "year")] # reorganizing column headers
+# 
+# 
+# colNames <- c("datetimeAK", "site.ID", "fDOM", "SPC", "Turb", "NO3", "Q", "day", "year")
+# names(CARI_chem)<- colNames # renaming columns 
 
-#DOD_chem <- DOD_chem[-c(409859:419367), ] # removing the bottom of the df that has no datetime associated with chems
+
+# # merge CARI and DOD sites 
+# CARI_chem$datetimeAK <- ymd_hms(CARI_chem$datetimeAK)
+# DOD_chem$datetimeAK <- ymd_hms(DOD_chem$datetimeAK)
+# 
+# DOD_chem <- full_join(DOD_chem, CARI_chem, by = c("datetimeAK", "site.ID", "fDOM",
+#                                                   "SPC", "Turb", "NO3", "year",
+#                                                   "day"))
+# DOD_chem <- DOD_chem[order(DOD_chem$datetimeAK),]
+# DOD_chem$julian <- yday(DOD_chem$datetimeAK)
+# 
+# DOD_chem %>% filter(julian < 305) %>%
+#              ggplot(aes(x = julian, y = fDOM, group = year)) +
+#                geom_point(aes(color = year)) +
+#                facet_wrap(~site.ID, scales = "free_y")
+
 
 # plotting to make sure this merged properly
 chem.long <- DOD_chem %>%
@@ -2797,7 +2900,8 @@ mean_daily_long <- mean_daily %>%
 ggplot(mean_daily_long, aes(x = julian, y = concentration, color = site.ID)) +
   geom_point(size = 0.35) +
   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
-  facet_grid(response_var~year, scales = "free")
+  facet_grid(response_var~year, scales = "free") +
+  theme_bw()
 
 
 
@@ -2829,8 +2933,9 @@ VAUL_year <- subset(similar_chem_year, site.ID == "VAUL")
 
 # mean_daily <- mean_daily[-2130, ] # last row
 write.csv(mean_daily, here("Output_from_analysis", "08_Catchment_characteristics", "mean_daily.csv"))
-# plot
-# across all years ####
+
+
+# Yearly chem plots ####
 # NO3
 ggplot(mean_daily, aes(x = site.ID, y = dailyNO3, fill = site.ID)) +
   geom_boxplot() +
@@ -2916,66 +3021,242 @@ ggplot(mean_daily, aes(x = julian, y = dailyTurb, col = site.ID)) +
 write.table(mean_daily, file = "chem_year_similar.csv", sep = ",", col.names = NA,
             qmethod = "double")
 
-year.cari <- CARI_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
+### JSC 12/31/2024 ###
+# Define the output directory
+output_dir <- here("Output_from_analysis", "08_Catchment_characteristics")
 
-write.table(year.cari, file = "cari.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Define the function to handle summarization and adding site
+process_and_summarize <- function(data, site) {
+  summarized_data <- data %>%
+    group_by(year) %>%
+    summarise(
+      medianfDOM = median(fDOM, na.rm = TRUE),
+      medianNO3 = median(NO3, na.rm = TRUE),
+      medianSPC = median(SPC, na.rm = TRUE),
+      medianTURB = median(Turb, na.rm = TRUE)
+    ) %>% 
+    ungroup() %>%
+    mutate(
+      site = site,
+      avg_medianfDOM = mean(medianfDOM, na.rm = TRUE),
+      avg_medianNO3 = mean(medianNO3, na.rm = TRUE),
+      avg_medianSPC = mean(medianSPC, na.rm = TRUE),
+      avg_medianTURB = mean(medianTURB, na.rm = TRUE)
+    ) %>%
+    dplyr::select(site, year, medianfDOM, medianNO3, medianSPC, medianTURB, avg_medianfDOM, avg_medianNO3, avg_medianSPC, avg_medianTURB)
+  
+  return(summarized_data)
+}
+
+# List of data frames and corresponding sites
+data_list <- list(
+  CARI_year = "CARI",
+  FRCH_year = "FRCH",
+  MOOS_year = "MOOS",
+  POKE_year = "POKE",
+  VAUL_year = "VAUL",
+  STRT_year = "STRT"
+)
+
+# Apply the process_and_summarize function to each data frame and combine
+combined_data <- bind_rows(lapply(names(data_list), function(name) {
+  data <- get(name)
+  site <- data_list[[name]]
+  process_and_summarize(data, site)
+}))
+
+# Define the output path for the combined data
+output_path <- here("Output_from_analysis", "08_Catchment_characteristics", "site_chems_year.csv")
+
+# Write the combined data to a CSV file
+write.csv(combined_data, file = output_path, row.names = FALSE)
+
+# Print the structure of the combined data frame to confirm
+str(combined_data)
+
+### Summary stats of chems for manuscript ####
+
+# Vault NO3 vs. the rest of the sites
+# Calculate the avg_medianNO3 for VAUL
+vaul_avg_no3 <- combined_data %>%
+  filter(site == "VAUL") %>%
+  summarise(mean_avg_medianNO3 = mean(avg_medianNO3, na.rm = TRUE)) %>%
+  pull(mean_avg_medianNO3)
+
+# Calculate the avg_medianNO3 for the rest of the sites
+rest_avg_no3 <- combined_data %>%
+  filter(site != "VAUL") %>%
+  summarise(mean_avg_medianNO3 = mean(avg_medianNO3, na.rm = TRUE)) %>%
+  pull(mean_avg_medianNO3)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- vaul_avg_no3 / rest_avg_no3
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
+
+# Vault fDOM vs. the rest of the sites
+# Calculate the avg_medianfDOM for VAUL
+vaul_avg_fDOM <- combined_data %>%
+  filter(site == "VAUL") %>%
+  summarise(mean_avg_medianfDOM = mean(avg_medianfDOM, na.rm = TRUE)) %>%
+  pull(mean_avg_medianfDOM)
+
+# Calculate the avg_medianfDOM for the rest of the sites
+rest_avg_fDOM <- combined_data %>%
+  filter(site != "VAUL",
+         site != "MOOS") %>%
+  summarise(mean_avg_medianfDOM = mean(avg_medianfDOM, na.rm = TRUE)) %>%
+  pull(mean_avg_medianfDOM)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- vaul_avg_fDOM / rest_avg_fDOM
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
+
+# MOOS fDOM vs. the rest of the sites
+# Calculate the avg_medianfDOM for MOOS
+moos_avg_fDOM <- combined_data %>%
+  filter(site == "MOOS") %>%
+  summarise(mean_avg_medianfDOM = mean(avg_medianfDOM, na.rm = TRUE)) %>%
+  pull(mean_avg_medianfDOM)
+
+# Calculate the avg_medianNO3 for the rest of the sites
+rest_avg_fDOM <- combined_data %>%
+  filter(site != "MOOS",
+         site != "VAUL") %>%
+  summarise(mean_avg_medianfDOM = mean(avg_medianfDOM, na.rm = TRUE)) %>%
+  pull(mean_avg_medianfDOM)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- moos_avg_fDOM / rest_avg_fDOM
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
+
+# Vault SPC vs. the rest of the sites
+vaul_avg_SPC <- combined_data %>%
+  filter(site == "VAUL") %>%
+  summarise(mean_avg_medianSPC = mean(avg_medianSPC, na.rm = TRUE)) %>%
+  pull(mean_avg_medianSPC)
+
+# Calculate the avg_median for rest of sites
+rest_avg_SPC <- combined_data %>%
+  filter(site != "VAUL") %>%
+  summarise(mean_avg_medianSPC = mean(avg_medianSPC, na.rm = TRUE)) %>%
+  pull(mean_avg_medianSPC)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- vaul_avg_SPC / rest_avg_SPC
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
+
+# Vault Turb vs. the rest of the sites
+vaul_avg_turb <- combined_data %>%
+  filter(site == "VAUL") %>%
+  summarise(mean_avg_medianTURB = mean(avg_medianTURB, na.rm = TRUE)) %>%
+  pull(mean_avg_medianTURB)
+
+# Calculate the avg_median for rest of sites
+rest_avg_turb <- combined_data %>%
+  filter(site != "VAUL") %>%
+  summarise(mean_avg_medianTURB = mean(avg_medianTURB, na.rm = TRUE)) %>%
+  pull(mean_avg_medianTURB)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- vaul_avg_turb / rest_avg_turb
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
 
 
-year.frch <- FRCH_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
+### CVs ###
+# Calculate the Coefficient of Variation (CV)
+calculate_cv <- function(x) {
+  ifelse(length(x) > 1, sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE) * 100, NA)
+}
 
-write.table(year.frch, file = "frch.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Calculate CVs for each site 
+cv_data <- mean_daily %>%
+  group_by(site.ID) %>%
+  summarise(
+    cv_fDOM = calculate_cv(dailyfDOM),
+    cv_NO3 = calculate_cv(dailyNO3),
+    cv_SPC = calculate_cv(dailySPC),
+    cv_TURB = calculate_cv(dailyTurb)
+  ) %>%
+  ungroup() %>%
+  rename(site = site.ID)
 
-year.moos <- MOOS_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
-write.table(year.moos, file = "moos.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Print the CV data frame
+print(cv_data)
 
-year.poke <- POKE_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
-write.table(year.poke, file = "poke.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Define the output path for the CV data frame
+output_path <- here("Output_from_analysis", "08_Catchment_characteristics", "site_year_CVs.csv")
 
-year.vaul <- VAUL_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
-write.table(year.vaul, file = "vaul.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Write the CV data frame to a CSV file
+write.csv(cv_data, file = output_path, row.names = FALSE)
 
-year.strt <- STRT_year %>% 
-  group_by(year) %>% 
-  summarise(medianfDOM = median(fDOM, na.rm = TRUE),
-            medianNO3 = median(NO3, na.rm = TRUE),
-            medianSPC = median(SPC, na.rm = TRUE),
-            medianTURB = median(Turb, na.rm = TRUE))
-write.table(year.strt, file = "strt.csv", sep = ",", col.names = NA,
-            qmethod = "double")
+# Optionally, print the structure of the CV data frame to confirm
+str(cv_data)
 
-#########################################
-### ANOVA: Comparing catchments*years ###
-#########################################
+### Summary stats of CVs ###
+#### CARI CV-fDOM vs. the rest of the sites
+cari_avg_fDOM <- cv_data %>%
+  filter(site == "CARI") %>%
+  pull(cv_fDOM)
+
+# Calculate the avg_median for rest of sites
+rest_avg_fDOM <- cv_data %>%
+  filter(site != "CARI") %>%
+  summarise(mean_avg_medianfDOM = mean(cv_fDOM, na.rm = TRUE)) %>%
+  pull(mean_avg_medianfDOM)
+
+# Compute the ratio
+ratio_cari_vs_rest <- cari_avg_fDOM / rest_avg_fDOM
+
+# Print the ratio
+print(ratio_cari_vs_rest)
+
+### VAUL CV-SPC vs. the rest of the sites
+vaul_avg_SPC <- cv_data %>%
+  filter(site == "VAUL") %>%
+  pull(cv_SPC)
+
+# Calculate the avg_median for rest of sites
+rest_avg_SPC <- cv_data %>%
+  filter(site != "VAUL") %>%
+  summarise(mean_avg_medianSPC = mean(cv_SPC, na.rm = TRUE)) %>%
+  pull(mean_avg_medianSPC)
+
+# Compute the ratio
+ratio_vaul_vs_rest <- vaul_avg_SPC / rest_avg_SPC
+
+# Print the ratio
+print(ratio_vaul_vs_rest)
+
+### CARI CV-Turb vs. the rest of the sites
+cari_avg_TURB <- cv_data %>%
+  filter(site == "CARI") %>%
+  pull(cv_TURB)
+
+# Calculate the avg_median for rest of sites
+rest_avg_TURB <- cv_data %>%
+  filter(site != "CARI") %>%
+  summarise(mean_avg_medianTURB = mean(cv_TURB, na.rm = TRUE)) %>%
+  pull(mean_avg_medianTURB)
+
+# Compute the ratio
+ratio_cari_vs_rest <- cari_avg_TURB / rest_avg_TURB
+
+# Print the ratio
+print(ratio_cari_vs_rest)
+
+
+### ANOVA: Comparing catchments*years ####
+
 ###***TKH: Are we using these catchment*year comparisons? These analysis are treating each daily value as independent. Would need to account for temporal autocorrelation.
 
 #fDOM
@@ -3171,8 +3452,6 @@ ggplot(chem_total_long, aes(x = julian, y = concentration, color = site.ID)) +
 
 
 
-
-###########################################################################################
 
 ############################### Storm Precip/Total Q for each storm ###############################################
 library(dataRetrieval)
