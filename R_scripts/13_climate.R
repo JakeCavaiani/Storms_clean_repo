@@ -58,7 +58,7 @@ library(AICcmodavg)
 
 
 
-#### load data ####
+#### ARCHIVE load data ####
 
 dat = read.table(file = "vdv_1987-01-01 00_00_00_2020-02-27 00_00_00_20200227045530.csv", 
                  header = T, sep = ",", dec = ".", skip=4)
@@ -482,7 +482,7 @@ ggsave("~/Documents/Storms/Harms_general/Climate.pdf", width = 6, height = 6, de
 # 
 
 #### SNOTEL DATA # This is what I am using in my thesis as of 10/7/22 ####
-precip_file_list <- list.files(path="~/Documents/Storms_clean_repo/Climate/SWE_Precip/",
+precip_file_list <- list.files(path="~/GitHub/Storms_clean_repo/Climate/SWE_Precip/",
                                   recursive=F,
                                   full.names=TRUE) # reading in individual storms by site 
 
@@ -493,7 +493,7 @@ precip <-do.call("rbind", lapply(precip_file_list,
                                      header=T, blank.lines.skip = TRUE, fill=TRUE))
 
 # rain 
-rain <- read.csv("~/Documents/Storms_clean_repo/Climate/Precip/Fairbanks_Precip_Snow.csv", skip = 5, header = T)
+rain <- read.csv("~/GitHub/Storms_clean_repo/Climate/Precip/Fairbanks_Precip_Snow.csv", skip = 5, header = T)
 rain <- rain[c("Date", "Precipitation..in.")]
 rain$Date <- mdy(rain$Date) # converting the date column from character to date format
 
@@ -652,12 +652,19 @@ ggplot(climate.sum, aes(x = year, y = precip, fill = MONTH)) +
         legend.direction = "horizontal",
         legend.key.size = unit(0.5, 'cm')) +
   scale_fill_manual(values=cbPalette) +
+  scale_x_continuous(breaks = unique(climate.sum$year), 
+                     labels = function(x) { 
+                       ifelse(x %% 5 == 0, x, "")  
+                     }) + # Add this line to customize labeling
   theme(axis.text.x=element_text(size=15), 
         axis.text.y = element_text(size = 15),
         axis.title.x = element_text(size = 20),
         axis.title.y = element_text(size = 20))
 
-
+library(here)
+ggsave("total_precip_snotel.pdf",
+       path = here("plots", "Precip"),
+       width = 10, height = 10)
 
 ggsave("total_precip_snotel.pdf",
        path = here("Climate"),

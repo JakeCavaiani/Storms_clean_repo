@@ -481,7 +481,7 @@ no3.hi.burn <- ggplot(NO3_data, aes(x = pctburn_lg, y = meanHI)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.32, label.x = -.35, size = 5.5) +
+                  label.y = 0.38, label.x = -.35, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -551,7 +551,7 @@ no3.beta.deciduous <- ggplot(NO3_data, aes(x = Deciduous.2010, y = meanBETA)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.2, label.x = -.7, size = 5.5) +
+                  label.y = 0.075, label.x = -.7, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -625,7 +625,7 @@ no3.sdhi.slope <- ggplot(NO3_data, aes(x = Slope, y = sdHI)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.515, label.x = -0.9, size = 5.5) +
+                  label.y = 0.48, label.x = -0.9, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -677,7 +677,7 @@ no3.sdbeta.deciduous <- ggplot(NO3_data, aes(x = Deciduous.2010, y = sdBETA)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 3.5, label.x = -.4, size = 5.5) +
+                  label.y = 1.25, label.x = -.4, size = 5.5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -798,7 +798,7 @@ fdom.hi.slope <- ggplot(fDOM_data, aes(x = Slope, y = meanHI)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.15, label.x = 0, size = 5) +
+                  label.y = 0.05, label.x = 0.45, size = 5) +
   theme_classic() +
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -933,7 +933,7 @@ fDOM.sdhi.burn <- ggplot(fDOM_data, aes(x = pctburn_lg, y = sdHI)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = .475, label.x = -.5, size = 5) +
+                  label.y = .35, label.x = -.5, size = 5) +
   theme_classic()+
   geom_errorbar(aes(x=pctburn_lg, ymin=sdHI-seHI, ymax=sdHI+seHI), width=0.2, colour="black", alpha=0.9, size=1.0) +
   theme(axis.text.x=element_text(size=20), 
@@ -1001,7 +1001,7 @@ fDOM.sdbeta.deciduous <- ggplot(fDOM_data, aes(x = Deciduous.2010, y = sdBETA)) 
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 1.8, label.x = -0.9, size = 5) +
+                  label.y = 1.0, label.x = -0.9, size = 5) +
   theme_classic()+
   geom_errorbar(aes(x=Deciduous.2010, ymin=sdBETA-seBETA, ymax=sdBETA+seBETA), width=0.2, colour="black", alpha=0.9, size=1.0) +
   theme(axis.text.x=element_text(size=20), 
@@ -1102,7 +1102,7 @@ spc.hi.slope <- ggplot(SPC_data, aes(x = Slope, y = meanHI)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.54, label.x = 0.2, size = 5) +
+                  label.y = 0.625, label.x = 0.65, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1173,7 +1173,7 @@ spc.beta.slope <- ggplot(SPC_data, aes(x = Slope, y = meanBETA)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 0.4, label.x = 1, size = 5) +
+                  label.y = -0.125, label.x = 1, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1294,7 +1294,7 @@ spc.sdbeta.burn <- ggplot(SPC_data, aes(x = pctburn_lg, y = sdBETA)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 7.2, label.x = -0.5, size = 5) +
+                  label.y = 1.5, label.x = -0.5, size = 5) +
   theme_classic()+
   theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
@@ -1575,7 +1575,7 @@ turb.sdbeta.slope <- ggplot(turb_data, aes(x = Slope, y = sdBETA)) +
                   method.args = list(formula = y~x),
                   geom = 'text',
                   aes(label = paste("P-value = ", signif(..p.value.., digits = 2), sep = "")),
-                  label.y = 2.9, label.x = -.75, size = 5) +
+                  label.y = 0.8, label.x = -.75, size = 5) +
     theme(axis.text.x=element_text(size=20), 
         axis.text.y = element_text(size = 20),
         axis.title.x = element_text(size = 20),
