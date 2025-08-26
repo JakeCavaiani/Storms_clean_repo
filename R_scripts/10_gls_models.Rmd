@@ -49,7 +49,6 @@ library(ggpmisc)
 library(ggpubr)
 library(ggExtra)
 library(lubridate)
-library(nlme)
 # library(MuMIn)
 library(multcomp)
 library(sjPlot)
@@ -235,6 +234,8 @@ Efulla[I1]<-Ear1
 acf(Efulla, na.action=na.pass)
 pacf(Efulla, na.action=na.pass)
 ```
+###***TKH: ARMA(1,1) is good here
+
 # corARMA structure 
 ```{r}
 no3.mod.arma.1.2 <- gls(dailyNO3 ~ site.ID, 
@@ -443,6 +444,7 @@ acf(Efulla, na.action=na.pass)
 pacf(Efulla, na.action=na.pass)
 ```
 Still autocorrelation 
+### *** TKH: ARMA(1,1) looks ok
 
 # corARMA structure 
 ```{r}
@@ -531,6 +533,7 @@ F-value: 4.063
 p-value: 0.0184
 Denon DF: 245
 
+###***TKH: MOOS & CARI are significantly different
 
 ### SPC ### 
 ```{r}
