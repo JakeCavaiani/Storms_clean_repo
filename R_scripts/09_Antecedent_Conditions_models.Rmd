@@ -90,6 +90,8 @@ HI_FI_SPC = subset(AMC, response_var == "SPC")
 HI_FI_turb = subset(AMC, response_var == "turb")
 
 ```
+### ***TKH the above is replaced by the section below (after normalizing) and can be deleted?
+### ***TKH Why is intensity 1 for all of 2022? 
 
 ### Scaling and normalizing data ### 
 ```{r, echo=FALSE}
@@ -162,11 +164,11 @@ ggsave("NO3_pairs_MOOS.pdf",
        width = 10, height = 10)
 
 
-MOOS.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_MOOS)
+MOOS.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_MOOS)
 
-vif(MOOS.model)
-plot(MOOS.model)
-summary(MOOS.model)
+vif(MOOS.no3.model)
+plot(MOOS.no3.model)
+summary(MOOS.no3.model)
 
 
 ```
@@ -182,11 +184,11 @@ ggsave("NO3_pairs_FRCH.pdf",
        width = 10, height = 10)
 
 
-FRCH.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_FRCH)
+FRCH.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_FRCH)
 
-vif(FRCH.model)
-plot(FRCH.model)
-summary(FRCH.model)
+vif(FRCH.no3.model)
+plot(FRCH.no3.model)
+summary(FRCH.no3.model)
 
 
 ```
@@ -202,11 +204,11 @@ ggsave("NO3_pairs_CARI.pdf",
        width = 10, height = 10)
 
 
-CARI.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_CARI)
+CARI.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_CARI)
 
-vif(CARI.model)
-plot(CARI.model)
-summary(CARI.model)
+vif(CARI.no3.model)
+plot(CARI.no3.model)
+summary(CARI.no3.model)
 ```
 
 ```{r}
@@ -220,11 +222,11 @@ ggsave("NO3_pairs_POKE.pdf",
        width = 10, height = 10)
 
 
-POKE.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_POKE)
+POKE.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_POKE)
 
-vif(POKE.model)
-plot(POKE.model)
-summary(POKE.model)
+vif(POKE.no3.model)
+plot(POKE.no3.model)
+summary(POKE.no3.model)
 ```
 
 ```{r}
