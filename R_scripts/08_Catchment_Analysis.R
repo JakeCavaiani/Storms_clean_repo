@@ -27,19 +27,24 @@ library(zoo)
 # Read in polygon data 
 catchment <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
 
-catchment <- catchment[c("site","SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean")] # selecting the columns that I want
+catchment <- catchment[c("site","SLOPE_MEAN", "orgsoil_extent", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "Year")] # selecting the columns that I want
 
-# Manually adjusting the PF extent from the most updated torre and Neal PF maps (11/1/2023)
-
+# Add estimates of permafrost extent made by Torre Jorgenson  (11/1/2023)
+# Add deciduous cover
 catchment <- catchment %>% 
-  mutate(Pf_Prob_1m_mean_x = case_when(site == 'Caribou_CJ' ~ 29.3,
-                                       site == 'French' ~ 32.9,
-                                       site == 'Poker_PJ' ~ 25.3,
-                                       site == 'Moose' ~ 38.4,
-                                       site == 'Vault' ~ 58.4,
-                                       site == 'Stuart' ~ 30.8,
-                                       TRUE ~ Pf_Prob_1m_mean_x))
-
+  mutate(pfrost_extent = case_when(site == 'Caribou_CJ' ~ 29.3,
+                                  site == 'French' ~ 32.9,
+                                  site == 'Poker_PJ' ~ 25.3,
+                                  site == 'Moose' ~ 38.4,
+                                  site == 'Vault' ~ 58.4,
+                                  site == 'Stuart' ~ 30.8)) %>%
+  mutate(decid = ifelse(site == 'Caribou_CJ', 18.3,
+                    ifelse(site == 'French', 22.7,
+                      ifelse(site == 'Poker_PJ', 21.6,
+                        ifelse(site == 'Moose', 22.5,
+                          ifelse(site == 'Vault', 19.9, 18.8)))))) %>%
+  filter(Year == 2019)
+                        
 
 ggpairs(catchment,
         columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
@@ -48,10 +53,11 @@ ggpairs(catchment,
 ###***TKH: Slope & pfrost r = -0.34. Coefficients <0.5 are weak. This is across the full dataset though. Let's look at just the 6 catchments we are addressing here.
 
 highlight_df <- filter(catchment, site %in% c("Caribou_CJ", "French", "Poker_PJ",
-                                              "Moose", "Vault", "Stuart"))
+                                              "Moose", "Vault", "Stuart")) %>%
+                mutate(site = ifelse())
 
 ggpairs(highlight_df,
-        columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
+        columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "pfrost_extent", "decid"),
         title="Correlation matrix: All sites") 
 ## pfrost & slope negatively correlated, but driven largely by one point with strong leverage (VAUL)
 ## pfrost & NDVI also negatively correlated, one major outlier
@@ -68,30 +74,30 @@ catchment %>%
 # combine AMC and catchment_characteristics
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
-DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
+#DOD_catchment <- read.csv(here("Ancillary_data", "DOD_Sites_AK_polys_190903_Predictors.csv"))
 
 # filter to 2020 attributes only. NDVI was available beginning 1984.
-DOD_catchment <- DOD_catchment %>% filter(Year == 2020)
+#DOD_catchment <- DOD_catchment %>% filter(Year == 2020)
 
 # Manually adjusting the PF extent from the most updated torre and Neal PF maps (11/1/2023)
 
-DOD_catchment <- DOD_catchment %>% 
-  mutate(Pf_Prob_1m_mean_x = case_when(site.ID == 'CARI' ~ 29.3,
-                                       site.ID == 'FRCH' ~ 32.9,
-                                       site.ID == 'POKE' ~ 25.3,
-                                       site.ID == 'MOOS' ~ 38.4,
-                                       site.ID == 'VAUL' ~ 58.4,
-                                       site.ID == 'STRT' ~ 30.8,
-                                       TRUE ~ Pf_Prob_1m_mean_x))
+#DOD_catchment <- DOD_catchment %>% 
+#  mutate(Pf_Prob_1m_mean_x = case_when(site.ID == 'CARI' ~ 29.3,
+#                                       site.ID == 'FRCH' ~ 32.9,
+#                                       site.ID == 'POKE' ~ 25.3,
+#                                       site.ID == 'MOOS' ~ 38.4,
+#                                       site.ID == 'VAUL' ~ 58.4,
+#                                       site.ID == 'STRT' ~ 30.8,
+#                                       TRUE ~ Pf_Prob_1m_mean_x))
 
 
 # 
-AMC <- full_join(AMC, DOD_catchment)
+# AMC <- full_join(AMC, highlight_df, by = "site")
 # 
-write.csv(AMC, here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
+# write.csv(AMC, here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
 # 
 # 
-AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
+# AMC <- read.csv(here("Output_from_analysis", "08_Catchment_characteristics", "Antecedent_HI_BETA_Catchment.csv"))
 
 # AMC <- read_csv("Output_from_analysis/08_Catchment_characteristics/Antecedent_HI_BETA_Catchment.csv")
 
@@ -107,7 +113,7 @@ AMC <- AMC %>% mutate(burn = ifelse(site.ID %in% c("POKE","STRT","MOOS"), "burne
 cv <- function(x) 100*( sd(x, na.rm = TRUE)/mean(x, na.rm = TRUE))
 
 ## Across all years
-st.all <- AMC %>% group_by(response_var, site.ID, pf, burn, Pf_Prob_1m_mean_x, pctburn_lg, SLOPE_MEAN, NDVI_p50__mean) %>%
+st.all <- AMC %>% group_by(response_var, site.ID) %>%
                     summarize(across(c(Hyst_index, Flush_index, Beta_index), 
                                 list(mn = ~ mean(.x, na.rm = TRUE),
                                      md = ~ median(.x, na.rm = TRUE),
@@ -116,13 +122,98 @@ st.all <- AMC %>% group_by(response_var, site.ID, pf, burn, Pf_Prob_1m_mean_x, p
                                     ))
 
 ## Within years
-yr.st <- AMC %>% group_by(response_var, site.ID, year, pf, burn, Pf_Prob_1m_mean_x, pctburn_lg, SLOPE_MEAN, NDVI_p50__mean) %>%
+yr.st <- AMC %>% group_by(response_var, site.ID, year) %>%
                      summarize(across(c(Hyst_index, Flush_index, Beta_index), 
                                   list(mn = ~ mean(.x, na.rm = TRUE),
                                        md = ~ median(.x, na.rm = TRUE),
                                        SD = ~ sd(.x, na.rm = TRUE),
                                        CV = ~ cv(.x))
                                       ))
+
+### ***TKH: the below is temporary as analysis might be buried below.
+st.all <- st.all %>% mutate(site = ifelse(site.ID == "CARI", "Caribou_CJ",
+                                      ifelse(site.ID == "FRCH", "French",
+                                          ifelse(site.ID == "MOOS", "Moose",
+                                              ifelse(site.ID == "POKE", "Poker",
+                                                  ifelse(site.ID == "STRT", "Stuart", "Vault"))))))
+
+st.all.catch <- full_join(st.all, highlight_df, by = "site")
+
+## HI
+#decid
+st.all.catch %>% ggplot(aes(x = decid, y = Hyst_index_mn)) +
+                    geom_point() +
+                    facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = decid, y = Hyst_index_SD)) +
+                    geom_point() +
+                    facet_wrap(~response_var, scale = "free_y")
+
+#pfrost
+st.all.catch %>% ggplot(aes(x = pfrost_extent, y = Hyst_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = pfrost_extent, y = Hyst_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+# burn
+st.all.catch %>% ggplot(aes(x = pctburn_lg, y = Hyst_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = pctburn_lg, y = Hyst_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+# slope
+st.all.catch %>% ggplot(aes(x = SLOPE_MEAN, y = Hyst_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = SLOPE_MEAN, y = Hyst_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+## FI
+#decid
+st.all.catch %>% ggplot(aes(x = decid, y = Flush_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = decid, y = Flush_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+#pfrost
+st.all.catch %>% ggplot(aes(x = pfrost_extent, y = Flush_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = pfrost_extent, y = Flush_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+# burn
+st.all.catch %>% ggplot(aes(x = pctburn_lg, y = Flush_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = pctburn_lg, y = Flush_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+# slope
+st.all.catch %>% ggplot(aes(x = SLOPE_MEAN, y = Flush_index_mn)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+st.all.catch %>% ggplot(aes(x = SLOPE_MEAN, y = Flush_index_SD)) +
+  geom_point() +
+  facet_wrap(~response_var, scale = "free_y")
+
+### ***TKH Above is temporary
 
 # Output summarized data
 dir.create("summary_tables")                               
