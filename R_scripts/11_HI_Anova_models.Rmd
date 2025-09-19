@@ -167,7 +167,6 @@ emmeans(NO3.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 ```
  
-### ***TKH: model is named CV above, but the response variable is just meanHI?
  
  
 #fDOM 
@@ -193,7 +192,7 @@ emmeans(fDOM.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
 ```
-### ***TKH: model is named CV above, but the response variable is just meanHI?
+
 
 
 normality looks good 
@@ -497,6 +496,14 @@ anova(turb.CV.BETA.mod)
 emmeans(turb.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 ### ***TKH: note emmeans result differs from the cld below. Use emmeans
+CARI:a
+VAUL:b
+MOOS:b
+STRT:b
+POKE:a
+FRCH:a
+
+### ***TKH: 
 CARI:a
 VAUL:b
 MOOS:b
@@ -881,6 +888,8 @@ VAUL:ab
 STRT:ab
 MOOS:ab
 FRCH:b
+
+
 ```{r}
 # getting the letter designation for significance 
 anova <- aov(sdBETA ~ site.ID, data = HI_FI_turb)

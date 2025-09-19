@@ -43,6 +43,10 @@ files <- list.files(input_directory, full.names = TRUE, pattern = "*.csv") # Adj
 ATW_data <- files %>%
   map_dfr(process_file) # This applies `process_file` to each file and combines them
 
+# export file
+write_csv(ATW_data, here("Output_from_analysis", "compare_JSC_ATW_storm_totals", "updated_AMC_metrics_2509.csv"))
+
+
 # Write the combined data to a new CSV file (optional)
 # write_csv(combined_data, "combined_output.csv")
 
@@ -192,7 +196,51 @@ generate_comparison_plots_with_r2(merged_data, variables_to_compare, output_dire
 
 
 
+#####  Merge Updated AMC metrics with Storm metrics  ####
+# Changing the name of the storm column to match my original dataframe
+ATW_filtered <- ATW_data %>% 
+  rename(storm.ID = "storm.num", 
+         precip = "total_storm_ppt",
+         precip.week = "prev7",
+         Intensity = "intensity",
+         precip.month = "prev30") %>%
+  mutate(
+    year = format(storm_start, "%Y"),
+    unique_storm_id = str_c(site.ID, year, storm.ID, sep = "-")) %>%
+  select(site.ID, year, storm.ID, unique_storm_id, precip, precip.week, precip.month, Intensity) %>% 
+  mutate(year = as.double(year))
 
+antecedent_HI_FI_AllYears <- read_csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- antecedent_HI_FI_AllYears[c("Hyst_index", "HI_ymin", "HI_ymax", 
+                                                         "site.ID", "storm.ID", "month.x", 
+                                                         "day.x", "response_var", "Flush_index", 
+                                                         "FI_ymin", "FI_ymax", "year", "Parameter",  
+                                                         "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", 
+                                                         "t", "df", "p", "precip", "temp", "precip.week", 
+                                                         "precip.month", "ThreeMonth", "temp.week", 
+                                                         "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+                                                        "date", "TimeSinceChena")] # selecting the columns that I want
+
+AMC_updated <- full_join(AMC, ATW_filtered, by = c("storm.ID", "site.ID", "year"))
+
+AMC_updated <- AMC_updated[c("Hyst_index", "HI_ymin", "HI_ymax", 
+                             "site.ID", "storm.ID", "month.x", 
+                             "day.x", "response_var", "Flush_index", 
+                             "FI_ymin", "FI_ymax", "year", "Parameter",  
+                             "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", 
+                             "t", "df", "p", "precip.y", "temp", "precip.week.y", 
+                             "precip.month.y", "ThreeMonth", "temp.week", 
+                             "TOTAL.TIME", "Intensity.y", "doy", "burn", "pf", 
+                             "date", "TimeSinceChena")] # selecting the columns that I want
+AMC_updated <- AMC_updated %>% 
+  rename(precip = precip.y, 
+         precip.week = precip.week.y,
+         precip.month = precip.month.y,
+         Intensity = Intensity.y)
+
+# export file
+write_csv(ATW_data, here("Output_from_analysis", "compare_JSC_ATW_storm_totals", "updated_AMC_HI_BETA_file_2509.csv"))
 
 
 
