@@ -240,7 +240,7 @@ AMC_updated <- AMC_updated %>%
          Intensity = Intensity.y)
 
 # export file
-write_csv(ATW_data, here("Output_from_analysis", "compare_JSC_ATW_storm_totals", "updated_AMC_HI_BETA_file_2509.csv"))
+write_csv(AMC_updated, here("Output_from_analysis", "compare_JSC_ATW_storm_totals", "updated_AMC_HI_BETA_file_2509.csv"))
 
 
 
