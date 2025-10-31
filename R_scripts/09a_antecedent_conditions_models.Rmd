@@ -77,8 +77,12 @@ pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + Hy
 ```{r, echo=FALSE}
 
 # scale & standardize predictors # 
+# add hard code ln-HI & beta for use w/ ggparis plotting
 varnames <- c("precip.week", "precip.month", "ThreeMonth", "Intensity", "TimeSinceChena")
-AMC <- AMC %>% mutate(across(starts_with(varnames), ~as.numeric(scale (., center = TRUE, scale = TRUE)), .names = "{.col}_z"))
+AMC <- AMC %>% mutate(across(starts_with(varnames), ~as.numeric(scale (., center = TRUE, scale = TRUE)), .names = "{.col}_z")) %>%
+               mutate(ln_HI = log(Hyst_index + 1)) %>%
+               mutate(ln_beta = log(Beta_index + 7))
+  
 
 ```
 
@@ -89,23 +93,24 @@ AMC <- AMC %>% mutate(across(starts_with(varnames), ~as.numeric(scale (., center
 ### HI ###
 ## NO3 ##
 
-# MOOS
+# MOOS #
 pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
-        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "Hyst_index"), mapping = aes(color = as.factor(year)))
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
         
-ggsave(pairs, file = "HI_NO3_MOOS_pairs.pdf",
+ggsave(pairs, file = "HI_lnNO3_MOOS_pairs.pdf",
        path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
        width = 10, height = 10, units = "in")
 
-mod1 <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
-                lmer(Hyst_index ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+hi.no3.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
 
-vif(mod1)
-qqnorm(resid(mod1,  type = "pearson"))
-qqline(resid(mod1,  type = "pearson"))
-plot(mod1)
-summary(mod1)
-confint(mod1)
+vif(hi.no3.moos.lmer)
+qqnorm(resid(hi.no3.moos.lmer,  type = "pearson"))
+qqline(resid(hi.no3.moos.lmer,  type = "pearson"))
+plot(hi.no3.moos.lmer)
+summary(hi.no3.moos.lmer)
+confint(hi.no3.moos.lmer)
+r.squaredGLMM(hi.no3.moos.lmer)
 
 ## Check effect of outlier
 mod1.out <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
@@ -115,8 +120,1178 @@ mod1.out <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
 summary(mod1.out)
 confint(mod1.out)
 # Same qualitative result
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.no3.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.frch.lmer)
+qqnorm(resid(hi.no3.frch.lmer,  type = "pearson"))
+qqline(resid(hi.no3.frch.lmer,  type = "pearson"))
+plot(hi.no3.frch.lmer)
+summary(hi.no3.frch.lmer)
+confint(hi.no3.frch.lmer)
+r.squaredGLMM(hi.no3.frch.lmer)
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.no3.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.poke.lmer)
+# ppt month & week too strongly correlated
+
+# Remove precip.week from model
+hi.no3.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.poke.lmer)
+qqnorm(resid(hi.no3.poke.lmer,  type = "pearson"))
+qqline(resid(hi.no3.poke.lmer,  type = "pearson"))
+plot(hi.no3.poke.lmer)
+summary(hi.no3.poke.lmer)
+confint(hi.no3.poke.lmer)
+r.squaredGLMM(hi.no3.poke.lmer)
+
+## Random var = 0. Check lm
+mod3.lm <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3") %>%
+                lm(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(mod3.lm)
+# same qualitative result. Nothing significant.
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.no3.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.cari.lmer)
+# ppt month & week too strongly correlated
+
+# Remove precip.week from model
+hi.no3.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.cari.lmer)
+qqnorm(resid(hi.no3.cari.lmer,  type = "pearson"))
+qqline(resid(hi.no3.cari.lmer,  type = "pearson"))
+plot(hi.no3.cari.lmer)
+summary(hi.no3.cari.lmer)
+confint(hi.no3.cari.lmer)
+r.squaredGLMM(hi.no3.cari.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.no3.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.strt.lmer)
+#ppt_week & ppt_month too strongly correlated
+
+hi.no3.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.strt.lmer)
+qqnorm(resid(hi.no3.strt.lmer,  type = "pearson"))
+qqline(resid(hi.no3.strt.lmer,  type = "pearson"))
+plot(hi.no3.strt.lmer)
+summary(hi.no3.strt.lmer)
+confint(hi.no3.strt.lmer)
+r.squaredGLMM(hi.no3.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+NO3_VAUL <- AMC %>% filter(response_var == "NO3") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = NO3_VAUL, col = as.factor(NO3_VAUL$year))
+
+hi.no3.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.vaul.lmer)
+qqnorm(resid(hi.no3.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.no3.vaul.lmer,  type = "pearson"))
+plot(hi.no3.vaul.lmer)
+summary(hi.no3.vaul.lmer)
+confint(hi.no3.vaul.lmer)
+r.squaredGLMM(hi.no3.vaul.lmer)
 ```
-####***TKH here
+
+```{r}
+## fDOM ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.moos.lmer)
+qqnorm(resid(hi.fdom.moos.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.moos.lmer,  type = "pearson"))
+plot(hi.fdom.moos.lmer)
+summary(hi.fdom.moos.lmer)
+confint(hi.fdom.moos.lmer)
+r.squaredGLMM(hi.fdom.moos.lmer)
+
+# random var = 0. Compare w/ lm
+hi.fdom.moos.lm <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.moos.lm)
+# qualitatively same as lmer
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.frch.lmer)
+qqnorm(resid(hi.fdom.frch.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.frch.lmer,  type = "pearson"))
+plot(hi.fdom.frch.lmer)
+summary(hi.fdom.frch.lmer)
+confint(hi.fdom.frch.lmer)
+r.squaredGLMM(hi.fdom.frch.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.cari.lmer)
+# ppt week & ppt month too strongly correlated
+
+hi.fdom.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.cari.lmer)
+qqnorm(resid(hi.fdom.cari.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.cari.lmer,  type = "pearson"))
+plot(hi.fdom.cari.lmer)
+summary(hi.fdom.cari.lmer)
+confint(hi.fdom.cari.lmer)
+r.squaredGLMM(hi.fdom.cari.lmer)
+
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.poke.lmer)
+# ppt week & ppt month too strongly correlated
+
+hi.fdom.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.poke.lmer)
+qqnorm(resid(hi.fdom.poke.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.poke.lmer,  type = "pearson"))
+plot(hi.fdom.poke.lmer)
+summary(hi.fdom.poke.lmer)
+confint(hi.fdom.poke.lmer)
+r.squaredGLMM(hi.fdom.poke.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.strt.lmer)
+qqnorm(resid(hi.fdom.strt.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.strt.lmer,  type = "pearson"))
+plot(hi.fdom.strt.lmer)
+summary(hi.fdom.strt.lmer)
+confint(hi.fdom.strt.lmer)
+r.squaredGLMM(hi.fdom.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+fdom_VAUL <- AMC %>% filter(response_var == "fDOM") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = fdom_VAUL, col = as.factor(fdom_VAUL$year))
+
+hi.fdom.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.vaul.lmer)
+qqnorm(resid(hi.fdom.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.vaul.lmer,  type = "pearson"))
+plot(hi.fdom.vaul.lmer)
+summary(hi.fdom.vaul.lmer)
+confint(hi.fdom.vaul.lmer)
+r.squaredGLMM(hi.fdom.vaul.lmer)
+
+# random var = 0. Check lm
+hi.fdom.vaul.lm <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.vaul.lm)
+# same qualitative result
+```
+
+```{r}
+## SpCond ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.moos.lmer)
+qqnorm(resid(hi.spc.moos.lmer,  type = "pearson"))
+qqline(resid(hi.spc.moos.lmer,  type = "pearson"))
+plot(hi.spc.moos.lmer)
+summary(hi.spc.moos.lmer)
+confint(hi.spc.moos.lmer)
+r.squaredGLMM(hi.spc.moos.lmer)
+
+# random var = 0. Compare w/ lm
+hi.spc.moos.lm <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.spc.moos.lm)
+# qualitatively same as lmer
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.frch.lmer)
+qqnorm(resid(hi.spc.frch.lmer,  type = "pearson"))
+qqline(resid(hi.spc.frch.lmer,  type = "pearson"))
+plot(hi.spc.frch.lmer)
+summary(hi.spc.frch.lmer)
+confint(hi.spc.frch.lmer)
+r.squaredGLMM(hi.spc.frch.lmer)
+
+# Random var low relative to resid. Check lm.
+hi.spc.frch.lm <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.spc.frch.lm)
+# qualitatively similar to lmer
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+# filter 2 outliers
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>% 
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_POKE_pairs_2out.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.poke.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.spc.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.poke.lmer)
+qqnorm(resid(hi.spc.poke.lmer,  type = "pearson"))
+qqline(resid(hi.spc.poke.lmer,  type = "pearson"))
+plot(hi.spc.poke.lmer)
+summary(hi.spc.poke.lmer)
+confint(hi.spc.poke.lmer)
+r.squaredGLMM(hi.spc.poke.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.cari.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.spc.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.cari.lmer)
+qqnorm(resid(hi.spc.cari.lmer,  type = "pearson"))
+qqline(resid(hi.spc.cari.lmer,  type = "pearson"))
+plot(hi.spc.cari.lmer)
+summary(hi.spc.cari.lmer)
+confint(hi.spc.cari.lmer)
+r.squaredGLMM(hi.spc.cari.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.strt.lmer)
+qqnorm(resid(hi.fdom.strt.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.strt.lmer,  type = "pearson"))
+plot(hi.fdom.strt.lmer)
+summary(hi.fdom.strt.lmer)
+confint(hi.fdom.strt.lmer)
+r.squaredGLMM(hi.fdom.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+spc_VAUL <- AMC %>% filter(response_var == "SPC") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = spc_VAUL, col = as.factor(spc_VAUL$year))
+# 1 large negative outlier- remove
+
+spc_VAUL <- AMC %>% filter(response_var == "SPC") %>% filter(site.ID == "VAUL") %>% filter(ln_HI >= -0.5)
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = spc_VAUL, col = as.factor(spc_VAUL$year))
+
+hi.spc.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "SPC" & ln_HI >= -0.5) %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.vaul.lmer)
+qqnorm(resid(hi.spc.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.spc.vaul.lmer,  type = "pearson"))
+plot(hi.spc.vaul.lmer)
+# not great
+summary(hi.spc.vaul.lmer)
+confint(hi.spc.vaul.lmer)
+r.squaredGLMM(hi.spc.vaul.lmer)
+
+# random var = 0. Check lm
+hi.fdom.vaul.lm <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.vaul.lm)
+# same qualitative result
+```
+
+```{r}
+## Turb ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.moos.lmer)
+qqnorm(resid(hi.turb.moos.lmer,  type = "pearson"))
+qqline(resid(hi.turb.moos.lmer,  type = "pearson"))
+plot(hi.turb.moos.lmer)
+summary(hi.turb.moos.lmer)
+confint(hi.turb.moos.lmer)
+r.squaredGLMM(hi.turb.moos.lmer)
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.frch.lmer)
+qqnorm(resid(hi.turb.frch.lmer,  type = "pearson"))
+qqline(resid(hi.turb.frch.lmer,  type = "pearson"))
+plot(hi.turb.frch.lmer)
+summary(hi.turb.frch.lmer)
+confint(hi.turb.frch.lmer)
+r.squaredGLMM(hi.turb.frch.lmer)
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.poke.lmer)
+qqnorm(resid(hi.turb.poke.lmer,  type = "pearson"))
+qqline(resid(hi.turb.poke.lmer,  type = "pearson"))
+plot(hi.turb.poke.lmer)
+summary(hi.turb.poke.lmer)
+confint(hi.turb.poke.lmer)
+r.squaredGLMM(hi.turb.poke.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.cari.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.turb.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.cari.lmer)
+qqnorm(resid(hi.turb.cari.lmer,  type = "pearson"))
+qqline(resid(hi.turb.cari.lmer,  type = "pearson"))
+plot(hi.turb.cari.lmer)
+summary(hi.turb.cari.lmer)
+confint(hi.turb.cari.lmer)
+r.squaredGLMM(hi.turb.cari.lmer)
+
+# No variance associated with year. Check lm
+hi.turb.cari.lm <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                           lm(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z , data = .)
+summary(hi.turb.cari.lm)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.strt.lmer)
+qqnorm(resid(hi.turb.strt.lmer,  type = "pearson"))
+qqline(resid(hi.turb.strt.lmer,  type = "pearson"))
+plot(hi.turb.strt.lmer)
+summary(hi.turb.strt.lmer)
+confint(hi.turb.strt.lmer)
+r.squaredGLMM(hi.turb.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+turb_VAUL <- AMC %>% filter(response_var == "turb") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = turb_VAUL, col = as.factor(turb_VAUL$year))
+
+hi.turb.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.vaul.lmer)
+qqnorm(resid(hi.turb.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.turb.vaul.lmer,  type = "pearson"))
+plot(hi.turb.vaul.lmer)
+summary(hi.turb.vaul.lmer)
+confint(hi.turb.vaul.lmer)
+r.squaredGLMM(hi.turb.vaul.lmer)
+
+```
+
+```{r}
+### BETA ###
+## NO3 ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_lnbeta_NO3_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+beta.no3.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "NO3") %>%
+                lmer(ln_beta ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.moos.lmer)
+qqnorm(resid(beta.no3.moos.lmer,  type = "pearson"))
+qqline(resid(beta.no3.moos.lmer,  type = "pearson"))
+plot(beta.no3.moos.lmer)
+summary(beta.no3.moos.lmer)
+confint(beta.no3.moos.lmer)
+r.squaredGLMM(beta.no3.moos.lmer)
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_lnbeta_NO3_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+beta.no3.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "NO3") %>%
+                lmer(ln_beta ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.frch.lmer)
+qqnorm(resid(beta.no3.frch.lmer,  type = "pearson"))
+qqline(resid(beta.no3.frch.lmer,  type = "pearson"))
+plot(beta.no3.frch.lmer)
+summary(beta.no3.frch.lmer)
+confint(beta.no3.frch.lmer)
+r.squaredGLMM(beta.no3.frch.lmer)
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+# remove 1 outlier
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3" & ln_beta <= 2.4) %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_lnbeta_NO3_POKE_pairs_1out.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+beta.no3.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3" & ln_beta <= 2.4) %>%
+                lmer(ln_beta ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.poke.lmer)
+# ppt month & week too strongly correlated
+
+# Remove precip.week from model
+beta.no3.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "NO3" & ln_beta <= 2.4) %>%
+                lmer(ln_beta ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.poke.lmer)
+qqnorm(resid(beta.no3.poke.lmer,  type = "pearson"))
+qqline(resid(beta.no3.poke.lmer,  type = "pearson"))
+plot(beta.no3.poke.lmer)
+summary(beta.no3.poke.lmer)
+confint(beta.no3.poke.lmer)
+r.squaredGLMM(hi.no3.poke.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_lnbeta_NO3_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+# remove 3 outliers
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3" & ln_beta >= 1.5) %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_beta"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_lnbeta_NO3_CARI_pairs_3out.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+beta.no3.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3" & ln_beta >= 1.5) %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.cari.lmer)
+# ppt month & week too strongly correlated
+
+# Remove precip.week from model
+beta.no3.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "NO3" & ln_beta >= 1.5) %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(beta.no3.cari.lmer)
+qqnorm(resid(beta.no3.cari.lmer,  type = "pearson"))
+qqline(resid(beta.no3.cari.lmer,  type = "pearson"))
+plot(beta.no3.cari.lmer)
+summary(beta.no3.cari.lmer)
+confint(beta.no3.cari.lmer)
+r.squaredGLMM(beta.no3.cari.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.no3.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.strt.lmer)
+#ppt_week & ppt_month too strongly correlated
+
+hi.no3.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.strt.lmer)
+qqnorm(resid(hi.no3.strt.lmer,  type = "pearson"))
+qqline(resid(hi.no3.strt.lmer,  type = "pearson"))
+plot(hi.no3.strt.lmer)
+summary(hi.no3.strt.lmer)
+confint(hi.no3.strt.lmer)
+r.squaredGLMM(hi.no3.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "NO3") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_NO3_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+NO3_VAUL <- AMC %>% filter(response_var == "NO3") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = NO3_VAUL, col = as.factor(NO3_VAUL$year))
+
+hi.no3.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "NO3") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.no3.vaul.lmer)
+qqnorm(resid(hi.no3.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.no3.vaul.lmer,  type = "pearson"))
+plot(hi.no3.vaul.lmer)
+summary(hi.no3.vaul.lmer)
+confint(hi.no3.vaul.lmer)
+r.squaredGLMM(hi.no3.vaul.lmer)
+```
+
+```{r}
+## fDOM ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.moos.lmer)
+qqnorm(resid(hi.fdom.moos.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.moos.lmer,  type = "pearson"))
+plot(hi.fdom.moos.lmer)
+summary(hi.fdom.moos.lmer)
+confint(hi.fdom.moos.lmer)
+r.squaredGLMM(hi.fdom.moos.lmer)
+
+# random var = 0. Compare w/ lm
+hi.fdom.moos.lm <- AMC %>% filter(site.ID == "MOOS" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.moos.lm)
+# qualitatively same as lmer
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.frch.lmer)
+qqnorm(resid(hi.fdom.frch.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.frch.lmer,  type = "pearson"))
+plot(hi.fdom.frch.lmer)
+summary(hi.fdom.frch.lmer)
+confint(hi.fdom.frch.lmer)
+r.squaredGLMM(hi.fdom.frch.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.cari.lmer)
+# ppt week & ppt month too strongly correlated
+
+hi.fdom.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.cari.lmer)
+qqnorm(resid(hi.fdom.cari.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.cari.lmer,  type = "pearson"))
+plot(hi.fdom.cari.lmer)
+summary(hi.fdom.cari.lmer)
+confint(hi.fdom.cari.lmer)
+r.squaredGLMM(hi.fdom.cari.lmer)
+
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.poke.lmer)
+# ppt week & ppt month too strongly correlated
+
+hi.fdom.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.poke.lmer)
+qqnorm(resid(hi.fdom.poke.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.poke.lmer,  type = "pearson"))
+plot(hi.fdom.poke.lmer)
+summary(hi.fdom.poke.lmer)
+confint(hi.fdom.poke.lmer)
+r.squaredGLMM(hi.fdom.poke.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.strt.lmer)
+qqnorm(resid(hi.fdom.strt.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.strt.lmer,  type = "pearson"))
+plot(hi.fdom.strt.lmer)
+summary(hi.fdom.strt.lmer)
+confint(hi.fdom.strt.lmer)
+r.squaredGLMM(hi.fdom.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+fdom_VAUL <- AMC %>% filter(response_var == "fDOM") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = fdom_VAUL, col = as.factor(fdom_VAUL$year))
+
+hi.fdom.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.vaul.lmer)
+qqnorm(resid(hi.fdom.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.vaul.lmer,  type = "pearson"))
+plot(hi.fdom.vaul.lmer)
+summary(hi.fdom.vaul.lmer)
+confint(hi.fdom.vaul.lmer)
+r.squaredGLMM(hi.fdom.vaul.lmer)
+
+# random var = 0. Check lm
+hi.fdom.vaul.lm <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.vaul.lm)
+# same qualitative result
+```
+
+```{r}
+## SpCond ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.moos.lmer)
+qqnorm(resid(hi.spc.moos.lmer,  type = "pearson"))
+qqline(resid(hi.spc.moos.lmer,  type = "pearson"))
+plot(hi.spc.moos.lmer)
+summary(hi.spc.moos.lmer)
+confint(hi.spc.moos.lmer)
+r.squaredGLMM(hi.spc.moos.lmer)
+
+# random var = 0. Compare w/ lm
+hi.spc.moos.lm <- AMC %>% filter(site.ID == "MOOS" & response_var == "SPC") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.spc.moos.lm)
+# qualitatively same as lmer
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.frch.lmer)
+qqnorm(resid(hi.spc.frch.lmer,  type = "pearson"))
+qqline(resid(hi.spc.frch.lmer,  type = "pearson"))
+plot(hi.spc.frch.lmer)
+summary(hi.spc.frch.lmer)
+confint(hi.spc.frch.lmer)
+r.squaredGLMM(hi.spc.frch.lmer)
+
+# Random var low relative to resid. Check lm.
+hi.spc.frch.lm <- AMC %>% filter(site.ID == "FRCH" & response_var == "SPC") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.spc.frch.lm)
+# qualitatively similar to lmer
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+# filter 2 outliers
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>% 
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_POKE_pairs_2out.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.poke.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.spc.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "SPC" & ln_HI > 0) %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.poke.lmer)
+qqnorm(resid(hi.spc.poke.lmer,  type = "pearson"))
+qqline(resid(hi.spc.poke.lmer,  type = "pearson"))
+plot(hi.spc.poke.lmer)
+summary(hi.spc.poke.lmer)
+confint(hi.spc.poke.lmer)
+r.squaredGLMM(hi.spc.poke.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.spc.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.cari.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.spc.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.cari.lmer)
+qqnorm(resid(hi.spc.cari.lmer,  type = "pearson"))
+qqline(resid(hi.spc.cari.lmer,  type = "pearson"))
+plot(hi.spc.cari.lmer)
+summary(hi.spc.cari.lmer)
+confint(hi.spc.cari.lmer)
+r.squaredGLMM(hi.spc.cari.lmer)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_SPC_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.fdom.strt.lmer)
+qqnorm(resid(hi.fdom.strt.lmer,  type = "pearson"))
+qqline(resid(hi.fdom.strt.lmer,  type = "pearson"))
+plot(hi.fdom.strt.lmer)
+summary(hi.fdom.strt.lmer)
+confint(hi.fdom.strt.lmer)
+r.squaredGLMM(hi.fdom.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "SPC") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+spc_VAUL <- AMC %>% filter(response_var == "SPC") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = spc_VAUL, col = as.factor(spc_VAUL$year))
+# 1 large negative outlier- remove
+
+spc_VAUL <- AMC %>% filter(response_var == "SPC") %>% filter(site.ID == "VAUL") %>% filter(ln_HI >= -0.5)
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = spc_VAUL, col = as.factor(spc_VAUL$year))
+
+hi.spc.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "SPC" & ln_HI >= -0.5) %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.spc.vaul.lmer)
+qqnorm(resid(hi.spc.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.spc.vaul.lmer,  type = "pearson"))
+plot(hi.spc.vaul.lmer)
+# not great
+summary(hi.spc.vaul.lmer)
+confint(hi.spc.vaul.lmer)
+r.squaredGLMM(hi.spc.vaul.lmer)
+
+# random var = 0. Check lm
+hi.fdom.vaul.lm <- AMC %>% filter(site.ID == "VAUL" & response_var == "fDOM") %>%
+                lm(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z, data = .)
+summary(hi.fdom.vaul.lm)
+# same qualitative result
+```
+
+```{r}
+## Turb ##
+
+# MOOS #
+pairs <- AMC %>% filter(site.ID == "MOOS" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_MOOS_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.moos.lmer <- AMC %>% filter(site.ID == "MOOS" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.moos.lmer)
+qqnorm(resid(hi.turb.moos.lmer,  type = "pearson"))
+qqline(resid(hi.turb.moos.lmer,  type = "pearson"))
+plot(hi.turb.moos.lmer)
+summary(hi.turb.moos.lmer)
+confint(hi.turb.moos.lmer)
+r.squaredGLMM(hi.turb.moos.lmer)
+
+# FRCH #
+pairs <- AMC %>% filter(site.ID == "FRCH" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_FRCH_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.frch.lmer <- AMC %>% filter(site.ID == "FRCH" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.frch.lmer)
+qqnorm(resid(hi.turb.frch.lmer,  type = "pearson"))
+qqline(resid(hi.turb.frch.lmer,  type = "pearson"))
+plot(hi.turb.frch.lmer)
+summary(hi.turb.frch.lmer)
+confint(hi.turb.frch.lmer)
+r.squaredGLMM(hi.turb.frch.lmer)
+
+# POKE #
+pairs <- AMC %>% filter(site.ID == "POKE" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_POKE_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.poke.lmer <- AMC %>% filter(site.ID == "POKE" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.poke.lmer)
+qqnorm(resid(hi.turb.poke.lmer,  type = "pearson"))
+qqline(resid(hi.turb.poke.lmer,  type = "pearson"))
+plot(hi.turb.poke.lmer)
+summary(hi.turb.poke.lmer)
+confint(hi.turb.poke.lmer)
+r.squaredGLMM(hi.turb.poke.lmer)
+
+# CARI #
+pairs <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_CARI_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.cari.lmer)
+# ppt_week & ppt_month too correlated
+
+hi.turb.cari.lmer <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.cari.lmer)
+qqnorm(resid(hi.turb.cari.lmer,  type = "pearson"))
+qqline(resid(hi.turb.cari.lmer,  type = "pearson"))
+plot(hi.turb.cari.lmer)
+summary(hi.turb.cari.lmer)
+confint(hi.turb.cari.lmer)
+r.squaredGLMM(hi.turb.cari.lmer)
+
+# No variance associated with year. Check lm
+hi.turb.cari.lm <- AMC %>% filter(site.ID == "CARI" & response_var == "turb") %>%
+                           lm(ln_HI ~ precip.month_z + TimeSinceChena + Intensity_z , data = .)
+summary(hi.turb.cari.lm)
+
+# STRT #
+pairs <- AMC %>% filter(site.ID == "STRT" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_turb_STRT_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+hi.turb.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.strt.lmer)
+qqnorm(resid(hi.turb.strt.lmer,  type = "pearson"))
+qqline(resid(hi.turb.strt.lmer,  type = "pearson"))
+plot(hi.turb.strt.lmer)
+summary(hi.turb.strt.lmer)
+confint(hi.turb.strt.lmer)
+r.squaredGLMM(hi.turb.strt.lmer)
+
+# VAUL #
+pairs <- AMC %>% filter(site.ID == "VAUL" & response_var == "turb") %>%
+        ggpairs(columns = c("precip.week_z", "precip.month_z", "ThreeMonth_z", "Intensity_z", "TimeSinceChena", "ln_HI"), mapping = aes(color = as.factor(year)))
+        
+ggsave(pairs, file = "HI_fDOM_VAUL_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10, units = "in")
+
+turb_VAUL <- AMC %>% filter(response_var == "turb") %>% filter(site.ID == "VAUL")
+
+pairs(~precip.week + precip.month + ThreeMonth + Intensity + TimeSinceChena + ln_HI, data = turb_VAUL, col = as.factor(turb_VAUL$year))
+
+hi.turb.vaul.lmer <- AMC %>% filter(site.ID == "VAUL" & response_var == "turb") %>%
+                lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
+
+vif(hi.turb.vaul.lmer)
+qqnorm(resid(hi.turb.vaul.lmer,  type = "pearson"))
+qqline(resid(hi.turb.vaul.lmer,  type = "pearson"))
+plot(hi.turb.vaul.lmer)
+summary(hi.turb.vaul.lmer)
+confint(hi.turb.vaul.lmer)
+r.squaredGLMM(hi.turb.vaul.lmer)
+
+```
+
 ```{r}
 ggpairs(HI_FI_NO3_FRCH,
         columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
