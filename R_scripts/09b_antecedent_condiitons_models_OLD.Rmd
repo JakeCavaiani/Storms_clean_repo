@@ -1,0 +1,1648 @@
+---
+title: "09X_antecedent_conditions_models_OLD"
+output: html_document
+date: "2025-11-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+ggpairs(HI_FI_NO3_FRCH,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("NO3_pairs_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_FRCH)
+
+vif(FRCH.no3.model)
+plot(FRCH.no3.model)
+summary(FRCH.no3.model)
+
+
+```
+
+```{r}
+ggpairs(HI_FI_NO3_CARI,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("NO3_pairs_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_CARI)
+
+vif(CARI.no3.model)
+plot(CARI.no3.model)
+summary(CARI.no3.model)
+```
+
+```{r}
+ggpairs(HI_FI_NO3_POKE,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("NO3_pairs_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena + Intensity, data = HI_FI_NO3_POKE)
+
+vif(POKE.no3.model)
+plot(POKE.no3.model)
+summary(POKE.no3.model)
+```
+
+```{r}
+ggpairs(HI_FI_NO3_VAUL,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("NO3_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+
+summary(VAUL.model)
+
+
+```
+normality doesnt look great....lets try and log transform 
+###***TKH: this is fine
+```{r}
+HI_FI_NO3_VAUL$logHI <- log(abs(HI_FI_NO3_VAUL$Hyst_index))
+VAUL.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
+
+vif(VAUL.model.log)
+plot(VAUL.model.log)
+summary(VAUL.model.log)
+
+```
+Does this need to be further transformed? 
+
+```{r}
+ggpairs(HI_FI_NO3_STRT,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("NO3_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.no3.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+
+```
+lets log transform 
+###***TKH: this is fine
+
+```{r}
+HI_FI_NO3_STRT$logHI <- log(abs(HI_FI_NO3_STRT$Hyst_index))
+STRT.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
+
+vif(STRT.model.log)
+plot(STRT.model.log)
+summary(STRT.model.log)
+
+```
+Doesnt look much better -  do we need to further transform?
+
+```{r}
+no3hireg <- AMC %>% filter(response_var == "NO3") %>%
+                      group_by(site.ID) %>%
+                      do(glance(lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, .)))
+
+Plot_no3 <- plot_summs(CARI.no3.model, FRCH.no3.model,
+           MOOS.no3.model, POKE.no3.model, STRT.no3.model, 
+           VAUL.no3.model, scale = TRUE,
+           model.names = c("CARI", "FRCH", "MOOS", "POKE", "STRT", "VAUL"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) #+ 
+  #xlim(-0.5, 0.75)
+
+vn = expression(paste(HI*-N*O[3]^"-"))
+no3_hi <- Plot_no3 + 
+  xlab("") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Antecedent precipitation\n(1 month)", 
+                             "Storm precipitation")) +
+  geom_text(data = no3hireg, aes(x = -0.35, y = c(1.7, 1.5, 1.3, 1.1, 0.9, 0.7), color = site.ID, hjust = 0,
+           label = paste("R[adj]^2", "==", round(adj.r.squared, 2))), size = 5, 
+            show.legend = FALSE,
+            parse = TRUE) +
+  xlim(-0.375, 0.3) +
+  theme_bw() +
+  ggtitle(vn) +
+  theme(axis.text.x = element_blank(), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        plot.title = element_text(size=20))
+
+ggsave("HI_NO3_ant.pdf",
+       path = here("plots", "Publication"),
+       width = 6, height = 5)
+
+
+# ggsave("HI_NO3.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+```
+
+### fDOM ###
+``` {r}
+# correlation 
+fDOM_data <- HI_FI_fDOM[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+#fDOM_data <- na.omit(fDOM_data) # 273 to 273 rows 
+
+HI_FI_fDOM$logHI <- log(abs(HI_FI_fDOM$Hyst_index))
+
+ggpairs(fDOM_data,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("fDOM_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_fDOM_MOOS <- subset(HI_FI_fDOM, site.ID == "MOOS")
+HI_FI_fDOM_FRCH <- subset(HI_FI_fDOM, site.ID == "FRCH")
+HI_FI_fDOM_CARI <- subset(HI_FI_fDOM, site.ID == "CARI")
+HI_FI_fDOM_POKE <- subset(HI_FI_fDOM, site.ID == "POKE")
+HI_FI_fDOM_VAUL <- subset(HI_FI_fDOM, site.ID == "VAUL")
+HI_FI_fDOM_STRT <- subset(HI_FI_fDOM, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_MOOS,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("fDOM_pairs_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_FRCH,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("fDOM_pairs_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+what does a log transform look like 
+###***TKH: this is fine
+```{r}
+FRCH.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_FRCH)
+
+vif(FRCH.model.log)
+plot(FRCH.model.log)
+
+```
+THis looks worse, lets stick with the original
+
+```{r}
+ggpairs(HI_FI_fDOM_CARI,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("fDOM_pairs_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+lets log transform
+###***TKH: this is fine
+```{r}
+CARI.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_CARI)
+
+vif(CARI.model.log)
+plot(CARI.model.log)
+
+```
+maybe further transform?
+```{r}
+ggpairs(HI_FI_fDOM_POKE,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("fDOM_pairs_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_VAUL,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("fDOM_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+```
+Vifs may be a little high for precipweek 
+###***TKH: 2 is a good rule of thumb
+```{r}
+ggpairs(HI_FI_fDOM_STRT,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("fDOM_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.fdom.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+```
+###***TKH: ppt week &  month too strongly correlated
+```{r}
+fdomhireg <- AMC %>% filter(response_var == "fDOM") %>%
+                      group_by(site.ID) %>%
+                      do(glance(lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, .)))
+
+Plot_fDOM <- plot_summs(CARI.fdom.model, FRCH.fdom.model, MOOS.fdom.model, 
+           POKE.fdom.model, STRT.fdom.model, 
+           VAUL.fdom.model, scale = TRUE,
+           model.names = c("CARI", "FRCH", "MOOS", "POKE", "STRT", "VAUL"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
+  theme(aspect.ratio = 1) #+ 
+  #xlim(-0.3, 0.6)
+  
+fDOM_hi <- Plot_fDOM + 
+  xlab("") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Antecedent precipitation\n(1 month)", 
+                             "Storm precipitation")) +
+  geom_text(data = fdomhireg, aes(x = -0.35, y = c(3.25, 3.05, 2.85, 2.65, 2.45, 2.25), color = site.ID, hjust = 0,
+           label = paste("R[adj]^2", "==", round(adj.r.squared, 2))), size = 5, 
+            show.legend = FALSE,
+            parse = TRUE) +
+  xlim(-0.375, 0.3) +
+  xlab("coefficient") +
+  theme_bw() +
+  ggtitle("HI-fDOM") +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        plot.title = element_text(size=20))
+
+ggsave("HI_fDOM_ant.pdf",
+       path = here("plots", "Publication"),
+       width = 6, height = 5)
+
+
+```
+
+### SPC ###
+``` {r}
+# correlation 
+SPC_data <- HI_FI_SPC[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+SPC_data <- na.omit(SPC_data) # 271 to 268 rows 
+
+HI_FI_SPC$logHI <- log(abs(HI_FI_SPC$Hyst_index))
+
+ggpairs(SPC_data,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("SPC_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_SPC_MOOS <- subset(HI_FI_SPC, site.ID == "MOOS")
+HI_FI_SPC_FRCH <- subset(HI_FI_SPC, site.ID == "FRCH")
+HI_FI_SPC_CARI <- subset(HI_FI_SPC, site.ID == "CARI")
+HI_FI_SPC_POKE <- subset(HI_FI_SPC, site.ID == "POKE")
+HI_FI_SPC_VAUL <- subset(HI_FI_SPC, site.ID == "VAUL")
+HI_FI_SPC_STRT <- subset(HI_FI_SPC, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_SPC_MOOS,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("SPC_pairs_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_FRCH,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("SPC_pairs_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_CARI,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("SPC_pairs_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_POKE,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("SPC_pairs_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+lets log transform 
+
+```{r}
+POKE.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_POKE)
+
+vif(POKE.model.log)
+plot(POKE.model.log)
+
+```
+mostly works except one point 
+
+```{r}
+ggpairs(HI_FI_SPC_VAUL,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("SPC_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+
+```
+Lets log transform 
+
+```{r}
+VAUL.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_VAUL)
+
+vif(VAUL.model.log)
+plot(VAUL.model.log)
+
+
+```
+
+```{r}
+ggpairs(HI_FI_SPC_STRT,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("SPC_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.spc.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+
+```
+
+```{r}
+spchireg <- AMC %>% filter(response_var == "SPC") %>%
+                      group_by(site.ID) %>%
+                      do(glance(lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, .)))
+
+Plot_spc <- plot_summs(CARI.spc.model, FRCH.spc.model, MOOS.spc.model, 
+           POKE.spc.model, STRT.spc.model, 
+           VAUL.spc.model, scale = TRUE,
+           model.names = c("CARI", "FRCH", "MOOS", "POKE", "STRT", "VAUL"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5"))+
+  theme(aspect.ratio = 1) #+
+ # xlim(-0.45, 0.7)
+
+SPC_hi <- Plot_spc + 
+  xlab("Coefficient estimate") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+  scale_y_discrete(labels= c("Seasonality", 
+                             "Antecedent precipitation\n(1 month)", 
+                             "Storm precipitation")) +
+  geom_text(data = spchireg, aes(x = -0.35, y = c(1.7, 1.5, 1.3, 1.1, 0.9, 0.7), color = site.ID, hjust = 0,
+            label = paste("R[adj]^2", "==", round(adj.r.squared, 2))), 
+            size = 5, 
+            show.legend = FALSE,
+            parse = TRUE) +
+  xlim(-0.375, 0.3) +
+  theme_bw() +
+  ggtitle("HI-SPC") +
+  theme(axis.text.x = element_blank(), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = c(0.15, 0.85),
+        legend.background = element_rect(fill = NA, color = NA),
+        legend.text = element_text(size = 15),
+        legend.title = element_blank(),
+        plot.title = element_text(size = 20))
+  
+ggsave("HI_SPC_ant.pdf",
+       path = here("plots", "Publication"),
+       width = 6, height = 5)
+
+#ggsave("HI_SPC.pdf",
+#       path = here("plots", "Coefficient_Plots", "HI"),
+#       width = 7, height = 7)
+```
+
+### turb ###
+``` {r}
+# correlation 
+turb_data <- HI_FI_turb[,c("Hyst_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+turb_data <- na.omit(turb_data) # 276 to 273 rows 
+
+HI_FI_turb$logHI <- log(abs(HI_FI_turb$Hyst_index))
+
+ggpairs(turb_data,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("turb_pairs.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_turb_MOOS <- subset(HI_FI_turb, site.ID == "MOOS")
+HI_FI_turb_FRCH <- subset(HI_FI_turb, site.ID == "FRCH")
+HI_FI_turb_CARI <- subset(HI_FI_turb, site.ID == "CARI")
+HI_FI_turb_POKE <- subset(HI_FI_turb, site.ID == "POKE")
+HI_FI_turb_VAUL <- subset(HI_FI_turb, site.ID == "VAUL")
+HI_FI_turb_STRT <- subset(HI_FI_turb, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_turb_MOOS,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("turb_pairs_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth +  TimeSinceChena, data = HI_FI_turb_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+lets log transform 
+
+```{r}
+MOOS.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_MOOS)
+
+vif(MOOS.model.log)
+plot(MOOS.model.log)
+summary(MOOS.model.log)
+```
+
+
+```{r}
+ggpairs(HI_FI_turb_FRCH,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("turb_pairs_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_turb_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_CARI,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("turb_pairs_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_turb_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_POKE,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("turb_pairs_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_turb_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_VAUL,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("turb_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_turb_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_STRT,
+        columns = c("Hyst_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("turb_pairs_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.turb.model <- lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_turb_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+```
+lets log transform 
+###***TKH: this is fine
+```{r}
+STRT.model.log <- lm(logHI ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_STRT)
+
+vif(STRT.model.log)
+plot(STRT.model.log)
+
+```
+may need further transformation 
+
+
+```{r}
+turbhireg <- AMC %>% filter(response_var == "turb") %>%
+                      group_by(site.ID) %>%
+                      do(glance(lm(Hyst_index ~ StormPrecip + PrecipMonth + TimeSinceChena, .)))
+
+Plot_turb <- plot_summs(CARI.turb.model, FRCH.turb.model, MOOS.turb.model, 
+           POKE.turb.model, STRT.turb.model, 
+           VAUL.turb.model, scale = TRUE,
+           model.names = c("CARI", "FRCH", "MOOS", "POKE", "STRT", "VAUL"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) +
+  theme(aspect.ratio = 1) #+
+  #xlim(-0.15, 0.3)
+
+turb_hi <- Plot_turb + 
+           geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+  xlab("Coefficient estimate") + ylab("") +
+  scale_y_discrete(labels= c("Seasonality", 
+                             "Antecedent precipitation\n(1 month)", 
+                             "Storm precipitation")) +
+  geom_text(data = turbhireg, aes(x = -0.35, y = c(3.25, 3.05, 2.85, 2.65, 2.45, 2.25), color = site.ID, hjust = 0,
+           label = paste("R[adj]^2", "==", round(adj.r.squared, 2))), size = 5, 
+            show.legend = FALSE,
+            parse = TRUE) +
+  xlim(-0.375, 0.3) +
+  xlab("coefficient") +
+  theme_bw() +
+  ggtitle("HI-turbidity") +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        plot.title = element_text(size = 20))
+  
+
+ggsave("HI_turb_ant.pdf",
+       path = here("plots", "Publication"),
+       width = 6, height = 5)
+
+# ggsave("HI_turb.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+```
+
+```{r}
+### HI plots to single fig
+gA <- ggplotGrob(no3_hi)
+gB <- ggplotGrob(fDOM_hi)
+gC <- ggplotGrob(SPC_hi)
+gD <- ggplotGrob(turb_hi)
+
+grid::grid.newpage()
+grid.draw(cbind(rbind(gA, gB), rbind(gC, gD), size="first"))
+fig <- arrangeGrob(cbind(rbind(gA, gB), rbind(gC, gD), size="first"))
+ggsave(path = here("plots", "Publication"), file = "HI_ant.pdf", fig, width = 10, height = 11, units = "in")
+
+
+```
+### BETA ###
+# NO3 
+``` {r}
+#### Correlation 
+NO3_data <- HI_FI_NO3[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+NO3_data <- na.omit(NO3_data) # 267 to 247 rows 
+
+HI_FI_NO3$logBETA <- log(abs(HI_FI_NO3$Beta_index))
+
+ggpairs(NO3_data,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("NO3_pairs_BETA.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+1) StormTemp is heavily correlated with TempWeek leading up to a storm (0.778) but TempWeek is slightly more correlated with HI (-.05 to -.03)
+
+2) StormTemp is also correlated with time since chena (-0.735) but time since chena is more correlated with HI (0.251 vs. -0.173) so this makes me want to keep Time since Chena and temperature a week before considering that is a more marginal comparison with HI and the temperature predictors. 
+
+3)Precip week is correlated with precip month (0.511) but precip week is more correlated with HI than precip month (-0.242 vs. 0.048)
+
+4)Precip month is correlated with three month precip (0.591) but three month precip is more correlated with HI (0.220 vs. 0.048)
+
+5) Three month is correlated with Time since Chena (0.619) but time since chena is more correlated with HI (0.251 vs. 0.220)
+
+* to sum up this makes me want to drop storm temperature and three month precipitation.....but lets run the model with all of the candidate predictors first and go from there 
+
+
+```{r}
+HI_FI_NO3_MOOS <- subset(HI_FI_NO3, site.ID == "MOOS")
+HI_FI_NO3_FRCH <- subset(HI_FI_NO3, site.ID == "FRCH")
+HI_FI_NO3_CARI <- subset(HI_FI_NO3, site.ID == "CARI")
+HI_FI_NO3_POKE <- subset(HI_FI_NO3, site.ID == "POKE")
+HI_FI_NO3_VAUL <- subset(HI_FI_NO3, site.ID == "VAUL")
+HI_FI_NO3_STRT <- subset(HI_FI_NO3, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_NO3_MOOS,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("NO3_pairs_BETA_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+
+```{r}
+ggpairs(HI_FI_NO3_FRCH,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("NO3_pairs_BETA_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+
+```{r}
+ggpairs(HI_FI_NO3_CARI,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("NO3_pairs_BETA_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+CARI.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+
+```
+
+```{r}
+ggpairs(HI_FI_NO3_POKE,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("NO3_pairs_BETA_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+POKE.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+
+```{r}
+ggpairs(HI_FI_NO3_VAUL,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("NO3_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+
+```
+
+```{r}
+ggpairs(HI_FI_NO3_STRT,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("NO3_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.model <- lm(Beta_index ~ StormPrecip + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+
+```
+let me log transform
+
+```{r}
+STRT.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_NO3_STRT)
+
+vif(STRT.model.log)
+plot(STRT.model.log)
+
+```
+
+
+
+```{r}
+Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
+           CARI.model, POKE.model, 
+           VAUL.model, STRT.model, 
+           scale = TRUE,
+           model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
+
+vn = expression(paste(ß*-N*O[3]^"-"))
+no3_beta <- Plot_1 + 
+  xlab("") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Precipitation Month", 
+                             "Precipitation Week",
+                             "Storm Precipitation")) +
+  theme_bw() +
+   ggtitle(vn) +
+theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        plot.title = element_text(size = 20))
+ 
+ggsave("BETA_NO3_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
+
+# ggsave("BETA_NO3.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+
+
+```
+
+### fDOM ###
+``` {r}
+# correlation 
+fDOM_data <- HI_FI_fDOM[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+fDOM_data <- na.omit(fDOM_data) # 273 to 264 rows 
+
+HI_FI_fDOM$logBETA <- log(abs(HI_FI_fDOM$Beta_index))
+
+ggpairs(fDOM_data,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("fDOM_pairs_BETA.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_fDOM_MOOS <- subset(HI_FI_fDOM, site.ID == "MOOS")
+HI_FI_fDOM_FRCH <- subset(HI_FI_fDOM, site.ID == "FRCH")
+HI_FI_fDOM_CARI <- subset(HI_FI_fDOM, site.ID == "CARI")
+HI_FI_fDOM_POKE <- subset(HI_FI_fDOM, site.ID == "POKE")
+HI_FI_fDOM_VAUL <- subset(HI_FI_fDOM, site.ID == "VAUL")
+HI_FI_fDOM_STRT <- subset(HI_FI_fDOM, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_MOOS,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("fDOM_pairs_BETA_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_FRCH,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("fDOM_pairs_BETA_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+HI_FI_fDOM_FRCH <- HI_FI_fDOM_FRCH[-c(25,30), ]
+
+FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_CARI,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("fDOM_pairs_BETA_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_POKE,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("fDOM_pairs_BETA_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+HI_FI_fDOM_POKE <- HI_FI_fDOM_POKE[-c(12,32),]
+
+POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_VAUL,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("fDOM_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+HI_FI_fDOM_VAUL <- HI_FI_fDOM_VAUL[-c(4),]
+
+
+VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+```
+
+```{r}
+ggpairs(HI_FI_fDOM_STRT,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("fDOM_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_fDOM_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+```
+
+```{r}
+Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
+           CARI.model, POKE.model, 
+           VAUL.model, STRT.model, scale = TRUE,
+           model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
+
+fDOM_beta <- Plot_1 + 
+  xlab("") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+  theme_bw() +
+   ggtitle("ß-fDOM") +
+theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+      plot.title = element_text(size = 20)) 
+
+ggsave("BETA_fDOM_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
+ 
+
+# ggsave("BETA_fDOM.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+```
+
+### SPC ###
+``` {r}
+# correlation 
+SPC_data <- HI_FI_SPC[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+SPC_data <- na.omit(SPC_data) # 271 to 259 rows 
+
+HI_FI_SPC$logBETA <- log(abs(HI_FI_SPC$Beta_index))
+ggpairs(SPC_data,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("SPC_pairs_BETA.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_SPC_MOOS <- subset(HI_FI_SPC, site.ID == "MOOS")
+HI_FI_SPC_FRCH <- subset(HI_FI_SPC, site.ID == "FRCH")
+HI_FI_SPC_CARI <- subset(HI_FI_SPC, site.ID == "CARI")
+HI_FI_SPC_POKE <- subset(HI_FI_SPC, site.ID == "POKE")
+HI_FI_SPC_VAUL <- subset(HI_FI_SPC, site.ID == "VAUL")
+HI_FI_SPC_STRT <- subset(HI_FI_SPC, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_SPC_MOOS,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("SPC_pairs_BETA_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+Lets log transform
+
+```{r}
+MOOS.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_MOOS)
+
+vif(MOOS.model.log)
+plot(MOOS.model.log)
+summary(MOOS.model.log)
+```
+i dont know if this is better 
+
+```{r}
+ggpairs(HI_FI_SPC_FRCH,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("SPC_pairs_BETA_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_CARI,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("SPC_pairs_BETA_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_POKE,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("SPC_pairs_BETA_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+```
+
+```{r}
+ggpairs(HI_FI_SPC_VAUL,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("SPC_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+```
+lets log transform 
+
+```{r}
+VAUL.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_VAUL)
+
+vif(VAUL.model.log)
+plot(VAUL.model.log)
+summary(VAUL.model.log)
+```
+
+much better
+```{r}
+ggpairs(HI_FI_SPC_STRT,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("SPC_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+```
+
+lets log transform 
+
+```{r}
+STRT.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_SPC_STRT)
+
+vif(STRT.model.log)
+plot(STRT.model.log)
+summary(STRT.model.log)
+```
+
+
+```{r}
+Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
+           CARI.model, POKE.model, 
+           VAUL.model, STRT.model, scale = TRUE,
+           model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
+
+SPC_beta <- Plot_1 + 
+  xlab("Coefficient estimate") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+scale_y_discrete(labels= c("Seasonality", 
+                             "Precipitation Month", 
+                             "Precipitation Week",
+                             "Storm Precipitation")) +
+  theme_bw()+
+   ggtitle("ß-SPC") +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none",
+        plot.title = element_text(size = 20))
+
+ggsave("BETA_SPC_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
+ 
+# ggsave("BETA_SPC.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+```
+
+### turb ###
+``` {r}
+# correlation 
+turb_data <- HI_FI_turb[,c("Beta_index", "site.ID", "StormPrecip", "PrecipWeek", "PrecipMonth", "ThreeMonth", "Intensity", "TimeSinceChena", "pf", "burn", "year")]
+turb_data <- na.omit(turb_data) # 276 to 266 rows 
+
+HI_FI_turb$logBETA <- log(abs(HI_FI_turb$Beta_index))
+
+ggpairs(turb_data,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
+        
+ggsave("turb_pairs_BETA.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+```
+
+```{r}
+HI_FI_turb_MOOS <- subset(HI_FI_turb, site.ID == "MOOS")
+HI_FI_turb_FRCH <- subset(HI_FI_turb, site.ID == "FRCH")
+HI_FI_turb_CARI <- subset(HI_FI_turb, site.ID == "CARI")
+HI_FI_turb_POKE <- subset(HI_FI_turb, site.ID == "POKE")
+HI_FI_turb_VAUL <- subset(HI_FI_turb, site.ID == "VAUL")
+HI_FI_turb_STRT <- subset(HI_FI_turb, site.ID == "STRT")
+```
+
+```{r}
+ggpairs(HI_FI_turb_MOOS,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#A6761D"))
+        
+ggsave("turb_pairs_BETA_MOOS.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+MOOS.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_MOOS)
+
+vif(MOOS.model)
+plot(MOOS.model)
+summary(MOOS.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_FRCH,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#FF7F00"))
+        
+ggsave("turb_pairs_BETA_FRCH.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+FRCH.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_FRCH)
+
+vif(FRCH.model)
+plot(FRCH.model)
+summary(FRCH.model)
+```
+lets loog transform 
+
+```{r}
+FRCH.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_FRCH)
+
+vif(FRCH.model.log)
+plot(FRCH.model.log)
+
+```
+may need further transformation 
+
+```{r}
+ggpairs(HI_FI_turb_CARI,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#3288BD"))
+        
+ggsave("turb_pairs_BETA_CARI.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+CARI.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_CARI)
+
+vif(CARI.model)
+plot(CARI.model)
+summary(CARI.model)
+```
+
+```{r}
+ggpairs(HI_FI_turb_POKE,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#6A3D9A"))
+        
+ggsave("turb_pairs_BETA_POKE.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+POKE.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_POKE)
+
+vif(POKE.model)
+plot(POKE.model)
+summary(POKE.model)
+
+```
+log transform 
+
+```{r}
+POKE.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_POKE)
+
+vif(POKE.model.log)
+plot(POKE.model.log)
+summary(POKE.model.log)
+```
+
+
+
+```{r}
+ggpairs(HI_FI_turb_VAUL,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#E7298A"))
+        
+ggsave("turb_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+VAUL.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_VAUL)
+
+vif(VAUL.model)
+plot(VAUL.model)
+summary(VAUL.model)
+```
+
+log transform 
+
+```{r}
+VAUL.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_POKE)
+
+vif(VAUL.model.log)
+plot(VAUL.model.log)
+
+```
+looks worse 
+
+```{r}
+ggpairs(HI_FI_turb_STRT,
+        columns = c("Beta_index", "StormPrecip", "PrecipWeek", "PrecipMonth","ThreeMonth", "Intensity", "TimeSinceChena"),
+        ggplot2::aes(color = site.ID))+
+  scale_color_manual(values = c("#66C2A5"))
+        
+ggsave("turb_pairs_BETA_VAUL.pdf",
+       path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
+       width = 10, height = 10)
+
+
+STRT.model <- lm(Beta_index ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_STRT)
+
+vif(STRT.model)
+plot(STRT.model)
+summary(STRT.model)
+```
+lets log transform 
+
+```{r}
+
+STRT.model.log <- lm(logBETA ~ StormPrecip + PrecipWeek + PrecipMonth + TimeSinceChena, data = HI_FI_turb_STRT)
+
+vif(STRT.model.log)
+plot(STRT.model.log)
+
+```
+
+
+
+```{r}
+Plot_1 <- plot_summs(MOOS.model, FRCH.model, 
+           CARI.model, POKE.model, 
+           VAUL.model, STRT.model, scale = TRUE,
+           model.names = c("MOOS", "FRCH", "CARI", "POKE", "VAUL", "STRT"),
+           colors = c("#A6761D", "#FF7F00","#3288BD", "#6A3D9A", "#E7298A", "#66C2A5")) 
+
+turb_beta <- Plot_1 + 
+  xlab("Coefficient estimate") + ylab("") +
+  geom_vline(xintercept = 0,
+             colour = "grey80",
+             linetype = 1) +
+  theme_bw() +
+  ggtitle("ß-turbidity") +
+  theme(axis.text.x=element_text(size=15), 
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        legend.position = "none", 
+        plot.title = element_text(size = 20))
+
+ggsave("BETA_turb_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 7, height = 7)
+  
+
+# ggsave("BETA_turb.pdf",
+#        path = here("plots", "Coefficient_Plots", "HI"),
+#        width = 7, height = 7)
+```
+
+
+# plots for thesis # 
+```{r}
+library(ggpubr)
+ggarrange(fDOM_hi,no3_hi,
+          SPC_hi, turb_hi,
+          ncol = 2, nrow = 2,
+          common.legend = TRUE,
+          labels = c("A)", "B)",
+                     "C)", "D)"),
+          legend = "bottom",
+          align = "hv")
+
+
+ggsave("HIs_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 12, height = 12)
+
+ggarrange(fDOM_beta, no3_beta, 
+          SPC_beta, turb_beta,
+          ncol = 2, nrow = 2,
+          common.legend = TRUE,
+          labels = c("A)", "B)",
+                     "C)", "D)"),
+          legend = "bottom",
+          align = "hv")
+
+ggsave("BETAs_AMC.pdf",
+       path = here("plots", "Publication"),
+       width = 12, height = 12)
+# 
+# ggsave("NO3_fDOM.pdf",
+#        path = here("plots", "Coefficient_Plots"),
+#        width = 10, height = 10)
+# 
+# ggarrange(spc_hi, turb_hi,
+#           spc_beta, turb_beta,
+#           ncol = 2, nrow = 2,
+#           common.legend = TRUE,
+#           labels = c("A)", "B)",
+#                      "C)", "D)"),
+#           legend = "bottom")
+# 
+# ggsave("SPC_turb.pdf",
+#        path = here("plots", "Coefficient_Plots"),
+#        width = 10, height = 10)
+# 
+# # annotate_figure(a, 
+# #                 top =                         "Column 1 Title,                                                                            Column 2 Title")
+
+```
+
+
+
+
