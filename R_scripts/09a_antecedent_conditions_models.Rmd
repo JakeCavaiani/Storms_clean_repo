@@ -512,7 +512,7 @@ ggsave(pairs, file = "HI_SPC_STRT_pairs.pdf",
        path = here("Output_from_analysis", "09_Antecedent_Conditions_models", "plots"),
        width = 10, height = 10, units = "in")
 
-hi.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
+hi.spc.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC") %>%
                 lmer(ln_HI ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
 
 vif(hi.fdom.strt.lmer)
@@ -1098,7 +1098,7 @@ ggsave(pairs, file = "beta_SPC_STRT_pairs_out.pdf",
        width = 10, height = 10, units = "in")
 
 
-beta.fdom.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC" & ln_beta < 2) %>%
+beta.spc.strt.lmer <- AMC %>% filter(site.ID == "STRT" & response_var == "SPC" & ln_beta < 2) %>%
                 lmer(ln_beta ~ precip.week_z + precip.month_z + TimeSinceChena + Intensity_z + (1|year), data = .)
 
 vif(beta.fdom.strt.lmer)
@@ -1269,13 +1269,11 @@ r.squaredGLMM(beta.turb.vaul.lmer)
 
 ```
 
-```{r}
-#############
+```{r Coefficient plots 12/23/2025}
 ### PLOTS ###
-#############
 ## Effect sizes: Multiple models on one figure ##
 ## HI ##
-# NO3 #
+# HI NO3 ####
 multi.coef <- dwplot(list(hi.no3.moos.lmer, hi.no3.frch.lmer, hi.no3.cari.lmer, hi.no3.poke.lmer, hi.no3.strt.lmer, hi.no3.vaul.lmer), 
                   effects="fixed",
                   dot_args = list(size = 6),
@@ -1292,7 +1290,7 @@ multi.coef <- dwplot(list(hi.no3.moos.lmer, hi.no3.frch.lmer, hi.no3.cari.lmer, 
   xlim(-0.4, 0.5) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
-  theme(legend.position = c(0.72, 0.87),
+  theme(legend.position = c(0.78, 0.38),
         legend.title = element_blank(),
         legend.text = element_text(size = 18),
         legend.background = element_blank(),
@@ -1304,6 +1302,240 @@ multi.coef <- dwplot(list(hi.no3.moos.lmer, hi.no3.frch.lmer, hi.no3.cari.lmer, 
         axis.title.x = element_text(size = 22),
         plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"), file = "FigX_HI_NO3_coef.pdf", width = 10, height = 8, units = "in")
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_NO3_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# HI fDOM ####
+multi.coef <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lmer, hi.fdom.poke.lmer, hi.fdom.strt.lmer, hi.fdom.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(hi.fdom.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.fdom.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(hi.fdom.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.fdom.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(hi.fdom.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.fdom.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(hi.fdom.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.fdom.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(hi.fdom.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.fdom.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(hi.fdom.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(hi.fdom.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_fdom_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# HI SPC ####
+multi.coef <- dwplot(list(hi.spc.moos.lmer, hi.spc.frch.lmer, hi.spc.cari.lmer, hi.spc.poke.lmer, hi.spc.strt.lmer, hi.spc.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(hi.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(hi.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(hi.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(hi.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(hi.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(hi.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(hi.spc.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_spc_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# HI turb ####
+multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lmer, hi.turb.poke.lmer, hi.turb.strt.lmer, hi.turb.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(hi.turb.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.turb.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(hi.turb.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.turb.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(hi.turb.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.turb.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(hi.turb.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.turb.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(hi.turb.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.turb.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(hi.turb.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(hi.turb.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+## BETA ##
+# beta NO3 ####
+multi.coef <- dwplot(list(beta.no3.moos.lmer, beta.no3.frch.lmer, beta.no3.cari.lmer, beta.no3.poke.lmer, beta.no3.strt.lmer, beta.no3.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.no3.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.no3.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.no3.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.no3.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.no3.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.no3.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.no3.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.no3.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.no3.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.no3.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.no3.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.no3.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_NO3_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# beta fDOM ####
+multi.coef <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.cari.lmer, beta.fdom.poke.lmer, beta.fdom.strt.lmer, beta.fdom.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.fdom.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.fdom.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.fdom.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.fdom.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.fdom.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.fdom.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.fdom.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# beta spc ####
+multi.coef <- dwplot(list(beta.spc.moos.lmer, beta.spc.frch.lmer, beta.spc.cari.lmer, beta.spc.poke.lmer, beta.spc.strt.lmer, beta.spc.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.spc.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+# beta turb ####
+multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.cari.lmer, beta.turb.poke.lmer, beta.turb.strt.lmer, beta.turb.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.turb.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.turb.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.turb.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.turb.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.turb.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.turb.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.turb.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.turb.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.turb.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.turb.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.turb.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.turb.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.4, 0.5) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
 ```
 
