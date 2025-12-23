@@ -1386,7 +1386,7 @@ multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lme
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.25, 0.25) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
   theme(legend.position = c(0.78, 0.38),
@@ -1420,7 +1420,7 @@ multi.coef <- dwplot(list(beta.no3.moos.lmer, beta.no3.frch.lmer, beta.no3.cari.
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.2, 0.3) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
   theme(legend.position = c(0.78, 0.38),
@@ -1453,7 +1453,7 @@ multi.coef <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.ca
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.15, 0.15) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
   theme(legend.position = c(0.78, 0.38),
@@ -1486,7 +1486,7 @@ multi.coef <- dwplot(list(beta.spc.moos.lmer, beta.spc.frch.lmer, beta.spc.cari.
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.1, 0.1) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
   theme(legend.position = c(0.78, 0.38),
@@ -1519,10 +1519,10 @@ multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.ca
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.1, 0.1) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena = "days since snowmelt")) +
   theme_bw() +
-  theme(legend.position = c(0.78, 0.38),
+  theme(legend.position = c(0.82, 0.38),
         legend.title = element_blank(),
         legend.text = element_text(size = 18),
         legend.background = element_blank(),
