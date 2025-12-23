@@ -108,16 +108,16 @@ vn = expression(paste(N*O[3]^"-"))
 supp.labs <- c("fDOM","NO3-", "SPC", "Turbidity")
 names(supp.labs) <- c("fDOM", "NO3", "SPC", "turb")
 
-AMC_new <- AMC_new[-c(21,42,62,79,96), ] # removing absorbance for now
+AMC_new <- AMC_new %>% 
+  filter(response_var != "abs")# removing absorbance for now
 
 AMC_new$facets = factor(AMC_new$response_var, labels = c(
     "fDOM",
     "NO3~^{-})",
     "SPC", 
-    "Turbidity",
-    "ABS"))
+    "Turbidity"))
 
-my_labeller <- as_labeller(c(abs = "ABS_254", fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
                            default = label_parsed)
 
 ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = PF, fill = site.ID)) +
@@ -145,8 +145,9 @@ ggsave("HI_all_solutes.line.pdf",
 
 
 ### HI ###
+# HI - NO3
 ```{r}
-#NO3
+# NO3 #
 ggplot(HI_FI_NO3, aes(site.ID, meanHI, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
@@ -166,13 +167,26 @@ anova(NO3.CV.HI.mod)
 emmeans(NO3.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 ```
- 
- 
- 
-#fDOM 
 
 ```{r}
-#fDOM
+# getting the letter designation for significance 
+anova <- aov(meanHI ~ site.ID, data = HI_FI_NO3)
+summary(anova)
+
+#tukeys test
+tukey <- TukeyHSD(anova)
+print(tukey)
+
+#cld
+cld <- multcompLetters4(anova, tukey)
+print(cld)
+```
+# For HI-NO3, no sig difference between sites (all letters are the same)
+ 
+# HI - fDOM 
+
+```{r fDOM}
+#fDOM #
 ggplot(HI_FI_fDOM, aes(site.ID, meanHI, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
@@ -217,17 +231,13 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
-VAUL:a
-MOOS:ab
-STRT:ab
-CARI:b
-POKE:b
-FRCH:b
+# For HI-fDOM: VAUL:a, MOOS:ab, STRT:ab, CARI:b, POKE:b, FRCH:b
 
 ### ***TKH: naming an object anova is not a good practice, because anova is a defined function in base R. The emmeans approach above at line 192 is the currently accepted way to complete post-hoc comparisons on lmer objects. For this model the letters listed from the cld output are the same result as emmeans because year is not explaining any variation (hence the singluar fit from lmer).
 
+# HI - SPC
 ```{r}
-#SPC
+#SPC #
 ggplot(HI_FI_SPC, aes(site.ID, meanHI, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
@@ -250,21 +260,7 @@ emmeans(SPC.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ### ***TKH: model name is CV but response is mean
 ### ***no post-hoc test needed because the omnibus test isn't significant (F-value < 2)
 
-```{r}
-# getting the letter designation for significance 
-anova <- aov(meanHI ~ site.ID, data = HI_FI_SPC)
-summary(anova)
-
-#tukeys test
-tukey <- TukeyHSD(anova)
-print(tukey)
-
-#cld
-cld <- multcompLetters4(anova, tukey)
-print(cld)
-
-
-```
+# For HI-SPC, no sig difference between sites (all letters are the same)
 POKE:a
 MOOS:a
 FRCH:a
@@ -273,9 +269,9 @@ STRT:a
 CARI:a
 
 
-
+# HI - Turb
 ```{r}
-#turb
+#turb #
 ggplot(HI_FI_turb, aes(site.ID, meanHI, fill = site.ID)) +
   geom_boxplot() +
   scale_fill_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
@@ -296,12 +292,6 @@ emmeans(turb.CV.HI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
 ```
-VAUL:a
-POKE:ab
-CARI:ab
-STRT:ab
-FRCH:ab
-MOOS:b
 
 ```{r}
 # getting the letter designation for significance 
@@ -316,12 +306,102 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For HI-turb: VAUL:a, MOOS:b, STRT:ab, CARI:ab, POKE:ab, FRCH:ab
 VAUL:a
 POKE:ab
 CARI:ab
 STRT:ab
 FRCH:ab
 MOOS:b
+
+# 12/23/2025 - FIGURE 4 - HI across all storms for fDOM (A), NO3 (B), SPC (C), turbidity (D)
+```{r}
+# FIGURE 4 TEST ###
+# PF extent
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
+
+my_labeller <- as_labeller(c(
+  fDOM = "fDOM", 
+  NO3 = "Nitrate",  # Subscript 3 and superscript as a minus sign
+  SPC = "SPC", 
+  turb = "Turbidity"             # Change turb to Turbidity
+), default = label_parsed)
+
+
+
+annotations <- data.frame(
+  response_var = c("fDOM", "fDOM", "fDOM", "fDOM", "fDOM", "fDOM",    
+                   "turb", "turb", "turb", "turb", "turb", "turb",
+                   "SPC", "SPC"),   
+  site.ID = c("VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH",         
+              "VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH",
+              NA, NA),        
+  Label = c("a", "ab", "ab", "b", "b", "b",                           
+            "a", "b", "ab", "ab", "ab", "ab",
+            "Clockwise", "Counterclockwise"),                       
+  x_position = c(6, 5, 3, 2, 4, 1,                                   
+                 6, 5, 3, 2, 4, 1,
+                 1.5,2),                                  
+  y_position = c(0.35, 0.35, 0.35, 0.35, 0.35, 0.35,                
+                 0.45, 0.45, 0.45, 0.45, 0.45, 0.45,
+                 0.1, -0.1)                
+)
+
+hi <- ggplot(AMC_new, aes(x = site.ID, y = meanHI, pattern = burn, fill = site.ID)) +
+  geom_hline(yintercept= 0, linetype="dashed", color = "red") +
+  geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .5,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  coord_cartesian(xlim = c(1, 6.05)) + 
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  facet_wrap(~response_var, labeller = my_labeller) +
+  geom_text(data = annotations, aes(x = x_position, y = y_position, label = Label), 
+            inherit.aes = FALSE, size = 7) + 
+  xlab("") +
+  ylab("HI") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(size = 16),
+        axis.title.y = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
+        strip.text = element_text(size = 20), 
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 20))
+  
+ggsave(hi, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig4_meanHI_all_annotated_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(hi, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig4_meanHI_all_annotated_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+```
 
 ### BETA ###
 
@@ -350,6 +430,7 @@ ggsave("BETA_all_solutes.pdf",
 
 ```
 
+# BETA - NO3
 ```{r}
 #NO3
 ggplot(HI_FI_NO3, aes(site.ID, meanBETA, fill = site.ID)) +
@@ -362,17 +443,16 @@ ggsave("BETA_NO3.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-NO3.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_NO3)
+NO3.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(NO3.CV.BETA.mod)
-qqnorm(resid(NO3.CV.BETA.mod))
-summary(NO3.CV.BETA.mod)
-anova(NO3.CV.BETA.mod)
+plot(NO3.BETA.mod)
+qqnorm(resid(NO3.BETA.mod))
+summary(NO3.BETA.mod)
+anova(NO3.BETA.mod)
 
-emmeans(NO3.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(NO3.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 ```
-### ***TKH: note model name contains CV but response is mean
 ### ***TKH: note year explains no variance so fit is singular. Nothing significant anyway.
 
 ```{r}
@@ -380,9 +460,10 @@ summary(NO3.CV.BETA.mod) # nothing is significant
 summary.lm(NO3.CV.BETA.mod)
 
 ```
+# For BETA-NO3, no sig difference between sites (all letters are the same)
 
 
-#fDOM
+#BETA - fDOM
 ```{r}
 ggplot(HI_FI_fDOM, aes(site.ID, meanBETA, fill = site.ID)) +
   geom_boxplot() +
@@ -393,23 +474,16 @@ ggsave("BETA_fDOM.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-fDOM.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
+fDOM.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-plot(fDOM.CV.BETA.mod)
-qqnorm(resid(fDOM.CV.BETA.mod))
-summary(fDOM.CV.BETA.mod)
+plot(fDOM.BETA.mod)
+qqnorm(resid(fDOM.BETA.mod))
+summary(fDOM.BETA.mod)
 
-emmeans(fDOM.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(fDOM.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
 ```
-### ***TKH: note CV in model name
-STRT:a
-FRCH:a
-POKE:a
-CARI:a
-MOOS:ab
-VAUL:b
 
 ```{r}
 # getting the letter designation for significance 
@@ -424,13 +498,9 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
-STRT:a
-FRCH:a
-POKE:a
-CARI:a
-MOOS:ab
-VAUL:b
+# For BETA-fDOM: VAUL:b, MOOS:ab, STRT:a, CARI:a, POKE:a, FRCH:a
 
+# BETA - SPC
 ```{r}
 #SPC
 ggplot(HI_FI_SPC, aes(site.ID, meanBETA, color = site.ID, shape = as.character(year))) +
@@ -442,18 +512,17 @@ ggsave("BETA_SPC_year.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-SPC.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_SPC)
+SPC.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_SPC)
 
-plot(SPC.CV.BETA.mod)
-qqnorm(resid(SPC.CV.BETA.mod))
-summary(SPC.CV.BETA.mod)
-anova(SPC.CV.BETA.mod)
+plot(SPC.BETA.mod)
+qqnorm(resid(SPC.BETA.mod))
+summary(SPC.BETA.mod)
+anova(SPC.BETA.mod)
 
-emmeans(SPC.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(SPC.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 # add post hoc pairwise comparisons
 
 ```
-### ***TKH: note CV in model name
 
 ```{r}
 # getting the letter designation for significance 
@@ -468,6 +537,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For BETA-SPC, no sig difference between sites (all letters are the same)
+
 FRCH:a
 MOOS:a
 STRT:a
@@ -475,6 +546,7 @@ POKE:a
 CARI:a
 VAUL:a
 
+# BETA - TURB 
 ```{r}
 #turb
 ggplot(HI_FI_turb, aes(site.ID, meanBETA, fill = site.ID)) +
@@ -486,16 +558,18 @@ ggsave("BETA_turb.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-turb.CV.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_turb)
+turb.BETA.mod <- lmer(meanBETA ~ site.ID + (1|year), data = HI_FI_turb)
 
-plot(turb.CV.BETA.mod)
-qqnorm(resid(turb.CV.BETA.mod))
-summary(turb.CV.BETA.mod)
-anova(turb.CV.BETA.mod)
+plot(turb.BETA.mod)
+qqnorm(resid(turb.BETA.mod))
+summary(turb.BETA.mod)
+anova(turb.BETA.mod)
 
-emmeans(turb.CV.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(turb.BETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 ### ***TKH: note emmeans result differs from the cld below. Use emmeans
+# For BETA-turb, CARI: a, VAUL: b, MOOS: b, STRT: b, POKE: a, FRCH: a
+
 CARI:a
 VAUL:b
 MOOS:b
@@ -503,34 +577,94 @@ STRT:b
 POKE:a
 FRCH:a
 
-### ***TKH: 
-CARI:a
-VAUL:b
-MOOS:b
-STRT:b
-POKE:a
-FRCH:a
-
-
+# 12/23/2025 - FIGURE 5 - BETA across all storms for fDOM (A), NO3 (B), SPC (C), turbidity (D)
 ```{r}
-# getting the letter designation for significance 
-anova <- aov(meanBETA ~ site.ID, data = HI_FI_turb)
-summary(anova)
+# FIGURE 4 TEST ###
+# PF extent
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
 
-#tukeys test
-tukey <- TukeyHSD(anova)
-print(tukey)
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
 
-#cld
-cld <- multcompLetters4(anova, tukey)
-print(cld)
+my_labeller <- as_labeller(c(
+  fDOM = "fDOM", 
+  NO3 = "Nitrate",  # Subscript 3 and superscript as a minus sign
+  SPC = "SPC", 
+  turb = "Turbidity"             # Change turb to Turbidity
+), default = label_parsed)
+
+
+
+annotations <- data.frame(
+  response_var = c("fDOM", "fDOM", "fDOM", "fDOM", "fDOM", "fDOM",    
+                   "turb", "turb", "turb", "turb", "turb", "turb",
+                   "SPC", "SPC"),   
+  site.ID = c("VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH",         
+              "VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH",
+              NA, NA),        
+  Label = c("b", "ab", "a", "a", "a", "a",                           
+            "b", "b", "b", "a", "a", "a",
+            "Flushing", "Dilution"),                       
+  x_position = c(6, 5, 3, 2, 4, 1,                                   
+                 6, 5, 3, 2, 4, 1,
+                 1.2,1.2),                                  
+  y_position = c(0.2, 0.8, 1.4, 1.4, 1.4, 1.4,                
+                 1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
+                 0.3, -1.0)                
+)
+
+beta <- ggplot(AMC_new, aes(x = site.ID, y = meanBETA, pattern = burn, fill = site.ID)) +
+  geom_hline(yintercept= 0, linetype="dashed", color = "red") +
+  geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .5,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  coord_cartesian(xlim = c(1, 6.05)) + 
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  facet_wrap(~response_var, labeller = my_labeller) +
+  geom_text(data = annotations, aes(x = x_position, y = y_position, label = Label), 
+            inherit.aes = FALSE, size = 7) + 
+  xlab("") +
+  ylab("ß") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(size = 16),
+        axis.title.y = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
+        strip.text = element_text(size = 20), 
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 20))
+  
+ggsave(beta, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig5_meanBETA_all_annotated_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(beta, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig5_meanBETA_all_annotated_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 ```
-CARI:a
-VAUL:a
-MOOS:a
-STRT:a
-POKE:a
-FRCH:a
 
 ### SDs of storm metrics ###
 
@@ -569,8 +703,7 @@ HI_FI_turb$logSDbeta <- log(abs(HI_FI_turb$sdBETA))
 
 ```
 
-# HI #
-# NO3-
+# SD HI - NO3 
 ```{r}
 ggplot(HI_FI_NO3, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
@@ -581,14 +714,14 @@ ggsave("sdHI_NO3.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-NO3.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_NO3)
+NO3.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(NO3.CV.sdHI.mod)
-qqnorm(resid(NO3.CV.sdHI.mod))
-summary(NO3.CV.sdHI.mod)
-anova(NO3.CV.sdHI.mod)
+plot(NO3.sdHI.mod)
+qqnorm(resid(NO3.sdHI.mod))
+summary(NO3.sdHI.mod)
+anova(NO3.sdHI.mod)
 
-emmeans(NO3.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(NO3.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -604,6 +737,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdHI-NO3, no sig difference between sites (all letters are the same)
+
 STRT:a
 CARI:a
 VAUL:a
@@ -611,6 +746,7 @@ POKE:a
 FRCH:a
 MOOS:a
 
+# SD HI - fDOM 
 ```{r}
 ggplot(HI_FI_fDOM, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
@@ -621,14 +757,14 @@ ggsave("sdHI_fDOM.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-fDOM.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_fDOM)
+fDOM.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-plot(fDOM.CV.sdHI.mod)
-qqnorm(resid(fDOM.CV.sdHI.mod))
-summary(fDOM.CV.sdHI.mod)
-anova(fDOM.CV.sdHI.mod)
+plot(fDOM.sdHI.mod)
+qqnorm(resid(fDOM.sdHI.mod))
+summary(fDOM.sdHI.mod)
+anova(fDOM.sdHI.mod)
 
-emmeans(fDOM.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(fDOM.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -644,6 +780,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdHI-fDOM, MOOS: a, STRT: ab, VAUL: ab, FRCH: ab, POKE: ab, CARI: b
+
 MOOS:a
 STRT:ab
 VAUL:ab
@@ -651,7 +789,7 @@ FRCH:ab
 POKE:ab
 CARI:b
 
-# SPC
+# SD HI - SPC 
 ```{r}
 ggplot(HI_FI_SPC, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
@@ -662,13 +800,13 @@ ggsave("sdHI_SPC.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-SPC.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_SPC)
+SPC.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_SPC)
 
-plot(SPC.CV.sdHI.mod)
-qqnorm(resid(SPC.CV.sdHI.mod))
-summary(SPC.CV.sdHI.mod)
+plot(SPC.sdHI.mod)
+qqnorm(resid(SPC.sdHI.mod))
+summary(SPC.sdHI.mod)
 
-emmeans(SPC.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(SPC.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -684,6 +822,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdHI-SPC, no sig difference between sites (all letters are the same)
+
 VAUL:a
 FRCH:a
 MOOS:a
@@ -691,7 +831,7 @@ STRT:a
 CARI:a
 POKE:a
 
-# turb
+# SD HI - TURB
 ```{r}
 ggplot(HI_FI_turb, aes(site.ID, sdHI, fill = site.ID)) +
   geom_boxplot() +
@@ -711,14 +851,14 @@ ggsave("sdHI_Turb_year.pdf",
        path = here("plots", "Storm_metrics_sites"),
        width = 10, height = 10)
 
-turb.CV.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_turb)
+turb.sdHI.mod <- lmer(sdHI ~ site.ID + (1|year), data = HI_FI_turb)
 
-plot(turb.CV.sdHI.mod)
-qqnorm(resid(turb.CV.sdHI.mod))
-summary(turb.CV.sdHI.mod)
-anova(turb.CV.sdHI.mod)
+plot(turb.sdHI.mod)
+qqnorm(resid(turb.sdHI.mod))
+summary(turb.sdHI.mod)
+anova(turb.sdHI.mod)
 
-emmeans(turb.CV.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(turb.sdHI.mod, list(pairwise ~ site.ID), adjust = "tukey")
 
 ```
 
@@ -735,6 +875,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdHI-TURB, no sig difference between sites (all letters are the same)
+
 CARI:a
 POKE:a
 FRCH:a
@@ -742,7 +884,85 @@ VAUL:a
 MOOS:a
 STRT:a
 
-# BETA 
+# 12/23/2025 - FIGURE 6 - sdHI across all storms for fDOM (A), NO3 (B), SPC (C), turbidity (D)
+```{r}
+# FIGURE 4 TEST ###
+# PF extent
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
+
+my_labeller <- as_labeller(c(
+  fDOM = "fDOM", 
+  NO3 = "Nitrate",  # Subscript 3 and superscript as a minus sign
+  SPC = "SPC", 
+  turb = "Turbidity"             # Change turb to Turbidity
+), default = label_parsed)
+
+
+
+annotations <- data.frame(
+  response_var = c("fDOM", "fDOM", "fDOM", "fDOM", "fDOM", "fDOM"),   
+  site.ID = c("VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH"),        
+  Label = c("ab", "a", "ab", "b", "ab", "ab"),                       
+  x_position = c(6, 5, 3, 2, 4, 1),                                  
+  y_position = c(0.4, 0.5, 0.6, 0.25, 0.5, 0.35)                
+)
+
+sdHI <- ggplot(AMC_new, aes(x = site.ID, y = sdHI, pattern = burn, fill = site.ID)) +
+  geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .5,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  coord_cartesian(xlim = c(1, 6.05)) + 
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  facet_wrap(~response_var, labeller = my_labeller) +
+  geom_text(data = annotations, aes(x = x_position, y = y_position, label = Label), 
+            inherit.aes = FALSE, size = 7) + 
+  xlab("") +
+  ylab("SD-HI") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(size = 16),
+        axis.title.y = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
+        strip.text = element_text(size = 20), 
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 20))
+  
+ggsave(sdHI, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig6_sdHI_all_annotated_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(sdHI, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig6_sdHI_all_annotated_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+```
+
+# SD - BETA ### 
 ```{r}
 #plot 
 ggplot(AMC_new, aes(x = site.ID, y = sdBETA, pattern = PF, fill = site.ID)) +
@@ -770,21 +990,21 @@ ggsave("sdBETA_all_solutes.pdf",
 
 ```
 
-# NO3
+# SD BETA - NO3
 ```{r}
-NO3.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_NO3)
+NO3.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(NO3.CV.sdBETA.mod)
+plot(NO3.sdBETA.mod)
 # variance increases with mean
 
-NO3.CV.logsdBETA.mod <- lmer(log(sdBETA) ~ site.ID + (1|year), data = HI_FI_NO3)
+NO3.logsdBETA.mod <- lmer(log(sdBETA) ~ site.ID + (1|year), data = HI_FI_NO3)
 
-plot(NO3.CV.logsdBETA.mod)
+plot(NO3.logsdBETA.mod)
 # fixed
-qqnorm(resid(NO3.CV.logsdBETA.mod))
-summary(NO3.CV.logsdBETA.mod)
+qqnorm(resid(NO3.logsdBETA.mod))
+summary(NO3.logsdBETA.mod)
 
-emmeans(NO3.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(NO3.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -800,6 +1020,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdBETA-NO3, no sig difference between sites (all letters are the same)
+
 CARI:a
 STRT:a
 POKE:a
@@ -807,15 +1029,15 @@ VAUL:a
 FRCH:a
 MOOS:a
 
-# fDOM
+# SD BETA - fDOM
 ```{r}
-fDOM.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
+fDOM.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_fDOM)
 
-plot(fDOM.CV.sdBETA.mod)
-qqnorm(resid(fDOM.CV.sdBETA.mod))
-summary(fDOM.CV.sdBETA.mod)
+plot(fDOM.sdBETA.mod)
+qqnorm(resid(fDOM.sdBETA.mod))
+summary(fDOM.sdBETA.mod)
 
-emmeans(fDOM.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(fDOM.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -831,6 +1053,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdBETA-fDOM, no sig difference between sites (all letters are the same)
+
 MOOS:a
 POKE:a
 FRCH:a
@@ -838,16 +1062,16 @@ STRT:a
 CARI:a
 VAUL:a
 
-# SPC
+# SD BETA - SPC
 ```{r}
-SPC.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_SPC)
+SPC.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_SPC)
 
-plot(SPC.CV.sdBETA.mod)
-qqnorm(resid(SPC.CV.sdBETA.mod))
-summary(SPC.CV.sdBETA.mod)
-anova(SPC.CV.sdBETA.mod)
+plot(SPC.sdBETA.mod)
+qqnorm(resid(SPC.sdBETA.mod))
+summary(SPC.sdBETA.mod)
+anova(SPC.sdBETA.mod)
 
-emmeans(SPC.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(SPC.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 
 ```{r}
@@ -863,6 +1087,8 @@ print(tukey)
 cld <- multcompLetters4(anova, tukey)
 print(cld)
 ```
+# For sdBETA-SPC, no sig difference between sites (all letters are the same)
+
 VAUL:a
 CARI:a
 POKE:a
@@ -870,18 +1096,19 @@ MOOS:a
 FRCH:a
 STRT:a
 
-# turb 
+# SD BETA - TURB 
 ```{r}
-turb.CV.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_turb)
+turb.sdBETA.mod <- lmer(sdBETA ~ site.ID + (1|year), data = HI_FI_turb)
 
-plot(turb.CV.sdBETA.mod)
-qqnorm(resid(turb.CV.sdBETA.mod))
-summary(turb.CV.sdBETA.mod)
-anova(turb.CV.sdBETA.mod)
+plot(turb.sdBETA.mod)
+qqnorm(resid(turb.sdBETA.mod))
+summary(turb.sdBETA.mod)
+anova(turb.sdBETA.mod)
 
-emmeans(turb.CV.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
+emmeans(turb.sdBETA.mod, list(pairwise ~ site.ID), adjust = "tukey")
 ```
 ### ***TKH: emmeans result differs from cld
+# For sdBETA - TURB: CARI: a, POKE: ab, VAUL: ab, STRT: ab, MOOS: ab, FRCH: b
 CARI:a
 POKE:ab
 VAUL:ab
@@ -889,24 +1116,82 @@ STRT:ab
 MOOS:ab
 FRCH:b
 
-
+# 12/23/2025 - FIGURE 7 - sdBETA across all storms for fDOM (A), NO3 (B), SPC (C), turbidity (D)
 ```{r}
-# getting the letter designation for significance 
-anova <- aov(sdBETA ~ site.ID, data = HI_FI_turb)
-summary(anova)
+# FIGURE 4 TEST ###
+# PF extent
+# POKE - 25%
+# CARI - 29%
+# STRT - 30%
+# FRCH - 33%
+# MOOS - 38%
+# VAUL - 58%
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
 
-#tukeys test
-tukey <- TukeyHSD(anova)
-print(tukey)
+my_labeller <- as_labeller(c(fDOM="fDOM", NO3="NO[3]", SPC="SPC", turb = "Turbidity"),
+                           default = label_parsed)
 
-#cld
-cld <- multcompLetters4(anova, tukey)
-print(cld)
+my_labeller <- as_labeller(c(
+  fDOM = "fDOM", 
+  NO3 = "Nitrate",  # Subscript 3 and superscript as a minus sign
+  SPC = "SPC", 
+  turb = "Turbidity"             # Change turb to Turbidity
+), default = label_parsed)
+
+
+
+annotations <- data.frame(
+  response_var = c("turb", "turb", "turb", "turb", "turb", "turb"),   
+  site.ID = c("VAUL", "MOOS", "STRT", "CARI", "POKE", "FRCH"),        
+  Label = c("ab", "ab", "ab", "a", "b", "ab"),                       
+  x_position = c(6, 5, 3, 2, 4, 1),                                  
+  y_position = c(0.25, 0.25, 0.2, 0.35, 0.25, 0.25)                
+)
+
+sdBETA <- ggplot(AMC_new, aes(x = site.ID, y = sdHI, pattern = burn, fill = site.ID)) +
+  geom_boxplot(width = .25,
+                 outlier.colour = NA,
+                 alpha = 0.5) +
+   geom_boxplot_pattern(position = position_dodge(preserve = "single"), 
+                        width = .5,
+                        color = "black", 
+                        pattern_fill = "white", 
+                        pattern_angle = 45, 
+                        pattern_density = 0.1, 
+                        pattern_spacing = 0.025, 
+                        pattern_key_scale_factor = 0.6) +
+  scale_pattern_manual(values = c(burned = "stripe", unburned = "none")) +
+  scale_x_discrete(limits = desired_order,
+                   labels = c("POKE" = "POKE\n(25%)",
+                              "CARI" = "CARI\n(29%)",
+                              "STRT" = "STRT\n(30%)",
+                              "FRCH" = "FRCH\n(33%)",
+                              "MOOS" = "MOOS\n(38%)",
+                              "VAUL" = "VAUL\n(58%)")) +
+  coord_cartesian(xlim = c(1, 6.05)) + 
+  scale_fill_manual(values=c("#3288BD","#FF7F00", "#E7298A", "#A6761D", "#6A3D9A", "#66C2A5"), guide = "none") +
+  facet_wrap(~response_var, labeller = my_labeller) +
+  geom_text(data = annotations, aes(x = x_position, y = y_position, label = Label), 
+            inherit.aes = FALSE, size = 7) + 
+  xlab("") +
+  ylab("SD-ß") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(size = 16),
+        axis.title.y = element_text(size = 25),
+        axis.text.y = element_text(size = 20),
+        strip.text = element_text(size = 20), 
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 20))
+  
+ggsave(sdBETA, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig7_sdBETA_all_annotated_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(sdBETA, path = here("plots", "Storm_metrics_sites"),
+       file = paste0("Fig7_sdBETA_all_annotated_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 ```
-CARI:a
-POKE:a
-VAUL:a
-STRT:a
-MOOS:a
-FRCH:a
+
 
