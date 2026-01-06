@@ -1306,6 +1306,11 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_NO3_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_NO3_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+
 # HI fDOM ####
 multi.coef <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lmer, hi.fdom.poke.lmer, hi.fdom.strt.lmer, hi.fdom.vaul.lmer), 
                   effects="fixed",
@@ -1338,6 +1343,11 @@ multi.coef <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lme
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_fdom_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_fdom_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 
 # HI SPC ####
 multi.coef <- dwplot(list(hi.spc.moos.lmer, hi.spc.frch.lmer, hi.spc.cari.lmer, hi.spc.poke.lmer, hi.spc.strt.lmer, hi.spc.vaul.lmer), 
@@ -1372,6 +1382,11 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_spc_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_spc_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+
 # HI turb ####
 multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lmer, hi.turb.poke.lmer, hi.turb.strt.lmer, hi.turb.vaul.lmer), 
                   effects="fixed",
@@ -1404,6 +1419,11 @@ multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lme
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 
 ## BETA ##
 # beta NO3 ####
@@ -1439,6 +1459,11 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_beta_NO3_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_NO3_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+
 # beta fDOM ####
 multi.coef <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.cari.lmer, beta.fdom.poke.lmer, beta.fdom.strt.lmer, beta.fdom.vaul.lmer), 
                   effects="fixed",
@@ -1471,6 +1496,11 @@ multi.coef <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.ca
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 
 # beta spc ####
 multi.coef <- dwplot(list(beta.spc.moos.lmer, beta.spc.frch.lmer, beta.spc.cari.lmer, beta.spc.poke.lmer, beta.spc.strt.lmer, beta.spc.vaul.lmer), 
@@ -1505,6 +1535,11 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+
 # beta turb ####
 multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.cari.lmer, beta.turb.poke.lmer, beta.turb.strt.lmer, beta.turb.vaul.lmer), 
                   effects="fixed",
@@ -1537,5 +1572,10 @@ multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.ca
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
+
+ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
 ```
 
