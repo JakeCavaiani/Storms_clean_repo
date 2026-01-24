@@ -1,6 +1,6 @@
 ---
 title: "12_Catchment_Characteristics_models"
-author: "Jake Cavaiani"
+author: "Jake Cavaiani, T.K. Harms edits (10/25-1/26)"
 date: "9/14/2022"
 output:
   word_document: default
@@ -29,6 +29,7 @@ Output: linear regression plots with each catchment and a 95% confidence interva
 ```{r}
 library(here)
 library(tidyverse)
+library(GGally)
 
 ```
 
@@ -77,7 +78,7 @@ Catchment_characteristics <- Catchment_characteristics[c("site", "Year", "SLOPE_
 Catchment_characteristics <- Catchment_characteristics %>% filter(site %in% c("Caribou_CJ", "Poker_PJ", "French", "Moose", "Stuart", "Vault")) %>%
   filter(Year == 2020) 
 
-## Add forest cover (from N. Pastick)
+## Add forest cover (from N. Pastick, reported in Jorgenson et a. 2025)
 ## NDVI average 2018-2020
 # CARI Average: 0.2106070103
 # FRCH Average: 0.2125723437
@@ -86,7 +87,7 @@ Catchment_characteristics <- Catchment_characteristics %>% filter(site %in% c("C
 # STRT Average: 0.2558581085
 # VAUL Average: 0.227537246
 
-## Permafrost cover from Jorgenson et al. 2025. Caribou estimated from NRDS geomorphic units by A. Wright
+## Permafrost cover from Jorgenson et al. 2025
 # CARI: 29.3
 # FRCH: 32.9
 # MOOS: 38.4
@@ -140,7 +141,7 @@ ggsave("ALL_pairs_studysite.pdf",
        width = 10, height = 10)
 
 ggpairs(Catchment_characteristics,
-        columns = c("SLOPE_MEAN", "cburntot", "orgsoil_extent", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "NDVIave", "deciduous2016", "deciduous2020", "evergreen" ),
+        columns = c("SLOPE_MEAN", "cburntot", "orgsoil_extent", "Pf_Prob_1m_mean_x", "pfrost", "NDVI_p50__mean", "NDVIave", "deciduous2020", "evergreen" ),
         ggplot2::aes())
 
 ggsave("model_pairs_studysite.pdf",
@@ -165,7 +166,7 @@ storm_char_all <- full_join(AMCsumm_all, Catchment_characteristics, by = "site")
 ```{r}
 
 storm_char_y %>% filter(response_var == "NO3") %>% ggpairs(
-        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "cburntot", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "deciduous2016", "deciduous2020", "evergreen"),
+        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "cburntot", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "pfrost", "deciduous2020", "evergreen"),
         ggplot2::aes(color = site)) +
   scale_color_manual(values = c("#3288BD", "#FF7F00","#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"))
 
@@ -174,16 +175,36 @@ ggsave("NO3_pairs_yr.pdf",
        width = 10, height = 10)
 
 storm_char_all %>% filter(response_var == "turb") %>% ggpairs(
-        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "orgsoil_extent", "cburntot", "pctburn_lg", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "pfrost", "deciduous2016", "deciduous2020", "evergreen"), 
-        upper = list(continuous = wrap("cor", method = "spearman", size = 2.5, hjust=0.7)))
+        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "orgsoil_extent", "cburntot", "pctburn_lg", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "pfrost", "deciduous2020", "evergreen"), 
+        upper = list(continuous = wrap("cor", method = "kendall", size = 2.5, hjust=0.7)))
 
 ggsave("NO3_pairs_ave.pdf",
        path = here("plots", "Correlation_matrices", "NO3"),
        width = 10, height = 10)
 
-## Correlations and scatterplots
+```
 
+# fDOM
+```{r}
+storm_char_all %>% filter(response_var == "turb") %>% ggpairs(
+        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "orgsoil_extent", "cburntot", "pctburn_lg", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "pfrost", "deciduous2020", "evergreen"), 
+        upper = list(continuous = wrap("cor", method = "kendall", size = 2.5, hjust=0.7)))
 
+ggsave("turb_pairs_ave.pdf",
+       path = here("plots", "Correlation_matrices", "turb"),
+       width = 10, height = 10)
+
+```
+
+# turb
+```{r}
+storm_char_all %>% filter(response_var == "turb") %>% ggpairs(
+        columns = c("Hyst_index_mn", "Hyst_index_SD", "Beta_index_mn", "Beta_index_SD", "SLOPE_MEAN", "orgsoil_extent", "cburntot", "pctburn_lg", "NDVIave", "NDVI_p50__mean", "Pf_Prob_1m_mean_x", "pfrost", "deciduous2020", "evergreen"), 
+        upper = list(continuous = wrap("cor", method = "kendall", size = 2.5, hjust=0.7)))
+
+ggsave("turb_pairs_ave.pdf",
+       path = here("plots", "Correlation_matrices", "turb"),
+       width = 10, height = 10)
 
 ```
 
