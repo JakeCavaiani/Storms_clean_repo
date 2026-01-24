@@ -87,7 +87,7 @@ Catchment_characteristics <- Catchment_characteristics %>% filter(site %in% c("C
 # VAUL Average: 0.227537246
 
 ## Permafrost cover from Jorgenson et al. 2025. Caribou estimated from NRDS geomorphic units by A. Wright
-# CARI: 
+# CARI: 29.3
 # FRCH: 32.9
 # MOOS: 38.4
 # POKE: 25.3
@@ -123,7 +123,7 @@ Catchment_characteristics <- Catchment_characteristics %>%
                                                     ifelse(site == "Moose", 38.4,
                                                       ifelse(site == "Poker_CJ", 25.3,
                                                         ifelse(site == "Stuart", 30.8,
-                                                          ifelse(site == "Vault", 58.4, NA))))))
+                                                          ifelse(site == "Vault", 58.4, 29.3))))))
 
 
 
