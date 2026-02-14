@@ -1355,11 +1355,7 @@ ggsave(beta_no3, path = here("plots", "Coefficient_Plots"),
 library(ggplot2)
 library(cowplot)
 library(here)
-
-# ----------------------------------------------
 # 1) Prepare the base panels (your plots: HI_NO3 & beta_no3)
-# ----------------------------------------------
-
 # LEFT panel (A): keep y tick labels; bottom legend; title
 p1 <- HI_no3 +
   labs(title = "HI - Nitrate") +
@@ -1392,12 +1388,10 @@ p2 <- beta_no3 +
     plot.background = element_rect(fill = NA, color = NA)
   )
 
-# ----------------------------------------------
+
 # 2) Compose with ggdraw + draw_plot (explicit positioning)
 #    - Equal widths for both panels (0.50 each)
 #    - Shift panel B slightly left to minimize seam
-# ----------------------------------------------
-
 # Tweak this small offset if needed; typical range 0.004 to 0.02
 seam_offset <- 0.0001
 
@@ -1414,16 +1408,14 @@ combined <- ggdraw() +
     size = 22,
     fontface = "bold"
   )
-
-# ----------------------------------------------
 # 3) Save (keep your large width to protect bottom legends)
-# ----------------------------------------------
+
 ggsave(combined, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_2_panel_NO3_coef_", Sys.Date(), ".jpg"),
        width = 23, height = 10, units = "in")
 
 # HI fDOM ####
-multi.coef <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lmer, hi.fdom.poke.lmer, hi.fdom.strt.lmer, hi.fdom.vaul.lmer), 
+HI_fDOM <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lmer, hi.fdom.poke.lmer, hi.fdom.strt.lmer, hi.fdom.vaul.lmer), 
                   effects="fixed",
                   dot_args = list(size = 6),
                   whisker_args = list(size = 2)) +
@@ -1451,30 +1443,29 @@ multi.coef <- dwplot(list(hi.fdom.moos.lmer, hi.fdom.frch.lmer, hi.fdom.cari.lme
         axis.title.x = element_text(size = 22),
         plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(HI_fDOM, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_fdom_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(HI_fDOM, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_fdom_coef_", Sys.Date(), ".jpg"),
        width = 10, height = 8, units = "in")
 
-
-# HI SPC ####
-multi.coef <- dwplot(list(hi.spc.moos.lmer, hi.spc.frch.lmer, hi.spc.cari.lmer, hi.spc.poke.lmer, hi.spc.strt.lmer, hi.spc.vaul.lmer), 
+# beta fDOM ####
+beta.fDOM <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.cari.lmer, beta.fdom.poke.lmer, beta.fdom.strt.lmer, beta.fdom.vaul.lmer), 
                   effects="fixed",
                   dot_args = list(size = 6),
                   whisker_args = list(size = 2)) +
-  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(hi.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.moos.lmer)))), 
-                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(hi.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.frch.lmer)))),
-                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(hi.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.cari.lmer)))),
-                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(hi.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.poke.lmer)))),
-                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(hi.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.strt.lmer)))),
-                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(hi.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(hi.spc.vaul.lmer)))))),
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.fdom.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.fdom.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.fdom.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.fdom.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.fdom.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.fdom.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.fdom.vaul.lmer)))))),
                      values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
   geom_vline(xintercept=0, lty=2) + 
   xlab("effect size") +
-  xlim(-0.4, 0.5) +
+  xlim(-0.15, 0.15) +
   scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena_z = "days since snowmelt")) +
   theme_bw() +
   theme(legend.position = c(0.78, 0.38),
@@ -1489,13 +1480,208 @@ multi.coef <- dwplot(list(hi.spc.moos.lmer, hi.spc.frch.lmer, hi.spc.cari.lmer, 
         axis.title.x = element_text(size = 22),
         plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(beta.fDOM, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(beta.fDOM, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+#### 2 panel fDOM FIGURE 2/14/2026 ####
+# 1) Prepare the base panels (your plots: HI_NO3 & beta_no3)
+# LEFT panel (A): keep y tick labels; bottom legend; title
+p1 <- HI_fDOM +
+  labs(title = "HI - fDOM") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: keep a very small right margin
+    plot.margin = margin(t = 18, r = 0, b = 30, l = 12),
+    axis.text.y = element_text(size = 22),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    # ensure no opaque background that would show during overlap
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+# RIGHT panel (B): remove y tick labels; bottom legend; title
+p2 <- beta.fDOM +
+  labs(title = "β - fDOM") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: zero left margin to hug panel A
+    plot.margin = margin(t = 18, r = 12, b = 30, l = 0),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+
+# 2) Compose with ggdraw + draw_plot (explicit positioning)
+#    - Equal widths for both panels (0.50 each)
+#    - Shift panel B slightly left to minimize seam
+# Tweak this small offset if needed; typical range 0.004 to 0.02
+seam_offset <- 0.0001
+
+combined <- ggdraw() +
+  # Panel A: exact left half
+  draw_plot(p1, x = 0.00, y = 0.00, width = 0.50, height = 1.00) +
+  # Panel B: same width but nudged left by seam_offset
+  draw_plot(p2, x = 0.50 - seam_offset, y = 0.00, width = 0.375, height = 1.00) +
+  # A/B labels (top-left of each panel area)
+  draw_plot_label(
+    label = c("A", "B"),
+    x = c(0.11, 0.51 - seam_offset),  # keep tag near left of each panel
+    y = c(0.98, 0.98),
+    size = 22,
+    fontface = "bold"
+  )
+# 3) Save (keep your large width to protect bottom legends)
+
+ggsave(combined, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_2_panel_fDOM_coef_", Sys.Date(), ".jpg"),
+       width = 23, height = 10, units = "in")
+
+# HI SPC ####
+HI_SPC <- dwplot(list(hi.spc.moos.lmer, hi.spc.frch.lmer, hi.spc.cari.lmer, hi.spc.poke.lmer, hi.spc.strt.lmer, hi.spc.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(hi.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(hi.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(hi.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(hi.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(hi.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(hi.spc.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(hi.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(hi.spc.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.3, 0.3) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena_z = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(HI_SPC, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_spc_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(HI_SPC, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_spc_coef_", Sys.Date(), ".jpg"),
        width = 10, height = 8, units = "in")
+
+# beta spc ####
+beta_SPC <- dwplot(list(beta.spc.moos.lmer, beta.spc.frch.lmer, beta.spc.cari.lmer, beta.spc.poke.lmer, beta.spc.strt.lmer, beta.spc.vaul.lmer), 
+                  effects="fixed",
+                  dot_args = list(size = 6),
+                  whisker_args = list(size = 2)) +
+  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.moos.lmer)))), 
+                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.frch.lmer)))),
+                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.cari.lmer)))),
+                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.poke.lmer)))),
+                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.strt.lmer)))),
+                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.spc.vaul.lmer)))))),
+                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
+  geom_vline(xintercept=0, lty=2) + 
+  xlab("effect size") +
+  xlim(-0.1, 0.1) +
+  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena_z = "days since snowmelt")) +
+  theme_bw() +
+  theme(legend.position = c(0.78, 0.38),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 18),
+        legend.background = element_blank(),
+        legend.box.background = element_rect(color = "black", size = 1),
+        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
+        panel.grid = element_blank(),
+        panel.border = element_rect(color = "black", size = 2),
+        axis.text = element_text(size = 22),
+        axis.title.x = element_text(size = 22),
+        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
+
+ggsave(beta_SPC, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(beta_SPC, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+#### 2 panel SPC FIGURE 2/14/2026 ####
+# 1) Prepare the base panels (your plots: HI_NO3 & beta_no3)
+# LEFT panel (A): keep y tick labels; bottom legend; title
+p1 <- HI_SPC +
+  labs(title = "HI - SPC") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: keep a very small right margin
+    plot.margin = margin(t = 18, r = 0, b = 30, l = 12),
+    axis.text.y = element_text(size = 22),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    # ensure no opaque background that would show during overlap
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+# RIGHT panel (B): remove y tick labels; bottom legend; title
+p2 <- beta_SPC +
+  labs(title = "β - SPC") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: zero left margin to hug panel A
+    plot.margin = margin(t = 18, r = 12, b = 30, l = 0),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+
+# 2) Compose with ggdraw + draw_plot (explicit positioning)
+#    - Equal widths for both panels (0.50 each)
+#    - Shift panel B slightly left to minimize seam
+# Tweak this small offset if needed; typical range 0.004 to 0.02
+seam_offset <- 0.0001
+
+combined <- ggdraw() +
+  # Panel A: exact left half
+  draw_plot(p1, x = 0.00, y = 0.00, width = 0.50, height = 1.00) +
+  # Panel B: same width but nudged left by seam_offset
+  draw_plot(p2, x = 0.50 - seam_offset, y = 0.00, width = 0.375, height = 1.00) +
+  # A/B labels (top-left of each panel area)
+  draw_plot_label(
+    label = c("A", "B"),
+    x = c(0.11, 0.51 - seam_offset),  # keep tag near left of each panel
+    y = c(0.98, 0.98),
+    size = 22,
+    fontface = "bold"
+  )
+# 3) Save (keep your large width to protect bottom legends)
+
+ggsave(combined, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_2_panel_SPC_coef_", Sys.Date(), ".jpg"),
+       width = 23, height = 10, units = "in")
+
 
 
 # HI turb ####
@@ -1534,86 +1720,6 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".jpg"),
        width = 10, height = 8, units = "in")
-
-
-
-
-
-# beta fDOM ####
-multi.coef <- dwplot(list(beta.fdom.moos.lmer, beta.fdom.frch.lmer, beta.fdom.cari.lmer, beta.fdom.poke.lmer, beta.fdom.strt.lmer, beta.fdom.vaul.lmer), 
-                  effects="fixed",
-                  dot_args = list(size = 6),
-                  whisker_args = list(size = 2)) +
-  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.fdom.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.moos.lmer)))), 
-                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.fdom.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.frch.lmer)))),
-                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.fdom.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.cari.lmer)))),
-                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.fdom.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.poke.lmer)))),
-                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.fdom.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.fdom.strt.lmer)))),
-                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.fdom.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.fdom.vaul.lmer)))))),
-                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
-  geom_vline(xintercept=0, lty=2) + 
-  xlab("effect size") +
-  xlim(-0.15, 0.15) +
-  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena_z = "days since snowmelt")) +
-  theme_bw() +
-  theme(legend.position = c(0.78, 0.38),
-        legend.title = element_blank(),
-        legend.text = element_text(size = 18),
-        legend.background = element_blank(),
-        legend.box.background = element_rect(color = "black", size = 1),
-        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
-        panel.grid = element_blank(),
-        panel.border = element_rect(color = "black", size = 2),
-        axis.text = element_text(size = 22),
-        axis.title.x = element_text(size = 22),
-        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
-
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
-       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".pdf"),
-       width = 10, height = 8, units = "in")
-
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
-       file = paste0("FigX_beta_fdom_coef_", Sys.Date(), ".jpg"),
-       width = 10, height = 8, units = "in")
-
-
-# beta spc ####
-multi.coef <- dwplot(list(beta.spc.moos.lmer, beta.spc.frch.lmer, beta.spc.cari.lmer, beta.spc.poke.lmer, beta.spc.strt.lmer, beta.spc.vaul.lmer), 
-                  effects="fixed",
-                  dot_args = list(size = 6),
-                  whisker_args = list(size = 2)) +
-  scale_color_manual(labels = rev(c(bquote(paste("MOOS ", R^{2} == .(format(r.squaredGLMM(beta.spc.moos.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.moos.lmer)))), 
-                                bquote(paste("FRCH ", R^{2} == .(format(r.squaredGLMM(beta.spc.frch.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.frch.lmer)))),
-                                bquote(paste("CARI ", R^{2} == .(format(r.squaredGLMM(beta.spc.cari.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.cari.lmer)))),
-                                bquote(paste("POKE ", R^{2} == .(format(r.squaredGLMM(beta.spc.poke.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.poke.lmer)))),
-                                bquote(paste("STRT ", R^{2} == .(format(r.squaredGLMM(beta.spc.strt.lmer)[[1]][1], digits = 2)), " n" == .(nobs(beta.spc.strt.lmer)))),
-                     bquote(paste("VAUL ", R^{2} == .(format(r.squaredGLMM(beta.spc.vaul.lmer)[[1]][1], digits = 2)),  " n" == .(nobs(beta.spc.vaul.lmer)))))),
-                     values = c("#E7298A", "#66C2A5", "#6A3D9A", "#3288BD", "#FF7F00", "#A6761D"), drop = FALSE) +
-  geom_vline(xintercept=0, lty=2) + 
-  xlab("effect size") +
-  xlim(-0.1, 0.1) +
-  scale_y_discrete(labels=c(precip.week_z = "ppt 1 week", precip.month_z = "ppt 1 month", Intensity_z = "ppt event intensity", TimeSinceChena_z = "days since snowmelt")) +
-  theme_bw() +
-  theme(legend.position = c(0.78, 0.38),
-        legend.title = element_blank(),
-        legend.text = element_text(size = 18),
-        legend.background = element_blank(),
-        legend.box.background = element_rect(color = "black", size = 1),
-        plot.title = element_text(face = "bold", hjust = 0.5, size =22),
-        panel.grid = element_blank(),
-        panel.border = element_rect(color = "black", size = 2),
-        axis.text = element_text(size = 22),
-        axis.title.x = element_text(size = 22),
-        plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
-
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
-       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".pdf"),
-       width = 10, height = 8, units = "in")
-
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
-       file = paste0("FigX_beta_spc_coef_", Sys.Date(), ".jpg"),
-       width = 10, height = 8, units = "in")
-
 
 # beta turb ####
 multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.cari.lmer, beta.turb.poke.lmer, beta.turb.strt.lmer, beta.turb.vaul.lmer), 
