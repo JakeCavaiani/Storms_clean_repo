@@ -1682,10 +1682,8 @@ ggsave(combined, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_2_panel_SPC_coef_", Sys.Date(), ".jpg"),
        width = 23, height = 10, units = "in")
 
-
-
 # HI turb ####
-multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lmer, hi.turb.poke.lmer, hi.turb.strt.lmer, hi.turb.vaul.lmer), 
+HI_turb <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lmer, hi.turb.poke.lmer, hi.turb.strt.lmer, hi.turb.vaul.lmer), 
                   effects="fixed",
                   dot_args = list(size = 6),
                   whisker_args = list(size = 2)) +
@@ -1713,16 +1711,16 @@ multi.coef <- dwplot(list(hi.turb.moos.lmer, hi.turb.frch.lmer, hi.turb.cari.lme
         axis.title.x = element_text(size = 22),
         plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(HI_turb, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".pdf"),
        width = 10, height = 8, units = "in")
 
-ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
+ggsave(HI_turb, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_HI_turb_coef_", Sys.Date(), ".jpg"),
        width = 10, height = 8, units = "in")
 
 # beta turb ####
-multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.cari.lmer, beta.turb.poke.lmer, beta.turb.strt.lmer, beta.turb.vaul.lmer), 
+beta_turb <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.cari.lmer, beta.turb.poke.lmer, beta.turb.strt.lmer, beta.turb.vaul.lmer), 
                   effects="fixed",
                   dot_args = list(size = 6),
                   whisker_args = list(size = 2)) +
@@ -1750,6 +1748,87 @@ multi.coef <- dwplot(list(beta.turb.moos.lmer, beta.turb.frch.lmer, beta.turb.ca
         axis.title.x = element_text(size = 22),
         plot.margin = margin(0.5,1.5,0.5,0.5, "cm"))
 
+ggsave(beta_turb, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".pdf"),
+       width = 10, height = 8, units = "in")
+
+ggsave(beta_turb, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".jpg"),
+       width = 10, height = 8, units = "in")
+
+
+#### 2 panel turbidity FIGURE 2/14/2026 ####
+# 1) Prepare the base panels (your plots: HI_NO3 & beta_no3)
+# LEFT panel (A): keep y tick labels; bottom legend; title
+p1 <- HI_turb +
+  labs(title = "HI - Turb") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: keep a very small right margin
+    plot.margin = margin(t = 18, r = 0, b = 30, l = 12),
+    axis.text.y = element_text(size = 22),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    # ensure no opaque background that would show during overlap
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+# RIGHT panel (B): remove y tick labels; bottom legend; title
+p2 <- beta_turb +
+  labs(title = "β - Turb") +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 22),
+    # seam: zero left margin to hug panel A
+    plot.margin = margin(t = 18, r = 12, b = 30, l = 0),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.title.x = element_text(size = 22),
+    axis.text.x = element_text(size = 22),
+    legend.text = element_text(size = 16),
+    plot.background = element_rect(fill = NA, color = NA)
+  )
+
+
+# 2) Compose with ggdraw + draw_plot (explicit positioning)
+#    - Equal widths for both panels (0.50 each)
+#    - Shift panel B slightly left to minimize seam
+# Tweak this small offset if needed; typical range 0.004 to 0.02
+seam_offset <- 0.0001
+
+combined <- ggdraw() +
+  # Panel A: exact left half
+  draw_plot(p1, x = 0.00, y = 0.00, width = 0.50, height = 1.00) +
+  # Panel B: same width but nudged left by seam_offset
+  draw_plot(p2, x = 0.50 - seam_offset, y = 0.00, width = 0.375, height = 1.00) +
+  # A/B labels (top-left of each panel area)
+  draw_plot_label(
+    label = c("A", "B"),
+    x = c(0.11, 0.51 - seam_offset),  # keep tag near left of each panel
+    y = c(0.98, 0.98),
+    size = 22,
+    fontface = "bold"
+  )
+# 3) Save (keep your large width to protect bottom legends)
+
+ggsave(combined, path = here("plots", "Coefficient_Plots"),
+       file = paste0("FigX_2_panel_TURB_coef_", Sys.Date(), ".jpg"),
+       width = 23, height = 10, units = "in")
+
+
+
+```
+
+
+
+
+
+
+
+# ============================= GRAVEYARD ========================================
+```{r}
 <<<<<<< Updated upstream
 ggsave(multi.coef, path = here("plots", "Coefficient_Plots"),
        file = paste0("FigX_beta_turb_coef_", Sys.Date(), ".pdf"),
@@ -1768,4 +1847,8 @@ ggsave(multi.coef, path = here("plots", "Coefficient_Plots"), file = "FigX_HI_NO
 
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+
+
+
+
 ```
