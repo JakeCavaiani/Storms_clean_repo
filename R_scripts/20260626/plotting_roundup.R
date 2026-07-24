@@ -122,7 +122,7 @@ mean_daily_fig_data_long <- mean_daily_chem_all %>%
   filter(response_var != "dailyABS")# converting to a long format so each response_var is within a single column
 
 mean_daily_fig_data_long$response_var <- factor(mean_daily_fig_data_long$response_var, levels = c("Q", "fDOM", "NO3", "SPC", "Turb"), 
-                                       labels = c("Q (l/sec)", "fDOM (QSU)", "NO3- (µM)", "SPC(µS/cm)", "Turbidity (FNU)"))
+                                       labels = c("Q~(L/s)", "fDOM~(QSU)", "NO[3]^{'-'}~(mu*M)", "SPC~(mu*S/cm)", "Turbidity~(FNU)"))
 
 
 # Plotting #
@@ -133,7 +133,7 @@ mean_daily_fig_data_long %>%
                      guide = guide_legend(title = "Site")) +
   xlab("") +
   ylab("") +
-  facet_grid(response_var~year, scales = "free") +
+  facet_grid(response_var~year, scales = "free", labeller = labeller(response_var = label_parsed)) +
   theme_classic() +
   theme(strip.text = element_text(size = 14),
         axis.text.x = element_text(size = 13, angle = -45, hjust = 1),
@@ -141,12 +141,12 @@ mean_daily_fig_data_long %>%
         axis.text.y = element_text(size = 20))
 
 ggsave("DoD_2015_2022.pdf",
-       path = here("plots", "20260626_plotting_roundup"),
-       width = 12, height = 8, units = "in")
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 12, height = 9, units = "in")
 
 ggsave("DoD_2015_2022.png",
-       path = here("plots", "20260626_plotting_roundup"),
-       width = 10, height = 8, units = "in")
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 12, height = 9, units = "in")
 
 
 # Daily mean Q boxplot with letters for significant differences for each catchment and year of the study ####
@@ -344,20 +344,572 @@ ggsave(Q, path = here("plots", "20260626_plotting_roundup"),
        file = paste0("Q_boxplot_letter_", Sys.Date(), ".jpg"),
        width = 12, height = 8, units = "in")
 
+# Figure 4. Concentration-discharge relationships during storms ####
+library(dataRetrieval)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(RColorBrewer)
+library(gridExtra)
+library(here)
+library(tidyverse)
+library(zoo)
+library(ggExtra)
+library(ggpmisc)
+library(ggpubr)
+
+# Load in Antecedent moisture conditions dataframe
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
+
+colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
+              "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
+              "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+              "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
+              "date", "TimeSinceChena")
+
+names(AMC)<- colNames # renaming columns
+
+AMC <- AMC %>% 
+  dplyr::mutate(across(c(PF),
+                       ~ifelse(site.ID == "STRT" | site.ID == "VAUL", "High", "Moderate"))) %>% 
+  dplyr::mutate(across(c(burn),
+                       ~ifelse(site.ID == "CARI" | site.ID == "VAUL", "Unburned", "Burned")))  
 
 
+vn = expression(paste(N*O[3]^"-"))
+##subsetting by solute 
+# NO3 #
+HI_FI_NO3 = subset(AMC, response_var == "NO3")
+# fDOM #
+HI_FI_fDOM = subset(AMC, response_var == "fDOM")
+# SPC #
+HI_FI_SPC = subset(AMC, response_var == "SPC")
+# turb #
+HI_FI_turb = subset(AMC, response_var == "turb")
+
+#### PLOTS ####
+
+# 2015-2022 # 
+HI_FI_NO3 <- subset(HI_FI_NO3, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_fDOM <- subset(HI_FI_fDOM, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_SPC <- subset(HI_FI_SPC, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+HI_FI_turb <- subset(HI_FI_turb, year =="2015"| year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022")
+
+# plots 
+# NO3
+vn = expression(paste(N*O[3]^"-"))
+
+HI_BETA_NO3.p = 
+  ggplot(HI_FI_NO3, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = burn), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle(vn)+ 
+  ylab("") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  labs(
+    colour = "Catchment",
+    shape = "Burn")
+
+a <- ggMarginal(HI_BETA_NO3.p, groupColour = TRUE, groupFill = TRUE)
+a
+
+# fDOM
+HI_BETA_fDOM.p = 
+  ggplot(HI_FI_fDOM, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = burn), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("fDOM")+ 
+  ylab("HI") +
+  xlab("") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") +
+  guides(shape=guide_legend("Permafrost Extent"),
+         col=guide_legend("Catchment"))
+
+# ggsave("fDOM_HI_BETA.pdf",
+#        path = here("plots", "HI_BETA"),
+#        width = 9, height = 9)
 
 
+b <- ggMarginal(HI_BETA_fDOM.p, groupColour = TRUE, groupFill = TRUE)
+b
+
+# SPC
+HI_BETA_SPC.p = 
+  ggplot(HI_FI_SPC, aes(Beta_index, Hyst_index)) + 
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = burn), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) + 
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5)+
+  ggtitle("SPC")+ 
+  ylab("HI") +
+  xlab("ß") +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        text = element_text(size = 15),
+        legend.position = "none") 
+
+c <- ggMarginal(HI_BETA_SPC.p, groupColour = TRUE, groupFill = TRUE)
+c
+
+# turb
+HI_BETA_turb.p =
+  ggplot(HI_FI_turb, aes(Beta_index, Hyst_index)) +
+  geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+
+  geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+  geom_point(aes(colour = factor(site.ID), shape = burn), size = 2.5) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  # quadrant labels
+  annotate("text", x = -1.5, y =  1.25, label = "Clockwise/\nDilution",         hjust = 0, size = 5.5, fontface = "bold") +
+  annotate("text", x =  1.3, y =  1.25, label = "Clockwise/\nFlushing",         hjust = 1, size = 5.5, fontface = "bold") +
+  annotate("text", x = -1.5, y = -1.00, label = "Counter-\nclockwise/\nDilution", hjust = 0, size = 5.5, fontface = "bold") +
+  annotate("text", x =  1.3, y = -1.00, label = "Counter-\nclockwise/\nFlushing", hjust = 1, size = 5.5, fontface = "bold") +
+  scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  theme_bw() +
+  ylim(-1.5, 1.5) + xlim(-1.5, 1.5) +
+  ggtitle("Turbidity") +
+  ylab("") + xlab("ß") +
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"),
+        text = element_text(size = 15),
+        legend.position = "none")
+
+d <- ggMarginal(HI_BETA_turb.p, groupColour = TRUE, groupFill = TRUE)
+d
+# OLD #
+# HI_BETA_turb.p = 
+#   ggplot(HI_FI_turb, aes(Beta_index, Hyst_index)) + 
+#   geom_errorbar(aes(ymin = HI_ymin, ymax = HI_ymax), colour = "black", alpha = 0.5, size = .5, width = 0.05)+ 
+#   geom_errorbarh(aes(xmin = Beta_ymin, xmax = Beta_ymax), colour = "black", alpha = 0.5, size = .5, height = 0.05) +
+#   geom_point(aes(colour = factor(site.ID), shape = PF), size = 2.5) +
+#   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+#   scale_color_manual(values=c("#3288BD","#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A"), "Permafrost Extent") + 
+#   theme_bw() +
+#   ylim(-1.5, 1.5) + 
+#   xlim(-1.5, 1.5) +
+#   ggtitle("Turbidity")+ 
+#   ylab("") +
+#   xlab("ß") +
+#   theme(panel.border = element_blank(), 
+#         panel.grid.major = element_blank(),
+#         panel.grid.minor = element_blank(), 
+#         axis.line = element_line(colour = "black"), 
+#         text = element_text(size = 15),
+#         legend.position = "none") 
+# 
+# d <- ggMarginal(HI_BETA_turb.p, groupColour = TRUE, groupFill = TRUE)
+# d
+# 
+# ggarrange(b,a,
+#           c,d,
+#           labels = c("A)", "B)",
+#                      "C)", "D)"))
+
+# OLD END #
+library(ggpubr)
+library(cowplot)
+
+# a plot that has BOTH color and shape mappings + the legend visible
+legend_plot <- ggplot(HI_FI_fDOM,
+                      aes(Beta_index, Hyst_index,
+                          colour = factor(site.ID), shape = burn)) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = c("#3288BD","#FF7F00","#A6761D",
+                                "#6A3D9A","#66C2A5","#E7298A")) +
+  labs(colour = "Catchment", shape = "") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.box = "horizontal",
+        text = element_text(size = 13))
+
+shared_legend <- cowplot::get_legend(legend_plot)
+
+# arrange the four ggMarginal panels
+panels <- ggarrange(b, a,
+                    c, d,
+                    labels = c("A)", "B)", "C)", "D)"))
+
+# stack panels + legend
+final_fig <- ggarrange(panels, shared_legend,
+                       ncol = 1, heights = c(1, 0.1))
+final_fig
+
+ggsave("HI_BETA.pdf",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 9, height = 9)
+
+ggsave("HI_BETA.png",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 9, height = 9)
 
 
+# Figure 5. Hysteresis index across all storms for fDOM (A), NO3– (B), SPC (C), and turbidity (D) ####
+rm(list=ls(all=TRUE))
 
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(rstatix)
+library(multcompView)
 
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
 
+colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
+              "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
+              "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+              "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
+              "date", "TimeSinceChena")
 
+names(AMC)<- colNames # renaming columns
 
+### AMC SUMMARY STATS ###
+summary_stats <- AMC %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop") %>%
+  group_by(site.ID) %>%
+  summarise(total_storms = sum(n_storms))
 
+AMC %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop")
 
+AMC <- AMC %>% 
+  group_by(site.ID, response_var, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE))
+
+AMC <- AMC %>% 
+  mutate(PF = case_when(site.ID == "STRT" | site.ID == "VAUL" ~ "High", TRUE ~ "Moderate")) %>% 
+  mutate(Burn = case_when(site.ID == "CARI" | site.ID == "VAUL" ~ "Unburned", TRUE ~ "Burned"))
+
+AMC <- AMC %>% ungroup() %>% 
+  filter(response_var != "abs")
+
+# ---- 1. CLD per response_var ---------------------------------------------
+get_cld_var <- function(df, rv) {
+  sites <- unique(df$site.ID)
+  if (length(sites) < 2) {
+    return(tibble(response_var = rv, site.ID = sites, Label = "a"))
+  }
+  
+  dunn <- df %>%
+    dunn_test(meanHI ~ site.ID, p.adjust.method = "bonferroni")
+  
+  pvals   <- setNames(dunn$p.adj, paste(dunn$group1, dunn$group2, sep = "-"))
+  letters <- multcompLetters(pvals)$Letters
+  
+  tibble(response_var = rv,
+         site.ID      = names(letters),
+         Label        = unname(letters))
+}
+
+rvs <- unique(AMC$response_var)
+cld_df <- map_dfr(rvs, function(rv) {
+  df_rv <- AMC %>% filter(response_var == rv)
+  get_cld_var(df_rv, rv)
+})
+
+# ---- 2. y-positions for letters ------------------------------------------
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+y_pos <- AMC %>%
+  group_by(response_var, site.ID) %>%
+  summarise(y_position = max(meanHI, na.rm = TRUE) + 0.15, .groups = "drop")
+
+annotations <- cld_df %>%
+  left_join(y_pos, by = c("response_var", "site.ID")) %>%
+  mutate(x_position = match(site.ID, desired_order))
+
+# ---- 3. Optional: pretty facet labels ------------------------------------
+AMC$response_var <- factor(AMC$response_var,
+                           levels = c("fDOM", "NO3", "SPC", "turb"),
+                           labels = c("fDOM",
+                                      "NO[3]^{'-'}",
+                                      "SPC",
+                                      "Turbidity"))
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = c("fDOM", "NO3", "SPC", "turb"),
+                                   labels = c("fDOM",
+                                              "NO[3]^{'-'}",
+                                              "SPC",
+                                              "Turbidity"))
+
+# ---- 4. Plot -------------------------------------------------------------
+library(ggpattern)
+
+lvls <- c("fDOM", "NO[3]^{'-'}", "SPC", "Turbidity")
+labs <- c("fDOM", "Nitrate", "SPC", "Turbidity")
+
+AMC$response_var <- factor(AMC$response_var, levels = lvls, labels = labs)
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = lvls, labels = labs)
+
+spc_labels <- data.frame(
+  response_var = factor("SPC", levels = levels(AMC$response_var)),
+  x    = 0.6,           # near left edge
+  y    = c(0.1, -0.1),
+  lab  = c("Clockwise", "Counterclockwise")
+)
+
+HI_box <- ggplot(AMC, aes(x = site.ID, y = meanHI,
+                          fill = site.ID, pattern = Burn)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                       color = "black",
+                       pattern_fill    = "white",
+                       pattern_angle   = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  geom_text(data = spc_labels,
+            aes(x = x, y = y, label = lab),
+            inherit.aes = FALSE, hjust = 0, fontface = "bold", size = 4) +
+  scale_pattern_manual(values = c(Burned = "stripe", Unburned = "none"),
+                       name = "") +
+  scale_x_discrete(
+    limits = c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+    labels = c(POKE = "POKE\n(25%)",
+               CARI = "CARI\n(29%)",
+               STRT = "STRT\n(30%)",
+               FRCH = "FRCH\n(33%)",
+               MOOS = "MOOS\n(38%)",
+               VAUL = "VAUL\n(58%)")
+  ) +
+  scale_fill_manual(values=c("#3288BD", "#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  xlab("") +
+  ylab("Mean HI") +
+  theme_bw() +
+  facet_wrap(~response_var) +
+  geom_text(data = annotations,
+            aes(x = x_position, y = y_position, label = Label),
+            inherit.aes = FALSE, size = 6) +
+  guides(fill = "none",
+         pattern = guide_legend(override.aes = list(fill = "white"))) +
+  theme_classic() +
+  theme(legend.position = "bottom")
+
+HI_box
+
+ggsave("HI_all_solutes.line.pdf",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
+
+ggsave("HI_all_solutes.line.png",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
+
+# Figure 6. Slope of the concentration-discharge relationship on the rising limb of each storm (β), across all storms ####
+rm(list=ls(all=TRUE))
+
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(rstatix)
+library(multcompView)
+
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
+
+colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
+              "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
+              "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+              "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
+              "date", "TimeSinceChena")
+
+names(AMC)<- colNames # renaming columns
+
+### AMC SUMMARY STATS ###
+summary_stats <- AMC %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop") %>%
+  group_by(site.ID) %>%
+  summarise(total_storms = sum(n_storms))
+
+AMC %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop")
+
+AMC <- AMC %>% 
+  group_by(site.ID, response_var, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE))
+
+AMC <- AMC %>% 
+  mutate(PF = case_when(site.ID == "STRT" | site.ID == "VAUL" ~ "High", TRUE ~ "Moderate")) %>% 
+  mutate(Burn = case_when(site.ID == "CARI" | site.ID == "VAUL" ~ "Unburned", TRUE ~ "Burned"))
+
+AMC <- AMC %>% ungroup() %>% 
+  filter(response_var != "abs")
+
+# ---- 1. CLD per response_var ---------------------------------------------
+get_cld_var <- function(df, rv) {
+  sites <- unique(df$site.ID)
+  if (length(sites) < 2) {
+    return(tibble(response_var = rv, site.ID = sites, Label = "a"))
+  }
+  
+  dunn <- df %>%
+    dunn_test(meanBETA ~ site.ID, p.adjust.method = "bonferroni")
+  
+  pvals   <- setNames(dunn$p.adj, paste(dunn$group1, dunn$group2, sep = "-"))
+  letters <- multcompLetters(pvals)$Letters
+  
+  tibble(response_var = rv,
+         site.ID      = names(letters),
+         Label        = unname(letters))
+}
+
+rvs <- unique(AMC$response_var)
+cld_df <- map_dfr(rvs, function(rv) {
+  df_rv <- AMC %>% filter(response_var == rv)
+  get_cld_var(df_rv, rv)
+})
+
+# ---- 2. y-positions for letters ------------------------------------------
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+y_pos <- AMC %>%
+  group_by(response_var, site.ID) %>%
+  summarise(y_position = max(meanBETA, na.rm = TRUE) + 0.15, .groups = "drop")
+
+annotations <- cld_df %>%
+  left_join(y_pos, by = c("response_var", "site.ID")) %>%
+  mutate(x_position = match(site.ID, desired_order))
+
+# ---- 3. Optional: pretty facet labels ------------------------------------
+AMC$response_var <- factor(AMC$response_var,
+                           levels = c("fDOM", "NO3", "SPC", "turb"),
+                           labels = c("fDOM",
+                                      "NO[3]^{'-'}",
+                                      "SPC",
+                                      "Turbidity"))
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = c("fDOM", "NO3", "SPC", "turb"),
+                                   labels = c("fDOM",
+                                              "NO[3]^{'-'}",
+                                              "SPC",
+                                              "Turbidity"))
+
+# ---- 4. Plot -------------------------------------------------------------
+library(ggpattern)
+
+lvls <- c("fDOM", "NO[3]^{'-'}", "SPC", "Turbidity")
+labs <- c("fDOM", "Nitrate", "SPC", "Turbidity")
+
+AMC$response_var <- factor(AMC$response_var, levels = lvls, labels = labs)
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = lvls, labels = labs)
+
+spc_labels <- data.frame(
+  response_var = factor("SPC", levels = levels(AMC$response_var)),
+  x    = 0.6,           # near left edge
+  y    = c(0.5, -1.0),
+  lab  = c("Flushing", "Dilution")
+)
+
+BETA_box <- ggplot(AMC, aes(x = site.ID, y = meanBETA,
+                          fill = site.ID, pattern = Burn)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                       color = "black",
+                       pattern_fill    = "white",
+                       pattern_angle   = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  geom_text(data = spc_labels,
+            aes(x = x, y = y, label = lab),
+            inherit.aes = FALSE, hjust = 0, fontface = "bold", size = 4) +
+  scale_pattern_manual(values = c(Burned = "stripe", Unburned = "none"),
+                       name = "") +
+  scale_x_discrete(
+    limits = c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+    labels = c(POKE = "POKE\n(25%)",
+               CARI = "CARI\n(29%)",
+               STRT = "STRT\n(30%)",
+               FRCH = "FRCH\n(33%)",
+               MOOS = "MOOS\n(38%)",
+               VAUL = "VAUL\n(58%)")
+  ) +
+  scale_fill_manual(values=c("#3288BD", "#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  xlab("") +
+  ylab("ß") +
+  theme_bw() +
+  facet_wrap(~response_var) +
+  geom_text(data = annotations,
+            aes(x = x_position, y = y_position, label = Label),
+            inherit.aes = FALSE, size = 6) +
+  guides(fill = "none",
+         pattern = guide_legend(override.aes = list(fill = "white"))) +
+  theme_classic() +
+  theme(legend.position = "bottom")
+
+BETA_box
+
+ggsave("BETA_all_solutes.line.pdf",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
+
+ggsave("BETA_all_solutes.line.png",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
 
 
 
