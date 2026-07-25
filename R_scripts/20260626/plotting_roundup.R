@@ -173,7 +173,7 @@ mean_daily_chem <- map_dfr(years, function(yr) {
   }
   
   df %>%
-    select(min, Site,
+    dplyr::select(min, Site,
            fDOM.QSU.mn.adj, SpCond.uScm.mn.adj,
            Turbidity.FNU.mn.adj, nitrateuM.adj.mn) %>%
     mutate(day = as.Date(min))
@@ -190,6 +190,12 @@ mean_daily_chem <- map_dfr(years, function(yr) {
   rename(site.ID = Site)
 
 mean_daily_chem <- mean_daily_chem %>% filter(!is.na(site.ID))
+
+summary <- mean_daily_chem %>% 
+  group_by(site.ID, year) %>% 
+  summarise(date_range_min = min(day),
+            date_range_max = max(day)) %>% 
+  na.omit()
 
 # Read in Q for each year (2018, 2019, 2020, 2021, 2022) and take mean daily Q
 # Build daily Q from yearly files
@@ -754,6 +760,7 @@ library(purrr)
 library(ggplot2)
 library(rstatix)
 library(multcompView)
+library(here)
 
 AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
 
@@ -780,7 +787,7 @@ summary_stats <- AMC %>%
   group_by(site.ID) %>%
   summarise(total_storms = sum(n_storms))
 
-AMC %>%
+year <- AMC %>%
   group_by(site.ID, year) %>%
   summarise(n_storms = n_distinct(storm.ID), .groups = "drop")
 
