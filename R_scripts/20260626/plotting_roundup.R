@@ -182,11 +182,11 @@ mean_daily_fig_data_long %>%
         axis.title.x = element_text(size = 20),
         axis.text.y = element_text(size = 20))
 
-ggsave("DoD_2015_2022.pdf",
+ggsave("Figure 3. Time series of discharge (Q)_1.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 9, units = "in")
 
-ggsave("DoD_2015_2022.png",
+ggsave("Figure 3. Time series of discharge (Q)_1.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 9, units = "in")
 
@@ -425,11 +425,11 @@ Q <- ggplot(Q_daily_new %>% filter(year %in% 2018:2022),
 
 Q
 
-ggsave("Q_stats.pdf",
+ggsave("Supplemental Figure 1. Daily mean discharge.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 8, units = "in")
 
-ggsave("Q_stats.png",
+ggsave("Supplemental Figure 1. Daily mean discharge.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 8, units = "in")
 
@@ -552,7 +552,12 @@ HI_BETA_NO3.p =
   theme_bw() +
   xlim(-1.5, 1.5) +
   ylim(-1.5, 1.5) +
-  ggtitle(vn) + 
+  ggtitle(vn) +
+  theme(
+    plot.title = element_text(
+      margin = margin(t = 10, b = 15)
+    )
+  )+
   ylab("") +
   xlab("") +
   theme(
@@ -562,8 +567,10 @@ HI_BETA_NO3.p =
     axis.line = element_line(colour = "black"), 
     text = element_text(size = 15),
     legend.position = "none",
-    aspect.ratio = 1
-  ) +
+    aspect.ratio = 1,
+    plot.margin = margin(2, 2, 2, 2),
+    plot.title = element_text(
+      margin = margin(t = 5, b = 5))) +
   labs(
     colour = "Catchment",
     shape = "Burn"
@@ -652,7 +659,12 @@ HI_BETA_fDOM.p =
   theme_bw() +
   ylim(-1.5, 1.5) + 
   xlim(-1.5, 1.5) +
-  ggtitle("fDOM") + 
+  ggtitle("fDOM") +
+  theme(
+    plot.title = element_text(
+      margin = margin(t = 10, b = 15)
+    )
+  )+
   ylab("HI") +
   xlab("") +
   theme(
@@ -662,8 +674,10 @@ HI_BETA_fDOM.p =
     axis.line = element_line(colour = "black"), 
     text = element_text(size = 15),
     legend.position = "none",
-    aspect.ratio = 1
-  ) +
+    aspect.ratio = 1,
+    plot.margin = margin(2, 2, 2, 2),
+    plot.title = element_text(
+      margin = margin(t = 5, b = 5))) +
   guides(
     shape = guide_legend("Permafrost Extent"),
     col = guide_legend("Catchment")
@@ -725,7 +739,12 @@ HI_BETA_SPC.p =
   theme_bw() +
   ylim(-1.5, 1.5) + 
   xlim(-1.5, 1.5) +
-  ggtitle("SPC") + 
+  ggtitle("SPC") +
+  theme(
+    plot.title = element_text(
+      margin = margin(t = 10, b = 15)
+    )
+  )+
   ylab("HI") +
   xlab("ß") +
   theme(
@@ -735,7 +754,10 @@ HI_BETA_SPC.p =
     axis.line = element_line(colour = "black"), 
     text = element_text(size = 15),
     legend.position = "none",
-    aspect.ratio = 1
+    aspect.ratio = 1,
+    plot.margin = margin(2, 2, 2, 2),
+    plot.title = element_text(
+      margin = margin(t = 5, b = 5))
   )
 
 c <- ggMarginal(
@@ -822,22 +844,22 @@ HI_BETA_turb.p =
   annotate(
     "text", x = -1.5, y = 1.25,
     label = "Clockwise/\nDilution",
-    hjust = 0, size = 5.5, fontface = "bold"
+    hjust = 0, size = 4.5, fontface = "bold"
   ) +
   annotate(
-    "text", x = 1.3, y = 1.25,
+    "text", x = 1.4, y = 1.25,
     label = "Clockwise/\nFlushing",
-    hjust = 1, size = 5.5, fontface = "bold"
+    hjust = 1, size = 4.5, fontface = "bold"
   ) +
   annotate(
     "text", x = -1.5, y = -1.00,
     label = "Counter-\nclockwise/\nDilution",
-    hjust = 0, size = 5.5, fontface = "bold"
+    hjust = 0, size = 4.5, fontface = "bold"
   ) +
   annotate(
-    "text", x = 1.3, y = -1.00,
+    "text", x = 1.4, y = -1.00,
     label = "Counter-\nclockwise/\nFlushing",
-    hjust = 1, size = 5.5, fontface = "bold"
+    hjust = 1, size = 4.5, fontface = "bold"
   ) +
   
   scale_color_manual(
@@ -850,6 +872,11 @@ HI_BETA_turb.p =
   ylim(-1.5, 1.5) +
   xlim(-1.5, 1.5) +
   ggtitle("Turbidity") +
+  theme(
+    plot.title = element_text(
+      margin = margin(t = 10, b = 15)
+    )
+  )+
   ylab("") +
   xlab("ß") +
   theme(
@@ -859,7 +886,10 @@ HI_BETA_turb.p =
     axis.line = element_line(colour = "black"),
     text = element_text(size = 15),
     legend.position = "none",
-    aspect.ratio = 1
+    aspect.ratio = 1,
+    plot.margin = margin(2, 2, 2, 2),
+    plot.title = element_text(
+      margin = margin(t = 5, b = 5))
   )
 
 d <- ggMarginal(
@@ -873,155 +903,76 @@ ggarrange(b,a,
           c,d,
           labels = c("A)", "B)",
                      "C)", "D)"))
-# OLD END #
-library(ggpubr)
-library(cowplot)
-
-# a plot that has BOTH color and shape mappings + the legend visible
-legend_plot <- ggplot(HI_FI_fDOM,
-                      aes(Beta_index, Hyst_index,
-                          colour = factor(site.ID), shape = burn)) +
-  geom_point(size = 2.5) +
-  scale_color_manual(values = c("#3288BD","#FF7F00","#A6761D",
-                                "#6A3D9A","#66C2A5","#E7298A")) +
-  labs(colour = "Catchment", shape = "") +
-  theme_bw() +
-  theme(legend.position = "bottom",
-        legend.box = "horizontal",
-        text = element_text(size = 13))
-
-shared_legend <- cowplot::get_legend(legend_plot)
-
-# arrange the four ggMarginal panels
-panels <- ggarrange(b, a,
-                    c, d,
-                    labels = c("A)", "B)", "C)", "D)"))
-
-# stack panels + legend
-final_fig <- ggarrange(panels, shared_legend,
-                       ncol = 1, heights = c(1, 0.1))
-final_fig
-
-
-library(ggpubr)
-library(cowplot)
-
-# ---------------------------------------------------------
-# Create plot for shared legend
-# ---------------------------------------------------------
 
 legend_plot <- ggplot(
-  HI_FI_fDOM,
-  aes(
-    Beta_index,
-    Hyst_index,
-    colour = factor(site.ID),
-    shape = burn
-  )
+  HI_FI_NO3,
+  aes(Beta_index, Hyst_index)
 ) +
-  geom_point(size = 2.5) +
+  geom_point(
+    aes(
+      colour = factor(site.ID),
+      shape = burn
+    ),
+    size = 3
+  ) +
   scale_color_manual(
+    name = "Catchment",
     values = c(
-      "#3288BD",
-      "#FF7F00",
-      "#A6761D",
-      "#6A3D9A",
-      "#66C2A5",
-      "#E7298A"
+      "#3288BD", "#FF7F00", "#A6761D",
+      "#6A3D9A", "#66C2A5", "#E7298A"
     )
   ) +
-  labs(
-    colour = "Catchment",
-    shape = ""
+  scale_shape_manual(
+    name = NULL,
+    values = c(16, 17)
+  ) +
+  guides(
+    colour = guide_legend(order = 1),
+    shape = guide_legend(order = 2)
   ) +
   theme_bw() +
   theme(
     legend.position = "bottom",
+    legend.direction = "horizontal",
     legend.box = "horizontal",
-    text = element_text(size = 13)
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.border = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank()
   )
 
-shared_legend <- cowplot::get_legend(legend_plot)
+library(cowplot)
 
+legend <- get_legend(legend_plot)
 
-# ---------------------------------------------------------
-# Add a little extra space above plot titles
-# ---------------------------------------------------------
-
-a <- a +
-  theme(
-    plot.margin = margin(
-      t = 15,
-      r = 5,
-      b = 5,
-      l = 5
-    )
-  )
-
-b <- b +
-  theme(
-    plot.margin = margin(
-      t = 15,
-      r = 5,
-      b = 5,
-      l = 5
-    )
-  )
-
-c <- c +
-  theme(
-    plot.margin = margin(
-      t = 15,
-      r = 5,
-      b = 5,
-      l = 5
-    )
-  )
-
-d <- d +
-  theme(
-    plot.margin = margin(
-      t = 15,
-      r = 5,
-      b = 5,
-      l = 5
-    )
-  )
-
-
-# ---------------------------------------------------------
-# Arrange the four panels
-# ---------------------------------------------------------
-
-panels <- ggarrange(
+main_figure <- ggarrange(
   b, a,
   c, d,
-  labels = c("A)", "B)", "C)", "D)")
+  labels = c("A)", "B)", "C)", "D)"),
+  ncol = 2,
+  nrow = 2,
+  align = "hv"
 )
 
-
-# ---------------------------------------------------------
-# Stack panels + shared legend
-# ---------------------------------------------------------
-
-final_fig <- ggarrange(
-  panels,
-  shared_legend,
+final_figure <- ggarrange(
+  main_figure,
+  legend,
   ncol = 1,
-  heights = c(1, 0.1)
+  heights = c(1, 0.08)
 )
 
-# Display
-final_fig
+final_figure
 
-ggsave("HI_BETA.pdf",
+ggsave("Figure 4. Concentration-discharge relationships_1.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 9, height = 9)
 
-ggsave("HI_BETA.png",
+ggsave("Figure 4. Concentration-discharge relationships_1.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 9, height = 9)
-
 
 # Figure 5. Hysteresis index across all storms for fDOM (A), NO3– (B), SPC (C), and turbidity (D) ####
 rm(list=ls(all=TRUE))
@@ -1208,11 +1159,11 @@ HI_box <- ggplot(AMC_trimmed, aes(x = site.ID, y = meanHI,
 
 HI_box
 
-ggsave("HI_all_solutes.line.pdf",
+ggsave("Figure 5. Boxplots of the hysteresis index.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
 
-ggsave("HI_all_solutes.line.png",
+ggsave("Figure 5. Boxplots of the hysteresis index.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
 
@@ -1404,16 +1355,13 @@ BETA_box <- ggplot(AMC, aes(x = site.ID, y = meanBETA,
 
 BETA_box
 
-ggsave("BETA_all_solutes.line.pdf",
+ggsave("Figure 6. Slope of the concentration-discharge.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
 
-ggsave("BETA_all_solutes.line.png",
+ggsave("Figure 6. Slope of the concentration-discharge.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
-
-
-
 
 
 ### SUPPLEMENTAL FIGURE 2-5: Daily Mean NO3, fDOM, SPC, Turb #### ####
@@ -1776,7 +1724,7 @@ ggsave("Supplemental Figure 2. Daily mean NO3– .pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 8, units = "in")
 
- ggsave("Supplemental Figure 2. Daily mean NO3– .png",
+ggsave("Supplemental Figure 2. Daily mean NO3– .png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 12, height = 8, units = "in")
 
@@ -1993,7 +1941,7 @@ get_cld_var <- function(df, rv) {
   }
   
   dunn <- df %>%
-    dunn_test(meanHI ~ site.ID, p.adjust.method = "bonferroni")
+    dunn_test(sdHI ~ site.ID, p.adjust.method = "bonferroni")
   
   pvals   <- setNames(dunn$p.adj, paste(dunn$group1, dunn$group2, sep = "-"))
   letters <- multcompLetters(pvals)$Letters
@@ -2014,7 +1962,7 @@ desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
 
 y_pos <- AMC_trimmed %>%
   group_by(response_var, site.ID) %>%
-  summarise(y_position = max(meanHI, na.rm = TRUE) + 0.15, .groups = "drop")
+  summarise(y_position = max(sdHI, na.rm = TRUE) + 0.15, .groups = "drop")
 
 annotations <- cld_df %>%
   left_join(y_pos, by = c("response_var", "site.ID")) %>%
@@ -2047,7 +1995,7 @@ annotations$response_var <- factor(annotations$response_var,
 spc_labels <- data.frame(
   response_var = factor("SPC", levels = levels(AMC_trimmed$response_var)),
   x    = 0.6,           # near left edge
-  y    = c(0.1, -0.1),
+  y    = c(0.6, -0.1),
   lab  = c("Clockwise", "Counterclockwise")
 )
 
@@ -2085,25 +2033,455 @@ HI_box <- ggplot(AMC_trimmed, aes(x = site.ID, y = sdHI,
             inherit.aes = FALSE, size = 6) +
   guides(fill = "none",
          pattern = guide_legend(override.aes = list(fill = "white"))) +
-  theme_classic() +
+  theme_bw() +
   theme(legend.position = "bottom")
 
 HI_box
 
-ggsave("HI_all_solutes.line.pdf",
+ggsave("Supplemental Figure 6. Annual standard deviation of HI.pdf",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
 
-ggsave("HI_all_solutes.line.png",
+ggsave("Supplemental Figure 6. Annual standard deviation of HI.png",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
+
+### SUPPLEMENTAL FIGURE 7: Annual standard deviation of BETA #### 
+rm(list=ls(all=TRUE))
+
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(rstatix)
+library(multcompView)
+
+AMC <- read.csv(here("Output_from_analysis", "07_Combine_HI_BETA_FI", "antecedent_HI_FI_AllYears.csv"))
+
+AMC <- AMC[c("Hyst_index","HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month.x", "day.x",
+             "response_var", "Flush_index","FI_ymin", "FI_ymax", "year", 
+             "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+             "df", "p", "precip", "temp", "precip.week", "precip.month", 
+             "ThreeMonth", "temp.week", "TOTAL.TIME", "Intensity", "doy", "burn", "pf", 
+             "date", "TimeSinceChena")] # selecting the columns that I want
+
+colNames <- c("Hyst_index", "HI_ymin", "HI_ymax", "site.ID", "storm.ID", "month", 
+              "day", "response_var", "Flush_index", "FI_ymin", "FI_ymax", "year", 
+              "Parameter", "Beta_index", "SE", "CI", "Beta_ymin", "Beta_ymax", "t", 
+              "df", "p", "StormPrecip", "StormTemp", "PrecipWeek", "PrecipMonth", 
+              "ThreeMonth", "TempWeek", "Duration", "Intensity", "doy", "burn", "PF", 
+              "date", "TimeSinceChena")
+
+names(AMC)<- colNames # renaming columns
+
+# Trim to common window
+date_ranges <- tibble(
+  year = c(2015, 2018, 2019, 2020, 2021, 2022),
+  start_date = as.Date(c(
+    "2015-06-26",
+    "2018-06-27",
+    "2019-06-16",
+    "2020-06-17",
+    "2021-06-12",
+    "2022-06-13"
+  )),
+  end_date = as.Date(c(
+    "2015-10-11",
+    "2018-10-12",
+    "2019-10-01",
+    "2020-09-30",
+    "2021-09-27",
+    "2022-09-28"
+  ))
+)
+
+AMC_trimmed <- AMC %>%
+  left_join(date_ranges, by = "year") %>%
+  filter(date >= start_date,
+         date <= end_date) %>%
+  select(-start_date, -end_date)
+
+### AMC SUMMARY STATS ###
+summary_stats <- AMC_trimmed %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop") %>%
+  group_by(site.ID) %>%
+  summarise(total_storms = sum(n_storms))
+
+AMC_trimmed %>%
+  group_by(site.ID, year) %>%
+  summarise(n_storms = n_distinct(storm.ID), .groups = "drop")
+
+AMC_trimmed <- AMC_trimmed %>% 
+  group_by(site.ID, response_var, year) %>% 
+  dplyr::summarise(meanHI = mean(Hyst_index, na.rm = TRUE),
+                   meanBETA = mean(Beta_index, na.rm = TRUE),
+                   sdHI = sd(Hyst_index, na.rm = TRUE),
+                   sdBETA = sd(Beta_index, na.rm = TRUE))
+
+AMC_trimmed <- AMC_trimmed %>% 
+  mutate(PF = case_when(site.ID == "STRT" | site.ID == "VAUL" ~ "High", TRUE ~ "Moderate")) %>% 
+  mutate(Burn = case_when(site.ID == "CARI" | site.ID == "VAUL" ~ "Unburned", TRUE ~ "Burned"))
+
+AMC_trimmed <- AMC_trimmed %>% ungroup() %>% 
+  filter(response_var != "abs")
+
+# ---- 1. CLD per response_var ---------------------------------------------
+get_cld_var <- function(df, rv) {
+  sites <- unique(df$site.ID)
+  if (length(sites) < 2) {
+    return(tibble(response_var = rv, site.ID = sites, Label = "a"))
+  }
+  
+  dunn <- df %>%
+    dunn_test(sdBETA ~ site.ID, p.adjust.method = "bonferroni")
+  
+  pvals   <- setNames(dunn$p.adj, paste(dunn$group1, dunn$group2, sep = "-"))
+  letters <- multcompLetters(pvals)$Letters
+  
+  tibble(response_var = rv,
+         site.ID      = names(letters),
+         Label        = unname(letters))
+}
+
+rvs <- unique(AMC_trimmed$response_var)
+cld_df <- map_dfr(rvs, function(rv) {
+  df_rv <- AMC_trimmed %>% filter(response_var == rv)
+  get_cld_var(df_rv, rv)
+})
+
+# ---- 2. y-positions for letters ------------------------------------------
+desired_order <- c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL")
+
+y_pos <- AMC_trimmed %>%
+  group_by(response_var, site.ID) %>%
+  summarise(y_position = max(sdBETA, na.rm = TRUE) + 0.15, .groups = "drop")
+
+annotations <- cld_df %>%
+  left_join(y_pos, by = c("response_var", "site.ID")) %>%
+  mutate(x_position = match(site.ID, desired_order))
+
+# ---- 3. Optional: pretty facet labels ------------------------------------
+AMC_trimmed$response_var <- factor(AMC_trimmed$response_var,
+                                   levels = c("fDOM", "NO3", "SPC", "turb"),
+                                   labels = c("fDOM",
+                                              "NO[3]^{'-'}",
+                                              "SPC",
+                                              "Turbidity"))
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = c("fDOM", "NO3", "SPC", "turb"),
+                                   labels = c("fDOM",
+                                              "NO[3]^{'-'}",
+                                              "SPC",
+                                              "Turbidity"))
+
+# ---- 4. Plot -------------------------------------------------------------
+library(ggpattern)
+
+lvls <- c("fDOM", "NO[3]^{'-'}", "SPC", "Turbidity")
+labs <- c("fDOM", "Nitrate", "SPC", "Turbidity")
+
+AMC_trimmed$response_var <- factor(AMC_trimmed$response_var, levels = lvls, labels = labs)
+annotations$response_var <- factor(annotations$response_var,
+                                   levels = lvls, labels = labs)
+
+# spc_labels <- data.frame(
+#   response_var = factor("SPC", levels = levels(AMC_trimmed$response_var)),
+#   x    = 0.6,           # near left edge
+#   y    = c(0.6, -0.1),
+#   lab  = c("Flushing", "Dilution")
+# )
+
+BETA_box <- ggplot(AMC_trimmed, aes(x = site.ID, y = sdBETA,
+                                  fill = site.ID, pattern = Burn)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_boxplot_pattern(position = position_dodge(preserve = "single"),
+                       color = "black",
+                       pattern_fill    = "white",
+                       pattern_angle   = 45,
+                       pattern_density = 0.1,
+                       pattern_spacing = 0.025,
+                       pattern_key_scale_factor = 0.6) +
+  # geom_text(data = spc_labels,
+  #           aes(x = x, y = y, label = lab),
+  #           inherit.aes = FALSE, hjust = 0, fontface = "bold", size = 4) +
+  scale_pattern_manual(values = c(Burned = "stripe", Unburned = "none"),
+                       name = "") +
+  scale_x_discrete(
+    limits = c("POKE", "CARI", "STRT", "FRCH", "MOOS", "VAUL"),
+    labels = c(POKE = "POKE\n(25%)",
+               CARI = "CARI\n(29%)",
+               STRT = "STRT\n(30%)",
+               FRCH = "FRCH\n(33%)",
+               MOOS = "MOOS\n(38%)",
+               VAUL = "VAUL\n(58%)")
+  ) +
+  scale_fill_manual(values=c("#3288BD", "#FF7F00", "#A6761D", "#6A3D9A", "#66C2A5", "#E7298A")) +
+  xlab("") +
+  ylab(expression(SD - beta))+
+  theme_bw() +
+  facet_wrap(~response_var) +
+  geom_text(data = annotations,
+            aes(x = x_position, y = y_position, label = Label),
+            inherit.aes = FALSE, size = 6) +
+  guides(fill = "none",
+         pattern = guide_legend(override.aes = list(fill = "white"))) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+BETA_box
+
+ggsave("Supplemental Figure 7. Annual standard deviation of BETA.pdf",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 6, height = 6)
+
+ggsave("Supplemental Figure 7. Annual standard deviation of BETA.png",
        path = here("Output_from_analysis", "20260626_plotting_roundup"),
        width = 6, height = 6)
 
 
+### SUPPLEMENTAL FIGURE 8: Spearman correlation coefficients between catchment attributes across all catchments #### 
+rm(list=ls(all=TRUE))
+
+library(tidyverse)
+library(stats)
+library(readr)
+library(plotly)
+library(GGally)
+library(ggpmisc)
+library(ggpubr)
+library(ggExtra)
+library(lubridate)
+library(nlme)
+library(MuMIn)
+library(multcomp)
+library(here)
+library(dataRetrieval)
+library(RColorBrewer)
+library(gridExtra)
+library(zoo)
+library(GGally)
+library(ggplot2)
+library(dplyr)
+# NEED data frame with:
+# Slope
+# % burned
+# organic soils
+# shallow permafrost
+# permafrost extent
+# NDVI
+# deciduous cover 
+catchment <- read.csv(here("Ancillary_data", "AK_polys_190903_Predictors.csv"))
+
+catchment <- catchment[c("site","SLOPE_MEAN", "orgsoil_extent", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "Year")] # selecting the columns that I want
+
+# Add estimates of permafrost extent made by Torre Jorgenson  (11/1/2023)
+# Add deciduous cover
+catchment <- catchment %>% 
+  mutate(pfrost_extent = case_when(site == 'Caribou_CJ' ~ 29.3,
+                                   site == 'French' ~ 32.9,
+                                   site == 'Poker_PJ' ~ 25.3,
+                                   site == 'Moose' ~ 38.4,
+                                   site == 'Vault' ~ 58.4,
+                                   site == 'Stuart' ~ 30.8)) %>%
+  mutate(decid = ifelse(site == 'Caribou_CJ', 18.3,
+                        ifelse(site == 'French', 22.7,
+                               ifelse(site == 'Poker_PJ', 21.6,
+                                      ifelse(site == 'Moose', 22.5,
+                                             ifelse(site == 'Vault', 19.9, 18.8)))))) %>%
+  filter(Year == 2019)
 
 
+# ggpairs(catchment,
+#         columns = c("SLOPE_MEAN", "areaburn_lg", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean"),
+#         title="Correlation matrix: All sites") 
+
+# this shows that slope and PF are highly correlated
+###***TKH: Slope & pfrost r = -0.34. Coefficients <0.5 are weak. This is across the full dataset though. Let's look at just the 6 catchments we are addressing here.
+
+highlight_df <- filter(catchment, site %in% c("Caribou_CJ", "French", "Poker_PJ",
+                                              "Moose", "Vault", "Stuart"))
+
+ggpairs(highlight_df,
+        columns = c("SLOPE_MEAN", "orgsoil_extent", "pctburn_lg", "Pf_Prob_1m_mean_x", "NDVI_p50__mean", "pfrost_extent", "decid"),
+        title="Correlation matrix: All sites") 
+
+library(GGally)
+library(ggplot2)
+library(dplyr)
+
+corr_df <- highlight_df %>%
+  dplyr::select(
+    SLOPE_MEAN,
+    pctburn_lg,
+    orgsoil_extent,
+    Pf_Prob_1m_mean_x,
+    pfrost_extent,
+    NDVI_p50__mean,
+    decid,
+    site
+  ) %>%
+  rename(
+    Slope = SLOPE_MEAN,
+    `% burned` = pctburn_lg,
+    `Organic Soil %` = orgsoil_extent,
+    `Shallow Permafrost` = Pf_Prob_1m_mean_x,
+    `Permafrost Extent` = pfrost_extent,
+    NDVI = NDVI_p50__mean,
+    `Deciduous cover` = decid
+  ) %>%
+  mutate(
+    site = case_when(
+      site == "Caribou_CJ" ~ "CARI",
+      site == "Vault"      ~ "VAUL",
+      site == "French"     ~ "FRCH",
+      site == "Moose"      ~ "MOOS",
+      site == "Stuart"     ~ "STRT",
+      site == "Poker_PJ"   ~ "POKE",
+      TRUE ~ as.character(site)
+    ),
+    site = factor(
+      site,
+      levels = c("CARI", "VAUL", "FRCH", "MOOS", "STRT", "POKE")
+    )
+  )
+
+# TAKE 2 # 
+library(GGally)
+library(ggplot2)
+library(cowplot)
+library(grid)
+
+# -----------------------------
+# Custom colored point function
+# -----------------------------
+
+colored_points <- function(data, mapping, ...) {
+  
+  ggplot(data = data, mapping = mapping) +
+    geom_point(
+      aes(color = site),
+      size = 2.5,
+      alpha = 0.8
+    ) +
+    scale_color_manual(
+      values = c(
+        "CARI" = "#3288BD",
+        "VAUL" = "#E7298A",
+        "FRCH" = "#FF7F00",
+        "MOOS" = "#A6761D",
+        "STRT" = "#66C2A5",
+        "POKE" = "#6A3D9A"
+      )
+    ) +
+    theme_bw() +
+    theme(
+      legend.position = "none",
+      axis.text.x = element_text(
+        size = 7,
+        angle = 45,
+        hjust = 1
+      ),
+      axis.text.y = element_text(size = 7)
+    )
+}
 
 
+# -----------------------------
+# Correlation matrix
+# -----------------------------
 
+corr_plot <- ggpairs(
+  corr_df,
+  columns = 1:7,
+  title = "Correlation matrix: All sites",
+  
+  lower = list(
+    continuous = colored_points
+  ),
+  
+  upper = list(
+    continuous = wrap(
+      "cor",
+      size = 4
+    )
+  ),
+  
+  diag = list(
+    continuous = wrap(
+      "densityDiag",
+      alpha = 0.4
+    )
+  )
+)
+
+
+# -----------------------------
+# Create separate legend
+# -----------------------------
+
+legend_plot <- ggplot(
+  corr_df,
+  aes(x = Slope, y = `% burned`, color = site)
+) +
+  geom_point(size = 3) +
+  scale_color_manual(
+    name = "Catchment",
+    values = c(
+      "CARI" = "#3288BD",
+      "VAUL" = "#E7298A",
+      "FRCH" = "#FF7F00",
+      "MOOS" = "#A6761D",
+      "STRT" = "#66C2A5",
+      "POKE" = "#6A3D9A"
+    )
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 10)
+  )
+
+legend <- get_legend(legend_plot)
+
+
+# -----------------------------
+# Convert ggpairs to grob
+# -----------------------------
+
+corr_grob <- ggmatrix_gtable(corr_plot)
+
+
+# -----------------------------
+# Combine matrix + legend
+# -----------------------------
+
+final_corr_plot <- ggdraw() +
+  draw_grob(
+    corr_grob,
+    x = 0,
+    y = 0.08,
+    width = 1,
+    height = 0.92
+  ) +
+  draw_grob(
+    legend,
+    x = 0,
+    y = 0,
+    width = 1,
+    height = 0.08
+  )
+
+final_corr_plot
+
+ggsave("Supplemental Figure 8. Spearman correlation catchment.pdf",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 9, height = 9)
+
+ggsave("Supplemental Figure 8. Spearman correlation catchment.png",
+       path = here("Output_from_analysis", "20260626_plotting_roundup"),
+       width = 9, height = 9)
 
 
 
